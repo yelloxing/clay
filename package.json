@@ -1,0 +1,13 @@
+{
+    "name": "quickes",
+    "version": "1.0.0",
+    "description": "帮助快速使用ES",
+    "scripts": {},
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yelloxing/quickES.git"
+    },
+    "author": "心叶",
+    "license": "MIT",
+    "devDependencies": {}
+}
