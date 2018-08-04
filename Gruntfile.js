@@ -1,8 +1,11 @@
 'use strict';
 
 var source = [
+
+    // 基础模块
     './src/core.js',
-    './src/config.js'
+    './src/config.js',
+    './src/animation.js'
 ];
 
 var banner = '/*!\n' +
@@ -64,7 +67,9 @@ module.exports = function (grunt) {
                     "navigator": true,
                     "document": true,
                     "console": true,
-                    "module":true
+                    "module": true,
+                    "setInterval": true,
+                    "clearInterval": true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件

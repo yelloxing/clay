@@ -2,6 +2,7 @@
 
     'use strict';
 
+    // 标签命名空间
     window.quickES.namespace = {
         svg: "http://www.w3.org/2000/svg",
         xhtml: "http://www.w3.org/1999/xhtml",
