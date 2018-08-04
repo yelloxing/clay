@@ -2,10 +2,14 @@
 
 var source = [
 
-    // 基础模块
-    './src/core.js',
-    './src/config.js',
-    './src/animation.js'
+    /*【基础模块】*/
+    './src/core.js',//核心代码
+    './src/config.js',//基本的配置文件
+    './src/animation.js',//轮询执行方法
+
+    /*【结点模块】 => only 浏览器 */
+    './src/dom/sizzle.js'//元素查找(本模块核心)
+
 ];
 
 var banner = '/*!\n' +
