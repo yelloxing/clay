@@ -49,7 +49,7 @@ module.exports = function (grunt) {
             },
             target: {
                 src: source,
-                dest: 'build/lib-<%= pkg.version %>.js'
+                dest: 'build/quickes-<%= pkg.version %>.js'
             }
         },
         jshint: { //语法检查
@@ -78,7 +78,7 @@ module.exports = function (grunt) {
                     mangle: true
                 },
                 files: [{
-                    'build/lib-<%= pkg.version %>.min.js': ['build/lib-<%= pkg.version %>.js']
+                    'build/quickes-<%= pkg.version %>.min.js': ['build/quickes-<%= pkg.version %>.js']
                 }]
             }
         }

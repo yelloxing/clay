@@ -26,7 +26,5 @@
 *
 * 【打包文件】
 * (0)./src/core.js
-* (1)./src/core.js
-* (2)./src/core.js
 *
 */
