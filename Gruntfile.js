@@ -1,7 +1,8 @@
 'use strict';
 
 var source = [
-    './src/core.js'
+    './src/core.js',
+    './src/config.js'
 ];
 
 var banner = '/*!\n' +
@@ -36,7 +37,7 @@ for (let flag = 0; flag < source.length; flag++) {
     banner += ('* (' + flag + ')' + source[flag] + '\n');
 }
 banner += '*\n' +
-    '*/';
+    '*/\n';
 module.exports = function (grunt) {
     /*配置插件*/
     grunt.initConfig({
@@ -62,7 +63,8 @@ module.exports = function (grunt) {
                     "window": true,
                     "navigator": true,
                     "document": true,
-                    "console": true
+                    "console": true,
+                    "module":true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
