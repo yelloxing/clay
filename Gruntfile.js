@@ -1,5 +1,9 @@
 'use strict';
 
+var source = [
+    './src/core.js'
+];
+
 var banner = '/*!\n' +
     '*\n' +
     '* quickES - Help quickly use ES.\n' +
@@ -26,11 +30,13 @@ var banner = '/*!\n' +
     '*\n' +
     '* 兼容不同浏览器的接口，提供常用的辅助方法，只是针对常用的，目标是轻量级。\n' +
     '*\n' +
-    '*/'
+    '* 【打包文件】\n';
 
-var source = [
-    './src/core.js'
-];
+for (let flag = 0; flag < source.length; flag++) {
+    banner += ('* (' + flag + ')' + source[flag] + '\n');
+}
+banner += '*\n' +
+    '*/';
 module.exports = function (grunt) {
     /*配置插件*/
     grunt.initConfig({
