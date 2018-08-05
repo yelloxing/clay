@@ -51,6 +51,7 @@
         for (flag = this.size; flag < this._collection.datas.length; flag++) {
             this._collection.enter.push(typeof this._collection.calc === 'function' ? this._collection.calc(this._collection.datas[flag]) : this._collection.datas[flag]);
         }
+        this.selector += ':enter()';
         return this;
 
     };
@@ -64,6 +65,7 @@
             this.collection.push(temp[flag]);
         }
         this.size = this.collection.length;
+        this.selector += ':exit()';
         return this;
 
     };

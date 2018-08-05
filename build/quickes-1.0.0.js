@@ -30,6 +30,8 @@
 * (2)./src/animation.js
 * (3)./src/dom/sizzle.js
 * (4)./src/dom/data.js
+* (5)./src/dom/modify.js
+* (6)./src/dom/search.js
 *
 */
 (function (global, factory, undefined) {
@@ -186,7 +188,35 @@
 
     'use strict';
 
-    $$.node = function () { };
+    $$.node = function () {
+
+        // 选择集合中的某个
+        this.eq = function (num) {
+            this.collection = this.size > num ? [this.collection[num]] : [];
+            this.size = this.collection.length;
+            return this;
+        };
+
+        this.setEnvironment = function (namespace) {
+            this.namespace = namespace;
+        };
+
+        // 只有在必要的时候才应该使用clone来建立一个新的对象
+        this.clone = function () {
+            var nodeObj = new $$.node(), flag;
+            for (var key in this) {
+                try {
+                    if (this.hasOwnProperty(key)) {
+                        nodeObj[key] = this[key];
+                    }
+                } catch (e) {
+                    throw new Error("Illegal property value！");
+                }
+            }
+            return nodeObj;
+        };
+
+    };
 
     $$.selectAll = function (selector, content) {
 
@@ -195,6 +225,7 @@
         nodeObj.selector = selector || '';
         nodeObj.content = content || document;
         nodeObj.collection = [];
+        nodeObj.namespace = 'html';
 
         if (typeof selector === 'string') {
 
@@ -294,6 +325,7 @@
         for (flag = this.size; flag < this._collection.datas.length; flag++) {
             this._collection.enter.push(typeof this._collection.calc === 'function' ? this._collection.calc(this._collection.datas[flag]) : this._collection.datas[flag]);
         }
+        this.selector += ':enter()';
         return this;
 
     };
@@ -307,6 +339,195 @@
             this.collection.push(temp[flag]);
         }
         this.size = this.collection.length;
+        this.selector += ':exit()';
+        return this;
+
+    };
+
+})(window, window.quickES);
+(function (window, $$, undefined) {
+
+    'use strict';
+
+    var toNode = function (namespace, param) {
+
+        if (param && (param.nodeType === 1 || param.nodeType === 11 || param.nodeType === 9)) {
+            return param;
+        } else if (param && typeof param === 'string') {
+            if (/^[\w\d-]+$/.test(param)) {
+                if (namespace === 'svg') {
+                    return document.createElementNS($$.namespace, param);
+                } else {
+                    return document.createElement(param);
+                }
+            } else {
+                var frameDiv;
+                if (namespace === 'svg') {
+                    frameDiv = createElementNS($$.namespace, 'svg');
+                } else {
+                    frameDiv = document.createElement("div");
+                }
+                frameDiv.innerHTML = param;
+                return $$.selectAll(frameDiv).children().collection[0];
+            }
+        } else {
+            throw new Error('Unexcepted Error!');
+        }
+
+    };
+
+    // 在被选元素内部的结尾插入内容
+    $$.node.prototype.append = function (param) {
+
+        var flag, node;
+        for (flag = 0; flag < this.size; flag++) {
+            node = toNode(this.namespace, param)
+            this.collection[flag].appendChild(node);
+        }
+        return this;
+
+    };
+
+    // 在被选元素内部的开头插入内容
+    $$.node.prototype.prepend = function (param) {
+
+        var flag, node;
+        for (flag = 0; flag < this.size; flag++) {
+            node = toNode(this.namespace, param)
+            this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
+        }
+        return this;
+
+    };
+
+    // 在被选元素之后插入内容
+    $$.node.prototype.after = function (param) {
+
+        var flag, node;
+        for (flag = 0; flag < this.size; flag++) {
+            node = toNode(this.namespace, param)
+            this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
+        }
+        return this;
+
+    };
+
+    // 在被选元素之前插入内容
+    $$.node.prototype.before = function (param) {
+
+        var flag, node;
+        for (flag = 0; flag < this.size; flag++) {
+            node = toNode(this.namespace, param)
+            this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
+        }
+        return this;
+
+    };
+
+    // 删除被选元素（及其子元素）
+    $$.node.prototype.remove = function () {
+
+        var flag;
+        for (flag = 0; flag < this.size; flag++) {
+            this.clone().eq(flag).parent().collection[0].removeChild(this.collection[flag]);
+        }
+        return this;
+
+    };
+
+    // 从被选元素中删除子元素
+    $$.node.prototype.empty = function () {
+
+        var flag;
+        for (flag = 0; flag < this.size; flag++) {
+            this.collection[flag].innerHTML = '';
+        }
+        return this;
+
+    };
+
+})(window, window.quickES);
+(function (window, $$, undefined) {
+
+    'use strict';
+
+    // 返回全部被选元素的父亲
+    $$.node.prototype.parent = function (filterback) {
+        var flag, parent, temp = this.collection;
+        this.collection = [];
+        for (flag = 0; flag < this.size; flag++) {
+            parent = temp[flag].parentNode;
+            if (parent) {
+                if (typeof filterback !== 'function' || filterback(parent, flag)) {
+                    this.collection.push(parent);
+                }
+            }
+        }
+        this.size = this.collection.length;
+        this.selector += ":parent()";
+        return this;
+
+    };
+
+    // 返回第一个被选元素的全部孩子
+    $$.node.prototype.children = function (filterback) {
+
+        var flag, children, temp = this.collection;
+        this.collection = [];
+        children = temp[0] ? temp[0].childNodes : [];
+        for (flag = 0; flag < children.length; flag++) {
+            if (children[flag].nodeType === 1 || children[flag].nodeType === 11 || children[flag].nodeType === 9) {
+                if (typeof filterback !== 'function' || filterback(children[flag])) {
+                    this.collection.push(children[flag]);
+                }
+            }
+        }
+        this.size = this.collection.length;
+        this.selector += ":children()";
+        return this;
+
+    };
+
+    // 返回全部被选元素的后一个兄弟
+    $$.node.prototype.next = function (filterback) {
+
+        var flag, next, temp = this.collection;
+        this.collection = [];
+        for (flag = 0; flag < this.size; flag++) {
+            next = temp[flag].nextSibling;
+            while (next && next.nodeType !== 1 && next.nodeType !== 11 && next.nodeType !== 9 && next.nextSibling) {
+                next = next.nextSibling;
+            }
+            if (next && (next.nodeType === 1 || next.nodeType === 11 || next.nodeType === 9)) {
+                if (typeof filterback !== 'function' || filterback(next, flag)) {
+                    this.collection.push(next);
+                }
+            }
+        }
+        this.size = this.collection.length;
+        this.selector += ":next()";
+        return this;
+
+    };
+
+    // 返回全部被选元素的前一个兄弟
+    $$.node.prototype.prev = function (filterback) {
+
+        var flag, prev, temp = this.collection;
+        this.collection = [];
+        for (flag = 0; flag < this.size; flag++) {
+            prev = temp[flag].previousSibling;
+            while (prev && prev.nodeType !== 1 && prev.nodeType !== 11 && prev.nodeType !== 9 && prev.previousSibling) {
+                prev = prev.previousSibling;
+            }
+            if (prev && (prev.nodeType === 1 || prev.nodeType === 11 || prev.nodeType === 9)) {
+                if (typeof filterback !== 'function' || filterback(prev, flag)) {
+                    this.collection.push(prev);
+                }
+            }
+        }
+        this.size = this.collection.length;
+        this.selector += ":prev()";
         return this;
 
     };

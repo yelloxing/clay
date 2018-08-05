@@ -2,7 +2,35 @@
 
     'use strict';
 
-    $$.node = function () { };
+    $$.node = function () {
+
+        // 选择集合中的某个
+        this.eq = function (num) {
+            this.collection = this.size > num ? [this.collection[num]] : [];
+            this.size = this.collection.length;
+            return this;
+        };
+
+        this.setEnvironment = function (namespace) {
+            this.namespace = namespace;
+        };
+
+        // 只有在必要的时候才应该使用clone来建立一个新的对象
+        this.clone = function () {
+            var nodeObj = new $$.node(), flag;
+            for (var key in this) {
+                try {
+                    if (this.hasOwnProperty(key)) {
+                        nodeObj[key] = this[key];
+                    }
+                } catch (e) {
+                    throw new Error("Illegal property value！");
+                }
+            }
+            return nodeObj;
+        };
+
+    };
 
     $$.selectAll = function (selector, content) {
 
@@ -11,6 +39,7 @@
         nodeObj.selector = selector || '';
         nodeObj.content = content || document;
         nodeObj.collection = [];
+        nodeObj.namespace = 'html';
 
         if (typeof selector === 'string') {
 

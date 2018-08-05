@@ -9,7 +9,9 @@ var source = [
 
     /*【结点模块】 => only 浏览器 */
     './src/dom/sizzle.js',//元素查找(本模块核心)
-    './src/dom/data.js'//为结点绑定数据
+    './src/dom/data.js',//为结点绑定数据
+    './src/dom/modify.js',//结点的增删改操作
+    './src/dom/search.js'//结点的查找操作
 
 ];
 
