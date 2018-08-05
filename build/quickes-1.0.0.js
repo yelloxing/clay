@@ -32,6 +32,8 @@
 * (4)./src/dom/data.js
 * (5)./src/dom/modify.js
 * (6)./src/dom/search.js
+* (7)./src/scale/linear.js
+* (8)./src/layout/pie.js
 *
 */
 (function (global, factory, undefined) {
@@ -533,3 +535,41 @@
     };
 
 })(window, window.quickES);
+(function (window, undefined) {
+
+    'use strict';
+
+    // 返回线性比例尺
+    window.quickES.scaleLinear = function () {
+
+        var scope = {};
+
+        // 返回比例尺计算后的值
+        function scaleLinear() {
+
+        };
+
+        // 获取或设置定义域
+        scaleLinear.domain = function () {
+
+        };
+
+        // 定义或设置值域
+        scaleLinear.range = function () {
+
+        };
+
+        return scaleLinear;
+    };
+
+})(typeof window !== "undefined" ? window : this);
+(function (window, undefined) {
+
+    'use strict';
+
+    // 把数据转换为方便画饼状图的数据
+    window.quickES.pieLayout = function () {
+
+    };
+
+})(typeof window !== "undefined" ? window : this);

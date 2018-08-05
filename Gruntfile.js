@@ -11,7 +11,13 @@ var source = [
     './src/dom/sizzle.js',//元素查找(本模块核心)
     './src/dom/data.js',//为结点绑定数据
     './src/dom/modify.js',//结点的增删改操作
-    './src/dom/search.js'//结点的查找操作
+    './src/dom/search.js',//结点的查找操作
+
+    /*【比例尺模块】 */
+    './src/scale/linear.js',//线性比例尺
+
+    /*【布局模块】 */
+    './src/layout/pie.js'//饼状图
 
 ];
 
