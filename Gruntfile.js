@@ -8,7 +8,8 @@ var source = [
     './src/animation.js',//轮询执行方法
 
     /*【结点模块】 => only 浏览器 */
-    './src/dom/sizzle.js'//元素查找(本模块核心)
+    './src/dom/sizzle.js',//元素查找(本模块核心)
+    './src/dom/data.js'//为结点绑定数据
 
 ];
 
