@@ -9,14 +9,14 @@
         } else if (param && typeof param === 'string') {
             if (/^[\w\d-]+$/.test(param)) {
                 if (namespace === 'svg') {
-                    return document.createElementNS($$.namespace, param);
+                    return document.createElementNS($$.namespace.svg, param);
                 } else {
                     return document.createElement(param);
                 }
             } else {
                 var frameDiv;
                 if (namespace === 'svg') {
-                    frameDiv = createElementNS($$.namespace, 'svg');
+                    frameDiv = createElementNS($$.namespace.svg, 'svg');
                 } else {
                     frameDiv = document.createElement("div");
                 }
