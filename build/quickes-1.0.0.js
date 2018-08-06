@@ -201,6 +201,7 @@
 
         this.setEnvironment = function (namespace) {
             this.namespace = namespace;
+            return this;
         };
 
         // 只有在必要的时候才应该使用clone来建立一个新的对象
@@ -224,7 +225,7 @@
 
         var nodeObj = new $$.node(), flag, temp;
 
-        nodeObj.selector = selector || '';
+        selector = selector || '';
         nodeObj.content = content || document;
         nodeObj.collection = [];
         nodeObj.namespace = 'html';
@@ -268,6 +269,8 @@
         }
 
         nodeObj.size = nodeObj.collection.length;
+
+        nodeObj.selector = (this.selector ? this.selector : "") + "selectAll(\"" + selector + "\")";
 
         return nodeObj;
 
@@ -365,7 +368,7 @@
             } else {
                 var frameDiv;
                 if (namespace === 'svg') {
-                    frameDiv = createElementNS($$.namespace.svg, 'svg');
+                    frameDiv = document.createElementNS($$.namespace.svg, 'svg');
                 } else {
                     frameDiv = document.createElement("div");
                 }
@@ -382,9 +385,20 @@
     $$.node.prototype.append = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.collection[flag].appendChild(node);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).append(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.collection[flag].appendChild(node);
+            }
         }
         return this;
 
@@ -394,9 +408,20 @@
     $$.node.prototype.prepend = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).prepend(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
+            }
         }
         return this;
 
@@ -406,9 +431,20 @@
     $$.node.prototype.after = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).after(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
+            }
         }
         return this;
 
@@ -418,9 +454,20 @@
     $$.node.prototype.before = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).before(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
+            }
         }
         return this;
 
@@ -448,10 +495,34 @@
 
     };
 
+    // 用于设置/改变属性值
+    $$.node.prototype.attr = function (name, val) {
+
+        if (!name || typeof name !== 'string') {
+            throw new Error('The name is invalid!');
+        } else if (val === null || val === undefined) {
+            return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
+        } else {
+            var flag;
+            for (flag = 0; flag < this.size; flag++) {
+                // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
+                this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
+            }
+            return this;
+        }
+
+    };
+
 })(window, window.quickES);
 (function (window, $$, undefined) {
 
     'use strict';
+
+    $$.node.prototype.selectAll = function (selector) {
+        var _this= $$.selectAll(selector, this.size > 0 ? this.collection[0] : this.content);
+        _this.namespace=this.namespace;
+        return _this;
+    };
 
     // 返回全部被选元素的父亲
     $$.node.prototype.parent = function (filterback) {
@@ -546,7 +617,7 @@
 
         // 返回比例尺计算后的值
         function scaleLinear(domain) {
-            if (domain && typeof domain === 'number') {
+            if (domain !== null && domain !== undefined && typeof domain === 'number') {
                 if (!scope.scaleCalc) {
                     throw new Error('You shoud first set the domain and range!');
                 } else if (domain <= scope.domains[0]) {
@@ -595,6 +666,8 @@
 
     // 把数据转换为方便画饼状图的数据
     window.quickES.pieLayout = function () {
+
+        
 
     };
 

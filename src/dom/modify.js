@@ -16,7 +16,7 @@
             } else {
                 var frameDiv;
                 if (namespace === 'svg') {
-                    frameDiv = createElementNS($$.namespace.svg, 'svg');
+                    frameDiv = document.createElementNS($$.namespace.svg, 'svg');
                 } else {
                     frameDiv = document.createElement("div");
                 }
@@ -33,9 +33,20 @@
     $$.node.prototype.append = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.collection[flag].appendChild(node);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).append(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.collection[flag].appendChild(node);
+            }
         }
         return this;
 
@@ -45,9 +56,20 @@
     $$.node.prototype.prepend = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).prepend(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
+            }
         }
         return this;
 
@@ -57,9 +79,20 @@
     $$.node.prototype.after = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).after(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
+            }
         }
         return this;
 
@@ -69,9 +102,20 @@
     $$.node.prototype.before = function (param) {
 
         var flag, node;
-        for (flag = 0; flag < this.size; flag++) {
-            node = toNode(this.namespace, param)
-            this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
+        if (this._collection && this._collection.enter) {
+            for (flag = 0; flag < this._collection.enter.length; flag++) {
+                node = toNode(this.namespace, param);
+                node._data = this._collection.enter[flag];
+                $$.selectAll(this.content).before(node);
+                this.collection.push(node);
+            }
+            delete this._collection;
+            this.size = this.collection.length;
+        } else {
+            for (flag = 0; flag < this.size; flag++) {
+                node = toNode(this.namespace, param)
+                this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
+            }
         }
         return this;
 
@@ -96,6 +140,24 @@
             this.collection[flag].innerHTML = '';
         }
         return this;
+
+    };
+
+    // 用于设置/改变属性值
+    $$.node.prototype.attr = function (name, val) {
+
+        if (!name || typeof name !== 'string') {
+            throw new Error('The name is invalid!');
+        } else if (val === null || val === undefined) {
+            return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
+        } else {
+            var flag;
+            for (flag = 0; flag < this.size; flag++) {
+                // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
+                this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
+            }
+            return this;
+        }
 
     };
 

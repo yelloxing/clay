@@ -17,7 +17,10 @@ var source = [
     './src/scale/linear.js',//线性比例尺
 
     /*【布局模块】 */
-    './src/layout/pie.js'//饼状图
+    './src/layout/pie.js',//饼状图
+
+    /*【动画模块】 */
+    
 
 ];
 

@@ -13,6 +13,7 @@
 
         this.setEnvironment = function (namespace) {
             this.namespace = namespace;
+            return this;
         };
 
         // 只有在必要的时候才应该使用clone来建立一个新的对象
@@ -36,7 +37,7 @@
 
         var nodeObj = new $$.node(), flag, temp;
 
-        nodeObj.selector = selector || '';
+        selector = selector || '';
         nodeObj.content = content || document;
         nodeObj.collection = [];
         nodeObj.namespace = 'html';
@@ -80,6 +81,8 @@
         }
 
         nodeObj.size = nodeObj.collection.length;
+
+        nodeObj.selector = (this.selector ? this.selector : "") + "selectAll(\"" + selector + "\")";
 
         return nodeObj;
 

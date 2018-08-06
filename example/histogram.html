@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>柱状图</title>
+    <script src="../build/quickes-1.0.0.min.js"></script>
+    <link rel="stylesheet" href="./easycss-1.2.1.min.css">
+</head>
+
+<body>
+    <svg></svg>
+    <script>
+
+        // 数据
+        var datas = [100, 50, 53, 360, 47, 657, 432, 463, 435];
+        // 获取比例尺
+        var scaleLinear = $$.scaleLinear().domain([0, 670]).range([0, 600]);
+        // 设置svg
+        var d = $$.selectAll('svg').setEnvironment('svg').attr('width', 720).attr('height', 480)
+            // 添加容器
+            .append('g').children().attr('transform', 'translate(60,60)')
+            // 把数据绑定到结点上去
+            .selectAll('rect').data(datas)
+            // 根据数据补足结点
+            .enter().append('rect').attr('x', 0)
+            // 修改元素位置
+            .attr('y', function (data, index) {
+                return index * 40;
+            })
+            // 控制长度（大小）
+            .attr('height', '30').attr('width', function (data, index) {
+                return scaleLinear(data);
+            })
+            // 样式
+            .attr('fill', function (data, index) {
+                return ['red', 'blue', 'green', 'pink', 'purple', 'yellow', 'aqua', 'black', 'darkcyan'][index];
+            });
+
+    </script>
+</body>
+
+</html>

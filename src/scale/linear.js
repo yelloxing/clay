@@ -9,7 +9,7 @@
 
         // 返回比例尺计算后的值
         function scaleLinear(domain) {
-            if (domain && typeof domain === 'number') {
+            if (domain !== null && domain !== undefined && typeof domain === 'number') {
                 if (!scope.scaleCalc) {
                     throw new Error('You shoud first set the domain and range!');
                 } else if (domain <= scope.domains[0]) {

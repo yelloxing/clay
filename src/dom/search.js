@@ -2,6 +2,12 @@
 
     'use strict';
 
+    $$.node.prototype.selectAll = function (selector) {
+        var _this= $$.selectAll(selector, this.size > 0 ? this.collection[0] : this.content);
+        _this.namespace=this.namespace;
+        return _this;
+    };
+
     // 返回全部被选元素的父亲
     $$.node.prototype.parent = function (filterback) {
         var flag, parent, temp = this.collection;
