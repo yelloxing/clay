@@ -19,7 +19,7 @@
         // 获取比例尺
         var scaleLinear = $$.scaleLinear().domain([0, 670]).range([0, 600]);
         // 设置svg
-        var d = $$.selectAll('svg').setEnvironment('svg').attr('width', 720).attr('height', 480)
+        $$.selectAll('svg').setEnvironment('svg').attr('width', 720).attr('height', 480)
             // 添加容器
             .append('g').children().attr('transform', 'translate(60,60)')
             // 把数据绑定到结点上去

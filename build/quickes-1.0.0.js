@@ -34,6 +34,7 @@
 * (6)./src/dom/search.js
 * (7)./src/scale/linear.js
 * (8)./src/layout/pie.js
+* (9)./src/svg/arc.js
 *
 */
 (function (global, factory, undefined) {
@@ -94,6 +95,11 @@
         xml: "http://www.w3.org/XML/1998/namespace",
         xmlns: "http://www.w3.org/2000/xmlns/"
     };
+
+    // 初始化对象
+    window.quickES.svg = {};
+    window.quickES.canvas = {};
+    window.quickES.webgl = {};
 
 })(typeof window !== "undefined" ? window : this);
 (function (window, undefined) {
@@ -617,7 +623,7 @@
 
         // 返回比例尺计算后的值
         function scaleLinear(domain) {
-            if (domain !== null && domain !== undefined && typeof domain === 'number') {
+            if (typeof domain === 'number') {
                 if (!scope.scaleCalc) {
                     throw new Error('You shoud first set the domain and range!');
                 } else if (domain <= scope.domains[0]) {
@@ -667,7 +673,127 @@
     // 把数据转换为方便画饼状图的数据
     window.quickES.pieLayout = function () {
 
-        
+        var scope = {
+            rotate: 0
+        };
+
+        // 根据数据返回角度值
+        var pieLayout = function (datas) {
+
+            if (scope.valueback) {
+                if (datas && datas.constructor === Array) {
+                    var temp = [], flag, total = 0, angle;
+                    for (flag = 0; flag < datas.length; flag++) {
+                        temp.push({
+                            data: datas[flag],
+                            value: scope.valueback(datas[flag], flag)
+                        });
+                        total += temp[flag].value;
+                    }
+                    for (flag = 0; flag < datas.length; flag++) {
+                        angle = (temp[flag].value / total) * Math.PI * 2;
+                        temp[flag].startAngle = flag == 0 ? scope.rotate : temp[flag - 1].endAngle;
+                        temp[flag].endAngle = temp[flag].startAngle + angle;
+                        temp[flag].angle=angle;
+                    }
+                    return temp;
+                } else {
+                    throw new Error('Unsupported data!');
+                }
+            } else {
+                throw new Error('You shoud first set the valueback!');
+            }
+
+        };
+
+        // 设置初始化旋转角度
+        pieLayout.rotate = function (angle) {
+
+            if (typeof angle === 'number') {
+                scope.rotate = angle % (Math.PI * 2);
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return pieLayout;
+        };
+
+        // 保存计算条目值的函数
+        pieLayout.value = function (valueback) {
+
+            if (typeof valueback === 'function') {
+                scope.valueback = valueback;
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return pieLayout;
+
+        };
+
+        return pieLayout;
+
+    };
+
+})(typeof window !== "undefined" ? window : this);
+(function (window, undefined) {
+
+    'use strict';
+
+    // 返回计算弧度路径函数
+    window.quickES.svg.arc = function () {
+
+        var scope = {
+            innerRadius: 0,
+            outerRadius: 10
+        };
+
+        // 输入经过饼状图布局处理后的一个数据，返回对应的path标签的d属性值
+        var arc = function (pieData) {
+
+            var sinStartAngle = Math.sin(pieData.startAngle),
+                sinEndAngle = Math.sin(pieData.endAngle),
+                cosStartAngle = Math.cos(pieData.startAngle),
+                cosEndAngle = Math.cos(pieData.endAngle);
+            var startInnerX = cosStartAngle * scope.innerRadius + scope.outerRadius,
+                startInnerY = sinStartAngle * scope.innerRadius + scope.outerRadius,
+                startOuterX = (1 + cosStartAngle) * scope.outerRadius,
+                startOuterY = (1 + sinStartAngle) * scope.outerRadius,
+                endInnerX = cosEndAngle * scope.innerRadius + scope.outerRadius,
+                endInnerY = sinEndAngle * scope.innerRadius + scope.outerRadius,
+                endOuterX = (1 + cosEndAngle) * scope.outerRadius,
+                endOuterY = (1 + sinEndAngle) * scope.outerRadius;
+            var angleDis = pieData.angle > Math.PI ? 1 : 0;
+            return "M" + startInnerX + " " + startInnerY +
+                "L" + startOuterX + " " + startOuterY +
+                "A" + scope.outerRadius + " " + scope.outerRadius + " 0 " + angleDis + " 1 " + endOuterX + " " + endOuterY +
+                "L" + endInnerX + " " + endInnerY +
+                "A" + scope.innerRadius + " " + scope.innerRadius + " 0 " + angleDis + " 0 " + startInnerX + " " + startInnerY;
+        };
+
+        // 设置内半径
+        arc.innerRadius = function (radius) {
+
+            if (typeof radius === 'number' && radius < scope.outerRadius) {
+                scope.innerRadius = radius;
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return arc;
+
+        };
+
+        // 设置外半径
+        arc.outerRadius = function (radius) {
+
+            if (typeof radius === 'number' && radius > scope.innerRadius) {
+                scope.outerRadius = radius;
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return arc;
+
+        };
+
+        return arc;
 
     };
 

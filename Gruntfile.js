@@ -20,7 +20,9 @@ var source = [
     './src/layout/pie.js',//饼状图
 
     /*【动画模块】 */
-    
+
+    /*【SVG模块】 */
+    './src/svg/arc.js'//绘制一段弧
 
 ];
 
@@ -85,7 +87,8 @@ module.exports = function (grunt) {
                     "console": true,
                     "module": true,
                     "setInterval": true,
-                    "clearInterval": true
+                    "clearInterval": true,
+                    "Math": true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
