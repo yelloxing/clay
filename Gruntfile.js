@@ -8,7 +8,7 @@ var source = [
     './src/animation.js',//轮询执行方法
 
     /*【数学模块】 => 提供数值计算 */
-    './src/math/interpolate/cardinal.js',
+    './src/math/interpolate/cardinal.js',//三次cardinal插值
 
     /*【结点模块】 => only 浏览器 */
     './src/dom/sizzle.js',//元素查找(本模块核心)

@@ -203,7 +203,7 @@
     window.quickES.math.cardinal = function () {
 
         var scope = {
-            "u": 0.25,
+            "u": 0,
             "M": [
                 [2, -2, 1, 1],
                 [-3, 3, -2, -1],
@@ -888,7 +888,35 @@
         // 输入多个点的位置数据，返回对应的path标签的d属性值
         var line = function (points) {
 
-             
+            if (points && points.constructor === Array && points.length >= 2) {
+                var d = "M" + scope.xback(points[0], 0) + " " + scope.yback(points[0], 0);
+                if (scope.interpolate == 'line') {//折线图
+                    d += "L";
+                    var flag;
+                    for (flag = 1; flag < points.length; flag++) {
+                        d += scope.xback(points[flag], flag) + " " + scope.yback(points[flag], flag) + ",";
+                    }
+                    d = d.replace(/,$/, '');
+                } else if (scope.interpolate == 'cardinal') {//三次cardinal插值法
+                    d += "L";
+                    var i, j, cardinal;
+                    for (i = 0; i < points.length - 1; i++) {
+                        var p1 = [scope.xback(points[i], i), scope.yback(points[i], i)];
+                        var p2 = [scope.xback(points[i + 1], i + 1), scope.yback(points[i + 1], i + 1)];
+                        cardinal = $$.math.cardinal().setPs(p1[0], p1[1], p1[0], p1[1], p2[0], p2[1], p2[0], p2[1]);
+                        for (j = p1[0]; j < p2[0]; j += 5) {
+                            d += (j + " " + cardinal(j) + ",");
+                        }
+                        d += (p2[0] + " " + cardinal(p2[0]) + ",");
+                    }
+                    d = d.replace(/,$/, '');
+                } else {
+                    throw new Error('Unsupported interpolate!');
+                }
+                return d;
+            } else {
+                throw new Error('Unsupported data!');
+            }
 
         };
 
@@ -904,7 +932,7 @@
         line.x = function (xback) {
 
             if (typeof xback === 'function') {
-                this.xback = xback;
+                scope.xback = xback;
             } else {
                 throw new Error('Unsupported data!');
             }
@@ -916,7 +944,7 @@
         line.y = function (yback) {
 
             if (typeof yback === 'function') {
-                this.yback = yback;
+                scope.yback = yback;
             } else {
                 throw new Error('Unsupported data!');
             }
