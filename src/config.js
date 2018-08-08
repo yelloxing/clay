@@ -11,9 +11,10 @@
         xmlns: "http://www.w3.org/2000/xmlns/"
     };
 
-    // 初始化对象
+    // 绘图
     window.quickES.svg = {};
-    window.quickES.canvas = {};
-    window.quickES.webgl = {};
+
+    // 工具
+    window.quickES.math = {};
 
 })(typeof window !== "undefined" ? window : this);

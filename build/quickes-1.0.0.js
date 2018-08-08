@@ -28,13 +28,15 @@
 * (0)./src/core.js
 * (1)./src/config.js
 * (2)./src/animation.js
-* (3)./src/dom/sizzle.js
-* (4)./src/dom/data.js
-* (5)./src/dom/modify.js
-* (6)./src/dom/search.js
-* (7)./src/scale/linear.js
-* (8)./src/layout/pie.js
-* (9)./src/svg/arc.js
+* (3)./src/math/interpolate/cardinal.js
+* (4)./src/dom/sizzle.js
+* (5)./src/dom/data.js
+* (6)./src/dom/modify.js
+* (7)./src/dom/search.js
+* (8)./src/scale/linear.js
+* (9)./src/layout/pie.js
+* (10)./src/svg/arc.js
+* (11)./src/svg/line.js
 *
 */
 (function (global, factory, undefined) {
@@ -96,10 +98,11 @@
         xmlns: "http://www.w3.org/2000/xmlns/"
     };
 
-    // 初始化对象
+    // 绘图
     window.quickES.svg = {};
-    window.quickES.canvas = {};
-    window.quickES.webgl = {};
+
+    // 工具
+    window.quickES.math = {};
 
 })(typeof window !== "undefined" ? window : this);
 (function (window, undefined) {
@@ -189,6 +192,79 @@
             console.error(clock.timerId);
             clock.timerId = null;
         }
+    };
+
+})(typeof window !== "undefined" ? window : this);
+(function (window, undefined) {
+
+    'use strict';
+
+    // 三次多项式的cardinal插值
+    window.quickES.math.cardinal = function () {
+
+        var scope = {
+            "u": 0.25,
+            "M": [
+                [2, -2, 1, 1],
+                [-3, 3, -2, -1],
+                [0, 0, 1, 0],
+                [1, 0, 0, 0]
+            ]
+        };
+
+        // 根据x值返回y值
+        var cardinal = function (x) {
+
+            if (scope.MR) {
+                var sx = (x - scope.a) / (scope.b - scope.a),
+                    sx2 = sx * sx,
+                    sx3 = sx * sx2;
+                var sResult = sx3 * scope.MR[0] + sx2 * scope.MR[1] + sx * scope.MR[2] + scope.MR[3];
+                return sResult * (scope.b - scope.a);
+            } else {
+                throw new Error('You shoud first set the position!');
+            }
+
+        };
+
+        // 设置张弛系数【应该在点的位置设置前设置】
+        cardinal.setU = function (t) {
+
+            if (typeof t === 'number') {
+                scope.u = (1 - t) * 0.5;
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return cardinal;
+
+        };
+
+        // 设置点的位置
+        cardinal.setPs = function (x0, y0, x1, y1, x2, y2, x3, y3) {
+
+            if (x0 <= x1 && x1 < x2 && x2 <= x3) {
+                // 记录原始尺寸
+                scope.a = x1; scope.b = x2;
+                var p3 = scope.u * (y2 - y0) / (x2 - x0),
+                    p4 = scope.u * (y3 - y1) / (x3 - x1);
+                // 缩放到[0,1]定义域
+                y1 /= (x2 - x1);
+                y2 /= (x2 - x1);
+                scope.MR = [
+                    2 * y1 - 2 * y2 + p3 + p4,
+                    3 * y2 - 3 * y1 - 2 * p3 - p4,
+                    p3,
+                    y1
+                ];
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return cardinal;
+
+        };
+
+        return cardinal;
+
     };
 
 })(typeof window !== "undefined" ? window : this);
@@ -402,7 +478,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.collection[flag].appendChild(node);
             }
         }
@@ -425,7 +501,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
             }
         }
@@ -448,7 +524,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
             }
         }
@@ -471,7 +547,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
             }
         }
@@ -636,7 +712,7 @@
             } else {
                 throw new Error('A number is required!');
             }
-        };
+        }
 
         // 获取或设置定义域
         scaleLinear.domain = function (domains) {
@@ -794,6 +870,62 @@
         };
 
         return arc;
+
+    };
+
+})(typeof window !== "undefined" ? window : this);
+(function (window, undefined) {
+
+    'use strict';
+
+    // 返回计算线条路径函数
+    window.quickES.svg.line = function () {
+
+        var scope = {
+            interpolate: 'line'
+        };
+
+        // 输入多个点的位置数据，返回对应的path标签的d属性值
+        var line = function (points) {
+
+             
+
+        };
+
+        // 设置曲线插值方法
+        line.interpolate = function (type) {
+
+            scope.interpolate = type;
+            return line;
+
+        };
+
+        // 设置计算x坐标的函数
+        line.x = function (xback) {
+
+            if (typeof xback === 'function') {
+                this.xback = xback;
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return line;
+
+        };
+
+        // 设置计算y坐标的函数
+        line.y = function (yback) {
+
+            if (typeof yback === 'function') {
+                this.yback = yback;
+            } else {
+                throw new Error('Unsupported data!');
+            }
+            return line;
+
+        };
+
+
+        return line;
 
     };
 

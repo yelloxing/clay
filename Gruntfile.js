@@ -7,6 +7,9 @@ var source = [
     './src/config.js',//基本的配置文件
     './src/animation.js',//轮询执行方法
 
+    /*【数学模块】 => 提供数值计算 */
+    './src/math/interpolate/cardinal.js',
+
     /*【结点模块】 => only 浏览器 */
     './src/dom/sizzle.js',//元素查找(本模块核心)
     './src/dom/data.js',//为结点绑定数据
@@ -22,7 +25,8 @@ var source = [
     /*【动画模块】 */
 
     /*【SVG模块】 */
-    './src/svg/arc.js'//绘制一段弧
+    './src/svg/arc.js',//绘制一段圆弧
+    './src/svg/line.js'//绘制一段线条
 
 ];
 

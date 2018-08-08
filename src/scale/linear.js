@@ -22,7 +22,7 @@
             } else {
                 throw new Error('A number is required!');
             }
-        };
+        }
 
         // 获取或设置定义域
         scaleLinear.domain = function (domains) {

@@ -44,7 +44,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.collection[flag].appendChild(node);
             }
         }
@@ -67,7 +67,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
             }
         }
@@ -90,7 +90,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
             }
         }
@@ -113,7 +113,7 @@
             this.size = this.collection.length;
         } else {
             for (flag = 0; flag < this.size; flag++) {
-                node = toNode(this.namespace, param)
+                node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
             }
         }
