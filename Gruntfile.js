@@ -22,7 +22,9 @@ var source = [
     /*【布局模块】 */
     './src/layout/pie.js',//饼状图
 
-    /*【动画模块】 */
+    /*【动画模块】 => only 浏览器 */
+    './src/animation/port.js',//对外提供的调用接口
+    './src/animation/attr.js',//针对属性的渐变计算
 
     /*【SVG模块】 */
     './src/svg/arc.js',//绘制一段圆弧

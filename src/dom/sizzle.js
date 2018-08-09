@@ -11,9 +11,19 @@
             return this;
         };
 
+        // 设置当前结点环境
         this.setEnvironment = function (namespace) {
             this.namespace = namespace;
             return this;
+        };
+
+        // 动画效果记录
+        this._animation = {
+            transition: false,
+            duration: 400,
+            ease: 'linear',
+            delay: 0,
+            attrback: this.animation.attrback()
         };
 
         // 只有在必要的时候才应该使用clone来建立一个新的对象

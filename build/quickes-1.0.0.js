@@ -35,8 +35,10 @@
 * (7)./src/dom/search.js
 * (8)./src/scale/linear.js
 * (9)./src/layout/pie.js
-* (10)./src/svg/arc.js
-* (11)./src/svg/line.js
+* (10)./src/animation/port.js
+* (11)./src/animation/attr.js
+* (12)./src/svg/arc.js
+* (13)./src/svg/line.js
 *
 */
 (function (global, factory, undefined) {
@@ -281,9 +283,19 @@
             return this;
         };
 
+        // 设置当前结点环境
         this.setEnvironment = function (namespace) {
             this.namespace = namespace;
             return this;
+        };
+
+        // 动画效果记录
+        this._animation = {
+            transition: false,
+            duration: 400,
+            ease: 'linear',
+            delay: 0,
+            attrback: this.animation.attrback()
         };
 
         // 只有在必要的时候才应该使用clone来建立一个新的对象
@@ -585,11 +597,20 @@
         } else if (val === null || val === undefined) {
             return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
         } else {
-            var flag;
-            for (flag = 0; flag < this.size; flag++) {
-                // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
-                this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
+            var flag, target;
+            if (this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
+                for (flag = 0; flag < this.size; flag++) {
+                    // 结点对象，序号，起始值，终止值，过渡时间，过渡方式，延迟时间
+                    target = this.eq(flag).clone();
+                    this._animation.attrback[name](target, flag, target.attr(name), val, this._animation.duration, this._animation.ease, this._animation.delay);
+                }
+            } else {
+                for (flag = 0; flag < this.size; flag++) {
+                    // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
+                    this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
+                }
             }
+
             return this;
         }
 
@@ -810,6 +831,87 @@
     };
 
 })(typeof window !== "undefined" ? window : this);
+(function (window, $$, undefined) {
+
+    'use strict';
+
+    // 标记当前查找到的结点有过渡动画（包括后续添加的结点，记录保存在对象而不是结点上）
+    $$.node.prototype.transition = function () {
+
+        this._animation.transition = true;
+        return this;
+
+    };
+
+    // 指定整个转变持续多长时间
+    $$.node.prototype.duration = function (duration) {
+
+        if (typeof duration === 'number') {
+            this._animation.duration = duration;
+        } else {
+            throw new Error('Unsupported data!');
+        }
+        return this;
+
+    };
+
+    // 指定转变的方式
+    $$.node.prototype.ease = function (ease) {
+
+        this._animation.ease = ease;
+        return this;
+
+    };
+
+    // 指定转变开始延迟时间
+    $$.node.prototype.delay = function (delay) {
+
+        if (typeof delay === 'number') {
+            this._animation.delay = delay;
+        } else {
+            throw new Error('Unsupported data!');
+        }
+        return this;
+
+    };
+
+    // 标记当前查找到的结点无过渡动画
+    $$.node.prototype.noTransition = function () {
+
+        this._animation.transition = false;
+        return this;
+
+    };
+
+    // 设置特定属性的过渡计算方法
+    $$.node.prototype.animation = function (attr, doback) {
+
+        if (typeof doback === 'function' && typeof attr === 'string') {
+            this._animation.attrback[attr] = doback;
+        } else {
+            throw new Error('Unsupported data!');
+        }
+        return this;
+
+    };
+
+})(window, window.quickES);
+(function (window, $$, undefined) {
+
+    'use strict';
+
+    // 针对需要过渡的属性定义处理方法
+    $$.node.prototype.animation.attrback = function () {
+        return {
+            'fill': function (nodeObj, index, startVal, endVal, duration, ease, delay) {
+
+                
+
+            }
+        };
+    };
+
+})(window, window.quickES);
 (function (window, undefined) {
 
     'use strict';

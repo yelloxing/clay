@@ -151,11 +151,20 @@
         } else if (val === null || val === undefined) {
             return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
         } else {
-            var flag;
-            for (flag = 0; flag < this.size; flag++) {
-                // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
-                this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
+            var flag, target;
+            if (this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
+                for (flag = 0; flag < this.size; flag++) {
+                    // 结点对象，序号，起始值，终止值，过渡时间，过渡方式，延迟时间
+                    target = this.eq(flag).clone();
+                    this._animation.attrback[name](target, flag, target.attr(name), val, this._animation.duration, this._animation.ease, this._animation.delay);
+                }
+            } else {
+                for (flag = 0; flag < this.size; flag++) {
+                    // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
+                    this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
+                }
             }
+
             return this;
         }
 
