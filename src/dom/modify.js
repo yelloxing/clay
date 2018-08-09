@@ -155,7 +155,7 @@
             if (this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
                 for (flag = 0; flag < this.size; flag++) {
                     // 结点对象，序号，起始值，终止值，过渡时间，过渡方式，延迟时间
-                    target = this.eq(flag).clone();
+                    target = this.eq(flag);
                     this._animation.attrback[name](target, flag, target.attr(name), val, this._animation.duration, this._animation.ease, this._animation.delay);
                 }
             } else {
