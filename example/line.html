@@ -39,7 +39,13 @@
             return data.index * 100;
         }).y(function (data) {
             return 400 - data.num;
-        }).interpolate('cardinal');
+        })
+            // 设置插值方法
+            .interpolate('cardinal')
+            // 设置精度
+            .setPrecision(3)
+            // 设置张弛系数
+            .setT(-2);
         // 设置svg
         $$.selectAll('svg').setEnvironment('svg').attr('width', 720).attr('height', 720)
             // 添加容器
