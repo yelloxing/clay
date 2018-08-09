@@ -6,7 +6,7 @@
     window.quickES.math.cardinal = function () {
 
         var scope = {
-            "u": 0,
+            "u": 0.5,
             "M": [
                 [2, -2, 1, 1],
                 [-3, 3, -2, -1],
