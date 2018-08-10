@@ -29,16 +29,17 @@
 * (1)./src/config.js
 * (2)./src/animation.js
 * (3)./src/math/interpolate/cardinal.js
-* (4)./src/dom/sizzle.js
-* (5)./src/dom/data.js
-* (6)./src/dom/modify.js
-* (7)./src/dom/search.js
-* (8)./src/scale/linear.js
-* (9)./src/layout/pie.js
-* (10)./src/animation/port.js
-* (11)./src/animation/attr.js
-* (12)./src/svg/arc.js
-* (13)./src/svg/line.js
+* (4)./src/math/ease.js
+* (5)./src/dom/sizzle.js
+* (6)./src/dom/data.js
+* (7)./src/dom/modify.js
+* (8)./src/dom/search.js
+* (9)./src/scale/linear.js
+* (10)./src/layout/pie.js
+* (11)./src/animation/port.js
+* (12)./src/animation/attr.js
+* (13)./src/svg/arc.js
+* (14)./src/svg/line.js
 *
 */
 (function (global, factory, undefined) {
@@ -191,7 +192,6 @@
     clock.stop = function () {
         if (clock.timerId) {
             clearInterval(clock.timerId);
-            console.error(clock.timerId);
             clock.timerId = null;
         }
     };
@@ -270,6 +270,46 @@
     };
 
 })(typeof window !== "undefined" ? window : this);
+(function (window, undefined) {
+
+    'use strict';
+
+
+    window.quickES.math.ease = function (type) {
+
+        var cubicBezier = /^cubic-bezier\((-?\d*\.?\d+), *(-?\d*\.?\d+), *(-?\d*\.?\d+), *(-?\d*\.?\d+)\)$/;
+
+        // 按照浏览器提供的css动画渐变定义
+        var defined = {
+            'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1.01)',
+            'ease-in': 'cubic-bezier(0.42, 0, 1, 1)',
+            'ease-in-out': 'cubic-bezier(0.42, 0, 0.57, 1.01)',
+            'ease-out': 'cubic-bezier(0, 0, 0.58, 1)'
+        };
+
+        if (type == 'linear') {//普通的线性变化
+            return function (deep) {
+                return deep;
+            };
+        } else if (cubicBezier.test(type)) {//Hermite拟合法
+            var point = cubicBezier.exec(type);
+            return window.quickES.math.cardinal().setU(-1).setPs(
+                -point[1], -point[2],
+                0, 0,
+                100, 100,
+                (2 - point[3]) * 100, (2 - point[4]) * 100
+            );
+        } else if (defined[type]) {//预定义固定参数的Hermite拟合法
+            return window.quickES.math.ease(defined[type]);
+        } else {
+            return function () {
+                return 100;
+            };
+        }
+
+    };
+
+})(typeof window !== "undefined" ? window : this);
 (function (window, $$, undefined) {
 
     'use strict';
@@ -294,7 +334,6 @@
             transition: false,
             duration: 400,
             ease: 'linear',
-            delay: 0,
             attrback: this.animation.attrback()
         };
 
@@ -477,7 +516,6 @@
 
     // 在被选元素内部的结尾插入内容
     $$.node.prototype.append = function (param) {
-
         var flag, node;
         if (this._collection && this._collection.enter) {
             for (flag = 0; flag < this._collection.enter.length; flag++) {
@@ -589,8 +627,8 @@
 
     };
 
-    // 用于设置/改变属性值
-    $$.node.prototype.attr = function (name, val) {
+    // 用于设置/获取属性值
+    $$.node.prototype.attr = function (name, val, isInner) {
 
         if (!name || typeof name !== 'string') {
             throw new Error('The name is invalid!');
@@ -598,11 +636,11 @@
             return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
         } else {
             var flag, target;
-            if (this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
+            if (!isInner && this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
                 for (flag = 0; flag < this.size; flag++) {
-                    // 结点对象，序号，起始值，终止值，过渡时间，过渡方式，延迟时间
-                    target = this.eq(flag);
-                    this._animation.attrback[name](target, flag, target.attr(name), val, this._animation.duration, this._animation.ease, this._animation.delay);
+                    // 结点对象，序号，起始值，终止值，过渡时间，过渡方式
+                    target = this.clone().eq(flag);
+                    this._animation.attrback[name](name, target, flag, target.attr(name), typeof val === 'function' ? val(this.collection[flag]._data, flag) : val, this._animation.duration, this._animation.ease);
                 }
             } else {
                 for (flag = 0; flag < this.size; flag++) {
@@ -610,10 +648,44 @@
                     this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
                 }
             }
-
             return this;
         }
 
+    };
+
+    // 用于设置/获取样式
+    $$.node.prototype.css = function (name, style) {
+
+        if (arguments.length <= 1 && typeof name !== 'object') {
+            if (this.size < 1) {
+                return undefined;
+            }
+            var allStyle;
+            // 获取结点全部样式
+            if (document.defaultView && document.defaultView.getComputedStyle) {
+                allStyle = document.defaultView.getComputedStyle(this.collection[0], null);
+            } else {
+                allStyle = this.collection[0].currentStyle;
+            }
+            // 返回样式
+            if (typeof name === 'string') {
+                return allStyle.getPropertyValue(name);
+            } else {
+                return allStyle;
+            }
+        } else if (this.size > 0) {
+            if (typeof name === 'object') {
+                var flag, key;
+                for (key in name) {
+                    for (flag = 0; flag < this.size; flag++) {
+                        this.collection[flag].style[key] = name[key];
+                    }
+                }
+            } else {
+                this.collection[0].style[name] = style;
+            }
+        }
+        return this;
     };
 
 })(window, window.quickES);
@@ -863,18 +935,6 @@
 
     };
 
-    // 指定转变开始延迟时间
-    $$.node.prototype.delay = function (delay) {
-
-        if (typeof delay === 'number') {
-            this._animation.delay = delay;
-        } else {
-            throw new Error('Unsupported data!');
-        }
-        return this;
-
-    };
-
     // 标记当前查找到的结点无过渡动画
     $$.node.prototype.noTransition = function () {
 
@@ -901,8 +961,26 @@
     'use strict';
 
     // 色彩处理方法
-    var colorback = function (nodeObj, index, startVal, endVal, duration, ease, delay) {
-
+    var colorback = function (key, nodeObj, index, startVal, endVal, duration, ease) {
+        // 获取渲染后的值
+        var stVal = $$.selectAll('head').css('color', startVal).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(',');
+        var etVal = $$.selectAll('head').css('color', endVal).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(',');
+        // 统一透明度
+        if (stVal.length == 3) stVal[3] = 1;
+        if (etVal.length == 3) etVal[3] = 1;
+        var easeFunction = typeof ease === 'function' ? ease : $$.math.ease(ease);
+        //启动动画
+        $$.animation(function (deep) {
+            deep = easeFunction(deep);
+            nodeObj.attr(key, 'rgba(' +
+                (deep * (etVal[0] - stVal[0]) * 0.01 - (-stVal[0])) + ',' +
+                (deep * (etVal[1] - stVal[1]) * 0.01 - (-stVal[1])) + ',' +
+                (deep * (etVal[2] - stVal[2]) * 0.01 - (-stVal[2])) + ',' +
+                (deep * (etVal[3] - stVal[3]) * 0.01 - (-stVal[3])) +
+                ')', true);
+        }, duration, function () {
+            nodeObj.attr(key, endVal, true);
+        });
     };
 
     // 针对需要过渡的属性定义处理方法

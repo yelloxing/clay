@@ -82,7 +82,6 @@
     clock.stop = function () {
         if (clock.timerId) {
             clearInterval(clock.timerId);
-            console.error(clock.timerId);
             clock.timerId = null;
         }
     };

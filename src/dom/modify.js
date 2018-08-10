@@ -31,7 +31,6 @@
 
     // 在被选元素内部的结尾插入内容
     $$.node.prototype.append = function (param) {
-
         var flag, node;
         if (this._collection && this._collection.enter) {
             for (flag = 0; flag < this._collection.enter.length; flag++) {
@@ -143,8 +142,8 @@
 
     };
 
-    // 用于设置/改变属性值
-    $$.node.prototype.attr = function (name, val) {
+    // 用于设置/获取属性值
+    $$.node.prototype.attr = function (name, val, isInner) {
 
         if (!name || typeof name !== 'string') {
             throw new Error('The name is invalid!');
@@ -152,11 +151,11 @@
             return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
         } else {
             var flag, target;
-            if (this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
+            if (!isInner && this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
                 for (flag = 0; flag < this.size; flag++) {
-                    // 结点对象，序号，起始值，终止值，过渡时间，过渡方式，延迟时间
-                    target = this.eq(flag);
-                    this._animation.attrback[name](target, flag, target.attr(name), val, this._animation.duration, this._animation.ease, this._animation.delay);
+                    // 结点对象，序号，起始值，终止值，过渡时间，过渡方式
+                    target = this.clone().eq(flag);
+                    this._animation.attrback[name](name, target, flag, target.attr(name), typeof val === 'function' ? val(this.collection[flag]._data, flag) : val, this._animation.duration, this._animation.ease);
                 }
             } else {
                 for (flag = 0; flag < this.size; flag++) {
@@ -164,10 +163,44 @@
                     this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
                 }
             }
-
             return this;
         }
 
+    };
+
+    // 用于设置/获取样式
+    $$.node.prototype.css = function (name, style) {
+
+        if (arguments.length <= 1 && typeof name !== 'object') {
+            if (this.size < 1) {
+                return undefined;
+            }
+            var allStyle;
+            // 获取结点全部样式
+            if (document.defaultView && document.defaultView.getComputedStyle) {
+                allStyle = document.defaultView.getComputedStyle(this.collection[0], null);
+            } else {
+                allStyle = this.collection[0].currentStyle;
+            }
+            // 返回样式
+            if (typeof name === 'string') {
+                return allStyle.getPropertyValue(name);
+            } else {
+                return allStyle;
+            }
+        } else if (this.size > 0) {
+            if (typeof name === 'object') {
+                var flag, key;
+                for (key in name) {
+                    for (flag = 0; flag < this.size; flag++) {
+                        this.collection[flag].style[key] = name[key];
+                    }
+                }
+            } else {
+                this.collection[0].style[name] = style;
+            }
+        }
+        return this;
     };
 
 })(window, window.quickES);

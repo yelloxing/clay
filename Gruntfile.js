@@ -9,24 +9,25 @@ var source = [
 
     /*【数学模块】 => 提供数值计算 */
     './src/math/interpolate/cardinal.js',//三次cardinal插值
+    './src/math/ease.js',//变换速率计算
 
-    /*【结点模块】 => only 浏览器 */
+    /*【结点模块】 => 关于DOM结点的操作 */
     './src/dom/sizzle.js',//元素查找(本模块核心)
     './src/dom/data.js',//为结点绑定数据
     './src/dom/modify.js',//结点的增删改操作
     './src/dom/search.js',//结点的查找操作
 
-    /*【比例尺模块】 */
+    /*【比例尺模块】=> 数据映射关系 */
     './src/scale/linear.js',//线性比例尺
 
-    /*【布局模块】 */
+    /*【布局模块】=> 把数据变成对于绘图而言更友好的格式 */
     './src/layout/pie.js',//饼状图
 
-    /*【动画模块】 => only 浏览器 */
+    /*【动画模块】 => 为DOM结点属性或样式的修改提供动画效果 */
     './src/animation/port.js',//对外提供的调用接口
     './src/animation/attr.js',//针对属性的渐变计算
 
-    /*【SVG模块】 */
+    /*【SVG模块】=> 提供更友好的接口来绘制SVG图形 */
     './src/svg/arc.js',//绘制一段圆弧
     './src/svg/line.js'//绘制一段线条
 

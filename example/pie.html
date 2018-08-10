@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>饼状图</title>
-    <script src="../build/quickes-1.0.0.min.js"></script>
+    <script src="../build/quickes-1.0.0.js"></script>
     <link rel="stylesheet" href="./easycss-1.2.1.min.css">
 </head>
 
@@ -45,15 +45,17 @@
             .selectAll('path').data(pieData)
             // 根据数据补足结点
             .enter().append('path')
+            // 使用动画
+            .attr('fill', 'white')
+            .transition().duration(10000).ease('ease-in')
             // 基本样式设置
             .attr('fill', function (data, index) {
                 return ['red', 'blue', 'green', 'pink', 'purple', 'yellow', 'aqua', 'black', 'darkcyan'][index];
-            }).attr('stroke', 'none')
+            })
             //设置路径
             .attr('d', function (data, index) {
                 return arc(data);
             });
-
     </script>
 </body>
 

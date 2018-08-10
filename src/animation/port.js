@@ -30,18 +30,6 @@
 
     };
 
-    // 指定转变开始延迟时间
-    $$.node.prototype.delay = function (delay) {
-
-        if (typeof delay === 'number') {
-            this._animation.delay = delay;
-        } else {
-            throw new Error('Unsupported data!');
-        }
-        return this;
-
-    };
-
     // 标记当前查找到的结点无过渡动画
     $$.node.prototype.noTransition = function () {
 

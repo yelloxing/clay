@@ -22,7 +22,6 @@
             transition: false,
             duration: 400,
             ease: 'linear',
-            delay: 0,
             attrback: this.animation.attrback()
         };
 
