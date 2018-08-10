@@ -47,7 +47,7 @@
             .enter().append('path')
             // 使用动画
             .attr('fill', 'white')
-            .transition().duration(10000).ease('ease-in')
+            .transition().duration(10000).ease('cubic-bezier(0.42, -0.4, 0.25, 1)')
             // 基本样式设置
             .attr('fill', function (data, index) {
                 return ['red', 'blue', 'green', 'pink', 'purple', 'yellow', 'aqua', 'black', 'darkcyan'][index];

@@ -3,6 +3,7 @@
     'use strict';
 
 
+    // 返回计算渐变数值的函数
     window.quickES.math.ease = function (type) {
 
         var cubicBezier = /^cubic-bezier\((-?\d*\.?\d+), *(-?\d*\.?\d+), *(-?\d*\.?\d+), *(-?\d*\.?\d+)\)$/;
@@ -21,11 +22,19 @@
             };
         } else if (cubicBezier.test(type)) {//Hermite拟合法
             var point = cubicBezier.exec(type);
+            if (point[1] > 0) {
+                point[1] = -point[1];
+                point[2] = -point[2];
+            }
+            if (point[3] < 1) {
+                point[3] = 2 - point[3];
+                point[4] = 2 - point[4];
+            }
             return window.quickES.math.cardinal().setU(-1).setPs(
-                -point[1], -point[2],
+                point[1], point[2],
                 0, 0,
                 100, 100,
-                (2 - point[3]) * 100, (2 - point[4]) * 100
+                point[3] * 100, point[4] * 100
             );
         } else if (defined[type]) {//预定义固定参数的Hermite拟合法
             return window.quickES.math.ease(defined[type]);
