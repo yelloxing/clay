@@ -50,4 +50,4 @@
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);

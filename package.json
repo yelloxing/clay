@@ -1,14 +1,14 @@
 {
-    "name": "quickes",
+    "name": "clay",
     "version": "1.0.0",
-    "description": "帮助快速使用ES",
+    "description": "Provide more flexible data visualization solutions!",
     "scripts": {
         "release": "node_modules/.bin/grunt release",
         "start": "npm run release"
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/yelloxing/quickES.git"
+        "url": "git+https://github.com/yelloxing/clay.git"
     },
     "author": "心叶",
     "license": "MIT",

@@ -3,7 +3,7 @@
     'use strict';
 
     // 三次多项式的cardinal插值
-    window.quickES.math.cardinal = function () {
+    window.clay.math.cardinal = function () {
 
         var scope = {
             "u": 0.5,

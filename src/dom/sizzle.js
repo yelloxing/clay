@@ -6,8 +6,8 @@
 
         // 选择集合中的某个
         this.eq = function (num) {
-            this.collection = this.size > num ? [this.collection[num]] : [];
-            this.size = this.collection.length;
+            this.collection = this.count > num ? [this.collection[num]] : [];
+            this.count = this.collection.length;
             return this;
         };
 
@@ -89,7 +89,7 @@
 
         }
 
-        nodeObj.size = nodeObj.collection.length;
+        nodeObj.count = nodeObj.collection.length;
 
         nodeObj.selector = (this.selector ? this.selector : "") + "selectAll(\"" + selector + "\")";
 
@@ -97,4 +97,4 @@
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);

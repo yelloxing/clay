@@ -3,7 +3,7 @@
     'use strict';
 
     // 返回计算线条路径函数
-    window.quickES.svg.line = function () {
+    window.clay.svg.line = function () {
 
         var scope = {
             interpolate: 'line',
@@ -33,7 +33,7 @@
                         // 辅助点
                         var p0 = (i == 0 ? p1 : [scope.xback(points[i - 1], i - 1), scope.yback(points[i - 1], i - 1)]);
                         var p3 = (i >= (points.length - 2) ? p2 : [scope.xback(points[i + 2], i + 2), scope.yback(points[i + 2], i + 2)]);
-                        cardinal = window.quickES.math.cardinal().setU(scope.t).setPs(p0[0], p0[1], p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
+                        cardinal = window.clay.math.cardinal().setU(scope.t).setPs(p0[0], p0[1], p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
                         for (j = p1[0]; j < p2[0]; j += scope.dis) {
                             d += (j + " " + cardinal(j) + ",");
                         }

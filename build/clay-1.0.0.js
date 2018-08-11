@@ -1,7 +1,7 @@
 /*!
 *
-* quickES - Help quickly use ES.
-* https://github.com/yelloxing/quickES
+* clay - Provide more flexible data visualization solutions!
+* git+https://github.com/yelloxing/clay.git
 * 
 * author 心叶
 *
@@ -13,18 +13,7 @@
 * Released under the MIT license
 * 
 **************************************************************
-* 
-*【内容】
 *
-* 1.不同浏览器兼容的常用方法
-*
-* 2.常用的自定义方法
-*
-* 【说明】
-*
-* 兼容不同浏览器的接口，提供常用的辅助方法，只是针对常用的，目标是轻量级。
-*
-* 【打包文件】
 * (0)./src/core.js
 * (1)./src/config.js
 * (2)./src/animation.js
@@ -34,12 +23,13 @@
 * (6)./src/dom/data.js
 * (7)./src/dom/modify.js
 * (8)./src/dom/search.js
-* (9)./src/scale/linear.js
-* (10)./src/layout/pie.js
-* (11)./src/animation/port.js
-* (12)./src/animation/attr.js
-* (13)./src/svg/arc.js
-* (14)./src/svg/line.js
+* (9)./src/dom/size.js
+* (10)./src/scale/linear.js
+* (11)./src/layout/pie.js
+* (12)./src/animation/port.js
+* (13)./src/animation/attr.js
+* (14)./src/svg/arc.js
+* (15)./src/svg/line.js
 *
 */
 (function (global, factory, undefined) {
@@ -64,28 +54,28 @@
     'use strict';
 
     // 定义挂载对象
-    var quickES = {
+    var clay = {
         "author": "心叶",
         "email": "yelloxing@gmail.com"
     };
 
     // 如果全局有重名，可以调用恢复
-    var _quickES = window.quickES,
+    var _clay = window.clay,
         _$$ = window.$$;
-    quickES.noConflict = function (flag) {
-        if (window.$$ === quickES) {
+    clay.noConflict = function (flag) {
+        if (window.$$ === clay) {
             window.$$ = _$$;
         }
-        if (flag && window.quickES === quickES) {
-            window.quickES = _quickES;
+        if (flag && window.clay === clay) {
+            window.clay = _clay;
         }
-        return quickES;
+        return clay;
     };
 
     // 挂载到全局
-    window.quickES = window.$$ = quickES;
+    window.clay = window.$$ = clay;
 
-    return quickES;
+    return clay;
 
 });
 (function (window, undefined) {
@@ -93,7 +83,7 @@
     'use strict';
 
     // 标签命名空间
-    window.quickES.namespace = {
+    window.clay.namespace = {
         svg: "http://www.w3.org/2000/svg",
         xhtml: "http://www.w3.org/1999/xhtml",
         xlink: "http://www.w3.org/1999/xlink",
@@ -102,10 +92,10 @@
     };
 
     // 绘图
-    window.quickES.svg = {};
+    window.clay.svg = {};
 
     // 工具
-    window.quickES.math = {};
+    window.clay.math = {};
 
 })(typeof window !== "undefined" ? window : this);
 (function (window, undefined) {
@@ -124,7 +114,7 @@
     };
 
     // 提供间隔执行方法
-    window.quickES.animation = function (doback, duration, callback) {
+    window.clay.animation = function (doback, duration, callback) {
         clock.timer(function (deep) {
             //其中deep为0-100，单位%，表示改变的程度
             doback(deep);
@@ -202,7 +192,7 @@
     'use strict';
 
     // 三次多项式的cardinal插值
-    window.quickES.math.cardinal = function () {
+    window.clay.math.cardinal = function () {
 
         var scope = {
             "u": 0.5,
@@ -276,9 +266,9 @@
 
 
     // 返回计算渐变数值的函数
-    window.quickES.math.ease = function (type) {
+    window.clay.math.ease = function (type) {
 
-        var cubicBezier = /^cubic-bezier\((-?\d*\.?\d+), *(-?\d*\.?\d+), *(-?\d*\.?\d+), *(-?\d*\.?\d+)\)$/;
+        var cubicBezier = /^cubic-bezier\( *(-?\d*\.?\d+) *, *(-?\d*\.?\d+) *, *(-?\d*\.?\d+) *, *(-?\d*\.?\d+) *\)$/;
 
         // 按照浏览器提供的css动画渐变定义
         var defined = {
@@ -288,28 +278,38 @@
             'ease-out': 'cubic-bezier(0, 0, 0.58, 1)'
         };
 
+        type=type.trim();
+
         if (type == 'linear') {//普通的线性变化
             return function (deep) {
                 return deep;
             };
         } else if (cubicBezier.test(type)) {//Hermite拟合法
             var point = cubicBezier.exec(type);
+            // 点计算对应具体计算方式修改
+            point[1] += 1;
+            point[2] += 1;
+            point[3] -= 1;
+            point[4] -= 1;
+
+            // 健壮性判断
+            var p;
             if (point[1] > 0) {
-                point[1] = -point[1];
-                point[2] = -point[2];
+                point[1] = 0;
+                point[2] = point[2] - (1 - point[2]) * point[1] / (1 - point[1]);
             }
             if (point[3] < 1) {
-                point[3] = 2 - point[3];
-                point[4] = 2 - point[4];
+                point[3] = 1;
+                point[4] = point[4] / point[3];
             }
-            return window.quickES.math.cardinal().setU(-1).setPs(
+            return window.clay.math.cardinal().setU(-1).setPs(
                 point[1], point[2],
                 0, 0,
                 100, 100,
                 point[3] * 100, point[4] * 100
             );
         } else if (defined[type]) {//预定义固定参数的Hermite拟合法
-            return window.quickES.math.ease(defined[type]);
+            return window.clay.math.ease(defined[type]);
         } else {
             return function () {
                 return 100;
@@ -327,8 +327,8 @@
 
         // 选择集合中的某个
         this.eq = function (num) {
-            this.collection = this.size > num ? [this.collection[num]] : [];
-            this.size = this.collection.length;
+            this.collection = this.count > num ? [this.collection[num]] : [];
+            this.count = this.collection.length;
             return this;
         };
 
@@ -410,7 +410,7 @@
 
         }
 
-        nodeObj.size = nodeObj.collection.length;
+        nodeObj.count = nodeObj.collection.length;
 
         nodeObj.selector = (this.selector ? this.selector : "") + "selectAll(\"" + selector + "\")";
 
@@ -418,7 +418,7 @@
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);
 (function (window, $$, undefined) {
 
     'use strict';
@@ -431,7 +431,7 @@
             return this.collection[0] ? this.collection[0]._data : undefined;
         } else {
             data = typeof calc === 'function' ? calc(data) : data;
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 this.collection[flag]._data = data;
             }
             return this;
@@ -445,7 +445,7 @@
         var flag, temp;
         if (!datas) {
             temp = [];
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 temp[flag] = this.collection[flag]._data;
             }
             return temp;
@@ -454,7 +454,7 @@
                 datas: datas,
                 calc: calc
             };
-            for (flag = 0; flag < this.size && flag < datas.length; flag++) {
+            for (flag = 0; flag < this.count && flag < datas.length; flag++) {
                 this.collection[flag]._data = typeof calc === 'function' ? calc(datas[flag], flag) : datas[flag];
             }
             return this;
@@ -469,7 +469,7 @@
 
         this._collection.enter = [];
         var flag;
-        for (flag = this.size; flag < this._collection.datas.length; flag++) {
+        for (flag = this.count; flag < this._collection.datas.length; flag++) {
             this._collection.enter.push(typeof this._collection.calc === 'function' ? this._collection.calc(this._collection.datas[flag]) : this._collection.datas[flag]);
         }
         this.selector += ':enter()';
@@ -482,16 +482,16 @@
 
         var flag, temp = this.collection;
         this.collection = [];
-        for (flag = this._collection.datas.length; flag < this.size; flag++) {
+        for (flag = this._collection.datas.length; flag < this.count; flag++) {
             this.collection.push(temp[flag]);
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ':exit()';
         return this;
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);
 (function (window, $$, undefined) {
 
     'use strict';
@@ -534,9 +534,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.collection[flag].appendChild(node);
             }
@@ -557,9 +557,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
             }
@@ -580,9 +580,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
             }
@@ -603,9 +603,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
             }
@@ -618,7 +618,7 @@
     $$.node.prototype.remove = function () {
 
         var flag;
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             this.clone().eq(flag).parent().collection[0].removeChild(this.collection[flag]);
         }
         return this;
@@ -629,7 +629,7 @@
     $$.node.prototype.empty = function () {
 
         var flag;
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             this.collection[flag].innerHTML = '';
         }
         return this;
@@ -642,17 +642,17 @@
         if (!name || typeof name !== 'string') {
             throw new Error('The name is invalid!');
         } else if (val === null || val === undefined) {
-            return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
+            return this.count > 0 ? this.collection[0].getAttribute(name) : undefined;
         } else {
             var flag, target;
             if (!isInner && this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
-                for (flag = 0; flag < this.size; flag++) {
+                for (flag = 0; flag < this.count; flag++) {
                     // 结点对象，序号，起始值，终止值，过渡时间，过渡方式
                     target = this.clone().eq(flag);
                     this._animation.attrback[name](name, target, flag, target.attr(name), typeof val === 'function' ? val(this.collection[flag]._data, flag) : val, this._animation.duration, this._animation.ease);
                 }
             } else {
-                for (flag = 0; flag < this.size; flag++) {
+                for (flag = 0; flag < this.count; flag++) {
                     // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
                     this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
                 }
@@ -666,7 +666,7 @@
     $$.node.prototype.css = function (name, style) {
 
         if (arguments.length <= 1 && typeof name !== 'object') {
-            if (this.size < 1) {
+            if (this.count < 1) {
                 return undefined;
             }
             var allStyle;
@@ -682,11 +682,11 @@
             } else {
                 return allStyle;
             }
-        } else if (this.size > 0) {
+        } else if (this.count > 0) {
             if (typeof name === 'object') {
                 var flag, key;
                 for (key in name) {
-                    for (flag = 0; flag < this.size; flag++) {
+                    for (flag = 0; flag < this.count; flag++) {
                         this.collection[flag].style[key] = name[key];
                     }
                 }
@@ -697,13 +697,13 @@
         return this;
     };
 
-})(window, window.quickES);
+})(window, window.clay);
 (function (window, $$, undefined) {
 
     'use strict';
 
     $$.node.prototype.selectAll = function (selector) {
-        var _this= $$.selectAll(selector, this.size > 0 ? this.collection[0] : this.content);
+        var _this= $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
         _this.namespace=this.namespace;
         return _this;
     };
@@ -712,7 +712,7 @@
     $$.node.prototype.parent = function (filterback) {
         var flag, parent, temp = this.collection;
         this.collection = [];
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             parent = temp[flag].parentNode;
             if (parent) {
                 if (typeof filterback !== 'function' || filterback(parent, flag)) {
@@ -720,7 +720,7 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":parent()";
         return this;
 
@@ -739,7 +739,7 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":children()";
         return this;
 
@@ -750,7 +750,7 @@
 
         var flag, next, temp = this.collection;
         this.collection = [];
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             next = temp[flag].nextSibling;
             while (next && next.nodeType !== 1 && next.nodeType !== 11 && next.nodeType !== 9 && next.nextSibling) {
                 next = next.nextSibling;
@@ -761,7 +761,7 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":next()";
         return this;
 
@@ -772,7 +772,7 @@
 
         var flag, prev, temp = this.collection;
         this.collection = [];
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             prev = temp[flag].previousSibling;
             while (prev && prev.nodeType !== 1 && prev.nodeType !== 11 && prev.nodeType !== 9 && prev.previousSibling) {
                 prev = prev.previousSibling;
@@ -783,19 +783,53 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":prev()";
         return this;
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);
+(function (window, $$, undefined) {
+
+    'use strict';
+
+    $$.node.prototype.size = function (type) {
+        var elemHeight, elemWidth;
+        if (this.count <= 0) {
+            return {
+                width: 0,
+                height: 0
+            };
+        } else if (type == 'content') { //内容
+            elemWidth = this.collection[0].clientWidth - ((this.css('padding-left') + "").replace('px', '')) - ((this.css('padding-right') + "").replace('px', ''));
+            elemHeight = this.collection[0].clientHeight - ((this.css('padding-top') + "").replace('px', '')) - ((this.css('padding-bottom') + "").replace('px', ''));
+        } else if (type == 'padding') { //内容+内边距
+            elemWidth = this.collection[0].clientWidth;
+            elemHeight = this.collection[0].clientHeight;
+        } else if (type == 'border') { //内容+内边距+边框
+            elemWidth = this.collection[0].offsetWidth;
+            elemHeight = this.collection[0].offsetHeight;
+        } else if (type == 'scroll') { //滚动的宽（不包括border）
+            elemWidth = this.collection[0].scrollWidth;
+            elemHeight = this.collection[0].scrollHeight;
+        } else {
+            elemWidth = this.collection[0].offsetWidth;
+            elemHeight = this.collection[0].offsetHeight;
+        }
+        return {
+            width: elemWidth,
+            height: elemHeight
+        };
+    };
+
+})(window, window.clay);
 (function (window, undefined) {
 
     'use strict';
 
     // 返回线性比例尺
-    window.quickES.scaleLinear = function () {
+    window.clay.scaleLinear = function () {
 
         var scope = {};
 
@@ -849,7 +883,7 @@
     'use strict';
 
     // 把数据转换为方便画饼状图的数据
-    window.quickES.pieLayout = function () {
+    window.clay.pieLayout = function () {
 
         var scope = {
             rotate: 0
@@ -964,7 +998,7 @@
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);
 (function (window, $$, undefined) {
 
     'use strict';
@@ -992,21 +1026,28 @@
         });
     };
 
+    // 宽高处理方法
+    var sizeback = function (key, nodeObj, index, startVal, endVal, duration, ease) {
+        nodeObj.attr(key, endVal, true);
+    };
+
     // 针对需要过渡的属性定义处理方法
     $$.node.prototype.animation.attrback = function () {
         return {
             'fill': colorback,
-            'stroke': colorback
+            'stroke': colorback,
+            'width': sizeback,
+            'height': sizeback
         };
     };
 
-})(window, window.quickES);
+})(window, window.clay);
 (function (window, undefined) {
 
     'use strict';
 
     // 返回计算弧度路径函数
-    window.quickES.svg.arc = function () {
+    window.clay.svg.arc = function () {
 
         var scope = {
             innerRadius: 0,
@@ -1070,7 +1111,7 @@
     'use strict';
 
     // 返回计算线条路径函数
-    window.quickES.svg.line = function () {
+    window.clay.svg.line = function () {
 
         var scope = {
             interpolate: 'line',
@@ -1100,7 +1141,7 @@
                         // 辅助点
                         var p0 = (i == 0 ? p1 : [scope.xback(points[i - 1], i - 1), scope.yback(points[i - 1], i - 1)]);
                         var p3 = (i >= (points.length - 2) ? p2 : [scope.xback(points[i + 2], i + 2), scope.yback(points[i + 2], i + 2)]);
-                        cardinal = window.quickES.math.cardinal().setU(scope.t).setPs(p0[0], p0[1], p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
+                        cardinal = window.clay.math.cardinal().setU(scope.t).setPs(p0[0], p0[1], p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
                         for (j = p1[0]; j < p2[0]; j += scope.dis) {
                             d += (j + " " + cardinal(j) + ",");
                         }

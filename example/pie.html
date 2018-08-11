@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>饼状图</title>
-    <script src="../build/quickes-1.0.0.js"></script>
+    <script src="../build/clay-1.0.0.min.js"></script>
     <link rel="stylesheet" href="./easycss-1.2.1.min.css">
 </head>
 
@@ -47,7 +47,7 @@
             .enter().append('path')
             // 使用动画
             .attr('fill', 'white')
-            .transition().duration(10000).ease('cubic-bezier(0.42, -0.4, 0.25, 1)')
+            .transition().duration(10000).ease('cubic-bezier( -0.42  , -0.4, 0.25, 1)')
             // 基本样式设置
             .attr('fill', function (data, index) {
                 return ['red', 'blue', 'green', 'pink', 'purple', 'yellow', 'aqua', 'black', 'darkcyan'][index];

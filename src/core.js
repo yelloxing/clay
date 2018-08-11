@@ -20,27 +20,27 @@
     'use strict';
 
     // 定义挂载对象
-    var quickES = {
+    var clay = {
         "author": "心叶",
         "email": "yelloxing@gmail.com"
     };
 
     // 如果全局有重名，可以调用恢复
-    var _quickES = window.quickES,
+    var _clay = window.clay,
         _$$ = window.$$;
-    quickES.noConflict = function (flag) {
-        if (window.$$ === quickES) {
+    clay.noConflict = function (flag) {
+        if (window.$$ === clay) {
             window.$$ = _$$;
         }
-        if (flag && window.quickES === quickES) {
-            window.quickES = _quickES;
+        if (flag && window.clay === clay) {
+            window.clay = _clay;
         }
-        return quickES;
+        return clay;
     };
 
     // 挂载到全局
-    window.quickES = window.$$ = quickES;
+    window.clay = window.$$ = clay;
 
-    return quickES;
+    return clay;
 
 });

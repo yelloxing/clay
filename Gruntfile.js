@@ -16,6 +16,7 @@ var source = [
     './src/dom/data.js',//为结点绑定数据
     './src/dom/modify.js',//结点的增删改操作
     './src/dom/search.js',//结点的查找操作
+    './src/dom/size.js',//获取元素渲染后的尺寸
 
     /*【比例尺模块】=> 数据映射关系 */
     './src/scale/linear.js',//线性比例尺
@@ -33,10 +34,9 @@ var source = [
 
 ];
 
-var banner = '/*!\n' +
-    '*\n' +
-    '* quickES - Help quickly use ES.\n' +
-    '* https://github.com/yelloxing/quickES\n' +
+var banner = '/*!\n*\n' +
+    '* <%= pkg.name %> - <%= pkg.description %>\n' +
+    '* <%= pkg.repository.url %>\n' +
     '* \n' +
     '* author <%= pkg.author %>\n' +
     '*\n' +
@@ -45,21 +45,10 @@ var banner = '/*!\n' +
     '* build 2018/07/29\n' +
     '*\n' +
     '* Copyright yelloxing\n' +
-    '* Released under the MIT license\n' +
+    '* Released under the <%= pkg.license %> license\n' +
     '* \n' +
     '**************************************************************\n' +
-    '* \n' +
-    '*【内容】\n' +
-    '*\n' +
-    '* 1.不同浏览器兼容的常用方法\n' +
-    '*\n' +
-    '* 2.常用的自定义方法\n' +
-    '*\n' +
-    '* 【说明】\n' +
-    '*\n' +
-    '* 兼容不同浏览器的接口，提供常用的辅助方法，只是针对常用的，目标是轻量级。\n' +
-    '*\n' +
-    '* 【打包文件】\n';
+    '*\n';
 
 for (let flag = 0; flag < source.length; flag++) {
     banner += ('* (' + flag + ')' + source[flag] + '\n');
@@ -78,7 +67,7 @@ module.exports = function (grunt) {
             },
             target: {
                 src: source,
-                dest: 'build/quickes-<%= pkg.version %>.js'
+                dest: 'build/clay-<%= pkg.version %>.js'
             }
         },
         jshint: { //语法检查
@@ -111,7 +100,7 @@ module.exports = function (grunt) {
                     mangle: true
                 },
                 files: [{
-                    'build/quickes-<%= pkg.version %>.min.js': ['build/quickes-<%= pkg.version %>.js']
+                    'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
                 }]
             }
         }

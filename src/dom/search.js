@@ -3,7 +3,7 @@
     'use strict';
 
     $$.node.prototype.selectAll = function (selector) {
-        var _this= $$.selectAll(selector, this.size > 0 ? this.collection[0] : this.content);
+        var _this= $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
         _this.namespace=this.namespace;
         return _this;
     };
@@ -12,7 +12,7 @@
     $$.node.prototype.parent = function (filterback) {
         var flag, parent, temp = this.collection;
         this.collection = [];
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             parent = temp[flag].parentNode;
             if (parent) {
                 if (typeof filterback !== 'function' || filterback(parent, flag)) {
@@ -20,7 +20,7 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":parent()";
         return this;
 
@@ -39,7 +39,7 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":children()";
         return this;
 
@@ -50,7 +50,7 @@
 
         var flag, next, temp = this.collection;
         this.collection = [];
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             next = temp[flag].nextSibling;
             while (next && next.nodeType !== 1 && next.nodeType !== 11 && next.nodeType !== 9 && next.nextSibling) {
                 next = next.nextSibling;
@@ -61,7 +61,7 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":next()";
         return this;
 
@@ -72,7 +72,7 @@
 
         var flag, prev, temp = this.collection;
         this.collection = [];
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             prev = temp[flag].previousSibling;
             while (prev && prev.nodeType !== 1 && prev.nodeType !== 11 && prev.nodeType !== 9 && prev.previousSibling) {
                 prev = prev.previousSibling;
@@ -83,10 +83,10 @@
                 }
             }
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ":prev()";
         return this;
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);

@@ -1,4 +1,6 @@
-#  quickES - 帮助快速使用ES
+#  clay - Provide more flexible data visualization solutions
+
+*   提供更灵活的数据可视化解决方案
 
 ****
 ### 作者:心叶

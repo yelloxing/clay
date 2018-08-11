@@ -3,7 +3,7 @@
     'use strict';
 
     // 返回线性比例尺
-    window.quickES.scaleLinear = function () {
+    window.clay.scaleLinear = function () {
 
         var scope = {};
 

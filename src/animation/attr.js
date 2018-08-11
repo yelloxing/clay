@@ -25,12 +25,19 @@
         });
     };
 
+    // 宽高处理方法
+    var sizeback = function (key, nodeObj, index, startVal, endVal, duration, ease) {
+        nodeObj.attr(key, endVal, true);
+    };
+
     // 针对需要过渡的属性定义处理方法
     $$.node.prototype.animation.attrback = function () {
         return {
             'fill': colorback,
-            'stroke': colorback
+            'stroke': colorback,
+            'width': sizeback,
+            'height': sizeback
         };
     };
 
-})(window, window.quickES);
+})(window, window.clay);

@@ -3,7 +3,7 @@
     'use strict';
 
     // 返回计算弧度路径函数
-    window.quickES.svg.arc = function () {
+    window.clay.svg.arc = function () {
 
         var scope = {
             innerRadius: 0,

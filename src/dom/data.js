@@ -10,7 +10,7 @@
             return this.collection[0] ? this.collection[0]._data : undefined;
         } else {
             data = typeof calc === 'function' ? calc(data) : data;
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 this.collection[flag]._data = data;
             }
             return this;
@@ -24,7 +24,7 @@
         var flag, temp;
         if (!datas) {
             temp = [];
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 temp[flag] = this.collection[flag]._data;
             }
             return temp;
@@ -33,7 +33,7 @@
                 datas: datas,
                 calc: calc
             };
-            for (flag = 0; flag < this.size && flag < datas.length; flag++) {
+            for (flag = 0; flag < this.count && flag < datas.length; flag++) {
                 this.collection[flag]._data = typeof calc === 'function' ? calc(datas[flag], flag) : datas[flag];
             }
             return this;
@@ -48,7 +48,7 @@
 
         this._collection.enter = [];
         var flag;
-        for (flag = this.size; flag < this._collection.datas.length; flag++) {
+        for (flag = this.count; flag < this._collection.datas.length; flag++) {
             this._collection.enter.push(typeof this._collection.calc === 'function' ? this._collection.calc(this._collection.datas[flag]) : this._collection.datas[flag]);
         }
         this.selector += ':enter()';
@@ -61,13 +61,13 @@
 
         var flag, temp = this.collection;
         this.collection = [];
-        for (flag = this._collection.datas.length; flag < this.size; flag++) {
+        for (flag = this._collection.datas.length; flag < this.count; flag++) {
             this.collection.push(temp[flag]);
         }
-        this.size = this.collection.length;
+        this.count = this.collection.length;
         this.selector += ':exit()';
         return this;
 
     };
 
-})(window, window.quickES);
+})(window, window.clay);

@@ -3,7 +3,7 @@
     'use strict';
 
     // 标签命名空间
-    window.quickES.namespace = {
+    window.clay.namespace = {
         svg: "http://www.w3.org/2000/svg",
         xhtml: "http://www.w3.org/1999/xhtml",
         xlink: "http://www.w3.org/1999/xlink",
@@ -12,9 +12,9 @@
     };
 
     // 绘图
-    window.quickES.svg = {};
+    window.clay.svg = {};
 
     // 工具
-    window.quickES.math = {};
+    window.clay.math = {};
 
 })(typeof window !== "undefined" ? window : this);

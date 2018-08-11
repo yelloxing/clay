@@ -40,9 +40,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.collection[flag].appendChild(node);
             }
@@ -63,9 +63,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.collection[flag].insertBefore(node, this.clone().eq(flag).children().collection[0]);
             }
@@ -86,9 +86,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.clone().eq(flag).next().collection[0]);
             }
@@ -109,9 +109,9 @@
                 this.collection.push(node);
             }
             delete this._collection;
-            this.size = this.collection.length;
+            this.count = this.collection.length;
         } else {
-            for (flag = 0; flag < this.size; flag++) {
+            for (flag = 0; flag < this.count; flag++) {
                 node = toNode(this.namespace, param);
                 this.clone().eq(flag).parent().collection[0].insertBefore(node, this.collection[flag]);
             }
@@ -124,7 +124,7 @@
     $$.node.prototype.remove = function () {
 
         var flag;
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             this.clone().eq(flag).parent().collection[0].removeChild(this.collection[flag]);
         }
         return this;
@@ -135,7 +135,7 @@
     $$.node.prototype.empty = function () {
 
         var flag;
-        for (flag = 0; flag < this.size; flag++) {
+        for (flag = 0; flag < this.count; flag++) {
             this.collection[flag].innerHTML = '';
         }
         return this;
@@ -148,17 +148,17 @@
         if (!name || typeof name !== 'string') {
             throw new Error('The name is invalid!');
         } else if (val === null || val === undefined) {
-            return this.size > 0 ? this.collection[0].getAttribute(name) : undefined;
+            return this.count > 0 ? this.collection[0].getAttribute(name) : undefined;
         } else {
             var flag, target;
             if (!isInner && this._animation.transition && typeof this._animation.attrback[name] === 'function') {//如果需要过渡设置值
-                for (flag = 0; flag < this.size; flag++) {
+                for (flag = 0; flag < this.count; flag++) {
                     // 结点对象，序号，起始值，终止值，过渡时间，过渡方式
                     target = this.clone().eq(flag);
                     this._animation.attrback[name](name, target, flag, target.attr(name), typeof val === 'function' ? val(this.collection[flag]._data, flag) : val, this._animation.duration, this._animation.ease);
                 }
             } else {
-                for (flag = 0; flag < this.size; flag++) {
+                for (flag = 0; flag < this.count; flag++) {
                     // 目前先不考虑针对特殊属性，比如svg标签的href和title等需要在指定的命名空间下，且前缀添加「xlink:」的情况
                     this.collection[flag].setAttribute(name, typeof val === 'function' ? val(this.collection[flag]._data, flag) : val);
                 }
@@ -172,7 +172,7 @@
     $$.node.prototype.css = function (name, style) {
 
         if (arguments.length <= 1 && typeof name !== 'object') {
-            if (this.size < 1) {
+            if (this.count < 1) {
                 return undefined;
             }
             var allStyle;
@@ -188,11 +188,11 @@
             } else {
                 return allStyle;
             }
-        } else if (this.size > 0) {
+        } else if (this.count > 0) {
             if (typeof name === 'object') {
                 var flag, key;
                 for (key in name) {
-                    for (flag = 0; flag < this.size; flag++) {
+                    for (flag = 0; flag < this.count; flag++) {
                         this.collection[flag].style[key] = name[key];
                     }
                 }
@@ -203,4 +203,4 @@
         return this;
     };
 
-})(window, window.quickES);
+})(window, window.clay);

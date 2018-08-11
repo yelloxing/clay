@@ -14,7 +14,7 @@
     };
 
     // 提供间隔执行方法
-    window.quickES.animation = function (doback, duration, callback) {
+    window.clay.animation = function (doback, duration, callback) {
         clock.timer(function (deep) {
             //其中deep为0-100，单位%，表示改变的程度
             doback(deep);
