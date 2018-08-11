@@ -53,11 +53,38 @@
 })(typeof window !== "undefined" ? window : this, function (window, noGlobal) {
     'use strict';
 
-    // 定义挂载对象
-    var clay = {
-        "author": "心叶",
-        "email": "yelloxing@gmail.com"
+    var clay = function (selector, content) {
+
+        if (typeof selector === 'function') {
+            if (clay.__isLoad__) {
+                selector();
+            } else {
+                if (document.addEventListener) {//Mozilla, Opera and webkit
+                    document.addEventListener("DOMContentLoaded", function doListenter() {
+                        document.removeEventListener("DOMContentLoaded", doListenter, false);
+                        selector();
+                        clay.__isLoad__ = true;
+                    });
+                } else if (document.attachEvent) {//IE
+                    document.attachEvent("onreadystatechange", function doListenter() {
+                        if (document.readyState === "complete") {
+                            document.detachEvent("onreadystatechange", doListenter);
+                            selector();
+                            clay.__isLoad__ = true;
+                        }
+                    });
+                }
+            }
+            return window.clay;
+        } else {
+            return window.clay.selectAll(selector, content);
+        }
+
     };
+
+    // 定义基本信息
+    clay.author = "心叶";
+    clay.email = "yelloxing@gmail.com";
 
     // 如果全局有重名，可以调用恢复
     var _clay = window.clay,
@@ -71,6 +98,9 @@
         }
         return clay;
     };
+
+    // 标记页面是否加载完毕
+    clay.__isLoad__ = false;
 
     // 挂载到全局
     window.clay = window.$$ = clay;
@@ -702,9 +732,9 @@
 
     'use strict';
 
-    $$.node.prototype.selectAll = function (selector) {
-        var _this= $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
-        _this.namespace=this.namespace;
+    $$.node.prototype.find = function (selector) {
+        var _this = $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
+        _this.namespace = this.namespace;
         return _this;
     };
 

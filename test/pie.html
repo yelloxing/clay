@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>饼状图</title>
+    <script src="../build/clay-1.0.0.min.js"></script>
+    <link rel="stylesheet" href="../docs/easycss-1.2.1.min.css">
+    <script>
+        $$(function () {
+            // 数据
+            var educations = [{
+                "info": "大专及以上",
+                "num": 11964
+            }, {
+                "info": "高中和中专",
+                "num": 18799
+            }, {
+                "info": "初中",
+                "num": 51966
+            }, {
+                "info": "小学",
+                "num": 35876
+            }, {
+                "info": "文盲入口",
+                "num": 5466
+            }];
+            // 把数据变成方便绘制饼状图的格式
+            var pieData = $$.pieLayout().value(function (item) {
+                return item.num;
+            }).rotate(1)(educations);
+            // 获取路径转换函数并设置
+            var arc = $$.svg.arc().outerRadius(100).innerRadius(0);
+            // 设置svg
+            $$('svg').setEnvironment('svg').attr('width', 720).attr('height', 720)
+                // 添加容器
+                .append('g').children().attr('transform', 'translate(60,60)')
+                // 把数据绑定到结点上去
+                .find('path').data(pieData)
+                // 根据数据补足结点
+                .enter().append('path')
+                // 使用动画
+                .attr('fill', 'white')
+                .transition().duration(10000).ease('cubic-bezier( -0.42  , -0.4, 0.25, 1)')
+                // 基本样式设置
+                .attr('fill', function (data, index) {
+                    return ['red', 'blue', 'green', 'pink', 'purple', 'yellow', 'aqua', 'black', 'darkcyan'][index];
+                })
+                //设置路径
+                .attr('d', function (data, index) {
+                    return arc(data);
+                });
+        });
+    </script>
+</head>
+
+<body>
+    <svg></svg>
+</body>
+
+</html>

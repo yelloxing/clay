@@ -2,9 +2,9 @@
 
     'use strict';
 
-    $$.node.prototype.selectAll = function (selector) {
-        var _this= $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
-        _this.namespace=this.namespace;
+    $$.node.prototype.find = function (selector) {
+        var _this = $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
+        _this.namespace = this.namespace;
         return _this;
     };
 
