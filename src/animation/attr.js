@@ -25,19 +25,18 @@
         });
     };
 
-    // 宽高处理方法
+    // 尺寸处理方法
     var sizeback = function (key, nodeObj, index, startVal, endVal, duration, ease) {
-        var stVal = nodeObj.css(key).replace('px', '');
-        var etVal = nodeObj.attr(key, endVal, true).css(key).replace('px', '');
-        if (stVal == 'auto') { stVal = 0; }
-        nodeObj.attr(key, startVal, true);
-        var unit = 'px';
-        // 如果不是可以统一转换为px的单位
-        if (!/^[\d.]+$/.test(stVal) || !/^[\d.]+$/.test(etVal)) {
-            var temp = /^([\d.]+)(.*)$/.exec(etVal);
+        var startValArray = /^([\d.]+)(.*)$/.exec(startVal);
+        var endValArray = /^([\d.]+)(.*)$/.exec(endVal);
+        var unit = endValArray[2];
+        if (startValArray && startValArray[2] == '') startValArray[2] = 'px';
+        if (endValArray && endValArray[2] == '') endValArray[2] = 'px';
+        var etVal = endValArray[1], stVal;
+        if (!startValArray || startValArray[2] != unit) {
             stVal = 0;
-            etVal = temp[1];
-            unit = temp[2];
+        } else {
+            stVal = startValArray[1];
         }
         var easeFunction = typeof ease === 'function' ? ease : $$.math.ease(ease);
         //启动动画
@@ -55,7 +54,13 @@
             'fill': colorback,
             'stroke': colorback,
             'width': sizeback,
-            'height': sizeback
+            'height': sizeback,
+            'x': sizeback,
+            'y': sizeback,
+            'left': sizeback,
+            'right': sizeback,
+            'top': sizeback,
+            'bottom': sizeback
         };
     };
 
