@@ -21,7 +21,7 @@
                     frameDiv = document.createElement("div");
                 }
                 frameDiv.innerHTML = param;
-                return $$.selectAll(frameDiv).children().collection[0];
+                return $$.sizzle(frameDiv).children().collection[0];
             }
         } else {
             throw new Error('Unexcepted Error!');
@@ -36,7 +36,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).append(node);
+                $$.sizzle(this.content).append(node);
                 this.collection.push(node);
             }
             delete this._collection;
@@ -59,7 +59,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).prepend(node);
+                $$.sizzle(this.content).prepend(node);
                 this.collection.push(node);
             }
             delete this._collection;
@@ -82,7 +82,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).after(node);
+                $$.sizzle(this.content).after(node);
                 this.collection.push(node);
             }
             delete this._collection;
@@ -105,7 +105,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).before(node);
+                $$.sizzle(this.content).before(node);
                 this.collection.push(node);
             }
             delete this._collection;

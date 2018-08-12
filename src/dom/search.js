@@ -2,8 +2,9 @@
 
     'use strict';
 
+    // 查找方法中只有这个会主动new一个新对象
     $$.node.prototype.find = function (selector) {
-        var _this = $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
+        var _this = $$.sizzle(selector, this.count > 0 ? this.collection[0] : this.content);
         _this.namespace = this.namespace;
         return _this;
     };

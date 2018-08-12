@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>柱状图</title>
-    <script src="../build/clay-1.0.0.min.js"></script>
+    <script src="../build/clay-1.0.0.js"></script>
     <link rel="stylesheet" href="../docs/easycss-1.2.1.min.css">
     <script>
         $$(function () {
@@ -26,13 +26,19 @@
                 .attr('y', function (data, index) {
                     return index * 40;
                 })
-                // 控制长度（大小）
-                .attr('height', '30').attr('width', function (data, index) {
-                    return scaleLinear(data);
-                })
                 // 样式
                 .attr('fill', function (data, index) {
                     return ['red', 'blue', 'green', 'pink', 'purple', 'yellow', 'aqua', 'black', 'darkcyan'][index];
+                })
+                .attr('height', '30')
+                // 启动动画
+                .attr('width', '300')
+                .transition()
+                // 配置动画
+                .duration(1000)
+                // 控制长度
+                .attr('width', function (data, index) {
+                    return scaleLinear(data);
                 });
         });
     </script>

@@ -27,7 +27,7 @@
 
         // 只有在必要的时候才应该使用clone来建立一个新的对象
         this.clone = function () {
-            var nodeObj = new $$.node(), flag;
+            var nodeObj = new $$.node();
             for (var key in this) {
                 try {
                     if (this.hasOwnProperty(key)) {
@@ -42,7 +42,9 @@
 
     };
 
-    $$.selectAll = function (selector, content) {
+    $$.node.prototype.constructor = clay;
+
+    $$.sizzle = function (selector, content) {
 
         var nodeObj = new $$.node(), flag, temp;
 
@@ -91,7 +93,7 @@
 
         nodeObj.count = nodeObj.collection.length;
 
-        nodeObj.selector = (this.selector ? this.selector : "") + "selectAll(\"" + selector + "\")";
+        nodeObj.selector = (this.selector ? this.selector : "") + "find(\"" + selector + "\")";
 
         return nodeObj;
 

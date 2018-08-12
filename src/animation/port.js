@@ -38,11 +38,11 @@
 
     };
 
-    // 设置特定属性的过渡计算方法
-    $$.node.prototype.animation = function (attr, doback) {
+    // 设置特定类别[attr或css等]的特定属性[color或left等]的过渡计算方法
+    $$.node.prototype.animation = function (type, key, doback) {
 
-        if (typeof doback === 'function' && typeof attr === 'string') {
-            this._animation.attrback[attr] = doback;
+        if (typeof doback === 'function' && typeof type === 'string' && typeof key === 'string') {
+            this._animation[type + 'back'][key] = doback;
         } else {
             throw new Error('Unsupported data!');
         }

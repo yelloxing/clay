@@ -43,7 +43,7 @@
             }
             return window.clay;
         } else {
-            return window.clay.selectAll(selector, content);
+            return window.clay.sizzle(selector, content);
         }
 
     };
@@ -51,6 +51,10 @@
     // 定义基本信息
     clay.author = "心叶";
     clay.email = "yelloxing@gmail.com";
+
+    clay.toString = function () {
+        return 'clay - Provide more flexible data visualization solutions![心叶]';
+    };
 
     // 如果全局有重名，可以调用恢复
     var _clay = window.clay,

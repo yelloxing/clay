@@ -10,13 +10,10 @@
 
         // 按照浏览器提供的css动画渐变定义
         var defined = {
-            'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1.01)',
-            'ease-in': 'cubic-bezier(0.42, 0, 1, 1)',
-            'ease-in-out': 'cubic-bezier(0.42, 0, 0.57, 1.01)',
-            'ease-out': 'cubic-bezier(0, 0, 0.58, 1)'
+            'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1.01)'
         };
 
-        type=type.trim();
+        type = type.trim();
 
         if (type == 'linear') {//普通的线性变化
             return function (deep) {

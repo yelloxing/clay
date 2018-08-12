@@ -77,7 +77,7 @@
             }
             return window.clay;
         } else {
-            return window.clay.selectAll(selector, content);
+            return window.clay.sizzle(selector, content);
         }
 
     };
@@ -85,6 +85,10 @@
     // 定义基本信息
     clay.author = "心叶";
     clay.email = "yelloxing@gmail.com";
+
+    clay.toString = function () {
+        return 'clay - Provide more flexible data visualization solutions![心叶]';
+    };
 
     // 如果全局有重名，可以调用恢复
     var _clay = window.clay,
@@ -302,13 +306,10 @@
 
         // 按照浏览器提供的css动画渐变定义
         var defined = {
-            'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1.01)',
-            'ease-in': 'cubic-bezier(0.42, 0, 1, 1)',
-            'ease-in-out': 'cubic-bezier(0.42, 0, 0.57, 1.01)',
-            'ease-out': 'cubic-bezier(0, 0, 0.58, 1)'
+            'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1.01)'
         };
 
-        type=type.trim();
+        type = type.trim();
 
         if (type == 'linear') {//普通的线性变化
             return function (deep) {
@@ -378,7 +379,7 @@
 
         // 只有在必要的时候才应该使用clone来建立一个新的对象
         this.clone = function () {
-            var nodeObj = new $$.node(), flag;
+            var nodeObj = new $$.node();
             for (var key in this) {
                 try {
                     if (this.hasOwnProperty(key)) {
@@ -393,7 +394,9 @@
 
     };
 
-    $$.selectAll = function (selector, content) {
+    $$.node.prototype.constructor = clay;
+
+    $$.sizzle = function (selector, content) {
 
         var nodeObj = new $$.node(), flag, temp;
 
@@ -442,7 +445,7 @@
 
         nodeObj.count = nodeObj.collection.length;
 
-        nodeObj.selector = (this.selector ? this.selector : "") + "selectAll(\"" + selector + "\")";
+        nodeObj.selector = (this.selector ? this.selector : "") + "find(\"" + selector + "\")";
 
         return nodeObj;
 
@@ -545,7 +548,7 @@
                     frameDiv = document.createElement("div");
                 }
                 frameDiv.innerHTML = param;
-                return $$.selectAll(frameDiv).children().collection[0];
+                return $$.sizzle(frameDiv).children().collection[0];
             }
         } else {
             throw new Error('Unexcepted Error!');
@@ -560,7 +563,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).append(node);
+                $$.sizzle(this.content).append(node);
                 this.collection.push(node);
             }
             delete this._collection;
@@ -583,7 +586,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).prepend(node);
+                $$.sizzle(this.content).prepend(node);
                 this.collection.push(node);
             }
             delete this._collection;
@@ -606,7 +609,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).after(node);
+                $$.sizzle(this.content).after(node);
                 this.collection.push(node);
             }
             delete this._collection;
@@ -629,7 +632,7 @@
             for (flag = 0; flag < this._collection.enter.length; flag++) {
                 node = toNode(this.namespace, param);
                 node._data = this._collection.enter[flag];
-                $$.selectAll(this.content).before(node);
+                $$.sizzle(this.content).before(node);
                 this.collection.push(node);
             }
             delete this._collection;
@@ -732,8 +735,9 @@
 
     'use strict';
 
+    // 查找方法中只有这个会主动new一个新对象
     $$.node.prototype.find = function (selector) {
-        var _this = $$.selectAll(selector, this.count > 0 ? this.collection[0] : this.content);
+        var _this = $$.sizzle(selector, this.count > 0 ? this.collection[0] : this.content);
         _this.namespace = this.namespace;
         return _this;
     };
@@ -1016,11 +1020,11 @@
 
     };
 
-    // 设置特定属性的过渡计算方法
-    $$.node.prototype.animation = function (attr, doback) {
+    // 设置特定类别[attr或css等]的特定属性[color或left等]的过渡计算方法
+    $$.node.prototype.animation = function (type, key, doback) {
 
-        if (typeof doback === 'function' && typeof attr === 'string') {
-            this._animation.attrback[attr] = doback;
+        if (typeof doback === 'function' && typeof type === 'string' && typeof key === 'string') {
+            this._animation[type + 'back'][key] = doback;
         } else {
             throw new Error('Unsupported data!');
         }
@@ -1036,8 +1040,8 @@
     // 色彩处理方法
     var colorback = function (key, nodeObj, index, startVal, endVal, duration, ease) {
         // 获取渲染后的值
-        var stVal = $$.selectAll('head').css('color', startVal).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(',');
-        var etVal = $$.selectAll('head').css('color', endVal).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(',');
+        var stVal = $$.sizzle('head').css('color', startVal).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(',');
+        var etVal = $$.sizzle('head').css('color', endVal).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(',');
         // 统一透明度
         if (stVal.length == 3) stVal[3] = 1;
         if (etVal.length == 3) etVal[3] = 1;
@@ -1058,7 +1062,26 @@
 
     // 宽高处理方法
     var sizeback = function (key, nodeObj, index, startVal, endVal, duration, ease) {
-        nodeObj.attr(key, endVal, true);
+        var stVal = nodeObj.css(key).replace('px', '');
+        var etVal = nodeObj.attr(key, endVal, true).css(key).replace('px', '');
+        if (stVal == 'auto') { stVal = 0; }
+        nodeObj.attr(key, startVal, true);
+        var unit = 'px';
+        // 如果不是可以统一转换为px的单位
+        if (!/^[\d.]+$/.test(stVal) || !/^[\d.]+$/.test(etVal)) {
+            var temp = /^([\d.]+)(.*)$/.exec(etVal);
+            stVal = 0;
+            etVal = temp[1];
+            unit = temp[2];
+        }
+        var easeFunction = typeof ease === 'function' ? ease : $$.math.ease(ease);
+        //启动动画
+        $$.animation(function (deep) {
+            deep = easeFunction(deep);
+            nodeObj.attr(key, (deep * (etVal - stVal) * 0.01 - (-stVal)) + unit, true);
+        }, duration, function () {
+            nodeObj.attr(key, endVal, true);
+        });
     };
 
     // 针对需要过渡的属性定义处理方法
@@ -1243,7 +1266,6 @@
             return line;
 
         };
-
 
         return line;
 
