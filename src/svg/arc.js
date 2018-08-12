@@ -11,8 +11,8 @@
         };
 
         // 输入经过饼状图布局处理后的一个数据，返回对应的path标签的d属性值
-        var arc = function (pieData) {
-
+        var arc = function (pieData, dis) {
+            dis = typeof dis === 'number' ? dis : 0;
             var sinStartAngle = Math.sin(pieData.startAngle),
                 sinEndAngle = Math.sin(pieData.endAngle),
                 cosStartAngle = Math.cos(pieData.startAngle),
@@ -25,6 +25,21 @@
                 endInnerY = sinEndAngle * scope.innerRadius + scope.outerRadius,
                 endOuterX = (1 + cosEndAngle) * scope.outerRadius,
                 endOuterY = (1 + sinEndAngle) * scope.outerRadius;
+            // 移动计算
+            if (dis != 0) {
+                var a = startOuterX + endOuterX - startInnerX - endInnerX;
+                var b = startOuterY + endOuterY - startInnerY - endInnerY;
+                var x = a * dis / Math.sqrt(a * a + b * b);
+                var y = b * x / a;
+                startInnerX += x;
+                startInnerY += y;
+                startOuterX += x;
+                startOuterY += y;
+                endInnerX += x;
+                endInnerY += y;
+                endOuterX += x;
+                endOuterY += y;
+            }
             var angleDis = pieData.angle > Math.PI ? 1 : 0;
             return "M" + startInnerX + " " + startInnerY +
                 "L" + startOuterX + " " + startOuterY +

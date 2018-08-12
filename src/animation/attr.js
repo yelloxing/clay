@@ -33,7 +33,7 @@
         if (startValArray && startValArray[2] == '') startValArray[2] = 'px';
         if (endValArray && endValArray[2] == '') endValArray[2] = 'px';
         var etVal = endValArray[1], stVal;
-        if (!startValArray || startValArray[2] != unit) {
+        if (!startValArray || startValArray[2] != endValArray[2]) {
             stVal = 0;
         } else {
             stVal = startValArray[1];

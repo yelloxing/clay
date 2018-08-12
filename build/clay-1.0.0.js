@@ -24,12 +24,13 @@
 * (7)./src/dom/modify.js
 * (8)./src/dom/search.js
 * (9)./src/dom/size.js
-* (10)./src/scale/linear.js
-* (11)./src/layout/pie.js
-* (12)./src/animation/port.js
-* (13)./src/animation/attr.js
-* (14)./src/svg/arc.js
-* (15)./src/svg/line.js
+* (10)./src/dom/event.js
+* (11)./src/scale/linear.js
+* (12)./src/layout/pie.js
+* (13)./src/animation/port.js
+* (14)./src/animation/attr.js
+* (15)./src/svg/arc.js
+* (16)./src/svg/line.js
 *
 */
 (function (global, factory, undefined) {
@@ -858,6 +859,90 @@
     };
 
 })(window, window.clay);
+(function (window, $$, undefined) {
+
+    'use strict';
+
+    // 添加绑定事件
+    $$.node.prototype.bind = function (eventType, callback, useCapture) {
+        var flag;
+        if (window.attachEvent) {
+            for (flag = 0; flag < this.count; flag++) {
+                this.collection[flag].attachEvent("on" + eventType, callback);
+            }
+        } else {
+            //默认捕获
+            useCapture = useCapture || false;
+            for (flag = 0; flag < this.count; flag++) {
+                this.collection[flag].addEventListener(eventType, callback, useCapture);
+            }
+        }
+        return this;
+    };
+
+    // 解除绑定事件
+    $$.node.prototype.unbind = function (eventType, callback, useCapture) {
+        var flag;
+        if (window.detachEvent) {
+            for (flag = 0; flag < this.count; flag++) {
+                this.collection[flag].detachEvent("on" + eventType, callback);
+            }
+        } else {
+            //默认捕获
+            useCapture = useCapture || false;
+            for (flag = 0; flag < this.count; flag++) {
+                this.collection[flag].removeEventListener(eventType, callback, useCapture);
+            }
+        }
+        return this;
+    };
+
+    // 在特定元素上面触发特定事件
+    $$.node.prototype.trigger = function (eventType, useCapture) {
+        var event, flag;
+        useCapture = useCapture || false;
+        //创建event的对象实例。
+        if (document.createEventObject) {
+            // IE浏览器支持fireEvent方法
+            event = document.createEventObject();
+            for (flag = 0; flag < this.count; flag++) {
+                this.collection[flag].fireEvent('on' + eventType, event);
+            }
+        } else {
+            // 其他标准浏览器使用dispatchEvent方法
+            event = document.createEvent('HTMLEvents');
+            // 3个参数：事件类型，是否冒泡，是否阻止浏览器的默认行为
+            event.initEvent(eventType, !useCapture, false);
+            for (flag = 0; flag < this.count; flag++) {
+                this.collection[flag].dispatchEvent(event);
+            }
+        }
+        return this;
+    };
+
+    // 取消冒泡事件
+    $$.node.prototype.cancelBubble = function (event) {
+        event = event || window.event;
+        if (event && event.stopPropagation) { //这是其他非IE浏览器
+            event.stopPropagation();
+        } else {
+            event.cancelBubble = true;
+        }
+        return this;
+    };
+
+    // 阻止默认事件
+    $$.node.prototype.preventDefault = function (event) {
+        event = event || window.event;
+        if (event && event.stopPropagation) { //这是其他非IE浏览器
+            event.preventDefault();
+        } else {
+            event.returnValue = false;
+        }
+        return this;
+    };
+
+})(window, window.clay);
 (function (window, undefined) {
 
     'use strict';
@@ -923,9 +1008,8 @@
             rotate: 0
         };
 
-        // 根据数据返回角度值
+        // 根据数据返回角度值，第二个参数代表偏离原来位置距离
         var pieLayout = function (datas) {
-
             if (scope.valueback) {
                 if (datas && datas.constructor === Array) {
                     var temp = [], flag, total = 0, angle;
@@ -940,7 +1024,7 @@
                         angle = (temp[flag].value / total) * Math.PI * 2;
                         temp[flag].startAngle = flag == 0 ? scope.rotate : temp[flag - 1].endAngle;
                         temp[flag].endAngle = temp[flag].startAngle + angle;
-                        temp[flag].angle=angle;
+                        temp[flag].angle = angle;
                     }
                     return temp;
                 } else {
@@ -1068,7 +1152,7 @@
         if (startValArray && startValArray[2] == '') startValArray[2] = 'px';
         if (endValArray && endValArray[2] == '') endValArray[2] = 'px';
         var etVal = endValArray[1], stVal;
-        if (!startValArray || startValArray[2] != unit) {
+        if (!startValArray || startValArray[2] != endValArray[2]) {
             stVal = 0;
         } else {
             stVal = startValArray[1];
@@ -1113,8 +1197,8 @@
         };
 
         // 输入经过饼状图布局处理后的一个数据，返回对应的path标签的d属性值
-        var arc = function (pieData) {
-
+        var arc = function (pieData, dis) {
+            dis = typeof dis === 'number' ? dis : 0;
             var sinStartAngle = Math.sin(pieData.startAngle),
                 sinEndAngle = Math.sin(pieData.endAngle),
                 cosStartAngle = Math.cos(pieData.startAngle),
@@ -1127,6 +1211,21 @@
                 endInnerY = sinEndAngle * scope.innerRadius + scope.outerRadius,
                 endOuterX = (1 + cosEndAngle) * scope.outerRadius,
                 endOuterY = (1 + sinEndAngle) * scope.outerRadius;
+            // 移动计算
+            if (dis != 0) {
+                var a = startOuterX + endOuterX - startInnerX - endInnerX;
+                var b = startOuterY + endOuterY - startInnerY - endInnerY;
+                var x = a * dis / Math.sqrt(a * a + b * b);
+                var y = b * x / a;
+                startInnerX += x;
+                startInnerY += y;
+                startOuterX += x;
+                startOuterY += y;
+                endInnerX += x;
+                endInnerY += y;
+                endOuterX += x;
+                endOuterY += y;
+            }
             var angleDis = pieData.angle > Math.PI ? 1 : 0;
             return "M" + startInnerX + " " + startInnerY +
                 "L" + startOuterX + " " + startOuterY +

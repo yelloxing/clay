@@ -17,6 +17,7 @@ var source = [
     './src/dom/modify.js',//结点的增删改操作
     './src/dom/search.js',//结点的查找操作
     './src/dom/size.js',//获取元素渲染后的尺寸
+    './src/dom/event.js',//结点事件相关操作
 
     /*【比例尺模块】=> 数据映射关系 */
     './src/scale/linear.js',//线性比例尺

@@ -9,9 +9,8 @@
             rotate: 0
         };
 
-        // 根据数据返回角度值
+        // 根据数据返回角度值，第二个参数代表偏离原来位置距离
         var pieLayout = function (datas) {
-
             if (scope.valueback) {
                 if (datas && datas.constructor === Array) {
                     var temp = [], flag, total = 0, angle;
@@ -26,7 +25,7 @@
                         angle = (temp[flag].value / total) * Math.PI * 2;
                         temp[flag].startAngle = flag == 0 ? scope.rotate : temp[flag - 1].endAngle;
                         temp[flag].endAngle = temp[flag].startAngle + angle;
-                        temp[flag].angle=angle;
+                        temp[flag].angle = angle;
                     }
                     return temp;
                 } else {

@@ -32,7 +32,7 @@
                 return item.num;
             }).rotate(1)(educations);
             // 获取路径转换函数并设置
-            var arc = $$.svg.arc().outerRadius(100).innerRadius(0);
+            var arc = $$.svg.arc().outerRadius(200).innerRadius(100);
             // 设置svg
             $$('svg').setEnvironment('svg').attr('width', 720).attr('height', 720)
                 // 添加容器
@@ -43,7 +43,7 @@
                 .enter().append('path')
                 // 使用动画
                 .attr('fill', 'white')
-                .transition().duration(10000).ease('cubic-bezier( -0.42  , -0.4, 0.25, 1)')
+                .transition().duration(1000).ease('cubic-bezier( -0.42  , -0.4, 0.25, 1)')
                 // 基本样式设置
                 .attr('fill', function (data, index) {
                     return ['red', 'blue', 'green', 'pink', 'purple', 'yellow', 'aqua', 'black', 'darkcyan'][index];
@@ -51,6 +51,25 @@
                 //设置路径
                 .attr('d', function (data, index) {
                     return arc(data);
+                }).bind('mouseenter', function () {
+                    var _this = this;
+                    $$(this).attr('flag', 1).attr('stop', 'no');
+                    $$.animation(function (deep) {
+                        $$(_this).attr('d', function (data) {
+                            return arc(data, deep * 0.2);
+                        });
+                    }, 1000, function () {
+                        $$(_this).attr('d', function (data) {
+                            return arc(data, 20 * $$(_this).attr('flag'));
+                        }).attr('stop', 'yes');
+                    });
+                }).bind('mouseout', function () {
+                    if ($$(this).attr('stop') == 'yes') {
+                        $$(this).attr('d', function (data) {
+                            return arc(data);
+                        });
+                    }
+                    $$(this).attr('flag', 0);
                 });
         });
     </script>
