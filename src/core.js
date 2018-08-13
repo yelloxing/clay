@@ -53,7 +53,7 @@
     clay.email = "yelloxing@gmail.com";
 
     clay.toString = function () {
-        return 'clay - Provide more flexible data visualization solutions![心叶]';
+        return 'clay - Provide more flexible data visualization solutions![走一步 再走一步]';
     };
 
     // 如果全局有重名，可以调用恢复

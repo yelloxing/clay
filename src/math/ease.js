@@ -8,11 +8,6 @@
 
         var cubicBezier = /^cubic-bezier\( *(-?\d*\.?\d+) *, *(-?\d*\.?\d+) *, *(-?\d*\.?\d+) *, *(-?\d*\.?\d+) *\)$/;
 
-        // 按照浏览器提供的css动画渐变定义
-        var defined = {
-            'ease': 'cubic-bezier(0.25, 0.1, 0.25, 1.01)'
-        };
-
         type = type.trim();
 
         if (type == 'linear') {//普通的线性变化
@@ -43,8 +38,6 @@
                 100, 100,
                 point[3] * 100, point[4] * 100
             );
-        } else if (defined[type]) {//预定义固定参数的Hermite拟合法
-            return window.clay.math.ease(defined[type]);
         } else {
             return function () {
                 return 100;

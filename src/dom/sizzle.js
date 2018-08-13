@@ -42,7 +42,7 @@
 
     };
 
-    $$.node.prototype.constructor = clay;
+    $$.node.prototype.constructor = $$;
 
     $$.sizzle = function (selector, content) {
 
