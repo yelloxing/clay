@@ -56,19 +56,9 @@
         if (typeof selector === 'string') {
 
             selector = (selector + "").trim().replace(/[\n\f\r]/g, '');
-
-            if (/^#[\d\w_]+$/.test(selector)) {
-                temp = nodeObj.content.getElementById(selector.replace(/^#/, ''));
-                if (temp) {
-                    nodeObj.collection.push(temp);
-                }
-            } else if (/^[\d\w_]+$/.test(selector)) {
-                temp = nodeObj.content.getElementsByTagName(selector);
-                for (flag = 0; flag < temp.length; flag++) {
-                    nodeObj.collection.push(temp[flag]);
-                }
-            } else {
-                throw new Error('Unsupported selector!');
+            temp = $$.sizzle.find(selector, nodeObj.content);
+            for (flag = 0; flag < temp.length; flag++) {
+                nodeObj.collection.push(temp[flag]);
             }
 
         } else if (selector.constructor === Array) {

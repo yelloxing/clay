@@ -12,7 +12,9 @@ var source = [
     './src/math/ease.js',//变换速率计算
 
     /*【结点模块】 => 关于DOM结点的操作 */
-    './src/dom/sizzle.js',//元素查找(本模块核心)
+    './src/dom/node.js',//结点元素对象(本模块核心)
+    './src/dom/sizzle/tool.js',//选择器辅助方法
+    './src/dom/sizzle/core.js',//内置sizzle选择器
     './src/dom/data.js',//为结点绑定数据
     './src/dom/modify.js',//结点的增删改操作
     './src/dom/search.js',//结点的查找操作
