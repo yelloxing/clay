@@ -103,7 +103,8 @@ module.exports = function (grunt) {
                     mangle: true
                 },
                 files: [{
-                    'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
+                    'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js'],
+                    'docs/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
                 }]
             }
         }
