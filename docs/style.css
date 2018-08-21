@@ -68,10 +68,16 @@ body>.frame>.view>section>p {
 }
 
 body>.frame>.view>section>.code {
-    background-color: #dfebf1;
+    background-color: #0a0a0a;
     padding: .1rem;
-    color: blue;
+    color: #ffffff;
+    font-weight: 200;
     border-radius: .05rem;
-    box-shadow: 0 0 3px #607d8b;
+    box-shadow: 0 0 13px 3px #0a0a0a;
     line-height: 1.6em;
+}
+
+body>.frame>.view>section>ul>li {
+    text-indent: 2em;
+    line-height: 1.8em;
 }
