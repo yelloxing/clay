@@ -3,7 +3,7 @@
     'use strict';
 
     var toNode = function (namespace, param) {
-
+        
         if (param && (param.nodeType === 1 || param.nodeType === 11 || param.nodeType === 9)) {
             return param;
         } else if (param && typeof param === 'string') {

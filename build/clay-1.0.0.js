@@ -29,10 +29,12 @@
 * (12)./src/dom/event.js
 * (13)./src/scale/linear.js
 * (14)./src/layout/pie.js
-* (15)./src/animation/port.js
-* (16)./src/animation/attr.js
-* (17)./src/svg/arc.js
-* (18)./src/svg/line.js
+* (15)./src/layout/axis.js
+* (16)./src/animation/port.js
+* (17)./src/animation/attr.js
+* (18)./src/svg/arc.js
+* (19)./src/svg/line.js
+* (20)./src/svg/axis.js
 *
 */
 (function (global, factory, undefined) {
@@ -947,7 +949,7 @@
     'use strict';
 
     var toNode = function (namespace, param) {
-
+        
         if (param && (param.nodeType === 1 || param.nodeType === 11 || param.nodeType === 9)) {
             return param;
         } else if (param && typeof param === 'string') {
@@ -1507,10 +1509,12 @@
             }
         }
 
-        // 获取或设置定义域
+        // 设置或者获取定义域
         scaleLinear.domain = function (domains) {
-            if (!domains || domains.constructor !== Array || typeof domains[0] !== 'number' || typeof domains[1] !== 'number') {
+            if (domains && (domains.constructor !== Array || typeof domains[0] !== 'number' || typeof domains[1] !== 'number')) {
                 throw new Error('Unsupported data!');
+            } else if (!domains) {
+                return scope.domains;
             }
             scope.domains = domains;
             if (scope.ranges) {
@@ -1519,10 +1523,12 @@
             return this;
         };
 
-        // 定义或设置值域
+        // 设置或者获取值域
         scaleLinear.range = function (ranges) {
-            if (!ranges || ranges.constructor !== Array || typeof ranges[0] !== 'number' || typeof ranges[1] !== 'number') {
+            if (ranges && (ranges.constructor !== Array || typeof ranges[0] !== 'number' || typeof ranges[1] !== 'number')) {
                 throw new Error('Unsupported data!');
+            } else if (!ranges) {
+                return scope.ranges;
             }
             scope.ranges = ranges;
             if (scope.domains) {
@@ -1598,6 +1604,74 @@
         };
 
         return pieLayout;
+
+    };
+
+})(typeof window !== "undefined" ? window : this);
+(function (window, undefined) {
+
+    'use strict';
+
+    // 把数据转换为方便画数轴的数据
+    window.clay.axisLayout = function () {
+
+        var scope = {
+            num: 10,
+            width: 700
+        };
+
+        var axisLayout = function (scaleLinear) {
+
+            var domain = scaleLinear.domain(), resultData = [], flag;
+            var pw = scope.width / (scope.num - 1);
+            var dw = (domain[1] - domain[0]) / (scope.num - 1);
+            for (flag = 0; flag < scope.num; flag++) {
+                resultData[flag] = {
+                    "p": pw * (flag),
+                    "v": scaleLinear(domain[0] + dw * flag)
+                };
+                if (scope.dot || scope.dot == 0) {
+                    resultData[flag].v = (resultData[flag].v).toFixed(scope.dot);
+                }
+            }
+            return resultData;
+
+        };
+
+        // 设置刻度个数
+        axisLayout.setNum = function (num) {
+
+            if (!num || typeof num != 'number') {
+                throw new Error('A number is expected!');
+            }
+            scope.num = num;
+            return axisLayout;
+
+        };
+
+        // 设置刻度尺长度
+        axisLayout.setWidth = function (width) {
+
+            if (!width || typeof width != 'number') {
+                throw new Error('A number is expected!');
+            }
+            scope.width = width;
+            return axisLayout;
+
+        };
+
+        // 设置小数点个数
+        axisLayout.setDot = function (dot) {
+
+            if ((!dot || typeof dot != 'number') && dot != 0) {
+                throw new Error('A number is expected!');
+            }
+            scope.dot = dot;
+            return axisLayout;
+
+        };
+
+        return axisLayout;
 
     };
 
@@ -1910,6 +1984,87 @@
         };
 
         return line;
+
+    };
+
+})(typeof window !== "undefined" ? window : this);
+(function (window, undefined) {
+
+    'use strict';
+
+    // 返回数轴
+    window.clay.svg.axis = function (scaleLinear, num, width, dot) {
+
+        var scope = {
+            "d": 'horizontal'
+        };
+
+        var axisLayout = window.clay.axisLayout();
+
+        var axis = function (scaleLinear) {
+
+            var tempLayout = axisLayout(scaleLinear), flag;
+            var resultData='';
+            if (scope.d == 'horizontal') {
+                resultData += '<g fill="none" font-size="10" font-family="sans-serif" text-anchor="middle">';
+                resultData += '<path stroke="#000" d="M0.5,0V0.5H' + (tempLayout[tempLayout.length - 1].p - (-0.5)) + 'V0"></path>';
+                for (flag = 0; flag < tempLayout.length; flag++) {
+                    resultData += '<g opacity="1" transform="translate(' + tempLayout[flag].p + ',0)">';
+                    resultData += '   <line stroke="#000" y2="6"></line>';
+                    resultData += '   <text fill="#000" y="9" dy="0.71em">' + tempLayout[flag].v + '</text>';
+                    resultData += '</g>';
+                }
+            } else {
+                resultData += '<g fill="none" font-size="10" font-family="sans-serif" text-anchor="end">';
+                resultData += '<path stroke="#000" d="M6,0.5H6.5V' + (tempLayout[tempLayout.length - 1].p - 0.5) + 'H6"></path>';
+                for (flag = 0; flag < tempLayout.length; flag++) {
+                    resultData += '<g opacity="1" transform="translate(0,' + tempLayout[flag].p + ')">';
+                    resultData += '   <line stroke="#000" x2="6"></line>';
+                    resultData += '   <text fill="#000" x="-10" y="4" dx="0.71em">' + tempLayout[tempLayout.length - flag - 1].v + '</text>';
+                    resultData += '</g>';
+                }
+            }
+            resultData += '</g>';
+            return resultData;
+
+        };
+
+        // 设置刻度尺是垂直的还是水平的
+        axis.setDir = function (d) {
+
+            if (d == 'vertical' || d == 'horizontal') {
+                scope.d = d;
+            }
+            return axis;
+
+        };
+
+        // 设置刻度个数
+        axis.setNum = function (num) {
+
+            if (num && num <= 1) num = 2;
+            axisLayout.setNum(num);
+            return axis;
+
+        };
+
+        // 设置刻度尺长度
+        axis.setWidth = function (width) {
+
+            axisLayout.setWidth(width);
+            return axis;
+
+        };
+
+        // 设置小数点个数
+        axis.setDot = function (dot) {
+
+            axisLayout.setDot(dot);
+            return axis;
+
+        };
+
+        return axis;
 
     };
 

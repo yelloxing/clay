@@ -24,10 +24,12 @@
             }
         }
 
-        // 获取或设置定义域
+        // 设置或者获取定义域
         scaleLinear.domain = function (domains) {
-            if (!domains || domains.constructor !== Array || typeof domains[0] !== 'number' || typeof domains[1] !== 'number') {
+            if (domains && (domains.constructor !== Array || typeof domains[0] !== 'number' || typeof domains[1] !== 'number')) {
                 throw new Error('Unsupported data!');
+            } else if (!domains) {
+                return scope.domains;
             }
             scope.domains = domains;
             if (scope.ranges) {
@@ -36,10 +38,12 @@
             return this;
         };
 
-        // 定义或设置值域
+        // 设置或者获取值域
         scaleLinear.range = function (ranges) {
-            if (!ranges || ranges.constructor !== Array || typeof ranges[0] !== 'number' || typeof ranges[1] !== 'number') {
+            if (ranges && (ranges.constructor !== Array || typeof ranges[0] !== 'number' || typeof ranges[1] !== 'number')) {
                 throw new Error('Unsupported data!');
+            } else if (!ranges) {
+                return scope.ranges;
             }
             scope.ranges = ranges;
             if (scope.domains) {

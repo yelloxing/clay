@@ -26,6 +26,7 @@ var source = [
 
     /*【布局模块】=> 把数据变成对于绘图而言更友好的格式 */
     './src/layout/pie.js',//饼状图
+    './src/layout/axis.js',//坐标轴
 
     /*【动画模块】 => 为DOM结点属性或样式的修改提供动画效果 */
     './src/animation/port.js',//对外提供的调用接口
@@ -33,8 +34,8 @@ var source = [
 
     /*【SVG模块】=> 提供更友好的接口来绘制SVG图形 */
     './src/svg/arc.js',//绘制一段圆弧
-    './src/svg/line.js'//绘制一段线条
-
+    './src/svg/line.js',//绘制一段线条
+    './src/svg/axis.js'//绘制坐标轴
 ];
 
 var banner = '/*!\n*\n' +
