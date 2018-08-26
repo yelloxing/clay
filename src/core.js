@@ -1,25 +1,22 @@
-(function (global, factory, undefined) {
+(function (global, factory) {
 
     'use strict';
 
-    if (global && global.document) {
-
-        // 如果是浏览器环境
-        factory(global);
-
-    } else if (typeof module === "object" && typeof module.exports === "object") {
-
-        // 如果是node.js环境
-        module.exports = factory(global, true);
-
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = factory(global);
     } else {
-        throw new Error("Unexcepted Error!");
+        factory(global);
     }
 
-})(typeof window !== "undefined" ? window : this, function (window, noGlobal) {
+})(typeof window !== "undefined" ? window : this, function (global, undefined) {
+
     'use strict';
 
-    var clay = function (selector, content) {
+    var clay = function (selector, context) {
+        return new clay.prototype.init(selector, context);
+    };
+
+    clay.prototype.init = function (selector, context) {
 
         if (typeof selector === 'function') {
             if (clay.__isLoad__) {
@@ -41,39 +38,27 @@
                     });
                 }
             }
-            return window.clay;
         } else {
-            return window.clay.sizzle(selector, content);
+            this.context = context = context || document;
+            var nodes = clay.sizzle(selector, context), flag;
+            for (flag = 0; flag < nodes.length; flag++) {
+                this[flag] = nodes[flag];
+            }
+            this.length = nodes.length;
         }
+        return this;
 
     };
 
-    // 定义基本信息
-    clay.author = "心叶";
-    clay.email = "yelloxing@gmail.com";
+    clay.prototype.init.prototype = clay.prototype;
 
-    clay.toString = function () {
-        return 'clay - Provide more flexible data visualization solutions![走一步 再走一步]';
-    };
-
-    // 如果全局有重名，可以调用恢复
-    var _clay = window.clay,
-        _$$ = window.$$;
-    clay.noConflict = function (flag) {
-        if (window.$$ === clay) {
-            window.$$ = _$$;
-        }
-        if (flag && window.clay === clay) {
-            window.clay = _clay;
-        }
-        return clay;
-    };
-
-    // 标记页面是否加载完毕
     clay.__isLoad__ = false;
 
-    // 挂载到全局
-    window.clay = window.$$ = clay;
+    clay.author = '心叶';
+    clay.email = 'yelloxing@gmail.com';
+    clay.version = '1.2.1';
+
+    global.clay = global.$$ = clay;
 
     return clay;
 

@@ -1,41 +1,16 @@
 'use strict';
 
 var source = [
+    './src/core.js',
+    './src/config.js',
 
-    /*【基础模块】*/
-    './src/core.js',//核心代码
-    './src/config.js',//基本的配置文件
-    './src/animation.js',//轮询执行方法
+    // 基本的结点操作
+    './src/node/sizzle.js',
+    './src/node/modify.js',
+    './src/node/data.js',
 
-    /*【数学模块】 => 提供数值计算 */
-    './src/math/interpolate/cardinal.js',//三次cardinal插值
-    './src/math/ease.js',//变换速率计算
-
-    /*【结点模块】 => 关于DOM结点的操作 */
-    './src/dom/node.js',//结点元素对象(本模块核心)
-    './src/dom/sizzle/tool.js',//选择器辅助方法
-    './src/dom/sizzle/core.js',//内置sizzle选择器
-    './src/dom/data.js',//为结点绑定数据
-    './src/dom/modify.js',//结点的增删改操作
-    './src/dom/search.js',//结点的查找操作
-    './src/dom/size.js',//获取元素渲染后的尺寸
-    './src/dom/event.js',//结点事件相关操作
-
-    /*【比例尺模块】=> 数据映射关系 */
-    './src/scale/linear.js',//线性比例尺
-
-    /*【布局模块】=> 把数据变成对于绘图而言更友好的格式 */
-    './src/layout/pie.js',//饼状图
-    './src/layout/axis.js',//坐标轴
-
-    /*【动画模块】 => 为DOM结点属性或样式的修改提供动画效果 */
-    './src/animation/port.js',//对外提供的调用接口
-    './src/animation/attr.js',//针对属性的渐变计算
-
-    /*【SVG模块】=> 提供更友好的接口来绘制SVG图形 */
-    './src/svg/arc.js',//绘制一段圆弧
-    './src/svg/line.js',//绘制一段线条
-    './src/svg/axis.js'//绘制坐标轴
+    // 数学计算
+    './src/math/interpolate/Hermite.js'
 ];
 
 var banner = '/*!\n*\n' +
@@ -46,19 +21,14 @@ var banner = '/*!\n*\n' +
     '*\n' +
     '* version <%= pkg.version %>\n' +
     '* \n' +
-    '* build 2018/07/29\n' +
+    '* build Sun Jul 29 2018\n' +
     '*\n' +
     '* Copyright yelloxing\n' +
     '* Released under the <%= pkg.license %> license\n' +
     '* \n' +
-    '**************************************************************\n' +
-    '*\n';
-
-for (let flag = 0; flag < source.length; flag++) {
-    banner += ('* (' + flag + ')' + source[flag] + '\n');
-}
-banner += '*\n' +
+    '* Date:' + new Date() + '\n' +
     '*/\n';
+
 module.exports = function (grunt) {
     /*配置插件*/
     grunt.initConfig({
@@ -77,7 +47,7 @@ module.exports = function (grunt) {
         jshint: { //语法检查
             options: { //语法检查配置
                 '-W064': true,
-                "strict": true,
+                "strict": false,
                 "eqnull": true,
                 "undef": true,
                 "globals": {
@@ -88,7 +58,9 @@ module.exports = function (grunt) {
                     "module": true,
                     "setInterval": true,
                     "clearInterval": true,
-                    "Math": true
+                    "Math": true,
+                    "HTMLCollection": true,
+                    "clay":true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
