@@ -1,107 +1,107 @@
 'use strict';
 
 var source = [
-    // 基本配置
-    './src/config.js',
+	// 基本配置
+	'./src/config.js',
 
-    // 基本的结点操作
-    './src/node/sizzle.js',
-    './src/node/modify.js',
-    './src/node/data.js',
+	// 基本的结点操作
+	'./src/node/sizzle.js',
+	'./src/node/modify.js',
+	'./src/node/data.js',
 
-    // 数学计算
-    './src/math/interpolate/Hermite.js'
+	// 数学计算
+	'./src/math/interpolate/Hermite.js'
 ];
 
 var banner = '/*!\n*\n' +
-    '* <%= pkg.name %> - <%= pkg.description %>\n' +
-    '* <%= pkg.repository.url %>\n' +
-    '* \n' +
-    '* author <%= pkg.author %>\n' +
-    '*\n' +
-    '* version <%= pkg.version %>\n' +
-    '* \n' +
-    '* build Sun Jul 29 2018\n' +
-    '*\n' +
-    '* Copyright yelloxing\n' +
-    '* Released under the <%= pkg.license %> license\n' +
-    '* \n' +
-    '* Date:' + new Date() + '\n' +
-    '*/\n';
+	'* <%= pkg.name %> - <%= pkg.description %>\n' +
+	'* <%= pkg.repository.url %>\n' +
+	'* \n' +
+	'* author <%= pkg.author %>\n' +
+	'*\n' +
+	'* version <%= pkg.version %>\n' +
+	'* \n' +
+	'* build Sun Jul 29 2018\n' +
+	'*\n' +
+	'* Copyright yelloxing\n' +
+	'* Released under the <%= pkg.license %> license\n' +
+	'* \n' +
+	'* Date:' + new Date() + '\n' +
+	'*/\n';
 
 module.exports = function (grunt) {
-    /*配置插件*/
-    grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'),
-        concat: { //合并代码
-            options: {
-                separator: '\n',
-                stripBanners: true
-            },
-            target: {
-                src: source,
-                dest: 'build/clay.js'
-            }
-        },
-        build: {//自定义插入合并
-            target: {
-                banner: banner,
-                src: 'build/clay.js',
-                dest: 'build/clay-<%= pkg.version %>.js'
-            }
-        },
-        clean: {// 删除临时文件
-            target: {
-                src: ['build/clay.js']
-            }
-        },
-        jshint: { //语法检查
-            options: { //语法检查配置
-                '-W064': true,
-                "strict": false,
-                "eqnull": true,
-                "undef": true,
-                "globals": {
-                    "window": true,
-                    "navigator": true,
-                    "document": true,
-                    "console": true,
-                    "module": true,
-                    "setInterval": true,
-                    "clearInterval": true,
-                    "Math": true,
-                    "HTMLCollection": true,
-                    "clay": true
-                },
-                "force": true, // 强制执行，即使出现错误也会执行下面的任务
-                "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
-            },
-            target: source
-        },
-        uglify: { //压缩代码
-            options: {
-                banner: banner
-            },
-            target: {
-                options: {
-                    mangle: true
-                },
-                files: [{
-                    'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
-                }]
-            }
-        }
-    });
+	/*配置插件*/
+	grunt.initConfig({
+		pkg: grunt.file.readJSON('package.json'),
+		concat: { //合并代码
+			options: {
+				separator: '\n',
+				stripBanners: true
+			},
+			target: {
+				src: source,
+				dest: 'build/clay.js'
+			}
+		},
+		build: {//自定义插入合并
+			target: {
+				banner: banner,
+				src: 'build/clay.js',
+				dest: 'build/clay-<%= pkg.version %>.js'
+			}
+		},
+		clean: {// 删除临时文件
+			target: {
+				src: ['build/clay.js']
+			}
+		},
+		jshint: { //语法检查
+			options: { //语法检查配置
+				'-W064': true,
+				"strict": true,
+				"eqnull": true,
+				"undef": true,
+				"globals": {
+					"window": true,
+					"navigator": true,
+					"document": true,
+					"console": true,
+					"module": true,
+					"setInterval": true,
+					"clearInterval": true,
+					"Math": true,
+					"HTMLCollection": true,
+					"clay": true
+				},
+				"force": true, // 强制执行，即使出现错误也会执行下面的任务
+				"reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
+			},
+			target: 'build/clay-<%= pkg.version %>.js'
+		},
+		uglify: { //压缩代码
+			options: {
+				banner: banner
+			},
+			target: {
+				options: {
+					mangle: true
+				},
+				files: [{
+					'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
+				}]
+			}
+		}
+	});
 
-    /*加载插件*/
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-clean');
+	/*加载插件*/
+	grunt.loadNpmTasks('grunt-contrib-concat');
+	grunt.loadNpmTasks('grunt-contrib-jshint');
+	grunt.loadNpmTasks('grunt-contrib-uglify');
+	grunt.loadNpmTasks('grunt-contrib-clean');
 
-    // clay特殊的任务
-    grunt.loadTasks("build/tasks");
+	// clay特殊的任务
+	grunt.loadTasks("build/tasks");
 
-    /*注册任务*/
-    grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
+	/*注册任务*/
+	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
 };

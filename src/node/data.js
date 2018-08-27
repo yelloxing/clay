@@ -51,7 +51,7 @@ clay.prototype.enter = function (str) {
 
     var flag, node, newClay = clay();
     for (flag = 0; this._enter && flag < this._enter.length; flag++) {
-        node = clay.toNode(str);
+        node = _toNode(str);
         node._data = this._enter[flag];
         newClay[flag] = node;
         newClay.length += 1;

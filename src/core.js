@@ -40,7 +40,7 @@
             }
         } else {
             this.context = context = context || document;
-            var nodes = clay.sizzle(selector, context), flag;
+            var nodes = _sizzle(selector, context), flag;
             for (flag = 0; flag < nodes.length; flag++) {
                 this[flag] = nodes[flag];
             }
