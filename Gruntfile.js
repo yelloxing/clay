@@ -71,6 +71,7 @@ module.exports = function (grunt) {
 					"clearInterval": true,
 					"Math": true,
 					"HTMLCollection": true,
+					"NodeList":true,
 					"clay": true
 				},
 				"force": true, // 强制执行，即使出现错误也会执行下面的任务

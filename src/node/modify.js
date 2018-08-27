@@ -27,3 +27,18 @@ function _toNode(str) {
 	}
 	return child;
 }
+
+clay.prototype.find = function (selector) {
+	if (this.length <= 0) return clay();
+	var newClay = clay(),
+		nodes = _sizzle(selector, this[0]), flag;
+	for (flag = 0; flag < nodes.length; flag++) {
+		newClay[flag] = nodes[flag];
+		newClay.length += 1;
+	}
+	return newClay;
+};
+
+clay.prototype.eq = function (flag) {
+	return this.length <= flag ? new clay() : new clay(this[flag]);
+};
