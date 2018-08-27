@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Aug 27 2018 00:57:32 GMT+0800 (CST)
+* Date:Mon Aug 27 2018 11:16:16 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -68,17 +68,7 @@
 
     clay.prototype.init.prototype = clay.prototype;
 
-    clay.__isLoad__ = false;
-
-    clay.author = '心叶';
-    clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.2.1';
-
-    global.clay = global.$$ = clay;
-
-    return clay;
-
-});
+// 命名空间路径
 clay.namespace = {
     svg: "http://www.w3.org/2000/svg",
     xhtml: "http://www.w3.org/1999/xhtml",
@@ -87,6 +77,7 @@ clay.namespace = {
     xmlns: "http://www.w3.org/2000/xmlns/"
 };
 
+// 空格、标志符
 clay.regexp = {
     // http://www.w3.org/TR/css3-selectors/#whitespace
     "whitespace": "[\\x20\\t\\r\\n\\f]",
@@ -94,6 +85,7 @@ clay.regexp = {
     "identifier": "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
+// 数学计算、绘图方案svg+canvas、布局
 clay.math = {};
 clay.svg = {};
 clay.canvas = {};
@@ -122,11 +114,16 @@ clay.sizzle = function (selector, context) {
         if (regexp.test(selector)) {
             var targetNodes = [];
 
+            return targetNodes;
         }
 
         // 其它情况一律认为希望把字符串变成结点
         else {
-            return [clay.toNode(selector)];
+            try {
+                return [clay.toNode(selector)];
+            } catch (e) {
+                return [];
+            }
         }
 
     }
@@ -312,3 +309,14 @@ clay.math.hermite = function () {
 
     return hermite;
 };
+    clay.__isLoad__ = false;
+
+    clay.author = '心叶';
+    clay.email = 'yelloxing@gmail.com';
+    clay.version = '1.2.1';
+
+    global.clay = global.$$ = clay;
+
+    return clay;
+
+});

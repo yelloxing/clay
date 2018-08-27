@@ -1,7 +1,7 @@
 'use strict';
 
 var source = [
-    './src/core.js',
+    // 基本配置
     './src/config.js',
 
     // 基本的结点操作
@@ -36,12 +36,23 @@ module.exports = function (grunt) {
         concat: { //合并代码
             options: {
                 separator: '\n',
-                stripBanners: true,
-                banner: banner
+                stripBanners: true
             },
             target: {
                 src: source,
+                dest: 'build/clay.js'
+            }
+        },
+        build: {//自定义插入合并
+            target: {
+                banner: banner,
+                src: 'build/clay.js',
                 dest: 'build/clay-<%= pkg.version %>.js'
+            }
+        },
+        clean: {// 删除临时文件
+            target: {
+                src: ['build/clay.js']
             }
         },
         jshint: { //语法检查
@@ -60,7 +71,7 @@ module.exports = function (grunt) {
                     "clearInterval": true,
                     "Math": true,
                     "HTMLCollection": true,
-                    "clay":true
+                    "clay": true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
@@ -86,7 +97,11 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+
+    // clay特殊的任务
+    grunt.loadTasks("build/tasks");
 
     /*注册任务*/
-    grunt.registerTask('release', ['concat:target', 'jshint:target', 'uglify:target']);
+    grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
 };

@@ -21,11 +21,16 @@ clay.sizzle = function (selector, context) {
         if (regexp.test(selector)) {
             var targetNodes = [];
 
+            return targetNodes;
         }
 
         // 其它情况一律认为希望把字符串变成结点
         else {
-            return [clay.toNode(selector)];
+            try {
+                return [clay.toNode(selector)];
+            } catch (e) {
+                return [];
+            }
         }
 
     }
