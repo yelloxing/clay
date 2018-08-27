@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Aug 27 2018 11:16:16 GMT+0800 (CST)
+* Date:Mon Aug 27 2018 11:34:15 GMT+0800 (CST)
 */
 (function (global, factory) {
 
