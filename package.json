@@ -4,6 +4,7 @@
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
+    "edit":"sass --watch ./docs/scss/root.scss:./docs/style.css",
     "start": "npm run release"
   },
   "repository": {
