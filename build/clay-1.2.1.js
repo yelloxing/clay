@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Aug 27 2018 23:25:57 GMT+0800 (CST)
+* Date:Tue Aug 28 2018 10:42:06 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -87,9 +87,11 @@ var _regexp = {
 
 // 数学计算、绘图方案svg+canvas、布局
 clay.math = {};
-clay.svg = {};
-clay.canvas = {};
+clay.svg = {}; clay.canvas = {};
 clay.layout = {};
+
+// 记录需要使用xlink命名空间常见的xml属性
+var xlink = ["href", "title", "show", "type", "role", "actuate"];
 
 // 负责查找结点
 function _sizzle(selector, context) {
@@ -258,6 +260,44 @@ clay.prototype.find = function (selector) {
 
 clay.prototype.eq = function (flag) {
 	return this.length <= flag ? new clay() : new clay(this[flag]);
+};
+
+clay.prototype.appendTo = function (target) {
+
+	var newClay = clay(target), i, j;
+	for (i = 0; i < newClay.length; i++)
+		for (j = 0; j < this.length; j++)
+			newClay[i].appendChild(this[j]);
+	return this;
+};
+
+clay.prototype.remove = function () {
+
+	var flag;
+	for (flag = 0; flag < this.length; flag++)
+		this[flag].parentNode.removeChild(this[flag]);
+	return this;
+};
+
+clay.prototype.attr = function (attr, val) {
+
+	if (val == null || val == undefined) {
+		return this.length > 0 ? this[0].getAttribute(attr) : undefined;
+	} else {
+		var flag;
+		for (flag = 0; flag < this.length; flag++) {
+			if (typeof val === 'function')
+				val = val(this[flag]._data, flag);
+			// 如果是xml元素
+			// 针对xlink使用特殊方法赋值
+			if (/[A-Z]/.test(this[flag].tagName) && xlink.indexOf(attr) >= 0) {
+				this[flag].setAttributeNS(_namespace.xlink, 'xlink:' + attr, val);
+			} else {
+				this[flag].setAttribute(attr, val);
+			}
+		}
+		return this;
+	}
 };
 
 // 用于把数据绑定到一组结点或返回第一个结点数据
