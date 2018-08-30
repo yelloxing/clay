@@ -71,7 +71,7 @@ module.exports = function (grunt) {
 					"clearInterval": true,
 					"Math": true,
 					"HTMLCollection": true,
-					"NodeList":true,
+					"NodeList": true,
 					"clay": true
 				},
 				"force": true, // 强制执行，即使出现错误也会执行下面的任务
@@ -91,6 +91,25 @@ module.exports = function (grunt) {
 					'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
 				}]
 			}
+		},
+		qunit: {//单元测试
+			target: {
+				options: {
+					httpBase: "http://localhost:8000/",
+					force: true,//一个任务失败了依旧不停止
+					urls: [
+						'test/node.html'
+					]
+				}
+			}
+		},
+		connect: {//给单元测试用的服务器
+			server: {
+				options: {
+					port: 8000,
+					base: '.'
+				}
+			}
 		}
 	});
 
@@ -99,10 +118,13 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-jshint');
 	grunt.loadNpmTasks('grunt-contrib-uglify');
 	grunt.loadNpmTasks('grunt-contrib-clean');
+	grunt.loadNpmTasks('grunt-contrib-qunit');
+	grunt.loadNpmTasks('grunt-contrib-connect');
 
 	// clay特殊的任务
 	grunt.loadTasks("build/tasks");
 
 	/*注册任务*/
 	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
+	grunt.registerTask('test', ['connect', 'qunit:target']);
 };
