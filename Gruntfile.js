@@ -99,7 +99,8 @@ module.exports = function (grunt) {
 					force: true,//一个任务失败了依旧不停止
 					urls: [
 						'test/data/node.html',
-						'test/data/data.html'
+						'test/data/data.html',
+						'test/data/math.html'
 					]
 				}
 			}
