@@ -47,7 +47,7 @@ module.exports = function (grunt) {
 			target: {
 				banner: banner,
 				src: 'build/clay.js',
-				dest: ['build/clay-<%= pkg.version %>.js','test/libs/clay-<%= pkg.version %>.js']
+				dest: ['build/clay-<%= pkg.version %>.js', 'test/libs/clay-<%= pkg.version %>.js']
 			}
 		},
 		clean: {// 删除临时文件
@@ -98,7 +98,8 @@ module.exports = function (grunt) {
 					httpBase: "http://localhost:8000",
 					force: true,//一个任务失败了依旧不停止
 					urls: [
-						'test/data/node.html'
+						'test/data/node.html',
+						'test/data/data.html'
 					]
 				}
 			}

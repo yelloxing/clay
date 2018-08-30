@@ -65,16 +65,15 @@ clay.prototype.attr = function (attr, val) {
 	if (val == null || val == undefined) {
 		return this.length > 0 ? this[0].getAttribute(attr) : undefined;
 	} else {
-		var flag;
+		var flag, _val;
 		for (flag = 0; flag < this.length; flag++) {
-			if (typeof val === 'function')
-				val = val(this[flag]._data, flag);
+			_val = typeof val === 'function' ? val(this[flag]._data, flag) : val;
 			// 如果是xml元素
 			// 针对xlink使用特殊方法赋值
 			if (/[A-Z]/.test(this[flag].tagName) && xlink.indexOf(attr) >= 0) {
-				this[flag].setAttributeNS(_namespace.xlink, 'xlink:' + attr, val);
+				this[flag].setAttributeNS(_namespace.xlink, 'xlink:' + attr, _val);
 			} else {
-				this[flag].setAttribute(attr, val);
+				this[flag].setAttribute(attr, _val);
 			}
 		}
 		return this;
