@@ -104,7 +104,7 @@ module.exports = function (grunt) {
 			}
 		},
 		connect: {//给单元测试用的服务器
-			server: {
+			target: {
 				options: {
 					port: 8000,
 					base: '.'
@@ -126,5 +126,5 @@ module.exports = function (grunt) {
 
 	/*注册任务*/
 	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
-	grunt.registerTask('test', ['connect', 'qunit:target']);
+	grunt.registerTask('test', ['connect:target', 'qunit:target']);
 };
