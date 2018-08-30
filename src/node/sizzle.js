@@ -24,12 +24,10 @@ function _sizzle(selector, context) {
 			// 分离出来四大选择器
 			// 然后初始化容器
 			var targetNodes,
-				nameReg = "\\[" + whitespace + "{0,}name(?:" + whitespace + "{0,}=" + whitespace + "{0,}(\\\'|\\\"){0,1}(" + identifier + ")\\1{0,1}){1,1}" + whitespace + "{0,}\\]",
 				id = selector.match(new RegExp('#' + identifier, 'g')),
 				cls = selector.match(new RegExp('\\.' + identifier, 'g')),
 				tag = selector.match(new RegExp('^' + identifier)),
-				attr = selector.match(new RegExp(attrReg, 'g')),
-				nattr = selector.match(new RegExp(nameReg));
+				attr = selector.match(new RegExp(attrReg, 'g'));
 			if (id) {
 				if (id.length > 1) {
 					return [];
@@ -44,8 +42,6 @@ function _sizzle(selector, context) {
 				targetNodes = context.getElementsByClassName((cls.shift(0) + "").replace(/^\./, ''));
 			} else if (tag) {
 				targetNodes = context.getElementsByTagName(tag.shift(0));
-			} else if (nattr) {
-				targetNodes = context.getElementsByName(nattr[2]);
 			} else {
 				targetNodes = context.getElementsByTagName('*');
 			}

@@ -5,32 +5,34 @@
  */
 module.exports = function (grunt) {
 
-    "use strict";
+	"use strict";
 
-    var srcFolder = __dirname + "/../../",
-        read = function (fileName) {
-            return grunt.file.read(srcFolder + fileName);
-        },
-        // 寻找插入点
-        core = read("src/core.js").split(/[\x20\t]*\/\/ @CODE\n(?:[\x20\t]*\/\/[^\n]+\n)*/),
-        config = {
-            wrap: {
-                start: core[0],
-                end: core[1]
-            }
-        };
+	var srcFolder = __dirname + "/../../",
+		read = function (fileName) {
+			return grunt.file.read(srcFolder + fileName);
+		},
+		// 寻找插入点
+		core = read("src/core.js").split(/[\x20\t]*\/\/ @CODE\n(?:[\x20\t]*\/\/[^\n]+\n)*/),
+		config = {
+			wrap: {
+				start: core[0],
+				end: core[1]
+			}
+		};
 
-    // 注册自定义grunt任务
-    grunt.registerMultiTask(
-        'build',
-        'Concatenate source!',
-        function () {
-            var src = this.data.src,
-                srcData = read(src),
-                name = this.data.dest,
-                banner = this.data.banner,
-                targetData = banner + config.wrap.start + srcData + config.wrap.end;
-            grunt.file.write(name, targetData);
-        }
-    );
+	// 注册自定义grunt任务
+	grunt.registerMultiTask(
+		'build',
+		'Concatenate source!',
+		function () {
+			var src = this.data.src,
+				srcData = read(src),
+				name = this.data.dest,
+				banner = this.data.banner,
+				targetData = banner + config.wrap.start + srcData + config.wrap.end, flag;
+			for (flag = 0; flag < name.length; flag++) {
+				grunt.file.write(name[flag], targetData);
+			}
+		}
+	);
 };
