@@ -100,7 +100,8 @@ module.exports = function (grunt) {
 					urls: [
 						'test/data/node.html',
 						'test/data/data.html',
-						'test/data/math.html'
+						'test/data/math.html',
+						'test/data/layout.html'
 					]
 				}
 			}
