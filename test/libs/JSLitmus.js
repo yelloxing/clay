@@ -278,6 +278,7 @@
 
 	// CSS we need for the UI
 	var STYLESHEET = '<style> \
+	  body {margin:1vw;} \
 	  #jslitmus {font-family:sans-serif; font-size: 12px;} \
 	  #jslitmus a {text-decoration: none;} \
 	  #jslitmus a:hover {text-decoration: underline;} \
@@ -289,6 +290,7 @@
 	  A IMG  {border:none} \
 	  #test_results { \
 		margin-top: 10px; \
+		width: 100%; \
 		font-size: 12px; \
 		font-family: sans-serif; \
 		border-collapse: collapse; \
@@ -316,10 +318,14 @@
 	  #test_results .test_nonlooping { \
 		border-left-style: dotted; \
 		border-left-width: 2px; \
+		text-align: center; \
+		width: 300px; \
 	  } \
 	  #test_results .test_looping { \
 		border-left-style: solid; \
 		border-left-width: 2px; \
+		text-align: center; \
+		width: 300px; \
 	  } \
 	  #test_results .test_name {white-space: nowrap;} \
 	  #test_results .test_pending { \
@@ -329,7 +335,8 @@
 	  } \
 	  #test_results .test_done {} \
 	  #test_results .test_done { \
-		text-align: right; \
+		text-align: center; \
+		width: 300px; \
 		font-family: monospace; \
 	  } \
 	  #test_results .test_error {color: #600;} \
@@ -346,10 +353,13 @@
 	  #chart img { \
 		border: solid 1px #ccc; \
 		margin-bottom: 5px; \
+		width: 98vw; \
+		display: inline-block; \
+		min-height: 100px; \
 	  } \
 	  #chart #tiny_url { \
-		height: 40px; \
-		width: 250px; \
+		min-height: 100px; \
+		width: 98vw; \
 	  } \
 	  #jslitmus_credit { \
 		font-size: 10px; \
@@ -360,18 +370,18 @@
 
 	// HTML markup for the UI
 	var MARKUP = '<div id="jslitmus"> \
-		<button onclick="JSLitmus.runAll(event)">Run Tests</button> \
-		<button id="stop_button" disabled="disabled" onclick="JSLitmus.stop()">Stop Tests</button> \
+		<button onclick="JSLitmus.runAll(event)">启动测试</button> \
+		<button id="stop_button" disabled="disabled" onclick="JSLitmus.stop()">停止测试</button> \
 		<br \> \
 		<br \> \
-		<input type="checkbox" style="vertical-align: middle" id="test_normalize" checked="checked" onchange="JSLitmus.renderAll()""> Normalize results \
+		<input type="checkbox" style="vertical-align: middle" id="test_normalize" checked="checked" onchange="JSLitmus.renderAll()""> 是否启用规范化结果？ \
 		<table id="test_results"> \
 		  <colgroup> \
 			<col /> \
 			<col width="100" /> \
 		  </colgroup> \
 		  <tr><th id="test_platform" colspan="2">' + platform + '</th></tr> \
-		  <tr><th>Test</th><th>Ops/sec</th></tr> \
+		  <tr><th>测试用例名称</th><th>每秒执行次数</th></tr> \
 		  <tr id="test_row_template" class="test_row" style="display:none"> \
 			<td class="test_name"></td> \
 			<td class="test_result">Ready</td> \
@@ -502,17 +512,17 @@
 		} else {
 		  if (test.running) {
 			cns.push('test_running');
-			cell.innerHTML = 'running';
+			cell.innerHTML = '运行中';
 		  } else if (jsl.indexOf(JSLitmus._queue, test) >= 0) {
 			cns.push('test_pending');
-			cell.innerHTML = 'pending';
+			cell.innerHTML = '准备中';
 		  } else if (test.count) {
 			cns.push('test_done');
 			var hz = test.getHz(jsl.$('test_normalize').checked);
 			cell.innerHTML = hz != Infinity ? hz : '&infin;';
 			cell.title = 'Looped ' + test.count + ' times in ' + test.time + ' seconds';
 		  } else {
-			cell.innerHTML = 'ready';
+			cell.innerHTML = '准备完毕';
 		  }
 		}
 		cell.className = cns.join(' ');
