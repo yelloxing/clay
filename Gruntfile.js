@@ -10,7 +10,8 @@ var source = [
 	'./src/node/data.js',
 
 	// 数学计算
-	'./src/math/interpolate/Hermite.js'
+	'./src/math/interpolate/Hermite.js',
+	'./src/math/interpolate/Cardinal.js'
 ];
 
 var banner = '/*!\n*\n' +
@@ -47,7 +48,7 @@ module.exports = function (grunt) {
 			target: {
 				banner: banner,
 				src: 'build/clay.js',
-				dest: ['build/clay-<%= pkg.version %>.js', 'test/libs/clay-<%= pkg.version %>.js']
+				dest: ['build/clay-<%= pkg.version %>.js', 'test/libs/clay.js']
 			}
 		},
 		clean: {// 删除临时文件
