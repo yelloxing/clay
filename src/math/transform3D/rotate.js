@@ -9,6 +9,7 @@ clay.math.rotate = function () {
 	};
 
 	// 设置旋转射线
+	// ax+by+cz+d=0
 	rotate.setL = function () {
 
 

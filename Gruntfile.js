@@ -9,6 +9,9 @@ var source = [
 	'./src/node/modify.js',
 	'./src/node/data.js',
 
+	// 工具
+	'./src/tool/animation.js',
+
 	// 数学计算
 	'./src/math/interpolate/Hermite.js',
 	'./src/math/interpolate/Cardinal.js',
