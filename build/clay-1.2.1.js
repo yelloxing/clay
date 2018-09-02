@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sun Sep 02 2018 00:48:31 GMT+0800 (CST)
+* Date:Sun Sep 02 2018 17:05:40 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -85,9 +85,9 @@ var _regexp = {
 	identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、绘图方案svg+canvas、布局
+// 数学计算、绘图方案svg+canvas+webgl、布局
 clay.math = {};
-clay.svg = {}; clay.canvas = {};
+clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
 
 // 记录需要使用xlink命名空间常见的xml属性
@@ -492,6 +492,147 @@ clay.math.cardinal = function () {
 	};
 
 	return cardinal;
+};
+
+// 围绕任意射线旋转
+// 旋转方向满足右手法则
+clay.math.rotate = function () {
+
+	var scope = {};
+
+	var rotate = function () {
+
+	};
+
+	// 设置旋转射线
+	rotate.setL = function () {
+
+
+		return rotate;
+
+	};
+
+	// 设置点最初的位置
+	rotate.setP = function (x, y, z) {
+
+		if (typeof x !== 'number' || typeof y !== 'number') throw new Error('Unsupported data!');
+		if (typeof z !== 'number') z = 0;
+
+		return rotate;
+
+	};
+
+	return rotate;
+
+};
+
+// 沿着指定方向移动
+clay.math.move = function () {
+
+	var scope = {};
+
+	// 根据移动距离返回移动后位置
+	// flag表示是否把这次移动后位置标记为下次移动开始位置
+	var move = function (d, flag) {
+
+		if (scope.D && scope.P) {
+			if (typeof d !== 'number') throw new Error('Unsupported data!');
+			var temp = [
+				scope.D[0] * d + scope.P[0],
+				scope.D[1] * d + scope.P[1],
+				scope.D[2] * d + scope.P[2]
+			];
+			// 如果flag为true，标记为下次移动开始位置
+			if (flag) {
+				scope.P = temp;
+				return move;
+			}
+			return temp;
+		} else {
+			throw new Error('You shoud first set the direction and position!');
+		}
+
+	};
+
+	// 设置点最初的位置
+	move.setP = function (x, y, z) {
+
+		if (typeof x !== 'number' || typeof y !== 'number') throw new Error('Unsupported data!');
+		if (typeof z !== 'number') z = 0;
+		scope.P = [x, y, z];
+		return move;
+
+	};
+
+	// 设置移动方向
+	move.setD = function (a, b, c) {
+
+		if (typeof a !== 'number' || typeof b !== 'number') throw new Error('Unsupported data!');
+		if (typeof c !== 'number') c = 0;
+		if (a == 0 && b == 0 && c == 0) {
+			scope.D = [0, 0, 0];
+		} else {
+			var temp = Math.sqrt(a * a + b * b + c * c);
+			scope.D = [a / temp, b / temp, c / temp];
+		}
+		return move;
+
+	};
+
+	return move;
+
+};
+
+// 在设置的中心点缩放指定倍速
+clay.math.scale = function () {
+
+	var scope = {};
+
+	// 根据缩放比例返回缩放后位置
+	// flag表示是否把这次缩放后位置标记为下次缩放开始位置
+	var scale = function (m, flag) {
+
+		if (scope.C && scope.P) {
+			if (typeof m !== 'number') throw new Error('Unsupported data!');
+			var temp = [
+				m * (scope.P[0] - scope.C[0]) + scope.C[0],
+				m * (scope.P[1] - scope.C[1]) + scope.C[1],
+				m * (scope.P[2] - scope.C[2]) + scope.C[2]
+			];
+			// 如果flag为true，标记为下次缩放开始位置
+			if (flag) {
+				scope.P = temp;
+				return scale;
+			}
+			return temp;
+		} else {
+			throw new Error('You shoud first set the center and position!');
+		}
+
+	};
+
+	// 设置缩放中心
+	scale.setC = function (a, b, c) {
+
+		if (typeof a !== 'number' || typeof b !== 'number') throw new Error('Unsupported data!');
+		if (typeof c !== 'number') c = 0;
+		scope.C = [a, b, c];
+		return scale;
+
+	};
+
+	// 设置点最初的位置
+	scale.setP = function (x, y, z) {
+
+		if (typeof x !== 'number' || typeof y !== 'number') throw new Error('Unsupported data!');
+		if (typeof z !== 'number') z = 0;
+		scope.P = [x, y, z];
+		return scale;
+
+	};
+
+	return scale;
+
 };
 
     clay.__isLoad__ = false;

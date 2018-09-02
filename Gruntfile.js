@@ -11,7 +11,19 @@ var source = [
 
 	// 数学计算
 	'./src/math/interpolate/Hermite.js',
-	'./src/math/interpolate/Cardinal.js'
+	'./src/math/interpolate/Cardinal.js',
+	'./src/math/transform3D/rotate.js',
+	'./src/math/transform3D/move.js',
+	'./src/math/transform3D/scale.js',
+
+	// 布局数据转换
+
+	// svg绘图
+
+	// Canvas2D绘图
+
+	// webgl3D绘图
+
 ];
 
 var banner = '/*!\n*\n' +

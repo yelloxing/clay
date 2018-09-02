@@ -15,9 +15,9 @@ var _regexp = {
 	identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、绘图方案svg+canvas、布局
+// 数学计算、绘图方案svg+canvas+webgl、布局
 clay.math = {};
-clay.svg = {}; clay.canvas = {};
+clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
 
 // 记录需要使用xlink命名空间常见的xml属性
