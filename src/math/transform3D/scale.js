@@ -1,13 +1,15 @@
 // 在设置的中心点缩放指定倍速
 clay.math.scale = function () {
 
-	var scope = {};
+	var scope = {
+		C: [0, 0, 0]
+	};
 
 	// 根据缩放比例返回缩放后位置
 	// flag表示是否把这次缩放后位置标记为下次缩放开始位置
 	var scale = function (m, flag) {
 
-		if (scope.C && scope.P) {
+		if (scope.P) {
 			if (typeof m !== 'number') throw new Error('Unsupported data!');
 			var temp = [
 				m * (scope.P[0] - scope.C[0]) + scope.C[0],
@@ -21,7 +23,7 @@ clay.math.scale = function () {
 			}
 			return temp;
 		} else {
-			throw new Error('You shoud first set the center and position!');
+			throw new Error('You shoud first set the position!');
 		}
 
 	};
