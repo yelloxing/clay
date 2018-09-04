@@ -13,8 +13,8 @@ clay.math.rotate = function () {
 			var x = scope.M.A[0][0] * scope.P[0] + scope.M.A[0][1] * scope.P[1] + scope.M.A[0][2] * scope.P[2] + scope.M.A[0][3],
 				y = scope.M.A[1][0] * scope.P[0] + scope.M.A[1][1] * scope.P[1] + scope.M.A[1][2] * scope.P[2] + scope.M.A[1][3],
 				z = scope.M.A[2][0] * scope.P[0] + scope.M.A[2][1] * scope.P[1] + scope.M.A[2][2] * scope.P[2] + scope.M.A[2][3],
-				cos = Math.round(Math.cos(deg) * 1000000000000000) / 1000000000000000,
-				sin = Math.round(Math.sin(deg) * 1000000000000000) / 1000000000000000;
+				cos = Math.cos(deg),
+				sin = Math.sin(deg);
 			var t = x * cos - y * sin;
 			y = x * sin + y * cos;
 			x = t;
@@ -23,6 +23,9 @@ clay.math.rotate = function () {
 				scope.M.B[1][0] * x + scope.M.B[1][1] * y + scope.M.B[1][2] * z + scope.M.B[1][3],
 				scope.M.B[2][0] * x + scope.M.B[2][1] * y + scope.M.B[2][2] * z + scope.M.B[2][3]
 			];
+			temp[0] = Math.round(temp[0] * 100000000000000) / 100000000000000;
+			temp[1] = Math.round(temp[1] * 100000000000000) / 100000000000000;
+			temp[2] = Math.round(temp[2] * 100000000000000) / 100000000000000;
 			// 如果flag为true，标记为下次旋转开始位置
 			if (flag) {
 				scope.P = temp;
@@ -65,9 +68,9 @@ clay.math.rotate = function () {
 			scope.M = {
 				// 任意射线变成OZ轴变换矩阵
 				A: [
-					[cos1, -sin1, 0, -a1],
-					[cos2 * sin1, cos1 * cos2, -sin2, -b1],
-					[sin1 * sin2, cos1 * sin2, cos2, -c1]
+					[cos1, -sin1, 0, b1 * sin1 - a1 * cos1],
+					[cos2 * sin1, cos1 * cos2, -sin2, c1 * sin2 - a1 * sin1 * cos2 - b1 * cos1 * cos2],
+					[sin1 * sin2, cos1 * sin2, cos2, -a1 * sin1 * sin2 - b1 * cos1 * sin2 - c1 * cos2]
 				],
 				// OZ轴变回原来的射线的变换矩阵
 				B: [
