@@ -19,6 +19,8 @@ var source = [
 	'./src/math/transform3D/move.js',
 	'./src/math/transform3D/scale.js',
 
+	// 刻度尺
+
 	// 布局数据转换
 
 	// svg绘图

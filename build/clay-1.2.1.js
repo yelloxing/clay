@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Sep 04 2018 21:36:03 GMT+0800 (CST)
+* Date:Wed Sep 05 2018 00:54:13 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -85,13 +85,14 @@ var _regexp = {
 	identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、绘图方案svg+canvas+webgl、布局
+// 数学计算、刻度尺、绘图方案svg+canvas+webgl、布局
 clay.math = {};
+clay.ruler = {};
 clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
 
 // 记录需要使用xlink命名空间常见的xml属性
-var xlink = ["href", "title", "show", "type", "role", "actuate"];
+var _xlink = ["href", "title", "show", "type", "role", "actuate"];
 
 // 负责查找结点
 function _sizzle(selector, context) {
@@ -285,7 +286,7 @@ clay.prototype.attr = function (attr, val) {
 			_val = typeof val === 'function' ? val(this[flag]._data, flag) : val;
 			// 如果是xml元素
 			// 针对xlink使用特殊方法赋值
-			if (/[A-Z]/.test(this[flag].tagName) && xlink.indexOf(attr) >= 0) {
+			if (/[A-Z]/.test(this[flag].tagName) && _xlink.indexOf(attr) >= 0) {
 				this[flag].setAttributeNS(_namespace.xlink, 'xlink:' + attr, _val);
 			} else {
 				this[flag].setAttribute(attr, _val);
@@ -293,6 +294,31 @@ clay.prototype.attr = function (attr, val) {
 		}
 		return this;
 	}
+};
+
+clay.prototype.css = function (name, style) {
+
+	if (arguments.length <= 1 && typeof name !== 'object') {
+		if (this.length < 1) return undefined;
+		var allStyle = document.defaultView && document.defaultView.getComputedStyle ?
+			document.defaultView.getComputedStyle(this[0], null) :
+			this[0].currentStyle;
+		return typeof name === 'string' ?
+			allStyle.getPropertyValue(name) :
+			allStyle;
+	} else if (this.length > 0) {
+		var flag, key;
+		if (typeof name === 'object') {
+			for (key in name)
+				for (flag = 0; flag < this.length; flag++)
+					this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, name[key]) : name[key];
+		} else {
+			for (flag = 0; flag < this.length; flag++)
+				this[flag].style[name] = typeof style === 'function' ? style(this[flag]._data, flag) : style;
+		}
+	}
+	return this;
+
 };
 
 // 用于把数据绑定到一组结点或返回第一个结点数据
