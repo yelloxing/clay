@@ -64,9 +64,9 @@ clay.math.rotate = function () {
 			scope.M = {
 				// 任意射线变成OZ轴变换矩阵
 				A: [
-					[cos1, -sin1, 0, 0],
-					[cos2 * sin1, cos1 * cos2, -sin2, 0],
-					[sin1 * sin2, cos1 * sin2, cos2, 0]
+					[cos1, -sin1, 0, -a1],
+					[cos2 * sin1, cos1 * cos2, -sin2, -b1],
+					[sin1 * sin2, cos1 * sin2, cos2, -c1]
 				],
 				// OZ轴变回原来的射线的变换矩阵
 				B: [
