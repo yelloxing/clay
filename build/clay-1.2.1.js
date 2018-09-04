@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Sep 04 2018 18:11:53 GMT+0800 (CST)
+* Date:Tue Sep 04 2018 18:28:07 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -596,8 +596,9 @@ clay.math.rotate = function () {
 				z = scope.M.A[2][0] * scope.P[0] + scope.M.A[2][1] * scope.P[1] + scope.M.A[2][2] * scope.P[2] + scope.M.A[2][3],
 				cos = Math.round(Math.cos(deg) * 1000000000000000) / 1000000000000000,
 				sin = Math.round(Math.sin(deg) * 1000000000000000) / 1000000000000000;
-			x = x * cos - y * sin;
+			var t = x * cos - y * sin;
 			y = x * sin + y * cos;
+			x = t;
 			var temp = [
 				scope.M.B[0][0] * x + scope.M.B[0][1] * y + scope.M.B[0][2] * z + scope.M.B[0][3],
 				scope.M.B[1][0] * x + scope.M.B[1][1] * y + scope.M.B[1][2] * z + scope.M.B[1][3],

@@ -11,7 +11,7 @@ QUnit.test('3D移动', 2, function () {
 QUnit.test('3D旋转', 1, function () {
 
 	var rotate2D = clay.math.rotate().setL(2, 1).setP(2, 0)(Math.PI / 2);
-	ok(rotate2D[0] == 3 && rotate2D[1] == 2 && rotate2D[2] == 0, '2D旋转');
+	ok(rotate2D[0] == 3 && rotate2D[1] == 1 && rotate2D[2] == 0, '2D旋转');
 
 });
 
