@@ -1,5 +1,7 @@
 #  clay - Provide more flexible data visualization solutions
 
+<img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/docs/images/clay.png">
+
 ****
 ### 作者:心叶
 ### 邮箱:yelloxing@gmail.com
