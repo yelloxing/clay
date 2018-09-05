@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Sep 06 2018 00:08:22 GMT+0800 (CST)
+* Date:Thu Sep 06 2018 00:13:57 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -509,7 +509,7 @@ clay.getColors = function (num) {
 // 返回最大值
 clay.max = function (array, valback) {
 
-	valback = typeof valback === 'function' ? valback : function (data) { return data };
+	valback = typeof valback === 'function' ? valback : function (data) { return data; };
 	var flag = 1, max = array[0], maxval = valback(array[0], 0), nowval;
 	for (; flag < array.length; flag++) {
 		nowval = valback(array[flag], flag);
@@ -525,7 +525,7 @@ clay.max = function (array, valback) {
 // 返回最小值
 clay.min = function (array, valback) {
 
-	valback = typeof valback === 'function' ? valback : function (data) { return data };
+	valback = typeof valback === 'function' ? valback : function (data) { return data; };
 	var flag = 1, min = array[0], minval = valback(array[0], 0), nowval;
 	for (; flag < array.length; flag++) {
 		nowval = valback(array[flag], flag);
