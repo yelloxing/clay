@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<title>clay - 性能基准测试 - 刻度尺</title>
+	<script src="../libs/JSLitmus.js"></script>
+	<script src="../libs/clay.js"></script>
+</head>
+
+<body>
+
+	<script>
+
+		JSLitmus.test('线性刻度尺', function () {
+
+			var linear = clay.ruler.linear().domain([0, 8]).range([1, 57]);
+			for (flag = 0; flag <= 3; flag += 0.01) {
+				linear(1);
+			}
+		});
+
+	</script>
+
+</body>
+
+</html>
