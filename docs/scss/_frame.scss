@@ -10,7 +10,7 @@ body {
         border-width: 0 .5rem;
         font-size: .3rem;
         font-family: fantasy;
-        @include bg_init('../images/clay.png');
+        @include bg_init('./images/clay.png');
         background-position-x: left;
         padding-left: .5rem;
         &>ul {
