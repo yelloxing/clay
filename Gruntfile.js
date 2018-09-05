@@ -20,6 +20,7 @@ var source = [
 	'./src/math/transform3D/scale.js',
 
 	// 刻度尺
+	'./src/ruler/linear.js'
 
 	// 布局数据转换
 
@@ -120,7 +121,8 @@ module.exports = function (grunt) {
 						'test/data/node.html',
 						'test/data/data.html',
 						'test/data/math.html',
-						'test/data/layout.html'
+						'test/data/layout.html',
+						'test/data/ruler.html'
 					]
 				}
 			}
