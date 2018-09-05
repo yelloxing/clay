@@ -95,7 +95,7 @@ clay.prototype.css = function (name, style) {
 		if (typeof name === 'object') {
 			for (key in name)
 				for (flag = 0; flag < this.length; flag++)
-					this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, name[key]) : name[key];
+					this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, key, name[key]) : name[key];
 		} else {
 			for (flag = 0; flag < this.length; flag++)
 				this[flag].style[name] = typeof style === 'function' ? style(this[flag]._data, flag) : style;

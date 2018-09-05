@@ -5,6 +5,7 @@
   "scripts": {
     "release": "node_modules/.bin/grunt release",
     "test": "node_modules/.bin/grunt test",
+    "server": "node_modules/.bin/grunt server",
     "edit": "sass --watch ./docs/scss/root.scss:./docs/style.css --style compressed",
     "start": "npm run release"
   },

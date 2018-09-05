@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Sep 05 2018 00:54:13 GMT+0800 (CST)
+* Date:Wed Sep 05 2018 16:39:21 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -311,7 +311,7 @@ clay.prototype.css = function (name, style) {
 		if (typeof name === 'object') {
 			for (key in name)
 				for (flag = 0; flag < this.length; flag++)
-					this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, name[key]) : name[key];
+					this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, key, name[key]) : name[key];
 		} else {
 			for (flag = 0; flag < this.length; flag++)
 				this[flag].style[name] = typeof style === 'function' ? style(this[flag]._data, flag) : style;

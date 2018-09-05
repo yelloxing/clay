@@ -106,14 +106,15 @@ module.exports = function (grunt) {
 					mangle: true
 				},
 				files: [{
-					'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
+					'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js'],
+					'docs/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
 				}]
 			}
 		},
 		qunit: {//单元测试
 			target: {
 				options: {
-					httpBase: "http://localhost:8000",
+					httpBase: "http://localhost:30001",
 					force: true,//一个任务失败了依旧不停止
 					urls: [
 						'test/data/node.html',
@@ -127,8 +128,15 @@ module.exports = function (grunt) {
 		connect: {//给单元测试用的服务器
 			target: {
 				options: {
-					port: 8000,
+					port: 30001,
 					base: '.'
+				}
+			},
+			docs: {
+				options: {
+					port: 30000,
+					base: './docs',
+					keepalive: true
 				}
 			}
 		}
@@ -148,4 +156,5 @@ module.exports = function (grunt) {
 	/*注册任务*/
 	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
 	grunt.registerTask('test', ['connect:target', 'qunit:target']);
+	grunt.registerTask('server', ['connect:docs']);
 };
