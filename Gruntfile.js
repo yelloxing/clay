@@ -11,6 +11,7 @@ var source = [
 
 	// 工具
 	'./src/tool/animation.js',
+	'./src/tool/calc.js',
 
 	// 数学计算
 	'./src/math/interpolate/Hermite.js',
