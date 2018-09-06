@@ -1,5 +1,5 @@
-// 线性刻度尺
-clay.ruler.linear = function () {
+// 线性比例尺
+clay.scale.linear = function () {
 
 	var scope = {};
 

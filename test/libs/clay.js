@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Sep 06 2018 12:07:08 GMT+0800 (CST)
+* Date:Fri Sep 07 2018 00:01:54 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -85,9 +85,9 @@ var _regexp = {
 	identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、刻度尺、绘图方案svg+canvas+webgl、布局
+// 数学计算、比例尺、绘图方案svg+canvas+webgl、布局
 clay.math = {};
-clay.ruler = {};
+clay.scale = {};
 clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
 
@@ -167,8 +167,8 @@ function _sizzle(selector, context) {
 				}
 
 				for (x = 0; f && attr && x < attr.length; x++) {
-					t = attrSplitReg.exec(attr[x]),
-						y = targetNodes[flag].getAttribute(t[1]);
+					t = attrSplitReg.exec(attr[x]);
+					y = targetNodes[flag].getAttribute(t[1]);
 					// 属性值写的时候需要相等
 					if (y === null || (t[2] && y != t[2])) {
 						f = false;
@@ -538,6 +538,82 @@ clay.min = function (array, valback) {
 
 };
 
+// 线性比例尺
+clay.scale.linear = function () {
+
+	var scope = {};
+
+	// 返回定义域的值对应的值域的值
+	var linear = function (domain) {
+
+		if (typeof domain === 'number')
+			if (!scope.scaleCalc)
+				throw new Error('You shoud first set the domain and range!');
+			else if (domain <= scope.domains[0])
+				return scope.ranges[0];
+			else if (domain >= scope.domains[1])
+				return scope.ranges[1];
+			else
+				return (domain - scope.domains[0]) * scope.scaleCalc + scope.ranges[0];
+		else
+			throw new Error('A number is required!');
+
+
+	};
+
+	linear.getDomain = function (range) {
+
+		if (typeof range === 'number')
+			if (!scope.scaleCalc)
+				throw new Error('You shoud first set the domain and range!');
+			else if (range <= scope.ranges[0])
+				return scope.domains[0];
+			else if (range >= scope.ranges[1])
+				return scope.domains[1];
+			else
+				return (range - scope.ranges[0]) / scope.scaleCalc + scope.domains[0];
+		else
+			throw new Error('A number is required!');
+
+	};
+
+	// 设置或者获取定义域
+	linear.domain = function (domains) {
+
+		if (domains.constructor === Array && domains.length >= 2)
+			scope.domains = domains;
+		else
+			return scope.domains;
+
+		// 如果定义域和值域都已经设置
+		// 更新计算方法
+		if (scope.ranges)
+			scope.scaleCalc = (scope.ranges[1] - scope.ranges[0]) / (scope.domains[1] - scope.domains[0]);
+		return linear;
+
+	};
+
+
+	// 设置或者获取值域
+	linear.range = function (ranges) {
+
+		if (ranges.constructor === Array && ranges.length >= 2)
+			scope.ranges = ranges;
+		else
+			return scope.ranges;
+
+		// 如果定义域和值域都已经设置
+		// 更新计算方法
+		if (scope.domains)
+			scope.scaleCalc = (scope.ranges[1] - scope.ranges[0]) / (scope.domains[1] - scope.domains[0]);
+		return linear;
+
+	};
+
+	return linear;
+
+};
+
 // Hermite三次插值
 clay.math.hermite = function () {
 
@@ -875,85 +951,6 @@ clay.math.scale = function () {
 	return scale;
 
 };
-
-// 线性刻度尺
-clay.ruler.linear = function () {
-
-	var scope = {};
-
-	// 返回定义域的值对应的值域的值
-	var linear = function (domain) {
-
-		if (typeof domain === 'number')
-			if (!scope.scaleCalc)
-				throw new Error('You shoud first set the domain and range!');
-			else if (domain <= scope.domains[0])
-				return scope.ranges[0];
-			else if (domain >= scope.domains[1])
-				return scope.ranges[1];
-			else
-				return (domain - scope.domains[0]) * scope.scaleCalc + scope.ranges[0];
-		else
-			throw new Error('A number is required!');
-
-
-	};
-
-	linear.getDomain = function (range) {
-
-		if (typeof range === 'number')
-			if (!scope.scaleCalc)
-				throw new Error('You shoud first set the domain and range!');
-			else if (range <= scope.ranges[0])
-				return scope.domains[0];
-			else if (range >= scope.ranges[1])
-				return scope.domains[1];
-			else
-				return (range - scope.ranges[0]) / scope.scaleCalc + scope.domains[0];
-		else
-			throw new Error('A number is required!');
-
-	};
-
-	// 设置或者获取定义域
-	linear.domain = function (domains) {
-
-		if (domains.constructor === Array && domains.length >= 2)
-			scope.domains = domains;
-		else
-			return scope.domains;
-
-		// 如果定义域和值域都已经设置
-		// 更新计算方法
-		if (scope.ranges)
-			scope.scaleCalc = (scope.ranges[1] - scope.ranges[0]) / (scope.domains[1] - scope.domains[0]);
-		return linear;
-
-	};
-
-
-	// 设置或者获取值域
-	linear.range = function (ranges) {
-
-		if (ranges.constructor === Array && ranges.length >= 2)
-			scope.ranges = ranges;
-		else
-			return scope.ranges;
-
-		// 如果定义域和值域都已经设置
-		// 更新计算方法
-		if (scope.domains)
-			scope.scaleCalc = (scope.ranges[1] - scope.ranges[0]) / (scope.domains[1] - scope.domains[0]);
-		return linear;
-
-	};
-
-	return linear;
-
-};
-
-
-
 
     clay.__isLoad__ = false;
 

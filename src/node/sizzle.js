@@ -71,8 +71,8 @@ function _sizzle(selector, context) {
 				}
 
 				for (x = 0; f && attr && x < attr.length; x++) {
-					t = attrSplitReg.exec(attr[x]),
-						y = targetNodes[flag].getAttribute(t[1]);
+					t = attrSplitReg.exec(attr[x]);
+					y = targetNodes[flag].getAttribute(t[1]);
 					// 属性值写的时候需要相等
 					if (y === null || (t[2] && y != t[2])) {
 						f = false;

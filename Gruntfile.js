@@ -13,6 +13,9 @@ var source = [
 	'./src/tool/animation.js',
 	'./src/tool/calc.js',
 
+	// 比例尺
+	'./src/scale/linear.js',
+
 	// 数学计算
 	'./src/math/interpolate/Hermite.js',
 	'./src/math/interpolate/Cardinal.js',
@@ -20,17 +23,11 @@ var source = [
 	'./src/math/transform3D/move.js',
 	'./src/math/transform3D/scale.js',
 
-	// 刻度尺
-	'./src/ruler/linear.js',
-
-	// 布局数据转换
-	'./src/layout/pie.js',
+	// 布局
 
 	// svg绘图
-	'./src/svg/arc.js',
 
 	// Canvas2D绘图
-	'./src/canvas/arc.js'
 
 	// webgl3D绘图
 
@@ -148,7 +145,7 @@ module.exports = function (grunt) {
 		copy: {//复制压缩后的文件用于用例开发
 			target: {
 				src: "build/clay-<%= pkg.version %>.min.js",
-				dest: "docs/clay-<%= pkg.version %>.min.js"
+				dest: "docs/clay.min.js"
 			}
 		}
 	});

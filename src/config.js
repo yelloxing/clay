@@ -15,9 +15,9 @@ var _regexp = {
 	identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、刻度尺、绘图方案svg+canvas+webgl、布局
+// 数学计算、比例尺、绘图方案svg+canvas+webgl、布局
 clay.math = {};
-clay.ruler = {};
+clay.scale = {};
 clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
 
