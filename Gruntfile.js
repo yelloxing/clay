@@ -21,13 +21,16 @@ var source = [
 	'./src/math/transform3D/scale.js',
 
 	// 刻度尺
-	'./src/ruler/linear.js'
+	'./src/ruler/linear.js',
 
 	// 布局数据转换
+	'./src/layout/pie.js',
 
 	// svg绘图
+	'./src/svg/arc.js',
 
 	// Canvas2D绘图
+	'./src/canvas/arc.js'
 
 	// webgl3D绘图
 
@@ -108,8 +111,7 @@ module.exports = function (grunt) {
 					mangle: true
 				},
 				files: [{
-					'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js'],
-					'docs/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
+					'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
 				}]
 			}
 		},
@@ -142,6 +144,12 @@ module.exports = function (grunt) {
 					keepalive: true
 				}
 			}
+		},
+		copy: {//复制压缩后的文件用于用例开发
+			target: {
+				src: "build/clay-<%= pkg.version %>.min.js",
+				dest: "docs/clay-<%= pkg.version %>.min.js"
+			}
 		}
 	});
 
@@ -152,12 +160,13 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-connect');
+	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	// clay特殊的任务
 	grunt.loadTasks("build/tasks");
 
 	/*注册任务*/
-	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
+	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target', 'copy:target']);
 	grunt.registerTask('test', ['connect:target', 'qunit:target']);
 	grunt.registerTask('server', ['connect:docs']);
 };

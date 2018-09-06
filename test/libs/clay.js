@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Sep 06 2018 00:13:57 GMT+0800 (CST)
+* Date:Thu Sep 06 2018 12:07:08 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -951,6 +951,9 @@ clay.ruler.linear = function () {
 	return linear;
 
 };
+
+
+
 
     clay.__isLoad__ = false;
 
