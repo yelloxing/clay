@@ -1,10 +1,11 @@
 'use strict';
 
 var source = [
-	// 基本配置
+
+	// 配置
 	'./src/config.js',
 
-	// 基本的结点操作
+	// 结点
 	'./src/node/sizzle.js',
 	'./src/node/modify.js',
 	'./src/node/data.js',
@@ -15,6 +16,7 @@ var source = [
 
 	// 比例尺
 	'./src/scale/linear.js',
+	'./src/scale/geo.js',
 
 	// 数学计算
 	'./src/math/interpolate/Hermite.js',
@@ -24,12 +26,22 @@ var source = [
 	'./src/math/transform3D/scale.js',
 
 	// 布局
+	'./src/layout/tree.js',
+	'./src/layout/force.js',
+	'./src/layout/pie.js',
 
 	// svg绘图
+	'./src/svg/arc.js',
+	'./src/svg/ruler.js',
+	'./src/svg/line.js',
 
 	// Canvas2D绘图
+	'./src/canvas/arc.js',
+	'./src/canvas/ruler.js',
+	'./src/canvas/line.js',
 
-	// webgl3D绘图
+	// WebGL3D绘图
+	'./src/webgl/polygon.js'
 
 ];
 
@@ -122,30 +134,24 @@ module.exports = function (grunt) {
 						'test/data/data.html',
 						'test/data/math.html',
 						'test/data/layout.html',
-						'test/data/ruler.html'
+						'test/data/scale.html'
 					]
 				}
 			}
 		},
-		connect: {//给单元测试用的服务器
-			target: {
+		connect: {
+			target: {//给单元测试用的服务器
 				options: {
 					port: 30001,
 					base: '.'
 				}
 			},
-			docs: {
+			local: {//服务器
 				options: {
 					port: 30000,
-					base: './docs',
+					base: '.',
 					keepalive: true
 				}
-			}
-		},
-		copy: {//复制压缩后的文件用于用例开发
-			target: {
-				src: "build/clay-<%= pkg.version %>.min.js",
-				dest: "docs/clay.min.js"
 			}
 		}
 	});
@@ -157,13 +163,12 @@ module.exports = function (grunt) {
 	grunt.loadNpmTasks('grunt-contrib-clean');
 	grunt.loadNpmTasks('grunt-contrib-qunit');
 	grunt.loadNpmTasks('grunt-contrib-connect');
-	grunt.loadNpmTasks('grunt-contrib-copy');
 
 	// clay特殊的任务
 	grunt.loadTasks("build/tasks");
 
 	/*注册任务*/
-	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target', 'copy:target']);
+	grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
 	grunt.registerTask('test', ['connect:target', 'qunit:target']);
-	grunt.registerTask('server', ['connect:docs']);
+	grunt.registerTask('server', ['connect:local']);
 };

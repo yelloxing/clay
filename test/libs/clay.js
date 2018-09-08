@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Sep 07 2018 00:01:54 GMT+0800 (CST)
+* Date:Sat Sep 08 2018 16:45:13 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -614,6 +614,7 @@ clay.scale.linear = function () {
 
 };
 
+
 // Hermite三次插值
 clay.math.hermite = function () {
 
@@ -951,6 +952,16 @@ clay.math.scale = function () {
 	return scale;
 
 };
+
+
+
+
+
+
+
+
+
+
 
     clay.__isLoad__ = false;
 

@@ -1,5 +1,7 @@
 #  clay - Provide more flexible data visualization solutions
 
+我们的目标是在提供更友好的数据可视化（2D和3D）解决方案。
+
 <img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/docs/images/clay.png">
 
 ****
@@ -7,9 +9,9 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
-### 接口文档和用例
+### 相关链接
 ------
-*	https://yelloxing.github.io/clay
+*	【接口文档和用例】https://yelloxing.github.io/clay/doc/index.html
 
 ### 免责声明
 ------

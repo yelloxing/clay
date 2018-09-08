@@ -14,7 +14,7 @@
 
 		JSLitmus.test('线性刻度尺', function () {
 
-			var linear = clay.ruler.linear().domain([0, 8]).range([1, 57]);
+			var linear = clay.scale.linear().domain([0, 8]).range([1, 57]);
 			for (flag = 0; flag <= 3; flag += 0.01) {
 				linear(1);
 			}
