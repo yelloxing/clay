@@ -1,6 +1,6 @@
 #  clay - Provide more flexible data visualization solutions
 
-我们的目标是在提供更友好的数据可视化（2D和3D）解决方案。
+我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
 
 <img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/doc/images/clay.png">
 
