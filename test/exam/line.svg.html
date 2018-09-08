@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<title>clay - 使用测试 - line.svg</title>
+	<script src="../libs/clay.js"></script>
+	<script>
+
+		$$(function () {
+
+			var line = $$.svg.line().interpolate('cardinal').setHeight(300);
+
+			$$('<path>').appendTo('.g1').attr('d', function () {
+				return line([[10, 100], [100, 200], [200, 70], [300, 250]], false);
+			}).attr('stroke', 'red')
+				.attr('fill', 'none')
+				.attr('stroke-width', '3');
+
+		});
+
+	</script>
+</head>
+
+<body>
+
+	<svg width=700 height=300>
+		<g class='g1' transform="translate(0,0)"></g>
+	</svg>
+
+</body>
+
+</html>

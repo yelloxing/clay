@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<title>clay - 使用测试 - line.canvas</title>
+	<script src="../libs/clay.js"></script>
+	<script>
+
+		$$(function () {
+
+			var line = $$.canvas.line().interpolate('cardinal').setHeight(300);
+
+			line($$('canvas'), [[10, 100], [100, 200], [200, 70], [300, 250]], {
+				color: 'red',
+				width: '5'
+			});
+
+		});
+
+	</script>
+</head>
+
+<body>
+
+	<canvas width=700 height=300></canvas>
+
+</body>
+
+</html>

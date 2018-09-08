@@ -20,7 +20,7 @@
 		});
 
 		JSLitmus.test('cardinal插值法', function () {
-			var cardinal = clay.math.cardinal().setP([0, 2], [1, 10], [2, 5], [3, 4]), flag;
+			var cardinal = clay.math.cardinal().setP([[0, 2], [1, 10], [2, 5], [3, 4]]), flag;
 			for (flag = 0; flag <= 3; flag += 0.01) {
 				cardinal(flag);
 			}

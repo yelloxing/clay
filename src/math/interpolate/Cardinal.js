@@ -35,15 +35,15 @@ clay.math.cardinal = function () {
 	};
 
 	// 设置点的位置
-	// 参数格式：[x,y],[x,y],...
+	// 参数格式：[[x,y],[x,y],...]
 	// 至少二个点
-	cardinal.setP = function () {
+	cardinal.setP = function (points) {
 
 		scope.hs = {
 			"x": [],
 			"h": []
 		};
-		var flag, points = arguments,
+		var flag,
 			slope = (points[1][1] - points[0][1]) / (points[1][0] - points[0][0]),
 			temp;
 		scope.hs.x[0] = points[0][0];

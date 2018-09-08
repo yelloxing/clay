@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>clay - 性能基准测试 - 刻度尺</title>
+	<title>clay - 性能基准测试 - 比例尺</title>
 	<script src="../libs/JSLitmus.js"></script>
 	<script src="../libs/clay.js"></script>
 </head>
@@ -12,7 +12,7 @@
 
 	<script>
 
-		JSLitmus.test('线性刻度尺', function () {
+		JSLitmus.test('线性比例尺', function () {
 
 			var linear = clay.scale.linear().domain([0, 8]).range([1, 57]);
 			for (flag = 0; flag <= 3; flag += 0.01) {
