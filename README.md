@@ -2,7 +2,7 @@
 
 我们的目标是在提供更友好的数据可视化（2D和3D）解决方案。
 
-<img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/docs/images/clay.png">
+<img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/doc/images/clay.png">
 
 ****
 ### 作者:心叶
