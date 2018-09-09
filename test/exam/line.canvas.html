@@ -9,14 +9,23 @@
 
 		$$(function () {
 
-			var line = $$.canvas.line('.cls1', {
-				strokeStyle: 'red',
-				lineWidth: '5'
-			}).interpolate('cardinal').setHeight(300).canvas('.cls2').config({
-				strokeStyle: 'blue'
-			});
+			var line = $$.canvas.line('.cls1',
+				// 配置画笔，后续修改或直接后续配置也可以
+				{
+					strokeStyle: 'red',
+					lineWidth: '5',
+					fillStyle: 'green'
+				}).interpolate('cardinal').setHeight(300)
+				// 可以传递canvas结点或者直接传递画笔
+				// 因此，配置好的曲线，可以重复利用
+				// 即使不是同一个画布
+				.canvas($$('.cls2')[0].getContext("2d")).config({
+					strokeStyle: 'blue'
+				});
 
-			line([[10, 100], [100, 200], [200, 70], [300, 250]]);
+			line([[10, 100], [100, 200], [200, 70], [300, 250]])
+				// 可以调用任何2d对象上的方法
+				.fill();
 
 		});
 

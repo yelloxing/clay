@@ -3,11 +3,10 @@
 // 绘制前再提供下面提供的方法设置也是可以的
 clay.canvas.line = function (_selector, config) {
 	config = config || {};
-	var canvas = clay(_selector), key;
-
+	var painter = _selector && _selector.constructor === CanvasRenderingContext2D ? _selector : clay(_selector)[0].getContext("2d"),
+		key;
 	var temp = _line({
 		init: function (x, y) {
-			var painter = canvas[0].getContext("2d");
 			painter.moveTo(x, y);
 			return painter;
 		},
@@ -18,17 +17,18 @@ clay.canvas.line = function (_selector, config) {
 		end: function (painter) {
 			for (key in config)
 				painter[key] = config[key];
-
 			painter.stroke();
-			return canvas;
+			return painter;
 		}
 	});
 
+	// 设置画笔
 	temp.canvas = function (selector) {
-		canvas = clay(selector);
+		painter = selector && selector.constructor === CanvasRenderingContext2D ? selector : clay(selector)[0].getContext("2d");
 		return temp;
 	};
 
+	// 配置画笔
 	temp.config = function (_config) {
 		for (key in _config)
 			config[key] = _config[key];

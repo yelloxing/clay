@@ -9,11 +9,17 @@
 
 		$$(function () {
 
-			var line = $$.svg.line().interpolate('cardinal').setHeight(300);
+			var line = $$.svg.line()
+				// 默认折线，也可以配置别的，
+				// 比如这里的cardinal三次插值
+				.interpolate('cardinal').setHeight(300);
 
 			$$('<path>').appendTo('.g1').attr('d', function () {
 				return line([[10, 100], [100, 200], [200, 70], [300, 250]], false);
-			}).attr('stroke', 'red')
+			})
+				// 由于svg和canvas不一样，
+				// 关于样式，编辑方法全部和普通svg一样
+				.attr('stroke', 'red')
 				.attr('fill', 'none')
 				.attr('stroke-width', '3');
 

@@ -32,6 +32,7 @@ var source = [
 
 	// 图形对象
 	'./src/painter/line.js',
+	'./src/painter/arc.js',
 
 	// svg绘图
 	'./src/painter/svg/arc.js',
@@ -106,6 +107,7 @@ module.exports = function (grunt) {
 					"clearInterval": true,
 					"Math": true,
 					"HTMLCollection": true,
+					"CanvasRenderingContext2D": true,
 					"NodeList": true,
 					"clay": true
 				},
