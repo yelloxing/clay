@@ -30,18 +30,21 @@ var source = [
 	'./src/layout/force.js',
 	'./src/layout/pie.js',
 
+	// 图形对象
+	'./src/painter/line.js',
+
 	// svg绘图
-	'./src/svg/arc.js',
-	'./src/svg/ruler.js',
-	'./src/svg/line.js',
+	'./src/painter/svg/arc.js',
+	'./src/painter/svg/ruler.js',
+	'./src/painter/svg/line.js',
 
 	// Canvas2D绘图
-	'./src/canvas/arc.js',
-	'./src/canvas/ruler.js',
-	'./src/canvas/line.js',
+	'./src/painter/canvas/arc.js',
+	'./src/painter/canvas/ruler.js',
+	'./src/painter/canvas/line.js',
 
 	// WebGL3D绘图
-	'./src/webgl/polygon.js'
+	'./src/painter/webgl/polygon.js'
 
 ];
 

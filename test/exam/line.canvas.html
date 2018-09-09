@@ -9,12 +9,14 @@
 
 		$$(function () {
 
-			var line = $$.canvas.line().interpolate('cardinal').setHeight(300);
-
-			line($$('canvas'), [[10, 100], [100, 200], [200, 70], [300, 250]], {
-				color: 'red',
-				width: '5'
+			var line = $$.canvas.line('.cls1', {
+				strokeStyle: 'red',
+				lineWidth: '5'
+			}).interpolate('cardinal').setHeight(300).canvas('.cls2').config({
+				strokeStyle: 'blue'
 			});
+
+			line([[10, 100], [100, 200], [200, 70], [300, 250]]);
 
 		});
 
@@ -23,7 +25,8 @@
 
 <body>
 
-	<canvas width=700 height=300></canvas>
+	<canvas class='cls1' width=700 height=300></canvas>
+	<canvas class='cls2' width=700 height=300></canvas>
 
 </body>
 
