@@ -31,6 +31,7 @@ var source = [
 	'./src/layout/pie.js',
 
 	// 图形对象
+	'./src/painter/tool.js',
 	'./src/painter/line.js',
 	'./src/painter/arc.js',
 

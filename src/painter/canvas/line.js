@@ -1,40 +1,26 @@
-// config采用canvas设置属性的api
-// 这二个参数不是必输项
-// 绘制前再提供下面提供的方法设置也是可以的
-clay.canvas.line = function (_selector, config) {
-	config = config || {};
-	var painter = _selector && _selector.constructor === CanvasRenderingContext2D ? _selector : clay(_selector)[0].getContext("2d"),
-		key;
-	var temp = _line({
-		init: function (x, y) {
-			painter.moveTo(x, y);
-			return painter;
-		},
-		draw: function (painter, x, y) {
-			painter.lineTo(x, y);
-			return painter;
-		},
-		end: function (painter) {
-			for (key in config)
-				painter[key] = config[key];
-			painter.stroke();
-			return painter;
-		}
-	});
+clay.canvas.line = function (selector, config) {
 
-	// 设置画笔
-	temp.canvas = function (selector) {
-		painter = selector && selector.constructor === CanvasRenderingContext2D ? selector : clay(selector)[0].getContext("2d");
-		return temp;
-	};
+	var key,
+		// 返回画线条的流程控制函数
+		// 并且返回的函数挂载了canvas特有的方法和属性
+		// 因此称之为基本的canvas对象
+		obj = _canvas(selector, config, _line, {
+			init: function (x, y) {
+				obj._painter.moveTo(x, y);
+				return obj._painter;
+			},
+			draw: function (painter, x, y) {
+				painter.lineTo(x, y);
+				return painter;
+			},
+			end: function (painter) {
+				for (key in obj._config)
+					painter[key] = obj._config[key];
+				painter.stroke();
+				return painter;
+			}
+		});
 
-	// 配置画笔
-	temp.config = function (_config) {
-		for (key in _config)
-			config[key] = _config[key];
-		return temp;
-	};
-
-	return temp;
+	return obj;
 
 };

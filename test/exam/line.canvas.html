@@ -9,7 +9,9 @@
 
 		$$(function () {
 
-			var line = $$.canvas.line('.cls1',
+			var line = $$.canvas.
+				// 设置画笔的时候，如果没有也不会报错
+				line('.cls',
 				// 配置画笔，后续修改或直接后续配置也可以
 				{
 					strokeStyle: 'red',
@@ -23,9 +25,15 @@
 					strokeStyle: 'blue'
 				});
 
-			line([[10, 100], [100, 200], [200, 70], [300, 250]])
-				// 可以调用任何2d对象上的方法
-				.fill();
+			var pen1 = line([[10, 100], [100, 200], [200, 70], [300, 250]]);
+
+			// 测试建立的对象是否独立
+			var line2 = $$.canvas.line('.cls', {
+				fillStyle: 'red'
+			});
+
+			// 可以调用任何2d对象上的方法
+			pen1.fill();
 
 		});
 

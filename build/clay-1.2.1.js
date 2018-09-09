@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sun Sep 09 2018 22:07:04 GMT+0800 (CST)
+* Date:Mon Sep 10 2018 00:58:29 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -957,6 +957,48 @@ clay.math.scale = function () {
 
 
 
+// 获取canvas2D对象
+function _getCanvas2D(selector) {
+
+	if (selector && selector.constructor === CanvasRenderingContext2D)
+		return selector;
+	else {
+		var canvas = clay(selector);
+		if (canvas.length > 0)
+			return canvas[0].getContext("2d");
+	}
+
+}
+
+// 基本的canvas对象
+// config采用canvas设置属性的api
+// 前二个参数不是必输项
+// 绘制前再提供下面提供的方法设置也是可以的
+// 第三个参数代表图形绘制控制方法
+// 最后一个是配置给控制方法的参数
+var _canvas = function (_selector, config, painterback, param) {
+
+	var key, temp = painterback(param);
+	temp._config = config || {};
+	temp._painter = _getCanvas2D(_selector);
+
+	// 获取画笔
+	temp.canvas = function (selector) {
+		temp._painter = _getCanvas2D(selector);
+		return temp;
+	};
+
+	// 配置画笔
+	temp.config = function (_config) {
+		for (key in _config)
+			temp._config[key] = _config[key];
+		return temp;
+	};
+
+	return temp;
+
+};
+
 // 2D曲线
 // config={init,draw,end}
 var _line = function (config) {
@@ -1044,10 +1086,46 @@ var _line = function (config) {
 };
 
 // 2D弧
-var _arc = function () {
+var _arc = function (type, painter) {
+
+	var scope = {
+		c: [0, 0]
+	};
+
+	var arc = function () {
+
+		// svg作为画板
+		if (type === 'svg') {
+			return painter();
+		}
+		// canvas作为画板
+		else {
+			return painter();
+		}
+
+	};
+
+	// 设置弧中心
+	arc.setCenter = function (x, y) {
+
+		if (typeof x !== 'number' || typeof y !== 'number')
+			throw new Error('Unsupported data!');
+		scope.c = [x, y];
+		return arc;
+
+	};
+
+	return arc;
 
 };
 
+clay.svg.arc = function () {
+
+	return _arc('svg', function () {
+
+	});
+
+};
 
 
 clay.svg.line = function () {
@@ -1066,46 +1144,47 @@ clay.svg.line = function () {
 
 };
 
+clay.canvas.arc = function (selector, config) {
+
+	var key,
+		obj = _canvas(selector, config, _line, function () {
+
+			for (key in obj._config)
+				obj._painter[key] = obj._config[key];
+
+			return obj._painter;
+
+		});
+
+	return obj;
+
+};
 
 
-// config采用canvas设置属性的api
-// 这二个参数不是必输项
-// 绘制前再提供下面提供的方法设置也是可以的
-clay.canvas.line = function (_selector, config) {
-	config = config || {};
-	var painter = _selector && _selector.constructor === CanvasRenderingContext2D ? _selector : clay(_selector)[0].getContext("2d"),
-		key;
-	var temp = _line({
-		init: function (x, y) {
-			painter.moveTo(x, y);
-			return painter;
-		},
-		draw: function (painter, x, y) {
-			painter.lineTo(x, y);
-			return painter;
-		},
-		end: function (painter) {
-			for (key in config)
-				painter[key] = config[key];
-			painter.stroke();
-			return painter;
-		}
-	});
+clay.canvas.line = function (selector, config) {
 
-	// 设置画笔
-	temp.canvas = function (selector) {
-		painter = selector && selector.constructor === CanvasRenderingContext2D ? selector : clay(selector)[0].getContext("2d");
-		return temp;
-	};
+	var key,
+		// 返回画线条的流程控制函数
+		// 并且返回的函数挂载了canvas特有的方法和属性
+		// 因此称之为基本的canvas对象
+		obj = _canvas(selector, config, _line, {
+			init: function (x, y) {
+				obj._painter.moveTo(x, y);
+				return obj._painter;
+			},
+			draw: function (painter, x, y) {
+				painter.lineTo(x, y);
+				return painter;
+			},
+			end: function (painter) {
+				for (key in obj._config)
+					painter[key] = obj._config[key];
+				painter.stroke();
+				return painter;
+			}
+		});
 
-	// 配置画笔
-	temp.config = function (_config) {
-		for (key in _config)
-			config[key] = _config[key];
-		return temp;
-	};
-
-	return temp;
+	return obj;
 
 };
 
