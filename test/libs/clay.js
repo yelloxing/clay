@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Sep 10 2018 22:07:53 GMT+0800 (CST)
+* Date:Tue Sep 11 2018 00:22:37 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -614,7 +614,6 @@ clay.scale.linear = function () {
 
 };
 
-
 // Hermite三次插值
 clay.math.hermite = function () {
 
@@ -1163,6 +1162,7 @@ var _arc = function (painter) {
 
 };
 
+
 clay.svg.arc = function () {
 
 	return _arc(
@@ -1181,7 +1181,9 @@ clay.svg.arc = function () {
 
 			var f = (endA - beginA) > Math.PI ? 1 : 0,
 				d = "M" + begInnerX + " " + begInnerY;
-			d += "A" + rmin + " " + rmin + " 0 " + f + " 1 " + endInnerX + " " + endInnerY;
+			d +=
+				// 横半径 竖半径 x轴偏移角度 0小弧/1大弧 0逆时针/1顺时针 终点x 终点y
+				"A" + rmin + " " + rmin + " 0 " + f + " 1 " + endInnerX + " " + endInnerY;
 			d += "L" + endOuterX + " " + endOuterY;
 			d += "A" + rmax + " " + rmax + " 0 " + f + " 0 " + begOuterX + " " + begOuterY;
 			d += "L" + begInnerX + " " + begInnerY;
@@ -1223,7 +1225,9 @@ clay.canvas.arc = function (selector, config) {
 		) {
 
 			obj._painter.moveTo(begInnerX, begInnerY);
-			obj._painter.arc(cx, cy, rmin, beginA, endA, false);
+			obj._painter.arc(
+				// (圆心x，圆心y，半径，开始角度，结束角度，true逆时针/false顺时针)
+				cx, cy, rmin, beginA, endA, false);
 			obj._painter.lineTo(endOuterX, endOuterY);
 			obj._painter.arc(cx, cy, rmax, endA, beginA, true);
 			obj._painter.lineTo(begInnerX, begInnerY);

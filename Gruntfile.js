@@ -16,7 +16,6 @@ var source = [
 
 	// 比例尺
 	'./src/scale/linear.js',
-	'./src/scale/geo.js',
 
 	// 数学计算
 	'./src/math/interpolate/Hermite.js',
@@ -24,6 +23,8 @@ var source = [
 	'./src/math/transform3D/rotate.js',
 	'./src/math/transform3D/move.js',
 	'./src/math/transform3D/scale.js',
+
+	// 物理计算
 
 	// 布局
 	'./src/layout/tree.js',
@@ -34,6 +35,7 @@ var source = [
 	'./src/painter/tool.js',
 	'./src/painter/line.js',
 	'./src/painter/arc.js',
+	'./src/painter/ruler.js',
 
 	// svg绘图
 	'./src/painter/svg/arc.js',

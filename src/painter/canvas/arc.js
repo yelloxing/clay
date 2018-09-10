@@ -12,7 +12,9 @@ clay.canvas.arc = function (selector, config) {
 		) {
 
 			obj._painter.moveTo(begInnerX, begInnerY);
-			obj._painter.arc(cx, cy, rmin, beginA, endA, false);
+			obj._painter.arc(
+				// (圆心x，圆心y，半径，开始角度，结束角度，true逆时针/false顺时针)
+				cx, cy, rmin, beginA, endA, false);
 			obj._painter.lineTo(endOuterX, endOuterY);
 			obj._painter.arc(cx, cy, rmax, endA, beginA, true);
 			obj._painter.lineTo(begInnerX, begInnerY);
