@@ -29,7 +29,6 @@ clay.math.rotate = function () {
 			// 如果flag为true，标记为下次旋转开始位置
 			if (flag) {
 				scope.P = temp;
-				return rotate;
 			}
 			return temp;
 		} else {

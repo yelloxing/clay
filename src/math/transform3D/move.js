@@ -17,7 +17,6 @@ clay.math.move = function () {
 			// 如果flag为true，标记为下次移动开始位置
 			if (flag) {
 				scope.P = temp;
-				return move;
 			}
 			return temp;
 		} else {

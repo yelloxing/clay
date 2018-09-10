@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Sep 10 2018 00:58:29 GMT+0800 (CST)
+* Date:Mon Sep 10 2018 22:07:53 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -771,7 +771,6 @@ clay.math.rotate = function () {
 			// 如果flag为true，标记为下次旋转开始位置
 			if (flag) {
 				scope.P = temp;
-				return rotate;
 			}
 			return temp;
 		} else {
@@ -862,7 +861,6 @@ clay.math.move = function () {
 			// 如果flag为true，标记为下次移动开始位置
 			if (flag) {
 				scope.P = temp;
-				return move;
 			}
 			return temp;
 		} else {
@@ -921,7 +919,6 @@ clay.math.scale = function () {
 			// 如果flag为true，标记为下次缩放开始位置
 			if (flag) {
 				scope.P = temp;
-				return scale;
 			}
 			return temp;
 		} else {
@@ -1006,35 +1003,43 @@ var _line = function (config) {
 	var scope = {
 		interpolate: 'line',
 		dis: 5,
-		t: 0
+		t: 0,
+		flag: false
 	};
 
 	// points代表曲线的点集合[[x,y],[x,y],...]
-	// flag可以不传递，默认false，表示y坐标轴方向和数学上保存一致
-	// 只有在设置为true的时候，才会使用浏览器的方式
-	var line = function (points, flag) {
+	var line = function (points) {
 
 		if (typeof scope.h === 'number') {
 			var cardinal, i,
-				result = config.init(points[0][0], flag ? points[0][1] : scope.h - points[0][1]);
+				result = config.init(points[0][0], scope.flag ? points[0][1] : scope.h - points[0][1]);
 
-			// cardinal插值法，目前只支持函数
+			// cardinal插值法
 			if (scope.interpolate === 'cardinal') {
 				cardinal = clay.math.cardinal().setU(scope.t).setP(points);
 				for (i = points[0][0] + scope.dis; i < points[points.length - 1][0]; i += scope.dis)
-					result = config.draw(result, i, flag ? cardinal(i) : scope.h - cardinal(i));
+					result = config.draw(result, i, scope.flag ? cardinal(i) : scope.h - cardinal(i));
 			}
 
 			// 默认或错误设置都归结为line
 			else {
 				for (i = 1; i < points.length; i++)
-					result = config.draw(result, points[i][0], flag ? points[i][1] : scope.h - points[i][1]);
+					result = config.draw(result, points[i][0], scope.flag ? points[i][1] : scope.h - points[i][1]);
 			}
 
 			return config.end(result);
 		} else {
 			throw new Error('You need to set the height first!');
 		}
+
+	};
+
+	// flag可以不传递，默认false，表示y坐标轴方向和数学上保存一致
+	// 只有在设置为true的时候，才会使用浏览器的方式
+	line.setFlag = function (flag) {
+
+		scope.flag = flag;
+		return line;
 
 	};
 
@@ -1086,22 +1091,60 @@ var _line = function (config) {
 };
 
 // 2D弧
-var _arc = function (type, painter) {
+var _arc = function (painter) {
 
 	var scope = {
-		c: [0, 0]
+		c: [0, 0],
+		r: [100, 140]
+	},
+		// 辅助计算的旋转对象
+		rotate = clay.math.rotate().setL(0, 0);
+
+	// r1和r2，内半径和外半径
+	// beginA起点弧度，rotateA旋转弧度式
+	var arc = function (beginA, rotateA, r1, r2) {
+
+		if (typeof r1 !== 'number') r1 = scope.r[0];
+		if (typeof r2 !== 'number') r2 = scope.r[1];
+
+		var temp = [], p;
+
+		// 内部
+		rotate.setP(scope.c[0] + r1, scope.c[1]);
+		p = rotate(beginA, true);
+		temp[0] = p[0];
+		temp[1] = p[1];
+		p = rotate(rotateA);
+		temp[2] = p[0];
+		temp[3] = p[1];
+
+		// 外部
+		rotate.setP(scope.c[0] + r2, scope.c[1]);
+		p = rotate(beginA, true);
+		temp[4] = p[0];
+		temp[5] = p[1];
+		p = rotate(rotateA);
+		temp[6] = p[0];
+		temp[7] = p[1];
+
+		return painter(
+			scope.c[0], scope.c[1],
+			r1, r2,
+			beginA, beginA + rotateA,
+			temp[0], temp[1],
+			temp[4], temp[5],
+			temp[2], temp[3],
+			temp[6], temp[7]
+		);
 	};
 
-	var arc = function () {
+	// 设置内外半径
+	arc.setRadius = function (r1, r2) {
 
-		// svg作为画板
-		if (type === 'svg') {
-			return painter();
-		}
-		// canvas作为画板
-		else {
-			return painter();
-		}
+		if (typeof r1 !== 'number' || typeof r2 !== 'number')
+			throw new Error('Unsupported data!');
+		scope.r = [r1, r2];
+		return arc;
 
 	};
 
@@ -1110,6 +1153,7 @@ var _arc = function (type, painter) {
 
 		if (typeof x !== 'number' || typeof y !== 'number')
 			throw new Error('Unsupported data!');
+		rotate.setL(x, y);
 		scope.c = [x, y];
 		return arc;
 
@@ -1121,9 +1165,30 @@ var _arc = function (type, painter) {
 
 clay.svg.arc = function () {
 
-	return _arc('svg', function () {
+	return _arc(
+		// 圆心（cx,cy）
+		// 内半径，外半径
+		// 开始弧度，结束弧度
+		function (
+			cx, cy,
+			rmin, rmax,
+			beginA, endA,
+			begInnerX, begInnerY,
+			begOuterX, begOuterY,
+			endInnerX, endInnerY,
+			endOuterX, endOuterY
+		) {
 
-	});
+			var f = (endA - beginA) > Math.PI ? 1 : 0,
+				d = "M" + begInnerX + " " + begInnerY;
+			d += "A" + rmin + " " + rmin + " 0 " + f + " 1 " + endInnerX + " " + endInnerY;
+			d += "L" + endOuterX + " " + endOuterY;
+			d += "A" + rmax + " " + rmax + " 0 " + f + " 0 " + begOuterX + " " + begOuterY;
+			d += "L" + begInnerX + " " + begInnerY;
+
+			return d;
+
+		});
 
 };
 
@@ -1147,11 +1212,25 @@ clay.svg.line = function () {
 clay.canvas.arc = function (selector, config) {
 
 	var key,
-		obj = _canvas(selector, config, _line, function () {
+		obj = _canvas(selector, config, _arc, function (
+			cx, cy,
+			rmin, rmax,
+			beginA, endA,
+			begInnerX, begInnerY,
+			begOuterX, begOuterY,
+			endInnerX, endInnerY,
+			endOuterX, endOuterY
+		) {
+
+			obj._painter.moveTo(begInnerX, begInnerY);
+			obj._painter.arc(cx, cy, rmin, beginA, endA, false);
+			obj._painter.lineTo(endOuterX, endOuterY);
+			obj._painter.arc(cx, cy, rmax, endA, beginA, true);
+			obj._painter.lineTo(begInnerX, begInnerY);
 
 			for (key in obj._config)
 				obj._painter[key] = obj._config[key];
-
+			obj._painter.fill();
 			return obj._painter;
 
 		});
@@ -1187,7 +1266,6 @@ clay.canvas.line = function (selector, config) {
 	return obj;
 
 };
-
 
     clay.__isLoad__ = false;
 

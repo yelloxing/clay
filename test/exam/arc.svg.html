@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<title>clay - 使用测试 - arc.svg</title>
+	<script src="../libs/clay.js"></script>
+	<script>
+
+		$$(function () {
+
+			var arc = $$.svg.arc().setCenter(200, 200);
+
+			$$('<path>').appendTo('svg').attr('d', function () {
+				return arc(Math.PI / 4, Math.PI, 100, 200);
+			}).attr('fill', 'blue');
+
+		});
+
+	</script>
+</head>
+
+<body>
+
+	<svg width=400 height=400></svg>
+
+</body>
+
+</html>

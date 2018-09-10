@@ -19,7 +19,6 @@ clay.math.scale = function () {
 			// 如果flag为true，标记为下次缩放开始位置
 			if (flag) {
 				scope.P = temp;
-				return scale;
 			}
 			return temp;
 		} else {

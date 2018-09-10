@@ -46,7 +46,6 @@ var source = [
 	'./src/painter/canvas/line.js',
 
 	// WebGL3D绘图
-	'./src/painter/webgl/polygon.js'
 
 ];
 
