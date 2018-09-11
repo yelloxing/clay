@@ -25,6 +25,7 @@ var source = [
 	'./src/math/transform3D/scale.js',
 
 	// 物理计算
+	'./src/physics/dynamic/velocity-verlet.js',
 
 	// 布局
 	'./src/layout/tree.js',
