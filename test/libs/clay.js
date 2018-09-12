@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Sep 12 2018 01:01:25 GMT+0800 (CST)
+* Date:Wed Sep 12 2018 23:51:51 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -952,59 +952,73 @@ clay.math.scale = function () {
 
 // 速度verlet
 // 下一时刻的位置只依赖于当前时刻的位置、速度 和 加速度
-var _velocityVerlet = function () {
-
-	var scope = {
-		p: [],
-		v: [],
-		a: []
-	}, flag, a;
+var _velocityVerlet = {
 
 	// 传递时间差，获取下一刻位置
-	var verlet = function (dt, aback) {
-
+	getP: function (p, v, a, dt) {
 		// 具体格式使用泰勒展开（在dt处展开）
 		// 然后对比f(t+dt)和f(t)即可推导出
-		for (flag = 0; flag < scope.p.length; flag++) {
-			scope.p[flag] = scope.p[flag] + scope.v[flag] * dt + 0.5 * scope.a[flag] * dt * dt;
-		}
-		// 前一刻加速度保留一下
-		a = scope.a;
-		// 下一刻加速度需要依赖具体环境的受力得出
-		// 传递下一刻位置
-		// 由外界给出方法计算
-		scope.a = aback(scope.p);
-		for (flag = 0; flag < scope.p.length; flag++) {
-			scope.v[flag] = scope.v[flag] + (a[flag] + scope.a[flag]) * 0.5 * dt;
-		}
-		return scope.p;
+		return p + v * dt + 0.5 * a * dt * dt;
+	},
 
-	};
-
-	// 设置前一刻的位置，速度，加速度
-	verlet.set = function (position, velocity, acceleration) {
-
-		if (
-			position && position.constructor === Array &&
-			velocity && velocity.constructor === Array &&
-			acceleration && acceleration.constructor === Array &&
-			position.length == velocity.length && velocity.length == acceleration.length
-		) {
-			scope.p = position;
-			scope.v = velocity;
-			scope.a = acceleration;
-		} else {
-			throw new Error('Unsupported data!');
-		}
-		return verlet;
-
-	};
-
-	return verlet;
+	// 获取下一刻速度
+	// 当前时刻的位置、速度 和 加速度 时间差 下一刻加速度
+	getV: function (p, v, a, dt, na) {
+		return v + (a + na) * 0.5 * dt;
+	}
 
 };
 
 
+clay.layout.force = function () {
+
+	var scope = {
+
+	},
+
+		// 更新库伦斥力
+		updateReplusion = function () {
+
+		},
+
+		// 更新弹簧引力
+		updateSpring = function () {
+
+		},
+
+		// 更新位置
+		update = function () {
+
+		};
+
+	// 初始化环境
+	var force = function (nodes) {
+
+
+
+	};
+
+	// 添加结点
+	force.addNode = function (node) {
+
+	};
+
+	// 删除结点
+	force.deleteNode = function (id) {
+
+	};
+
+	// 修改结点
+	// 比如对特定一个结点进行拖拽
+	// 通过这个方法修改该结点位置
+	// 由于此刻不稳定了，会自动触发计算
+	force.updateNode = function (id, info) {
+
+	};
+
+	return force;
+
+};
 
 
 // 获取canvas2D对象
