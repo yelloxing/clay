@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+	<meta charset="UTF-8">
+	<title>clay - 使用测试 - force.svg</title>
+	<style>
+		svg {
+			padding: 50px;
+		}
+	</style>
+	<script src="../libs/clay.js"></script>
+	<script>
+
+		$$(function () {
+
+			// 获取力布局
+			var force = clay.layout.force(600, 600);
+
+			// 设置处理方法
+			force.bind('init', function (node) {
+
+				$$('<circle id="' + node.id + '">').appendTo('.circle')
+					.attr('r', '30')
+					.attr('cx', node.x)
+					.attr('cy', node.y)
+					.attr('fill', node.color)
+					.attr('stroke', 'black')
+					.attr('stroke-width', '5');
+			}, function (link, sourceNode, targetNode) {
+				$$('<line source=' + sourceNode.id + ' target=' + targetNode.id + ' x1=' + sourceNode.x + ' y1=' + sourceNode.y + ' x2=' + targetNode.x + ' y2=' + targetNode.y + '>').appendTo('.line')
+					.attr('stroke-width', '5')
+					.attr('stroke', 'black');
+			})
+				.bind('update', function (node) {
+					$$('#' + node.id)
+						.attr('cx', node.x)
+						.attr('cy', node.y);
+				}, function (link, sourceNode, targetNode) {
+					$$('[source=' + link.link[0] + '][target=' + link.link[1] + ']')
+						.attr('x1', sourceNode.x)
+						.attr('y1', sourceNode.y)
+						.attr('x2', targetNode.x)
+						.attr('y2', targetNode.y);
+				})
+				;
+
+			// 绑定初始化数据
+			force(
+				[
+					{ "id": 1, "info": "001", "color": "red" },
+					{ "id": 2, "info": "002", "color": "red" },
+					{ "id": 3, "info": "003", "color": "green" },
+					{ "id": 4, "info": "004", "color": "blue" },
+					{ "id": 5, "info": "005", "color": "blue" },
+					{ "id": 6, "info": "006", "color": "green" },
+					{ "id": 7, "info": "007", "color": "green" },
+					{ "id": 8, "info": "008", "color": "green" },
+					{ "id": 9, "info": "009", "color": "green" },
+					{ "id": 10, "info": "010", "color": "green" },
+					{ "id": 11, "info": "011", "color": "green" },
+					{ "id": 12, "info": "012", "color": "green" },
+					{ "id": 13, "info": "013", "color": "green" },
+					{ "id": 14, "info": "014", "color": "green" }
+				], [
+					{ "link": [4, 5], "length": 50 },
+					{ "link": [4, 2], "length": 100 },
+					{ "link": [1, 2], "length": 50 },
+					{ "link": [5, 6], "length": 10 },
+					{ "link": [3, 6], "length": 50 },
+					{ "link": [6, 7], "length": 50 },
+					{ "link": [8, 7], "length": 50 },
+					{ "link": [8, 9], "length": 50 },
+					{ "link": [8, 10], "length": 50 },
+					{ "link": [8, 11], "length": 50 },
+					{ "link": [8, 12], "length": 50 },
+					{ "link": [2, 13], "length": 50 },
+					{ "link": [1, 14], "length": 50 }
+				]
+			);
+
+		});
+
+	</script>
+</head>
+
+<body>
+
+	<svg width=600 height=600>
+		<g class="line"></g>
+		<g class="circle"></g>
+	</svg>
+
+</body>
+
+</html>

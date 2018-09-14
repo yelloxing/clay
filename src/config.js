@@ -23,3 +23,8 @@ clay.layout = {};
 
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
+
+// 库仑常数
+var _physics = {
+	K: 8988000000
+};
