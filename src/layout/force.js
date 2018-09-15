@@ -67,6 +67,7 @@ clay.layout.force = function (width, height) {
 			updateSpring();
 			// 更新位置
 			for (flag = 0; flag < allNode.length; flag++) {
+				// 目前先不使用verlet计算
 				dx = allNode[flag]._forceX;
 				dy = allNode[flag]._forceY;
 				dsq = dx * dx + dy * dy;
@@ -76,25 +77,29 @@ clay.layout.force = function (width, height) {
 					dx *= s;
 					dy *= s;
 				}
-				if (allNode[flag].x + dx < 0 || allNode[flag].x + dx > width) dx = -dx;
-				if (allNode[flag].y + dy < 0 || allNode[flag].y + dy > height) dy = -dy;
+				// 该模型的特点是，向四周扩散，是否需要改进为中心聚拢，后期再说
+				if (allNode[flag].x + dx < 0 || allNode[flag].x + dx > width) dx = 0;
+				if (allNode[flag].y + dy < 0 || allNode[flag].y + dy > height) dy = 0;
 				allNode[flag].x += dx;
 				allNode[flag].y += dy;
 			}
 
 			// 调用钩子
+			if (scope.e.live && typeof scope.e.live[0] === 'function') scope.e.live[0]();
 			for (flag = 0; flag < allLink.length; flag++) {
 				scope.e.update[1](allLink[flag], scope.n[allLink[flag].link[0]], scope.n[allLink[flag].link[1]]);
 			}
 			for (flag = 0; flag < allNode.length; flag++) {
 				scope.e.update[0](scope.n[allNode[flag].id]);
 			}
+			if (scope.e.live && typeof scope.e.live[1] === 'function') scope.e.live[1]();
 			if (scope._n_ > 0) {
 				scope._n_ -= 1;
 				window.setTimeout(function () {
 					update();
 				}, 40);
 			}
+
 
 		};
 
@@ -155,6 +160,7 @@ clay.layout.force = function (width, height) {
 	// 挂载处理事件
 	// 初始化环境 init(nodeback(node), linkback(link, sourceNode, targetNode))
 	// 结点更新处理方法 update(nodeback(node), linkback(link, sourceNode, targetNode))
+	// 生命钩子 live(beforback(),afterback())
 	force.bind = function (type, nodeback, linkback) {
 
 		if (typeof nodeback !== 'function') nodeback = function () { };

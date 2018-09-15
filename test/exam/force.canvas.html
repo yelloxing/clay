@@ -3,7 +3,7 @@
 
 <head>
 	<meta charset="UTF-8">
-	<title>clay - 使用测试 - force.svg</title>
+	<title>clay - 使用测试 - force.canvas</title>
 	<style>
 		svg {
 			padding: 50px;
@@ -14,34 +14,34 @@
 
 		$$(function () {
 
+			var pen = $$('canvas')[0].getContext("2d");
+
 			// 获取力布局
-			var force = clay.layout.force(600, 600);
+			var force = clay.layout.force(600, 600),
+				circle = function (node) {
+					pen.beginPath();
+					pen.arc(node.x + 50, node.y + 50, 30, 0, 2 * Math.PI);
+					pen.fillStyle = node.color;
+					pen.closePath();
+					pen.fill();
+				},
+				line = function (link, sourceNode, targetNode) {
+					pen.beginPath();
+					pen.moveTo(sourceNode.x + 50, sourceNode.y + 50);
+					pen.lineTo(targetNode.x + 50, targetNode.y + 50);
+					pen.lineWidth = 2;
+					pen.strokeStyle = 'black';
+					pen.stroke();
+					pen.closePath();
+				};
 
 			// 设置处理方法
-			force.bind('init', function (node) {
-
-				$$('<circle id="' + node.id + '">').appendTo('.circle')
-					.attr('r', '30')
-					.attr('cx', node.x)
-					.attr('cy', node.y)
-					.attr('fill', node.color);
-			}, function (link, sourceNode, targetNode) {
-				$$('<line source=' + sourceNode.id + ' target=' + targetNode.id + ' x1=' + sourceNode.x + ' y1=' + sourceNode.y + ' x2=' + targetNode.x + ' y2=' + targetNode.y + '>').appendTo('.line')
-					.attr('stroke-width', '2')
-					.attr('stroke', 'black');
-			})
-				.bind('update', function (node) {
-					$$('#' + node.id)
-						.attr('cx', node.x)
-						.attr('cy', node.y);
-				}, function (link, sourceNode, targetNode) {
-					$$('[source=' + link.link[0] + '][target=' + link.link[1] + ']')
-						.attr('x1', sourceNode.x)
-						.attr('y1', sourceNode.y)
-						.attr('x2', targetNode.x)
-						.attr('y2', targetNode.y);
-				})
-				;
+			force.bind('init', circle, line)
+				.bind('update', circle, line)
+				.bind('live', function () {
+					pen.clearRect(0, 0, 700, 700);
+				});
+			;
 
 			// 绑定初始化数据
 			force(
@@ -85,10 +85,7 @@
 
 <body>
 
-	<svg width=600 height=600>
-		<g class="line"></g>
-		<g class="circle"></g>
-	</svg>
+	<canvas width=700 height=700></canvas>
 
 </body>
 
