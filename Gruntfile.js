@@ -30,22 +30,18 @@ var source = [
 	// 布局
 	'./src/layout/tree.js',
 	'./src/layout/force.js',
-	'./src/layout/pie.js',
 
 	// 图形对象
 	'./src/painter/tool.js',
 	'./src/painter/line.js',
 	'./src/painter/arc.js',
-	'./src/painter/ruler.js',
 
 	// svg绘图
 	'./src/painter/svg/arc.js',
-	'./src/painter/svg/ruler.js',
 	'./src/painter/svg/line.js',
 
 	// Canvas2D绘图
 	'./src/painter/canvas/arc.js',
-	'./src/painter/canvas/ruler.js',
 	'./src/painter/canvas/line.js',
 
 	// WebGL3D绘图

@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Sep 15 2018 12:31:27 GMT+0800 (CST)
+* Date:Sat Sep 15 2018 16:29:04 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1151,7 +1151,6 @@ clay.layout.force = function (width, height) {
 
 };
 
-
 // 获取canvas2D对象
 function _getCanvas2D(selector) {
 
@@ -1361,7 +1360,6 @@ var _arc = function (painter) {
 
 };
 
-
 clay.svg.arc = function () {
 
 	return _arc(
@@ -1392,7 +1390,6 @@ clay.svg.arc = function () {
 		});
 
 };
-
 
 clay.svg.line = function () {
 
@@ -1441,7 +1438,6 @@ clay.canvas.arc = function (selector, config) {
 	return obj;
 
 };
-
 
 clay.canvas.line = function (selector, config) {
 
