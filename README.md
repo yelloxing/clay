@@ -1,5 +1,9 @@
 #  clay - Provide more flexible data visualization solutions
 
+[![hompage](https://github.com/yelloxing/clay/blob/master/data/SVG/github.svg)](https://github.com/yelloxing)
+[![clay Code](https://github.com/yelloxing/clay/blob/master/data/SVG/clay.svg)](https://github.com/yelloxing/clay)
+[![clay license](https://github.com/yelloxing/clay/blob/master/data/SVG/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
+
 我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
 
 <img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/doc/images/clay.png">
