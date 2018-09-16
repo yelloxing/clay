@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Sep 15 2018 16:29:04 GMT+0800 (CST)
+* Date:Sun Sep 16 2018 16:40:20 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -543,82 +543,6 @@ clay.min = function (array, valback) {
 
 };
 
-// 线性比例尺
-clay.scale.linear = function () {
-
-	var scope = {};
-
-	// 返回定义域的值对应的值域的值
-	var linear = function (domain) {
-
-		if (typeof domain === 'number')
-			if (!scope.scaleCalc)
-				throw new Error('You shoud first set the domain and range!');
-			else if (domain <= scope.domains[0])
-				return scope.ranges[0];
-			else if (domain >= scope.domains[1])
-				return scope.ranges[1];
-			else
-				return (domain - scope.domains[0]) * scope.scaleCalc + scope.ranges[0];
-		else
-			throw new Error('A number is required!');
-
-
-	};
-
-	linear.getDomain = function (range) {
-
-		if (typeof range === 'number')
-			if (!scope.scaleCalc)
-				throw new Error('You shoud first set the domain and range!');
-			else if (range <= scope.ranges[0])
-				return scope.domains[0];
-			else if (range >= scope.ranges[1])
-				return scope.domains[1];
-			else
-				return (range - scope.ranges[0]) / scope.scaleCalc + scope.domains[0];
-		else
-			throw new Error('A number is required!');
-
-	};
-
-	// 设置或者获取定义域
-	linear.domain = function (domains) {
-
-		if (domains.constructor === Array && domains.length >= 2)
-			scope.domains = domains;
-		else
-			return scope.domains;
-
-		// 如果定义域和值域都已经设置
-		// 更新计算方法
-		if (scope.ranges)
-			scope.scaleCalc = (scope.ranges[1] - scope.ranges[0]) / (scope.domains[1] - scope.domains[0]);
-		return linear;
-
-	};
-
-
-	// 设置或者获取值域
-	linear.range = function (ranges) {
-
-		if (ranges.constructor === Array && ranges.length >= 2)
-			scope.ranges = ranges;
-		else
-			return scope.ranges;
-
-		// 如果定义域和值域都已经设置
-		// 更新计算方法
-		if (scope.domains)
-			scope.scaleCalc = (scope.ranges[1] - scope.ranges[0]) / (scope.domains[1] - scope.domains[0]);
-		return linear;
-
-	};
-
-	return linear;
-
-};
-
 // Hermite三次插值
 clay.math.hermite = function () {
 
@@ -952,25 +876,6 @@ clay.math.scale = function () {
 	};
 
 	return scale;
-
-};
-
-// 速度verlet
-// 下一时刻的位置只依赖于当前时刻的位置、速度 和 加速度
-var _velocityVerlet = {
-
-	// 传递时间差，获取下一刻位置
-	getP: function (p, v, a, dt) {
-		// 具体格式使用泰勒展开（在dt处展开）
-		// 然后对比f(t+dt)和f(t)即可推导出
-		return p + v * dt + 0.5 * a * dt * dt;
-	},
-
-	// 获取下一刻速度
-	// 当前时刻的位置、速度 和 加速度 时间差 下一刻加速度
-	getV: function (p, v, a, dt, na) {
-		return v + (a + na) * 0.5 * dt;
-	}
 
 };
 

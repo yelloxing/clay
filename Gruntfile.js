@@ -14,9 +14,6 @@ var source = [
 	'./src/tool/animation.js',
 	'./src/tool/calc.js',
 
-	// 比例尺
-	'./src/scale/linear.js',
-
 	// 数学计算
 	'./src/math/interpolate/Hermite.js',
 	'./src/math/interpolate/Cardinal.js',
@@ -25,7 +22,6 @@ var source = [
 	'./src/math/transform3D/scale.js',
 
 	// 物理计算
-	'./src/physics/dynamic/velocity-verlet.js',
 
 	// 布局
 	'./src/layout/tree.js',
@@ -136,9 +132,7 @@ module.exports = function (grunt) {
 					urls: [
 						'test/data/node.html',
 						'test/data/data.html',
-						'test/data/math.html',
-						'test/data/layout.html',
-						'test/data/scale.html'
+						'test/data/math.html'
 					]
 				}
 			}
