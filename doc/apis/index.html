@@ -110,5 +110,11 @@
 		<a href="#top">回到顶部</a>
 	</footer>
 </body>
+<script>
+	window.setTimeout(function () {
+		var target = /(#.*)/.exec(window.location.href + "");
+		if (target) window.location.href = target[1];
+	}, 200);
+</script>
 
 </html>
