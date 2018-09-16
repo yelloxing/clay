@@ -1,0 +1,92 @@
+body>section {
+    font-size: 0;
+}
+
+body>section>* {
+    display: inline-block;
+    vertical-align: top;
+}
+
+body>section>article {
+    font-size: .16rem;
+    width: calc(100% - 2rem);
+    padding: 0 .2rem;
+}
+
+body>section>ul {
+    font-size: .14rem;
+    width: 2rem;
+}
+
+body>section>ul>li {
+    line-height: .3rem;
+    height: .5rem;
+    padding: .1rem .15rem;
+    border: 1px solid #b9b7b7;
+    color: #c6538c;
+    cursor: pointer;
+}
+
+body>section>ul>li:hover {
+    background-color: #f5f5f5;
+    color: #ad3972;
+}
+
+body>section>ul>li:not(:last-child) {
+    border-bottom-width: 0;
+}
+
+body>section>ul>li:first-child {
+    border-radius: .05rem .05rem 0 0;
+}
+
+body>section>ul>li:last-child {
+    border-radius: 0 0 .05rem .05rem;
+}
+
+body>section>ul>li.blank {
+    padding-left: .3rem;
+}
+
+body>section>article>h1,
+body>section>article>h2,
+body>section>article>h3 {
+    line-height: 1.8;
+}
+
+body>section>article>h1,
+body>section>article>h2 {
+    border-bottom: 1px solid #ddd;
+}
+
+body>section>article>h1 {
+    font-size: .22rem;
+}
+
+body>section>article>h2 {
+    font-size: .2rem;
+}
+
+body>section>article>h3 {
+    font-size: .18rem;
+}
+
+body>section>article>p {
+    text-indent: 2em;
+    line-height: 1.8;
+}
+
+body>section>article>ul {
+    margin-left: .3rem;
+}
+
+body>section>article>ul>li {
+    list-style-type: disc;
+    line-height: 1.8;
+}
+
+body>section>article>ul.inner>li {
+    list-style-type: none;
+    line-height: 1.6;
+    font-size: .14rem;
+}
