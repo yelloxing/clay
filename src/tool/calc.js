@@ -1,4 +1,4 @@
-// 把颜色统一转变长rgba(x,x,x,x)格式
+// 把颜色统一转变成rgba(x,x,x,x)格式
 // 返回数字数组[r,g,b,a]
 clay.color = function (color) {
 

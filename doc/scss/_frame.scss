@@ -8,10 +8,11 @@ body {
         max-width: $frame-width;
         position: relative;
         border-width: 0 .5rem;
-        font-size: .3rem;
+		font-size: .3rem;
         font-family: fantasy;
         @include bg_init('./images/clay.png');
-        background-position-x: left;
+		background-position-x: left;
+		background-size: auto 80%;
         padding-left: .5rem;
         &>ul {
             position: absolute;
