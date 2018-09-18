@@ -56,15 +56,14 @@
             <li onclick='goto("mathematics-move")' class='blank'>移动变换</li>
             <li onclick='goto("mathematics-scale")' class='blank'>缩放变换</li>
             <li onclick='goto("mathematics-rotate")' class='blank'>旋转变换</li>
-            <li>布局</li>
-            <li class='blank'>树布局</li>
-            <li class='blank'>力布局</li>
-            <li>SVG绘图</li>
-            <li class='blank'>扇形</li>
-            <li class='blank'>曲线</li>
-            <li>Canvas2D绘图</li>
-            <li class='blank'>扇形</li>
-            <li class='blank'>曲线</li>
+            <li onclick='goto("layout")'>布局</li>
+            <li onclick='goto("layout-force")' class='blank'>力布局</li>
+            <li onclick='goto("svg")'>SVG绘图</li>
+            <li onclick='goto("svg-arc")' class='blank'>扇形</li>
+            <li onclick='goto("svg-line")' class='blank'>曲线</li>
+            <li onclick='goto("canvas2d")'>Canvas2D绘图</li>
+            <li onclick='goto("canvas2d-arc")' class='blank'>扇形</li>
+            <li onclick='goto("canvas2d-line")' class='blank'>曲线</li>
         </ul>
         <article>
             <h1>
@@ -367,6 +366,172 @@ var rotate=clay.math.rotate()
             </ul>
             <p>
                 之所以提供不同的接口，虽然最后一种就可以解决使用问题，主要是考虑到调用的方便和后期效率改进。
+            </p>
+            <h2 id='layout'>
+                布局
+            </h2>
+            <p>
+                针对一些常见视图（比如树菜单、饼状图等）封装成对应的布局，布局只负责位置等信息的计算，具体的绘制方法通过布局提供的钩子函数实现。
+            </p>
+            <h3 id='layout-force'>
+                力布局
+            </h3>
+            <p>
+                比如一群人，任意二个人之间都可能有关或无关，有关的人之间关系密切程度也不一定相同，如果想绘制一张人物关系图，就可以使用这里的力布局。
+            </p>
+            <pre class="code">
+var force = clay.layout
+    //设置控制范围，必须初始化确定，不可以修改
+    .force(600, 600);
+
+//初始化配置
+force.bind('init',function(node){
+
+    //配置结点绘制方法，svg或canvas等具体的绘图方法
+},function(link, sourceNode, targetNode){
+
+    //配置连线绘制方法
+})
+
+//配置轮播计算更新绘制方法，和初始化类似
+.bind('update',
+function(node){},
+function(link, sourceNode, targetNode){});</pre>
+            <p>
+                这样就配置好了一个力布局，此时布局不会干任何事情，因为还没有传递具体的数据。
+            </p>
+            <pre class="code">
+force(
+    [
+        //除了id用于唯一标志一个结点，别的属性可以是任意的，个数也任意
+        { "id": 1, "info": "001", "color": "red" },
+        ......
+    ],
+    [
+        { "link": [4, 5], "length": 50 },
+        ......
+    ]
+);</pre>
+            <p>
+                调用获取的布局函数，传递结点和连线数据，就会启动计算，获取类似下面的图形（实际是动态的，可以拖拽，当然，这些都是可以由开发者自行决定）。
+            </p>
+            <img width='70%' src="./force-demo.png" alt="force布局用例图">
+            <p>
+                默认下，拖拽等其它交互都不是布局需要提供的，这是不同的绘图方法决定的，其它布局也是一样的；力布局提供了修改内部数据的方法。
+            </p>
+            <pre class="code">force.update(id, attr, value);</pre>
+            <p>
+                通过调用update方法，可以修改指定id的那个结点的attr属性为value。那结点具体有那些属性？除了一些内置属性（下划线开头和x、y）外，别的都是启动时外界传递的，可以打印出来一个例子的结点。
+            </p>
+            <img src="./force-nodes.png" alt="force布局结点图">
+            <span class="warn">
+                温馨提示：id属性一定不要修改，下划线开头的慎重修改，大部分情况就是修改x和y的值，比如拖拽。
+            </span>
+            <h2 id='svg'>
+                SVG绘图
+            </h2>
+            <p>
+                并不是真的绘制出来图形，只是根据输入的数据返回特定图形的路径值等，可以看下面具体的说明。
+            </p>
+            <h3 id='svg-arc'>
+                扇形
+            </h3>
+            <pre class="code">
+var arc = $$.svg.arc()
+//圆心默认（0,0），这里修改一下
+.setCenter(200, 200);
+
+$$('&lt;path&gt;').appendTo('svg').attr('d', function () {
+    //调用绘图工具返回前面提到的路径
+    //参数分别表示开始角度，跨越角度，内半径和外半径
+    return arc(Math.PI / 4, Math.PI*3/2, 100, 200);
+}).attr('fill', 'blue');</pre>
+            <p>
+                配置好绘图工具，就可以传递不同的参数返回不同的路径，上面运行的效果如下。
+            </p>
+            <img src="./svg-arc.png" alt="扇形用例图">
+            <p>
+                和设置圆心类似，内外半径也有默认值，可以通过arc.setRadius(r1,r2)方法修改，因此最后的arc方法如果只传递二个参数，半径就会采用默认值，canvas2D绘制扇形图也是一样。
+            </p>
+            <h3 id='svg-line'>
+                曲线
+            </h3>
+            <pre class="code">
+var line = $$.svg.line()
+// 默认折线，也可以配置别的，
+// 比如这里的cardinal三次插值
+.interpolate('cardinal').setHeight(300);
+
+$$('&lt;path&gt;').appendTo('.g1').attr('d', function () {
+    return line([[10, 100], [100, 20], [200, 240], [300, 50]]);
+})
+// 由于svg和canvas不一样，
+// 关于样式，编辑方法全部和普通svg一样
+.attr('stroke', 'red')
+.attr('fill', 'none')
+.attr('stroke-width', '3');</pre>
+            <p>
+                类似的，获取一条绘制曲线的svg图形对象，然后进行一些配置，最后传递结点，就会返回一条采用指定方法拟合的曲线。
+            </p>
+            <img src="./svg-line.png" alt="曲线用例图">
+            <p>
+                上面通过interpolate方法配置拟合方法，setHeight方法设置图形的高，除此之外，还有以下配置方法需要说明：
+            </p>
+            <ul class="inner">
+                <li>1.line.setFlag(boolean):默认false，表示y坐标轴方向和数学上保存一致，否则反过来；</li>
+                <li>2.line.setT(number):设置张弛系数；</li>
+                <li>3.line.setPrecision(number):设置精度。</li>
+            </ul>
+            <h2 id='canvas2d'>
+                Canvas2D绘图
+            </h2>
+            <p>
+                和SVG不同，这里是绘制具体的图形，这些差异是由特定的绘图环境决定的。
+            </p>
+            <h3 id='canvas2d-arc'>
+                扇形
+            </h3>
+            <pre class="code">
+var arc = $$.canvas.arc('canvas', {
+    fillStyle: 'red'
+}).setCenter(200, 200);
+
+arc(Math.PI / 4, Math.PI / 2 * 3, 100, 200);</pre>
+            <p>
+                绘制扇形的配置等和SVG部分完全一样，这里需要说明一下canvas2D绘图特有的一些细节。
+            </p>
+            <p>
+                如上面，获取arc对象时，可以传递画笔和对画笔的配置json（画笔只要是一个合法的选择器就可以了），当然也可以不传递，在后面调用canvas和config方法配置也可以。
+            </p>
+            <p>
+                需要注意的是，这是对所有canvas2D绘图对象都通用的API，下面绘制曲线会给出例子，后面不再说明。
+            </p>
+            <h3 id='canvas2d-line'>
+                曲线
+            </h3>
+            <pre class="code">
+var line = $$.canvas.
+// 设置画笔的时候，如果没有也不会报错
+line('.cls',
+// 配置画笔，后续修改或直接后续配置也可以
+{
+    strokeStyle: 'red',
+    lineWidth: '5',
+    fillStyle: 'green'
+}).interpolate('cardinal').setHeight(300)
+// 可以传递canvas结点或者直接传递画笔
+// 因此，配置好的曲线，可以重复利用
+// 即使不是同一个画布
+.canvas($$('.cls2')[0].getContext("2d")).config({
+    strokeStyle: 'blue'
+});
+
+var pen = line([[10, 100], [100, 200], [200, 70], [300, 250]]);
+
+// 可以调用任何2d对象上的方法
+pen.fill();</pre>
+            <p>
+                因为绘制曲线的配置也是和上面一样，与SVG部分一致，这里主要是用一个例子演示了使用canvas2D绘图特殊的写法。
             </p>
         </article>
     </section>
