@@ -397,6 +397,7 @@ force.bind('init',function(node){
 .bind('update',
 function(node){},
 function(link, sourceNode, targetNode){});</pre>
+            <span class="warn">温馨提示：force.bind('live',beforback(),afterback())用于在每次更新前和更新结束后调用。</span>
             <p>
                 这样就配置好了一个力布局，此时布局不会干任何事情，因为还没有传递具体的数据。
             </p>
@@ -453,6 +454,7 @@ $$('&lt;path&gt;').appendTo('svg').attr('d', function () {
             <p>
                 和设置圆心类似，内外半径也有默认值，可以通过arc.setRadius(r1,r2)方法修改，因此最后的arc方法如果只传递二个参数，半径就会采用默认值，canvas2D绘制扇形图也是一样。
             </p>
+            <span class="warn">温馨提示：第二个参数弧度跨度值域为[0,2PI)，下同。</span>
             <h3 id='svg-line'>
                 曲线
             </h3>
