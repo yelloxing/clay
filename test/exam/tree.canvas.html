@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <title>clay - 使用测试 - tree.canvas</title>
+    <script src="../libs/clay.js"></script>
+    <script>
+
+        $$(function () {
+
+            var tree = clay.layout.tree();
+
+            tree
+                .bind('root', function (initTree) {
+                    return initTree;
+                })
+                .bind('child', function (parentTree) {
+                    return parentTree.list;
+                })
+                .bind('id', function (treedata) {
+                    return treedata.name;
+                });
+
+            // 初始化树
+            tree({
+                "name": "前端",
+                "list": [{
+                    "name": "核心",
+                    "list": [{
+                        "name": "计算机",
+                        "list": [{
+                            "name": "算法",
+                            "list": [{
+                                "name": "思想",
+                                "list": [{
+                                    "name": "分治"
+                                }, {
+                                    "name": "回溯"
+                                }, {
+                                    "name": "限界"
+                                }, {
+                                    "name": "贪心"
+                                }]
+                            }, {
+                                "name": "模式"
+                            }]
+                        }]
+                    }, {
+                        "name": "HTML"
+                    }, {
+                        "name": "CSS"
+                    }, {
+                        "name": "ES"
+                    }]
+                }, {
+                    "name": "安全"
+                }, {
+                    "name": "工具"
+                }, {
+                    "name": "规范"
+                }, {
+                    "name": "库"
+                }]
+            });
+
+        });
+
+    </script>
+</head>
+
+<body>
+
+    <canvas width=1000 height=700></canvas>
+
+</body>
+
+</html>
