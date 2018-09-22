@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Sep 21 2018 00:00:02 GMT+0800 (CST)
+* Date:Sat Sep 22 2018 14:44:37 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -887,7 +887,36 @@ clay.layout.tree = function () {
         // 维护的树
         alltreedata,
         // 根结点ID
-        rootid;
+        rootid,
+
+        update = function () {
+            // 更新前调用
+            if (scope.e.live && typeof scope.e.live[0] === 'function') scope.e.live[0]();
+
+            alltreedata[rootid].top = alltreedata[rootid].size / 2;
+            alltreedata[rootid].left = 0.5;
+            (function drawer(pNode, beforeSize) {
+                var children = pNode.children, flag, child;
+                for (flag = 0; children && flag < children.length; flag++) {
+                    // 计算位置
+                    alltreedata[children[flag]].top = beforeSize + alltreedata[children[flag]].size / 2;
+                    alltreedata[children[flag]].left = pNode.left + 1;
+
+                    // 画线条
+                    scope.e.drawer[1](pNode, alltreedata[children[flag]]);
+
+                    drawer(alltreedata[children[flag]], beforeSize);
+                    beforeSize += alltreedata[children[flag]].size;
+                }
+
+                //  画结点
+                scope.e.drawer[0](pNode);
+
+            })(alltreedata[rootid], 0);
+
+            // 更新结束调用
+            if (scope.e.live && typeof scope.e.live[1] === 'function') scope.e.live[1]();
+        };
 
     // 可以传递任意格式的树原始数据
     // 只要配置对应的解析方法即可
@@ -928,7 +957,7 @@ clay.layout.tree = function () {
             alltreedata[id].size = children && children.length > 0 ? width - 1 : 1;
             return alltreedata[id].size;
         })(rootid);
-
+        update();
         return tree;
 
     };
@@ -937,27 +966,14 @@ clay.layout.tree = function () {
     // 获取根结点的方法:root(initTree)
     // 获取子结点的方法:child(parentTree,initTree)
     // 获取结点ID方法:id(treedata)
-    tree.bind = function (backname, callback) {
-        scope.e[backname] = callback;
+    // 生命钩子 live([beforback(),afterback()])
+    // 结点更新处理方法 drawer(nodeback(node), linkback(pNode, node))
+    tree.bind = function (backname, callback, moreback) {
+        if (/^(live|drawer)$/.test(backname))
+            scope.e[backname] = [callback, moreback];
+        else
+            scope.e[backname] = callback;
         return tree;
-    };
-
-    // 添加结点
-    tree.add = function () {
-
-    };
-
-    // 删除结点
-    tree.delete = function () {
-
-    };
-
-    // 修改结点
-    // 只可以修改结点信息
-    // 子结点的增删改不可以通过这里修改
-    // 当然包括自己的删除和修改也不可以
-    tree.update = function () {
-
     };
 
     return tree;

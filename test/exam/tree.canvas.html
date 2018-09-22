@@ -11,6 +11,27 @@
 
             var tree = clay.layout.tree();
 
+            var pen = $$('canvas')[0].getContext("2d");
+
+            var
+                nodeDrawer = function (node) {
+                    pen.beginPath();
+                    pen.arc(node.left * 150, node.top * 50, 10, 0, Math.PI * 2);
+                    pen.closePath();
+                    pen.fill();
+                    pen.fillText(node.data.name, node.left * 150, node.top * 50 + 20);
+                },
+                linkDrawer = function (pNode, node) {
+                    pen.beginPath();
+                    pen.moveTo(pNode.left * 150, pNode.top * 50);
+                    pen.bezierCurveTo(
+                        pNode.left * 150 + 100, pNode.top * 50,
+                        node.left * 150 - 100, node.top * 50,
+                        node.left * 150, node.top * 50
+                    );
+                    pen.stroke();
+                };
+
             tree
                 .bind('root', function (initTree) {
                     return initTree;
@@ -20,7 +41,11 @@
                 })
                 .bind('id', function (treedata) {
                     return treedata.name;
-                });
+                })
+                .bind('live', function () {
+                    pen.clearRect(0, 0, 1000, 700);
+                })
+                .bind('drawer', nodeDrawer, linkDrawer);
 
             // 初始化树
             tree({
@@ -28,6 +53,12 @@
                 "list": [{
                     "name": "核心",
                     "list": [{
+                        "name": "HTML"
+                    }, {
+                        "name": "CSS"
+                    }, {
+                        "name": "ES"
+                    }, {
                         "name": "计算机",
                         "list": [{
                             "name": "算法",
@@ -46,13 +77,7 @@
                                 "name": "模式"
                             }]
                         }]
-                    }, {
-                        "name": "HTML"
-                    }, {
-                        "name": "CSS"
-                    }, {
-                        "name": "ES"
-                    }]
+                    },]
                 }, {
                     "name": "安全"
                 }, {
