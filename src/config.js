@@ -1,18 +1,18 @@
 // 命名空间路径
 var _namespace = {
-	svg: "http://www.w3.org/2000/svg",
-	xhtml: "http://www.w3.org/1999/xhtml",
-	xlink: "http://www.w3.org/1999/xlink",
-	xml: "http://www.w3.org/XML/1998/namespace",
-	xmlns: "http://www.w3.org/2000/xmlns/"
+    svg: "http://www.w3.org/2000/svg",
+    xhtml: "http://www.w3.org/1999/xhtml",
+    xlink: "http://www.w3.org/1999/xlink",
+    xml: "http://www.w3.org/XML/1998/namespace",
+    xmlns: "http://www.w3.org/2000/xmlns/"
 };
 
 // 空格、标志符
 var _regexp = {
-	// http://www.w3.org/TR/css3-selectors/#whitespace
-	whitespace: "[\\x20\\t\\r\\n\\f]",
-	// http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
-	identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
+    // http://www.w3.org/TR/css3-selectors/#whitespace
+    whitespace: "[\\x20\\t\\r\\n\\f]",
+    // http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
+    identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
 // 数学计算、比例尺、绘图方案svg+canvas+webgl、布局
@@ -24,7 +24,8 @@ clay.layout = {};
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
 
-// 库仑常数
+// 库仑常数、引力常数
 var _physics = {
-	K: 8988000000
+    K: 8988000000,
+    G: 0.00000000667
 };

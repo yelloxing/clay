@@ -40,7 +40,7 @@ clay.layout.force = function (width, height) {
                 if (dx != 0 || dy != 0) {
                     d = Math.sqrt(dx * dx + dy * dy);
                     // 弹簧系数先写死
-                    f = 1 * (d - allLink[flag].length);
+                    f = 10 * (d - allLink[flag].length);
                     fx = f * dx / d;
                     fy = f * dy / d;
                     // scope.n和allNode二种方式访问效果一样

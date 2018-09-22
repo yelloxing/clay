@@ -41,3 +41,18 @@ function getMousePos(event) {
     var y = e.pageY || e.clientY + scrollY;
     return { 'x': x, 'y': y };
 }
+
+function calcViewportLocation(element) {
+    var currentWindow = window;
+    var rect = element.getBoundingClientRect(); // 元素的位置
+    var top = rect.top;
+    var left = rect.left;
+    while (currentWindow.frameElement != null) { // 处理父级 Window
+        element = currentWindow.frameElement;
+        currentWindow = currentWindow.parent;
+        rect = element.getBoundingClientRect();
+        if (rect.top > 0) { top += rect.top; }
+        if (rect.left > 0) { left += rect.left; }
+    }
+    return [Math.round(left), Math.round(top)];
+}
