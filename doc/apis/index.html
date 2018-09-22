@@ -58,6 +58,7 @@
             <li onclick='goto("mathematics-rotate")' class='blank'>旋转变换</li>
             <li onclick='goto("layout")'>布局</li>
             <li onclick='goto("layout-force")' class='blank'>力布局</li>
+            <li onclick='goto("layout-tree")' class='blank'>树布局</li>
             <li onclick='goto("svg")'>SVG绘图</li>
             <li onclick='goto("svg-arc")' class='blank'>扇形</li>
             <li onclick='goto("svg-line")' class='blank'>曲线</li>
@@ -428,6 +429,70 @@ force(
             <span class="warn">
                 温馨提示：id属性一定不要修改，下划线开头的慎重修改，大部分情况就是修改x和y的值，比如拖拽。
             </span>
+            <h3 id='layout-tree'>
+                树布局
+            </h3>
+            <p>
+                可以传递任意格式的原始数据，只需要配置有效的根结点、子孩子和id获取方法即可；具体的绘制方法需要你通过配置drawer的画结点和连线方法来实现（使用canvas还是svg等是你的自由，这里只是给出计算结果）。
+            </p>
+            <pre class="code">
+var tree = clay.layout.tree();
+
+var pen = $$('canvas')[0].getContext("2d");
+
+var
+    nodeDrawer = function (node) {
+        pen.beginPath();
+        pen.arc(node.left * 150, node.top * 50, 10, 0, Math.PI * 2);
+        pen.closePath();
+        pen.fill();
+        pen.fillText(node.data.name, node.left * 150, node.top * 50 + 20);
+    },
+    linkDrawer = function (pNode, node) {
+        pen.beginPath();
+        pen.moveTo(pNode.left * 150, pNode.top * 50);
+        pen.bezierCurveTo(
+        pNode.left * 150 + 100, pNode.top * 50,
+        node.left * 150 - 100, node.top * 50,
+        node.left * 150, node.top * 50);
+        pen.stroke();
+    };
+
+tree
+    //获取根结点方法
+    .bind('root', function (initTree) {
+        return initTree;
+    })
+    //获取孩子方法
+    .bind('child', function (parentTree) {
+        return parentTree.list;
+    })
+    //ID获取方法
+    .bind('id', function (treedata) {
+        return treedata.name;
+    })
+    //挂载每次绘制前和结束后处理方法
+    //结束后处理方法这里省略
+    .bind('live', function () {
+        pen.clearRect(0, 0, 1000, 700);
+    })
+    //配置具体的绘结点和连线方法
+    .bind('drawer', nodeDrawer, linkDrawer);
+
+// 初始化树
+tree(/*原始数据*/);
+            </pre>
+            <p>
+                这里选择的是canvas绘图方法，其中具体绘图方法形参是计算后的结点。
+            </p>
+            <img src="./tree-node.png" alt="树结点">
+            <p>
+                所有的布局都一样，这里也是，配置svg绘图方法就可以使用svg绘图，下面的运行后效果。
+            </p>
+            <img src="./tree-demo.png" width='100%' alt="树布局用例">
+            <p>
+                原始数据是根据根结点在左边的形式计算树的，如果希望绘制别的类型（比如根结点在顶部，或者结点在开始位置而不是在中心），可以在绘制的时候简单的处理一下，结点本身暴露的信息已经足够帮助你实现这些了。
+            </p>
             <h2 id='svg'>
                 SVG绘图
             </h2>
