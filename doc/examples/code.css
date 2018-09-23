@@ -1,0 +1,11 @@
+body>section>p {
+    text-indent: 2em;
+    line-height: 1.6;
+}
+
+body>section>.code {
+    background-color: #fff;
+    border-left: 3px solid #607d8b;
+    padding: .1rem;
+    font-family: monospace;
+}

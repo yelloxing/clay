@@ -9,6 +9,7 @@
     <title>clay - 实例</title>
     <link rel="stylesheet" href="../../easycss-1.2.1.min.css">
     <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="../code.css">
     <script src="../../../build/clay-1.2.1.min.js"></script>
     <script src="../../../test/exam/script.js"></script>
     <style>
@@ -118,6 +119,101 @@
     </header>
     <section>
         <svg width=900 height=500></svg>
+        <p>
+            上面演示的是如何使用tree布局绘制一棵最简单的树图，布局本身只会告诉你每个结点和连线的位置信息，包括动画和交互效果需要额外添加。
+        </p>
+        <p>
+            下面来看看用例的主要部分代码：
+        </p>
+        <pre class="code">
+// 获取布局对象
+var tree = clay.layout.tree();
+
+// 在页面添加用来绘制曲线、结点、文字背景和文字的分组
+$$('&lt;g class="line"&gt;&lt;/g&gt;').appendTo('svg');
+$$('&lt;g class="circle"&gt;&lt;/g&gt;').appendTo('svg');
+$$('&lt;g class="bg"&gt;&lt;/g&gt;').appendTo('svg');
+$$('&lt;g class="text"&gt;&lt;/g&gt;').appendTo('svg');
+
+// 配置具体的处理方法
+tree
+
+    // 获取根结点方法
+    .bind('root', function (initTree) {
+        return initTree[0];
+    })
+    // 获取孩子结点方法
+    .bind('child', function (parentTree, initTree) {
+        var children = parentTree.children, flag, temp = [];
+        for (flag = 0; flag < children.length; flag++) {
+            temp.push(initTree[children[flag]]);
+        }
+        return temp;
+    })
+    // 获取一个结点的ID的方法
+    .bind('id', function (treedata) {
+        return treedata.id;
+    })
+    // 配置绘图方法（不同绘图环境不一样）
+    .bind('drawer'
+
+        // 画结点
+        , function (node) {
+
+        // 1.圆圈
+        $$('&lt;circle id="' + node.id + '"&gt;').appendTo('.circle')
+        .attr('r', '6')
+        .attr('cx', node.top * 100)
+        .attr('cy', node.left * 130)
+        .attr('fill', '#000');
+
+        // 2.文字背景
+        $$('&lt;rect id="' + node.id + '"&gt;').appendTo('.bg')
+        .attr('width', node.data.name.length * 8 - (-10))
+        .attr('height', '30')
+        .attr('rx', '10')
+        .attr('ry', '10')
+        .attr('x', node.top * 100 - (-6))
+        .attr('y', node.left * 130 - 15)
+        .attr('fill', '#000');
+
+        // 3.文字
+        $$('&lt;text id="text-' + node.id + '" &gt;' + node.data.name + '&lt;/text&gt;')
+        .appendTo('.text')
+        .attr('x', node.top * 100 - (-10))
+        .attr('y', node.left * 130 - (-4))
+        .attr('fill', '#fff')
+    }, function (pNode, node) {
+
+        // 绘制结点的连线
+        $$('&lt;path id="' + pNode.id + '-' + node.id + '"&gt;&lt;/path&gt;').appendTo('.line')
+        .attr('d',
+            'M' + (pNode.top * 100) + " " + (pNode.left * 130) + " C" +
+            (pNode.top * 100) + "," + (pNode.left * 130 - (-70)) + " " +
+            (node.top * 100) + "," + (node.left * 130 - 70) + " " +
+            (node.top * 100) + "," + (node.left * 130) + " ")
+        .attr('stroke-width', '1.5px')
+        .attr('stroke', '#000')
+        .attr('fill', 'none');
+    });
+
+// 配置好以后，传入数据，开始绘图
+// 传入的数据可以是任意格式，只要前面对应配置即可
+tree([
+    { "name": "OS", "id": "1", "children": [1, 2, 3] },
+    { "name": "NOS", "id": "2", "children": [4, 5] },
+    { "name": "DOS", "id": "3", "children": [6, 7, 8] },
+    { "name": "SOS", "id": "4", "children": [] },
+    { "name": "BSD", "id": "5", "children": [] },
+    { "name": "Unix", "id": "6", "children": [] },
+    { "name": "Unix", "id": "7", "children": [9] },
+    { "name": "Windows", "id": "8", "children": [] },
+    { "name": "Linux", "id": "9", "children": [10, 11, 12] },
+    { "name": "Mac OS X", "id": "10", "children": [] },
+    { "name": "openSUSE", "id": "11", "children": [] },
+    { "name": "Centos", "id": "12", "children": [] },
+    { "name": "Ubuntu", "id": "13", "children": [] }
+]);</pre>
     </section>
     <footer>
         心叶 &copy;2007-2018 走一步，再走一步
