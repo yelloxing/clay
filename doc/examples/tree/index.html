@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../images/clay.png" type="image/x-png">
+    <title>clay - 实例</title>
+    <link rel="stylesheet" href="../../easycss-1.2.1.min.css">
+    <link rel="stylesheet" href="../../style.css">
+    <script src="../../../build/clay-1.2.1.min.js"></script>
+    <script src="../../../test/exam/script.js"></script>
+    <style>
+        text {
+            font-size: 12px;
+        }
+    </style>
+    <script>
+
+        $$(function () {
+
+            var tree = clay.layout.tree();
+
+            $$('<g class="line"></g>').appendTo('svg');
+            $$('<g class="circle"></g>').appendTo('svg');
+            $$('<g class="bg"></g>').appendTo('svg');
+            $$('<g class="text"></g>').appendTo('svg');
+
+            tree
+                .bind('root', function (initTree) {
+                    return initTree[0];
+                })
+                .bind('child', function (parentTree, initTree) {
+                    var children = parentTree.children, flag, temp = [];
+                    for (flag = 0; flag < children.length; flag++) {
+                        temp.push(initTree[children[flag]]);
+                    }
+                    return temp;
+                })
+                .bind('id', function (treedata) {
+                    return treedata.id;
+                })
+                .bind('drawer'
+                , function (node) {
+                    $$('<circle id="' + node.id + '">').appendTo('.circle')
+                        .attr('r', '6')
+                        .attr('cx', node.top * 100)
+                        .attr('cy', node.left * 130)
+                        .attr('fill', '#000');
+
+                    $$('<rect id="' + node.id + '">').appendTo('.bg')
+                        .attr('width', node.data.name.length * 8 - (-10))
+                        .attr('height', '30')
+                        .attr('rx', '10')
+                        .attr('ry', '10')
+                        .attr('x', node.top * 100 - (-6))
+                        .attr('y', node.left * 130 - 15)
+                        .attr('fill', '#000');
+
+                    $$('<text id="text-' + node.id + '" >' + node.data.name + '</text>').appendTo('.text')
+                        .attr('x', node.top * 100 - (-10))
+                        .attr('y', node.left * 130 - (-4))
+                        .attr('fill', '#fff')
+                }, function (pNode, node) {
+                    $$('<path id="' + pNode.id + '-' + node.id + '"></path>').appendTo('.line')
+                        .attr('d',
+                        'M' + (pNode.top * 100) + " " + (pNode.left * 130) + " C" +
+                        (pNode.top * 100) + "," + (pNode.left * 130 - (-70)) + " " +
+                        (node.top * 100) + "," + (node.left * 130 - 70) + " " +
+                        (node.top * 100) + "," + (node.left * 130) + " ")
+                        .attr('stroke-width', '1.5px')
+                        .attr('stroke', '#000')
+                        .attr('fill', 'none');
+                });
+
+            tree([
+                { "name": "OS", "id": "1", "children": [1, 2, 3] },
+                { "name": "NOS", "id": "2", "children": [4, 5] },
+                { "name": "DOS", "id": "3", "children": [6, 7, 8] },
+                { "name": "SOS", "id": "4", "children": [] },
+                { "name": "BSD", "id": "5", "children": [] },
+                { "name": "Unix", "id": "6", "children": [] },
+                { "name": "Unix", "id": "7", "children": [9] },
+                { "name": "Windows", "id": "8", "children": [] },
+                { "name": "Linux", "id": "9", "children": [10, 11, 12] },
+                { "name": "Mac OS X", "id": "10", "children": [] },
+                { "name": "openSUSE", "id": "11", "children": [] },
+                { "name": "Centos", "id": "12", "children": [] },
+                { "name": "Ubuntu", "id": "13", "children": [] }
+            ]);
+
+        });
+
+    </script>
+</head>
+
+<body>
+    <header id='top'>
+        clay v1.2.1
+        <ul>
+            <li>
+                <a href="../../index.html">首页</a>
+            </li>
+            <li>
+                <a href="../index.html" class='click'>实例</a>
+            </li>
+            <li>
+                <a href="../../apis/index.html">文档</a>
+            </li>
+            <li>
+                <a href="../../aboutUs.html">加入我们</a>
+            </li>
+        </ul>
+        <a href="https://github.com/yelloxing/clay" class="github">
+            Fork me on GitHub
+        </a>
+    </header>
+    <section>
+        <svg width=900 height=500></svg>
+    </section>
+    <footer>
+        心叶 &copy;2007-2018 走一步，再走一步
+        <a href="#top">回到顶部</a>
+    </footer>
+</body>
+
+</html>

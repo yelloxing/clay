@@ -6,7 +6,8 @@ body>section>ul>li>a {
     width: 100%;
     height: 100%;
     display: inline-block;
-    font-size: 0;
+    color: #45a0bc;
+    font-family: cursive;
 }
 
 body>section>ul>li {
@@ -25,7 +26,8 @@ body>section>ul>li {
     transition-timing-function: ease-in-out;
     background-size: contain;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center .34rem;
+    border: 1px solid #cbc9c9;
 }
 
 body>section>ul>li:hover {

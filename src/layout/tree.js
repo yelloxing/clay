@@ -48,6 +48,7 @@ clay.layout.tree = function () {
         alltreedata[id] = {
             "data": temp,
             "pid": null,
+            "id":id,
             "children": []
         };
         // 根据传递的原始数据，生成内部统一结构
@@ -59,6 +60,7 @@ clay.layout.tree = function () {
                 alltreedata[id] = {
                     "data": children[flag],
                     "pid": pid,
+                    "id":id,
                     "children": []
                 };
                 createTree(children[flag], id);
