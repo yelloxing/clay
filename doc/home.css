@@ -77,6 +77,7 @@ body>section>.download>span>button {
     font-size: .14rem;
     margin-top: .1rem;
     cursor: pointer;
+    background-color: transparent;
 }
 
 body>section>.download>span>button:not(:last-child)::after {
