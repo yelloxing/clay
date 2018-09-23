@@ -84,3 +84,28 @@ body>section>.download>span>button:not(:last-child)::after {
     padding: 0 .1em 0 1.5em;
     color: #999;
 }
+
+body>section>.question {
+    font-size: 0;
+}
+
+body>section>.question>.item {
+    font-size: .18rem;
+    vertical-align: top;
+    display: inline-block;
+    line-height: 1.6;
+    padding: .2rem;
+}
+
+body>section>.question>.item>.head {
+    display: block;
+    font-size: .24rem;
+    line-height: .4rem;
+    color: #3e93b5;
+}
+
+body>section>.question>.item>.p {
+    text-indent: .4rem;
+    display: inline-block;
+    color: #2b6d8d;
+}
