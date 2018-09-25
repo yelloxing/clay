@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="../easycss-1.2.1.min.css">
     <link rel="stylesheet" href="../style.css">
     <link rel="stylesheet" href="./style.css">
+    <script>
+        function goto(target) {
+            window.location.href = target;
+        }
+    </script>
 </head>
 
 <body>
@@ -34,12 +39,29 @@
         </a>
     </header>
     <section>
-
+        <div class="content">
+            <h2 id='tree'>树图</h2>
+            <ul>
+                <li onclick='goto("./tree/left-right-tree/index.html")'>
+                    左边到右边的树(静止)
+                    <span style='background-image:url("./image/left-right-tree.png")'></span>
+                </li>
+            </ul>
+        </div>
+        <div class="menu">
+            <a href="#tree">树图</a>
+        </div>
     </section>
     <footer>
         心叶 &copy;2007-2018 走一步，再走一步
         <a href="#top">回到顶部</a>
     </footer>
 </body>
+<script>
+    window.setTimeout(function () {
+        var target = /(#.*)/.exec(window.location.href + "");
+        if (target) window.location.href = target[1];
+    }, 200);
+</script>
 
 </html>

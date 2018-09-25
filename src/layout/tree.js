@@ -16,20 +16,20 @@ clay.layout.tree = function () {
             alltreedata[rootid].left = 0.5;
             (function drawer(pNode, beforeSize) {
                 var children = pNode.children, flag, child;
-                for (flag = 0; children && flag < children.length; flag++) {
+                for (flag = 0; flag < children.length; flag++) {
+
                     // 计算位置
                     alltreedata[children[flag]].top = beforeSize + alltreedata[children[flag]].size / 2;
                     alltreedata[children[flag]].left = pNode.left + 1;
 
                     // 画线条
-                    scope.e.drawer[1](pNode, alltreedata[children[flag]]);
+                    scope.e.drawer[1](pNode, alltreedata[children[flag]], alltreedata[rootid].size);
 
                     drawer(alltreedata[children[flag]], beforeSize);
                     beforeSize += alltreedata[children[flag]].size;
                 }
-
                 //  画结点
-                scope.e.drawer[0](pNode);
+                scope.e.drawer[0](pNode, alltreedata[rootid].size);
 
             })(alltreedata[rootid], 0);
 
@@ -48,7 +48,7 @@ clay.layout.tree = function () {
         alltreedata[id] = {
             "data": temp,
             "pid": null,
-            "id":id,
+            "id": id,
             "children": []
         };
         // 根据传递的原始数据，生成内部统一结构
@@ -60,7 +60,7 @@ clay.layout.tree = function () {
                 alltreedata[id] = {
                     "data": children[flag],
                     "pid": pid,
-                    "id":id,
+                    "id": id,
                     "children": []
                 };
                 createTree(children[flag], id);
