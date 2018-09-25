@@ -310,26 +310,7 @@ window.treeData = {
                                 { "name": "StackedAreaLabeler", "value": 3202 }
                             ]
                         },
-                        {
-                            "name": "layout",
-                            "children": [
-                                { "name": "AxisLayout", "value": 6725 },
-                                { "name": "BundledEdgeRouter", "value": 3727 },
-                                { "name": "CircleLayout", "value": 9317 },
-                                { "name": "CirclePackingLayout", "value": 12003 },
-                                { "name": "DendrogramLayout", "value": 4853 },
-                                { "name": "ForceDirectedLayout", "value": 8411 },
-                                { "name": "IcicleTreeLayout", "value": 4864 },
-                                { "name": "IndentedTreeLayout", "value": 3174 },
-                                { "name": "Layout", "value": 7881 },
-                                { "name": "NodeLinkTreeLayout", "value": 12870 },
-                                { "name": "PieLayout", "value": 2728 },
-                                { "name": "RadialTreeLayout", "value": 12348 },
-                                { "name": "RandomLayout", "value": 870 },
-                                { "name": "StackedAreaLayout", "value": 9121 },
-                                { "name": "TreeMapLayout", "value": 9191 }
-                            ]
-                        },
+                        { "name": "layout", "value": 1000 },
                         { "name": "Operator", "value": 2490 },
                         { "name": "OperatorList", "value": 5248 },
                         { "name": "OperatorSequence", "value": 4190 },

@@ -1,6 +1,6 @@
 svg {
-    width: 11rem;
-    height: 6rem;
+    width: 7rem;
+    height: 7rem;
     margin: auto;
     display: block;
 }
@@ -8,4 +8,3 @@ svg {
 body>section {
     overflow: auto;
 }
-

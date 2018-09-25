@@ -30,9 +30,6 @@ $$(function () {
                 .attr('x', (node.left - 0.5) * 980 / 5 - (-16))
                 .attr('y', node.top * 580 / (num - 1) - (-14));
 
-
-
-
         }, function (pNode, node, num) {
 
             // 画曲线
