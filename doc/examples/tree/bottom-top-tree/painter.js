@@ -36,7 +36,7 @@ $$(function () {
                 $$('<circle id="node-' + node.id + '"  r="3" fill="' + (node.children.length > 0 ? "red" : "white") + '" stroke="red" stroke-width="2"/>')
                     .appendTo('.circle')
                     .attr('cx', 550)
-                    .attr('cy', 300);
+                    .attr('cy', 592);
                 nodeClay = $$('#node-' + node.id);
             }
 
@@ -45,7 +45,7 @@ $$(function () {
                 $$('<text id="text-' + node.id + '" style="font-size:8px">' + node.data.name + '</text>')
                     .appendTo('.text')
                     .attr('x', 550)
-                    .attr('y', 300);
+                    .attr('y', 592);
                 textClay = $$('#text-' + node.id);
             }
 
@@ -88,15 +88,15 @@ $$(function () {
                 $$('<path id="pid-' + pNode.id + '-id-' + node.id + '" stroke-width="1.5" stroke="gray" fill="none"></path>')
                     .appendTo('.line')
                     .attr('d',
-                    'M' + 550 + " " + 300 + "C" +
-                    550 + "," + 300 + " " +
-                    550 + "," + 300 + " " +
-                    550 + "," + 300 + " "
+                    'M' + 550 + " " + 592 + "C" +
+                    550 + "," + 592 + " " +
+                    550 + "," + 592 + " " +
+                    550 + "," + 592 + " "
                     )
                     .attr('c-x', 550)
-                    .attr('c-y', 300)
+                    .attr('c-y', 592)
                     .attr('p-x', 550)
-                    .attr('p-y', 300);
+                    .attr('p-y', 592);
                 linkClay = $$('#pid-' + pNode.id + "-id-" + node.id);
             }
 
