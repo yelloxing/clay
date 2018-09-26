@@ -3,11 +3,11 @@ $$(function () {
         svg = $$('svg'),
         // 旋转对象
         rotate = clay.math.rotate().setL(350, 350),
-        move = clay.math.move();;
+        move = clay.math.move();
 
-    $$('<g class="circle"></g>').appendTo('svg');
     $$('<g class="line"></g>').appendTo('svg');
     $$('<g class="text"></g>').appendTo('svg');
+    $$('<g class="circle"></g>').appendTo('svg');
 
     tree
         .bind('root', function (initTree) {
@@ -25,13 +25,13 @@ $$(function () {
             var p = rotate.setP(350 + 70 * (node.left - 0.5), 350)(deg);
 
             // 画圆圈
-            $$('<circle r="3" fill="' + (node.children.length > 0 ? "red" : "none") + '" stroke="red" stroke-width="2"/>')
+            $$('<circle r="3" fill="' + (node.children.length > 0 ? "red" : "white") + '" stroke="red" stroke-width="2"/>')
                 .appendTo('.circle')
                 .attr('cx', p[0])
                 .attr('cy', p[1]);
 
             // 写文字
-            $$('<text style="font-size:10;">&nbsp;&nbsp;' + node.data.name + '</text>')
+            $$('<text style="font-size:10px;">&nbsp;&nbsp;' + node.data.name + '</text>')
                 .appendTo('.text')
                 .attr('x', p[0])
                 .attr('y', p[1])
@@ -48,10 +48,17 @@ $$(function () {
             var pNodeP = [p[0], p[1]];
 
             // 辅助位置计算
-            p = move.setD(pNodeP[0] - 350, pNodeP[1] - 350).setP(pNodeP[0], pNodeP[1])(50);
-            var pHelpP = [p[0], p[1]];
-            p = move.setD(nodeP[0] - 350, nodeP[1] - 350).setP(nodeP[0], nodeP[1])(-50);
-            var nHelpP = [p[0], p[1]];
+            var pHelpP, nHelpP;
+            if (!pNode.pid) {
+                pHelpP = [pNodeP[0] + 20, pNodeP[1] + 50];
+                p = move.setD(nodeP[0] - 350, nodeP[1] - 350).setP(nodeP[0] + 10, nodeP[1] + 10)(-50);
+                nHelpP = [p[0], p[1]];
+            } else {
+                p = move.setD(pNodeP[0] - 350, pNodeP[1] - 350).setP(pNodeP[0], pNodeP[1])(50);
+                pHelpP = [p[0], p[1]];
+                p = move.setD(nodeP[0] - 350, nodeP[1] - 350).setP(nodeP[0], nodeP[1])(-50);
+                nHelpP = [p[0], p[1]];
+            }
 
             // 画曲线
             $$('<path stroke-width="1.5" stroke="gray" fill="none"></path>')

@@ -1,101 +1,13 @@
 window.treeData = {
     "name": "flare",
     "children": [
+        { "name": "analytics" },
+        { "name": "animate" },
         {
-            "name": "analytics",
-            "children": [
-                {
-                    "name": "cluster",
-                    "children": [
-                        { "name": "AgglomerativeCluster", "value": 3938 },
-                        { "name": "CommunityStructure", "value": 3812 },
-                        { "name": "HierarchicalCluster", "value": 6714 },
-                        { "name": "MergeEdge", "value": 743 }
-                    ]
-                },
-                {
-                    "name": "graph",
-                    "children": [
-                        { "name": "BetweennessCentrality", "value": 3534 },
-                        { "name": "LinkDistance", "value": 5731 },
-                        { "name": "MaxFlowMinCut", "value": 7840 },
-                        { "name": "ShortestPaths", "value": 5914 },
-                        { "name": "SpanningTree", "value": 3416 }
-                    ]
-                },
-                {
-                    "name": "optimization",
-                    "children": [
-                        { "name": "AspectRatioBanker", "value": 7074 }
-                    ]
-                }
-            ]
+            "name": "display"
         },
         {
-            "name": "animate",
-            "children": [
-                { "name": "Easing", "value": 17010 },
-                { "name": "FunctionSequence", "value": 5842 },
-                {
-                    "name": "interpolate",
-                    "children": [
-                        { "name": "ArrayInterpolator", "value": 1983 },
-                        { "name": "ColorInterpolator", "value": 2047 },
-                        { "name": "DateInterpolator", "value": 1375 },
-                        { "name": "Interpolator", "value": 8746 },
-                        { "name": "MatrixInterpolator", "value": 2202 },
-                        { "name": "NumberInterpolator", "value": 1382 },
-                        { "name": "ObjectInterpolator", "value": 1629 },
-                        { "name": "PointInterpolator", "value": 1675 },
-                        { "name": "RectangleInterpolator", "value": 2042 }
-                    ]
-                },
-                { "name": "ISchedulable", "value": 1041 },
-                { "name": "Parallel", "value": 5176 },
-                { "name": "Pause", "value": 449 },
-                { "name": "Scheduler", "value": 5593 },
-                { "name": "Sequence", "value": 5534 },
-                { "name": "Transition", "value": 9201 },
-                { "name": "Transitioner", "value": 19975 },
-                { "name": "TransitionEvent", "value": 1116 },
-                { "name": "Tween", "value": 6006 }
-            ]
-        },
-        {
-            "name": "data1",
-            "children": [
-                {
-                    "name": "converters",
-                    "children": [
-                        { "name": "Converters", "value": 721 },
-                        { "name": "DelimitedTextConverter", "value": 4294 },
-                        { "name": "GraphMLConverter", "value": 9800 },
-                        { "name": "IDataConverter", "value": 1314 },
-                        { "name": "JSONConverter", "value": 2220 }
-                    ]
-                },
-                { "name": "DataField", "value": 1759 },
-                { "name": "DataSchema", "value": 2165 },
-                { "name": "DataSet", "value": 586 },
-                { "name": "DataSource", "value": 3331 },
-                { "name": "DataTable", "value": 772 },
-                { "name": "DataUtil", "value": 3322 }
-            ]
-        },
-        {
-            "name": "display",
-            "children": [
-                { "name": "DirtySprite", "value": 8833 },
-                { "name": "LineSprite", "value": 1732 },
-                { "name": "RectSprite", "value": 3623 },
-                { "name": "TextSprite", "value": 10066 }
-            ]
-        },
-        {
-            "name": "flex",
-            "children": [
-                { "name": "FlareVis", "value": 4116 }
-            ]
+            "name": "flex"
         },
         {
             "name": "physics",
@@ -142,21 +54,6 @@ window.treeData = {
                 { "name": "Variance", "value": 1876 },
                 { "name": "Xor", "value": 1101 },
                 { "name": "methods" }
-            ]
-        },
-        {
-            "name": "scale",
-            "children": [
-                { "name": "IScaleMap", "value": 2105 },
-                { "name": "LinearScale", "value": 1316 },
-                { "name": "LogScale", "value": 3151 },
-                { "name": "OrdinalScale", "value": 3770 },
-                { "name": "QuantileScale", "value": 2435 },
-                { "name": "QuantitativeScale", "value": 4839 },
-                { "name": "RootScale", "value": 1756 },
-                { "name": "Scale", "value": 4268 },
-                { "name": "ScaleType", "value": 1821 },
-                { "name": "TimeScale", "value": 5833 }
             ]
         },
         {
@@ -218,42 +115,10 @@ window.treeData = {
                     ]
                 },
                 {
-                    "name": "controls",
-                    "children": [
-                        { "name": "AnchorControl", "value": 2138 },
-                        { "name": "ClickControl", "value": 3824 },
-                        { "name": "Control", "value": 1353 },
-                        { "name": "ControlList", "value": 4665 },
-                        { "name": "DragControl", "value": 2649 },
-                        { "name": "ExpandControl", "value": 2832 },
-                        { "name": "HoverControl", "value": 4896 },
-                        { "name": "IControl", "value": 763 },
-                        { "name": "PanZoomControl", "value": 5222 },
-                        { "name": "SelectionControl", "value": 7862 },
-                        { "name": "TooltipControl", "value": 8435 }
-                    ]
+                    "name": "controls"
                 },
                 {
-                    "name": "data",
-                    "children": [
-                        { "name": "Data", "value": 20544 },
-                        { "name": "DataList", "value": 19788 },
-                        { "name": "DataSprite", "value": 10349 },
-                        { "name": "EdgeSprite", "value": 3301 },
-                        { "name": "NodeSprite", "value": 19382 },
-                        {
-                            "name": "render",
-                            "children": [
-                                { "name": "ArrowType", "value": 698 },
-                                { "name": "EdgeRenderer", "value": 5569 },
-                                { "name": "IRenderer", "value": 353 },
-                                { "name": "ShapeRenderer", "value": 2247 }
-                            ]
-                        },
-                        { "name": "ScaleBinding", "value": 11275 },
-                        { "name": "Tree", "value": 7147 },
-                        { "name": "TreeBuilder", "value": 9930 }
-                    ]
+                    "name": "data"
                 },
                 {
                     "name": "events",

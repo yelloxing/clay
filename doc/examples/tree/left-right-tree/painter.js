@@ -2,9 +2,10 @@ $$(function () {
     var tree = clay.layout.tree(),
         svg = $$('svg');
 
-    $$('<g class="circle"></g>').appendTo('svg');
+
     $$('<g class="line"></g>').appendTo('svg');
     $$('<g class="text"></g>').appendTo('svg');
+    $$('<g class="circle"></g>').appendTo('svg');
 
     tree
         .bind('root', function (initTree) {
@@ -19,13 +20,13 @@ $$(function () {
         .bind('drawer', function (node, num) {
 
             // 画圆圈
-            $$('<circle r="3" fill="' + (node.children.length > 0 ? "red" : "none") + '" stroke="red" stroke-width="2"/>')
+            $$('<circle r="3" fill="' + (node.children.length > 0 ? "red" : "white") + '" stroke="red" stroke-width="2"/>')
                 .appendTo('.circle')
                 .attr('cx', (node.left - 0.5) * 980 / 5 - (-10))
                 .attr('cy', node.top * 580 / (num - 1) - (-10));
 
             // 写文字
-            $$('<text style="font-size:10">' + node.data.name + '</text>')
+            $$('<text style="font-size:10px">' + node.data.name + '</text>')
                 .appendTo('.text')
                 .attr('x', (node.left - 0.5) * 980 / 5 - (-16))
                 .attr('y', node.top * 580 / (num - 1) - (-14));
