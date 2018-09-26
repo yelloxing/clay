@@ -1,0 +1,10 @@
+svg {
+    width: 8rem;
+    height: 6rem;
+    margin: auto;
+    display: block;
+}
+
+body>section {
+    overflow: auto;
+}
