@@ -2,8 +2,8 @@ $$(function () {
 
     var svg = $$('svg');
     $$('<g class="line"></g>').appendTo(svg);
-    $$('<g class="circle"></g>').appendTo(svg);
     $$('<g class="text"></g>').appendTo(svg);
+    $$('<g class="circle"></g>').appendTo(svg);
 
     // 获取力布局
     var force = clay.layout.force(880, 480);
