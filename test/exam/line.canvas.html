@@ -9,42 +9,11 @@
 
 		$$(function () {
 
-			var line = $$.canvas.
-				// 设置画笔的时候，如果没有也不会报错
-				line('.cls',
-				// 配置画笔，后续修改或直接后续配置也可以
-				{
-					strokeStyle: 'red',
-					lineWidth: '5',
-					fillStyle: 'green'
-				}).interpolate('cardinal').setHeight(300)
-				// 可以传递canvas结点或者直接传递画笔
-				// 因此，配置好的曲线，可以重复利用
-				// 即使不是同一个画布
-				.canvas($$('.cls2')[0].getContext("2d")).config({
-					strokeStyle: 'blue'
-				});
-
-			var pen1 = line([[10, 100], [100, 200], [200, 70], [300, 250]]);
-
-			// 测试建立的对象是否独立
-			var line2 = $$.canvas.line('.cls', {
-				fillStyle: 'red'
-			});
-
-			// 可以调用任何2d对象上的方法
-			pen1.fill();
-
 		});
 
 	</script>
 </head>
 
-<body>
-
-	<canvas class='cls1' width=700 height=300></canvas>
-	<canvas class='cls2' width=700 height=300></canvas>
-
-</body>
+<body></body>
 
 </html>

@@ -25,7 +25,6 @@ var source = [
 
 	// 布局
 	'./src/layout/tree.js',
-	'./src/layout/force.js',
 
 	// 图形对象
 	'./src/painter/tool.js',
