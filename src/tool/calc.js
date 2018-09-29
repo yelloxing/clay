@@ -58,9 +58,10 @@ clay.min = function (array, valback) {
 // 给一组数据，轮询执行一遍
 clay.loop = function (datas, callback) {
 
-    var flag = 0;
-    for (; flag < datas.length; flag++) {
+    var flag = 0, data;
+    for (data in datas) {
         callback(datas[flag], flag);
+        flag += 1;
     }
     return clay;
 

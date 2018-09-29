@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Sep 29 2018 12:31:34 GMT+0800 (CST)
+* Date:Sat Sep 29 2018 17:48:31 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -222,108 +222,108 @@ function _sizzle(selector, context) {
 
 // 把字符串变成结点
 function _toNode(str) {
-	var frame = document.createElementNS(_namespace.svg, 'svg');
-	// 把传递元素类型和标记进行统一处理
-	if (new RegExp("^" + _regexp.identifier + "$").test(str)) str = "<" + str + "></" + str + ">";
-	frame.innerHTML = str;
-	var childNodes = frame.childNodes, flag, child;
-	for (flag = 0; flag < childNodes.length; flag++) {
-		if (childNodes[flag].nodeType === 1 || childNodes[flag].nodeType === 9 || childNodes[flag].nodeType === 11) {
-			child = childNodes[flag];
-			break;
-		}
-	}
-	// 如果不是svg元素，重新用html命名空间创建
-	// 目前结点只考虑了svg元素和html元素
-	// 如果考虑别的元素类型需要修改此处判断方法
-	if (/[A-Z]/.test(child.tagName)) {
-		frame = document.createElement("div");
-		frame.innerHTML = str;
-		childNodes = frame.childNodes;
-		for (flag = 0; flag < childNodes.length; flag++) {
-			if (childNodes[flag].nodeType === 1 || childNodes[flag].nodeType === 9 || childNodes[flag].nodeType === 11) {
-				child = childNodes[flag];
-				break;
-			}
-		}
-	}
-	return child;
+    var frame = document.createElementNS(_namespace.svg, 'svg');
+    // 把传递元素类型和标记进行统一处理
+    if (new RegExp("^" + _regexp.identifier + "$").test(str)) str = "<" + str + "></" + str + ">";
+    frame.innerHTML = str;
+    var childNodes = frame.childNodes, flag, child;
+    for (flag = 0; flag < childNodes.length; flag++) {
+        if (childNodes[flag].nodeType === 1 || childNodes[flag].nodeType === 9 || childNodes[flag].nodeType === 11) {
+            child = childNodes[flag];
+            break;
+        }
+    }
+    // 如果不是svg元素，重新用html命名空间创建
+    // 目前结点只考虑了svg元素和html元素
+    // 如果考虑别的元素类型需要修改此处判断方法
+    if (child.tagName == 'canvas' || /[A-Z]/.test(child.tagName)) {
+        frame = document.createElement("div");
+        frame.innerHTML = str;
+        childNodes = frame.childNodes;
+        for (flag = 0; flag < childNodes.length; flag++) {
+            if (childNodes[flag].nodeType === 1 || childNodes[flag].nodeType === 9 || childNodes[flag].nodeType === 11) {
+                child = childNodes[flag];
+                break;
+            }
+        }
+    }
+    return child;
 }
 
 clay.prototype.find = function (selector) {
-	if (this.length <= 0) return clay();
-	var newClay = clay(),
-		nodes = _sizzle(selector, this[0]), flag;
-	for (flag = 0; flag < nodes.length; flag++) {
-		newClay[flag] = nodes[flag];
-		newClay.length += 1;
-	}
-	return newClay;
+    if (this.length <= 0) return clay();
+    var newClay = clay(),
+        nodes = _sizzle(selector, this[0]), flag;
+    for (flag = 0; flag < nodes.length; flag++) {
+        newClay[flag] = nodes[flag];
+        newClay.length += 1;
+    }
+    return newClay;
 };
 
 clay.prototype.eq = function (flag) {
-	return this.length <= flag ? new clay() : new clay(this[flag]);
+    return this.length <= flag ? new clay() : new clay(this[flag]);
 };
 
 clay.prototype.appendTo = function (target) {
 
-	var newClay = clay(target), i, j;
-	for (i = 0; i < newClay.length; i++)
-		for (j = 0; j < this.length; j++)
-			newClay[i].appendChild(this[j]);
-	return this;
+    var newClay = clay(target), i, j;
+    for (i = 0; i < newClay.length; i++)
+        for (j = 0; j < this.length; j++)
+            newClay[i].appendChild(this[j]);
+    return this;
 };
 
 clay.prototype.remove = function () {
 
-	var flag;
-	for (flag = 0; flag < this.length; flag++)
-		this[flag].parentNode.removeChild(this[flag]);
-	return this;
+    var flag;
+    for (flag = 0; flag < this.length; flag++)
+        this[flag].parentNode.removeChild(this[flag]);
+    return this;
 };
 
 clay.prototype.attr = function (attr, val) {
 
-	if (val == null || val == undefined) {
-		return this.length > 0 ? this[0].getAttribute(attr) : undefined;
-	} else {
-		var flag, _val;
-		for (flag = 0; flag < this.length; flag++) {
-			_val = typeof val === 'function' ? val(this[flag]._data, flag,this.eq(flag)) : val;
-			// 如果是xml元素
-			// 针对xlink使用特殊方法赋值
-			if (/[A-Z]/.test(this[flag].tagName) && _xlink.indexOf(attr) >= 0) {
-				this[flag].setAttributeNS(_namespace.xlink, 'xlink:' + attr, _val);
-			} else {
-				this[flag].setAttribute(attr, _val);
-			}
-		}
-		return this;
-	}
+    if (val == null || val == undefined) {
+        return this.length > 0 ? this[0].getAttribute(attr) : undefined;
+    } else {
+        var flag, _val;
+        for (flag = 0; flag < this.length; flag++) {
+            _val = typeof val === 'function' ? val(this[flag]._data, flag, this.eq(flag)) : val;
+            // 如果是xml元素
+            // 针对xlink使用特殊方法赋值
+            if (/[A-Z]/.test(this[flag].tagName) && _xlink.indexOf(attr) >= 0) {
+                this[flag].setAttributeNS(_namespace.xlink, 'xlink:' + attr, _val);
+            } else {
+                this[flag].setAttribute(attr, _val);
+            }
+        }
+        return this;
+    }
 };
 
 clay.prototype.css = function (name, style) {
 
-	if (arguments.length <= 1 && typeof name !== 'object') {
-		if (this.length < 1) return undefined;
-		var allStyle = document.defaultView && document.defaultView.getComputedStyle ?
-			document.defaultView.getComputedStyle(this[0], null) :
-			this[0].currentStyle;
-		return typeof name === 'string' ?
-			allStyle.getPropertyValue(name) :
-			allStyle;
-	} else if (this.length > 0) {
-		var flag, key;
-		if (typeof name === 'object') {
-			for (key in name)
-				for (flag = 0; flag < this.length; flag++)
-					this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, key, name[key]) : name[key];
-		} else {
-			for (flag = 0; flag < this.length; flag++)
-				this[flag].style[name] = typeof style === 'function' ? style(this[flag]._data, flag) : style;
-		}
-	}
-	return this;
+    if (arguments.length <= 1 && typeof name !== 'object') {
+        if (this.length < 1) return undefined;
+        var allStyle = document.defaultView && document.defaultView.getComputedStyle ?
+            document.defaultView.getComputedStyle(this[0], null) :
+            this[0].currentStyle;
+        return typeof name === 'string' ?
+            allStyle.getPropertyValue(name) :
+            allStyle;
+    } else if (this.length > 0) {
+        var flag, key;
+        if (typeof name === 'object') {
+            for (key in name)
+                for (flag = 0; flag < this.length; flag++)
+                    this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, key, name[key]) : name[key];
+        } else {
+            for (flag = 0; flag < this.length; flag++)
+                this[flag].style[name] = typeof style === 'function' ? style(this[flag]._data, flag) : style;
+        }
+    }
+    return this;
 
 };
 
@@ -547,9 +547,10 @@ clay.min = function (array, valback) {
 // 给一组数据，轮询执行一遍
 clay.loop = function (datas, callback) {
 
-    var flag = 0;
-    for (; flag < datas.length; flag++) {
+    var flag = 0, data;
+    for (data in datas) {
         callback(datas[flag], flag);
+        flag += 1;
     }
     return clay;
 
@@ -886,13 +887,13 @@ clay.math.scale = function () {
 // 获取canvas2D对象
 function _getCanvas2D(selector) {
 
-	if (selector && selector.constructor === CanvasRenderingContext2D)
-		return selector;
-	else {
-		var canvas = clay(selector);
-		if (canvas.length > 0)
-			return canvas[0].getContext("2d");
-	}
+    if (selector && selector.constructor === CanvasRenderingContext2D)
+        return selector;
+    else {
+        var canvas = clay(selector);
+        if (canvas.length > 0)
+            return canvas[0].getContext("2d");
+    }
 
 }
 
@@ -904,24 +905,75 @@ function _getCanvas2D(selector) {
 // 最后一个是配置给控制方法的参数
 var _canvas = function (_selector, config, painterback, param) {
 
-	var key, temp = painterback(param);
-	temp._config = config || {};
-	temp._painter = _getCanvas2D(_selector);
+    var key, temp = painterback(param);
+    temp._config = config || {};
+    temp._painter = _getCanvas2D(_selector);
 
-	// 获取画笔
-	temp.canvas = function (selector) {
-		temp._painter = _getCanvas2D(selector);
-		return temp;
-	};
+    // 获取画笔
+    temp.canvas = function (selector) {
+        temp._painter = _getCanvas2D(selector);
+        return temp;
+    };
 
-	// 配置画笔
-	temp.config = function (_config) {
-		for (key in _config)
-			temp._config[key] = _config[key];
-		return temp;
-	};
+    // 配置画笔
+    temp.config = function (_config) {
+        for (key in _config)
+            temp._config[key] = _config[key];
+        return temp;
+    };
 
-	return temp;
+    return temp;
+
+};
+
+// 考虑到canvas画图时就一个图层会有诸多不便
+// 提供一个可以使用图层绘制的canvas对象
+// 考虑到效率问题，和绘画独立出来
+clay.canvas.layer = function (selector, width, height) {
+    // 画笔
+    var painter = selector ? _getCanvas2D(selector) : undefined,
+        canvas = [],
+        // 图层集合
+        layer = {};
+    var layerManager = {
+        "get": function (index) {
+            if (!layer[index] || layer[index].constructor !== CanvasRenderingContext2D) {
+
+                canvas.push(document.createElement('canvas'));
+                // 设置大小才会避免莫名其妙的错误
+                canvas[canvas.length - 1].setAttribute('width', width);
+                canvas[canvas.length - 1].setAttribute('height', height);
+
+                layer[index] = canvas[canvas.length - 1].getContext('2d');
+            }
+            return layer[index];
+        },
+        "clearn": function () {
+            layer = {};
+            canvas = {};
+            return layerManager;
+        },
+        "painter": function (selector) {
+            if (selector)
+                painter = _getCanvas2D(selector);
+            return painter;
+        },
+        "update": function () {
+            if (painter && painter.constructor === CanvasRenderingContext2D) {
+                var flag;
+                painter.clearRect(0, 0, width, height);
+                painter.save();
+                // 混合模式等先不考虑
+                for (flag = 0; flag < canvas.length; flag++) {
+                    painter.drawImage(canvas[flag], 0, 0, width, height, 0, 0, width, height)
+                }
+                painter.restore();
+            }
+            return layerManager;
+        }
+    };
+
+    return layerManager;
 
 };
 
