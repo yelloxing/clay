@@ -49,8 +49,6 @@ var _arc = function (painter) {
 	// 设置内外半径
 	arc.setRadius = function (r1, r2) {
 
-		if (typeof r1 !== 'number' || typeof r2 !== 'number')
-			throw new Error('Unsupported data!');
 		scope.r = [r1, r2];
 		return arc;
 
@@ -59,8 +57,6 @@ var _arc = function (painter) {
 	// 设置弧中心
 	arc.setCenter = function (x, y) {
 
-		if (typeof x !== 'number' || typeof y !== 'number')
-			throw new Error('Unsupported data!');
 		rotate.setL(x, y);
 		scope.c = [x, y];
 		return arc;

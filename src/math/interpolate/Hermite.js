@@ -24,7 +24,7 @@ clay.math.hermite = function () {
         if (typeof t === 'number') {
             scope.u = (1 - t) * 0.5;
         } else {
-            throw new Error('Unsupported data!');
+            throw new Error('Expecting a figure!');
         }
         return hermite;
 
@@ -48,7 +48,7 @@ clay.math.hermite = function () {
                 y1
             ];
         } else {
-            throw new Error('Unsupported data!');
+            throw new Error('The point position should be increamented!');
         }
         return hermite;
 

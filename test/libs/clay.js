@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Sep 28 2018 11:34:06 GMT+0800 (CST)
+* Date:Sat Sep 29 2018 12:31:34 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -289,7 +289,7 @@ clay.prototype.attr = function (attr, val) {
 	} else {
 		var flag, _val;
 		for (flag = 0; flag < this.length; flag++) {
-			_val = typeof val === 'function' ? val(this[flag]._data, flag) : val;
+			_val = typeof val === 'function' ? val(this[flag]._data, flag,this.eq(flag)) : val;
 			// 如果是xml元素
 			// 针对xlink使用特殊方法赋值
 			if (/[A-Z]/.test(this[flag].tagName) && _xlink.indexOf(attr) >= 0) {
@@ -491,56 +491,67 @@ _clock.stop = function () {
 // 返回数字数组[r,g,b,a]
 clay.color = function (color) {
 
-	var temp = clay('head').css('color', color).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(new RegExp('\\,' + _regexp.whitespace));
-	return [+temp[0], +temp[1], +temp[2], temp[3] == undefined ? 1 : +temp[3]];
+    var temp = clay('head').css('color', color).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(new RegExp('\\,' + _regexp.whitespace));
+    return [+temp[0], +temp[1], +temp[2], temp[3] == undefined ? 1 : +temp[3]];
 
 };
 
 // 返回不少于指定个数的颜色值数组
 clay.getColors = function (num) {
 
-	if (typeof num == 'number' && num > 3) {
+    if (typeof num == 'number' && num > 3) {
 
-		var temp = [], flag = 0;
-		for (flag = 1; flag <= num; flag++)
-			temp.push('rgb(' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ')');
-		return temp;
+        var temp = [], flag = 0;
+        for (flag = 1; flag <= num; flag++)
+            temp.push('rgb(' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ')');
+        return temp;
 
-	} else {
-		return ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
-	}
+    } else {
+        return ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+    }
 
 };
 
 // 返回最大值
 clay.max = function (array, valback) {
 
-	valback = typeof valback === 'function' ? valback : function (data) { return data; };
-	var flag = 1, max = array[0], maxval = valback(array[0], 0), nowval;
-	for (; flag < array.length; flag++) {
-		nowval = valback(array[flag], flag);
-		if (maxval < nowval) {
-			max = array[flag];
-			maxval = nowval;
-		}
-	}
-	return max;
+    valback = typeof valback === 'function' ? valback : function (data) { return data; };
+    var flag = 1, max = array[0], maxval = valback(array[0], 0), nowval;
+    for (; flag < array.length; flag++) {
+        nowval = valback(array[flag], flag);
+        if (maxval < nowval) {
+            max = array[flag];
+            maxval = nowval;
+        }
+    }
+    return max;
 
 };
 
 // 返回最小值
 clay.min = function (array, valback) {
 
-	valback = typeof valback === 'function' ? valback : function (data) { return data; };
-	var flag = 1, min = array[0], minval = valback(array[0], 0), nowval;
-	for (; flag < array.length; flag++) {
-		nowval = valback(array[flag], flag);
-		if (minval > nowval) {
-			min = array[flag];
-			minval = nowval;
-		}
-	}
-	return min;
+    valback = typeof valback === 'function' ? valback : function (data) { return data; };
+    var flag = 1, min = array[0], minval = valback(array[0], 0), nowval;
+    for (; flag < array.length; flag++) {
+        nowval = valback(array[flag], flag);
+        if (minval > nowval) {
+            min = array[flag];
+            minval = nowval;
+        }
+    }
+    return min;
+
+};
+
+// 给一组数据，轮询执行一遍
+clay.loop = function (datas, callback) {
+
+    var flag = 0;
+    for (; flag < datas.length; flag++) {
+        callback(datas[flag], flag);
+    }
+    return clay;
 
 };
 
@@ -570,7 +581,7 @@ clay.math.hermite = function () {
         if (typeof t === 'number') {
             scope.u = (1 - t) * 0.5;
         } else {
-            throw new Error('Unsupported data!');
+            throw new Error('Expecting a figure!');
         }
         return hermite;
 
@@ -594,7 +605,7 @@ clay.math.hermite = function () {
                 y1
             ];
         } else {
-            throw new Error('Unsupported data!');
+            throw new Error('The point position should be increamented!');
         }
         return hermite;
 
@@ -606,277 +617,268 @@ clay.math.hermite = function () {
 // Cardinal三次插值
 clay.math.cardinal = function () {
 
-	var scope = { "t": 0 };
+    var scope = { "t": 0 };
 
-	// 根据x值返回y值
-	var i;
-	var cardinal = function (x) {
+    // 根据x值返回y值
+    var i;
+    var cardinal = function (x) {
 
-		if (scope.hs) {
+        if (scope.hs) {
+            i = -1;
+            while (i + 1 < scope.hs.x.length && (x > scope.hs.x[i + 1] || (i == -1 && x >= scope.hs.x[i + 1]))) {
+                i += 1;
+            }
+            if (i == -1 || i >= scope.hs.h.length)
+                throw new Error('Coordinate crossing!');
+            return scope.hs.h[i](x);
+        } else {
+            throw new Error('You shoud first set the position!');
+        }
 
-			i = -1;
-			while (i + 1 < scope.hs.x.length && (x > scope.hs.x[i + 1] || (i == -1 && x >= scope.hs.x[i + 1]))) {
-				i += 1;
-			}
-			if (i == -1 || i >= scope.hs.h.length)
-				throw new Error('Coordinate crossing!');
-			return scope.hs.h[i](x);
-		} else {
-			throw new Error('You shoud first set the position!');
-		}
+    };
 
-	};
+    // 设置张弛系数【应该在点的位置设置前设置】
+    cardinal.setU = function (t) {
 
-	// 设置张弛系数【应该在点的位置设置前设置】
-	cardinal.setU = function (t) {
+        if (typeof t === 'number') {
+            scope.t = t;
+        } else {
+            throw new Error('Expecting a figure!');
+        }
+        return cardinal;
 
-		if (typeof t === 'number') {
-			scope.t = t;
-		} else {
-			throw new Error('Unsupported data!');
-		}
-		return cardinal;
+    };
 
-	};
+    // 设置点的位置
+    // 参数格式：[[x,y],[x,y],...]
+    // 至少二个点
+    cardinal.setP = function (points) {
 
-	// 设置点的位置
-	// 参数格式：[[x,y],[x,y],...]
-	// 至少二个点
-	cardinal.setP = function (points) {
+        scope.hs = {
+            "x": [],
+            "h": []
+        };
+        var flag,
+            slope = (points[1][1] - points[0][1]) / (points[1][0] - points[0][0]),
+            temp;
+        scope.hs.x[0] = points[0][0];
+        for (flag = 1; flag < points.length; flag++) {
+            if (points[flag][0] <= points[flag - 1][0]) throw new Error('The point position should be increamented!');
+            scope.hs.x[flag] = points[flag][0];
+            // 求点斜率
+            temp = flag < points.length - 1 ?
+                (points[flag + 1][1] - points[flag - 1][1]) / (points[flag + 1][0] - points[flag - 1][0]) :
+                (points[flag][1] - points[flag - 1][1]) / (points[flag][0] - points[flag - 1][0]);
+            scope.hs.h[flag - 1] = clay.math.hermite().setU(scope.t).setP(points[flag - 1][0], points[flag - 1][1], points[flag][0], points[flag][1], slope, temp);
+            slope = temp;
+        }
+        return cardinal;
 
-		scope.hs = {
-			"x": [],
-			"h": []
-		};
-		var flag,
-			slope = (points[1][1] - points[0][1]) / (points[1][0] - points[0][0]),
-			temp;
-		scope.hs.x[0] = points[0][0];
-		for (flag = 1; flag < points.length; flag++) {
-			if (points[flag][0] <= points[flag - 1][0]) throw new Error('The point position should be increamented!');
-			scope.hs.x[flag] = points[flag][0];
-			// 求点斜率
-			temp = flag < points.length - 1 ?
-				(points[flag + 1][1] - points[flag - 1][1]) / (points[flag + 1][0] - points[flag - 1][0]) :
-				(points[flag][1] - points[flag - 1][1]) / (points[flag][0] - points[flag - 1][0]);
-			scope.hs.h[flag - 1] = clay.math.hermite().setU(scope.t).setP(points[flag - 1][0], points[flag - 1][1], points[flag][0], points[flag][1], slope, temp);
-			slope = temp;
-		}
-		return cardinal;
+    };
 
-	};
-
-	return cardinal;
+    return cardinal;
 };
 
 // 围绕任意射线旋转
 clay.math.rotate = function () {
 
-	var scope = {};
+    var scope = {};
 
-	// 旋转方向满足右手法则
-	// flag表示是否把这次旋转后位置标记为下次旋转开始位置
-	// deg采用弧度值单位
-	var rotate = function (deg, flag) {
+    // 旋转方向满足右手法则
+    // flag表示是否把这次旋转后位置标记为下次旋转开始位置
+    // deg采用弧度值单位
+    var rotate = function (deg, flag) {
 
-		if (scope.M && scope.P) {
-			if (typeof deg !== 'number') throw new Error('Unsupported data!');
-			var x = scope.M.A[0][0] * scope.P[0] + scope.M.A[0][1] * scope.P[1] + scope.M.A[0][2] * scope.P[2] + scope.M.A[0][3],
-				y = scope.M.A[1][0] * scope.P[0] + scope.M.A[1][1] * scope.P[1] + scope.M.A[1][2] * scope.P[2] + scope.M.A[1][3],
-				z = scope.M.A[2][0] * scope.P[0] + scope.M.A[2][1] * scope.P[1] + scope.M.A[2][2] * scope.P[2] + scope.M.A[2][3],
-				cos = Math.cos(deg),
-				sin = Math.sin(deg);
-			var t = x * cos - y * sin;
-			y = x * sin + y * cos;
-			x = t;
-			var temp = [
-				scope.M.B[0][0] * x + scope.M.B[0][1] * y + scope.M.B[0][2] * z + scope.M.B[0][3],
-				scope.M.B[1][0] * x + scope.M.B[1][1] * y + scope.M.B[1][2] * z + scope.M.B[1][3],
-				scope.M.B[2][0] * x + scope.M.B[2][1] * y + scope.M.B[2][2] * z + scope.M.B[2][3]
-			];
-			temp[0] = Math.round(temp[0] * 100000000000000) / 100000000000000;
-			temp[1] = Math.round(temp[1] * 100000000000000) / 100000000000000;
-			temp[2] = Math.round(temp[2] * 100000000000000) / 100000000000000;
-			// 如果flag为true，标记为下次旋转开始位置
-			if (flag) {
-				scope.P = temp;
-			}
-			return temp;
-		} else {
-			throw new Error('You shoud first set the ray and position!');
-		}
-	};
+        if (scope.M && scope.P) {
+            var x = scope.M.A[0][0] * scope.P[0] + scope.M.A[0][1] * scope.P[1] + scope.M.A[0][2] * scope.P[2] + scope.M.A[0][3],
+                y = scope.M.A[1][0] * scope.P[0] + scope.M.A[1][1] * scope.P[1] + scope.M.A[1][2] * scope.P[2] + scope.M.A[1][3],
+                z = scope.M.A[2][0] * scope.P[0] + scope.M.A[2][1] * scope.P[1] + scope.M.A[2][2] * scope.P[2] + scope.M.A[2][3],
+                cos = Math.cos(deg),
+                sin = Math.sin(deg);
+            var t = x * cos - y * sin;
+            y = x * sin + y * cos;
+            x = t;
+            var temp = [
+                scope.M.B[0][0] * x + scope.M.B[0][1] * y + scope.M.B[0][2] * z + scope.M.B[0][3],
+                scope.M.B[1][0] * x + scope.M.B[1][1] * y + scope.M.B[1][2] * z + scope.M.B[1][3],
+                scope.M.B[2][0] * x + scope.M.B[2][1] * y + scope.M.B[2][2] * z + scope.M.B[2][3]
+            ];
+            temp[0] = Math.round(temp[0] * 100000000000000) / 100000000000000;
+            temp[1] = Math.round(temp[1] * 100000000000000) / 100000000000000;
+            temp[2] = Math.round(temp[2] * 100000000000000) / 100000000000000;
+            // 如果flag为true，标记为下次旋转开始位置
+            if (flag) {
+                scope.P = temp;
+            }
+            return temp;
+        } else {
+            throw new Error('You shoud first set the ray and position!');
+        }
+    };
 
-	// 设置旋转射线
-	// (a1,b1,c1)->(a2,b2,c2)
-	rotate.setL = function (a1, b1, c1, a2, b2, c2) {
+    // 设置旋转射线
+    // (a1,b1,c1)->(a2,b2,c2)
+    rotate.setL = function (a1, b1, c1, a2, b2, c2) {
 
-		if (typeof a1 === 'number' && typeof b1 === 'number') {
+        if (typeof a1 === 'number' && typeof b1 === 'number') {
 
-			// 如果设置二个点
-			// 表示二维上围绕某个点旋转
-			if (typeof c1 !== 'number') {
-				c1 = 0; a2 = a1; b2 = b1; c2 = 1;
-			}
-			// 只设置三个点(设置不足六个点都认为只设置了三个点)
-			// 表示围绕从原点出发的射线旋转
-			else if (typeof a2 !== 'number' || typeof b2 !== 'number' || typeof c2 !== 'number') {
-				a2 = a1; b2 = b1; c2 = c1; a1 = 0; b1 = 0; c1 = 0;
-			}
+            // 如果设置二个点
+            // 表示二维上围绕某个点旋转
+            if (typeof c1 !== 'number') {
+                c1 = 0; a2 = a1; b2 = b1; c2 = 1;
+            }
+            // 只设置三个点(设置不足六个点都认为只设置了三个点)
+            // 表示围绕从原点出发的射线旋转
+            else if (typeof a2 !== 'number' || typeof b2 !== 'number' || typeof c2 !== 'number') {
+                a2 = a1; b2 = b1; c2 = c1; a1 = 0; b1 = 0; c1 = 0;
+            }
 
-			if (a1 == a2 && b1 == b2 && c1 == c2) throw new Error('It\'s not a legitimate ray!');
+            if (a1 == a2 && b1 == b2 && c1 == c2) throw new Error('It\'s not a legitimate ray!');
 
-			var sqrt1 = Math.sqrt((a2 - a1) * (a2 - a1) + (b2 - b1) * (b2 - b1)),
-				cos1 = sqrt1 != 0 ? (b2 - b1) / sqrt1 : 1,
-				sin1 = sqrt1 != 0 ? (a2 - a1) / sqrt1 : 0,
-				b = (a2 - a1) * sin1 + (b2 - b1) * cos1,
-				c = c2 - c1,
-				sqrt2 = Math.sqrt(b * b + c * c),
-				cos2 = sqrt2 != 0 ? c / sqrt2 : 1,
-				sin2 = sqrt2 != 0 ? b / sqrt2 : 0;
-			//旋转矩阵
-			scope.M = {
-				// 任意射线变成OZ轴变换矩阵
-				A: [
-					[cos1, -sin1, 0, b1 * sin1 - a1 * cos1],
-					[cos2 * sin1, cos1 * cos2, -sin2, c1 * sin2 - a1 * sin1 * cos2 - b1 * cos1 * cos2],
-					[sin1 * sin2, cos1 * sin2, cos2, -a1 * sin1 * sin2 - b1 * cos1 * sin2 - c1 * cos2]
-				],
-				// OZ轴变回原来的射线的变换矩阵
-				B: [
-					[cos1, cos2 * sin1, sin1 * sin2, a1],
-					[-sin1, cos2 * cos1, cos1 * sin2, b1],
-					[0, -sin2, cos2, c1]
-				]
-			};
+            var sqrt1 = Math.sqrt((a2 - a1) * (a2 - a1) + (b2 - b1) * (b2 - b1)),
+                cos1 = sqrt1 != 0 ? (b2 - b1) / sqrt1 : 1,
+                sin1 = sqrt1 != 0 ? (a2 - a1) / sqrt1 : 0,
+                b = (a2 - a1) * sin1 + (b2 - b1) * cos1,
+                c = c2 - c1,
+                sqrt2 = Math.sqrt(b * b + c * c),
+                cos2 = sqrt2 != 0 ? c / sqrt2 : 1,
+                sin2 = sqrt2 != 0 ? b / sqrt2 : 0;
+            //旋转矩阵
+            scope.M = {
+                // 任意射线变成OZ轴变换矩阵
+                A: [
+                    [cos1, -sin1, 0, b1 * sin1 - a1 * cos1],
+                    [cos2 * sin1, cos1 * cos2, -sin2, c1 * sin2 - a1 * sin1 * cos2 - b1 * cos1 * cos2],
+                    [sin1 * sin2, cos1 * sin2, cos2, -a1 * sin1 * sin2 - b1 * cos1 * sin2 - c1 * cos2]
+                ],
+                // OZ轴变回原来的射线的变换矩阵
+                B: [
+                    [cos1, cos2 * sin1, sin1 * sin2, a1],
+                    [-sin1, cos2 * cos1, cos1 * sin2, b1],
+                    [0, -sin2, cos2, c1]
+                ]
+            };
 
-		} else {
-			throw new Error('a1 and b1 is required!');
-		}
-		return rotate;
+        } else {
+            throw new Error('a1 and b1 is required!');
+        }
+        return rotate;
 
-	};
+    };
 
-	// 设置点最初的位置
-	rotate.setP = function (x, y, z) {
+    // 设置点最初的位置
+    rotate.setP = function (x, y, z) {
 
-		if (typeof x !== 'number' || typeof y !== 'number') throw new Error('Unsupported data!');
-		if (typeof z !== 'number') z = 0;
-		scope.P = [x, y, z];
-		return rotate;
+        if (typeof z !== 'number') z = 0;
+        scope.P = [x, y, z];
+        return rotate;
 
-	};
+    };
 
-	return rotate;
+    return rotate;
 
 };
 
 // 沿着指定方向移动
 clay.math.move = function () {
 
-	var scope = {};
+    var scope = {};
 
-	// 根据移动距离返回移动后位置
-	// flag表示是否把这次移动后位置标记为下次移动开始位置
-	var move = function (d, flag) {
+    // 根据移动距离返回移动后位置
+    // flag表示是否把这次移动后位置标记为下次移动开始位置
+    var move = function (d, flag) {
 
-		if (scope.D && scope.P) {
-			if (typeof d !== 'number') throw new Error('Unsupported data!');
-			var temp = [
-				scope.D[0] * d + scope.P[0],
-				scope.D[1] * d + scope.P[1],
-				scope.D[2] * d + scope.P[2]
-			];
-			// 如果flag为true，标记为下次移动开始位置
-			if (flag) {
-				scope.P = temp;
-			}
-			return temp;
-		} else {
-			throw new Error('You shoud first set the direction and position!');
-		}
+        if (scope.D && scope.P) {
+            var temp = [
+                scope.D[0] * d + scope.P[0],
+                scope.D[1] * d + scope.P[1],
+                scope.D[2] * d + scope.P[2]
+            ];
+            // 如果flag为true，标记为下次移动开始位置
+            if (flag) {
+                scope.P = temp;
+            }
+            return temp;
+        } else {
+            throw new Error('You shoud first set the direction and position!');
+        }
 
-	};
+    };
 
-	// 设置点最初的位置
-	move.setP = function (x, y, z) {
+    // 设置点最初的位置
+    move.setP = function (x, y, z) {
 
-		if (typeof x !== 'number' || typeof y !== 'number') throw new Error('Unsupported data!');
-		if (typeof z !== 'number') z = 0;
-		scope.P = [x, y, z];
-		return move;
+        if (typeof z !== 'number') z = 0;
+        scope.P = [x, y, z];
+        return move;
 
-	};
+    };
 
-	// 设置移动方向
-	move.setD = function (a, b, c) {
+    // 设置移动方向
+    move.setD = function (a, b, c) {
 
-		if (typeof a !== 'number' || typeof b !== 'number') throw new Error('Unsupported data!');
-		if (typeof c !== 'number') c = 0;
-		if (a == 0 && b == 0 && c == 0) {
-			scope.D = [0, 0, 0];
-		} else {
-			var temp = Math.sqrt(a * a + b * b + c * c);
-			scope.D = [a / temp, b / temp, c / temp];
-		}
-		return move;
+        if (typeof c !== 'number') c = 0;
+        if (a == 0 && b == 0 && c == 0) {
+            scope.D = [0, 0, 0];
+        } else {
+            var temp = Math.sqrt(a * a + b * b + c * c);
+            scope.D = [a / temp, b / temp, c / temp];
+        }
+        return move;
 
-	};
+    };
 
-	return move;
+    return move;
 
 };
 
 // 在设置的中心点缩放指定倍速
 clay.math.scale = function () {
 
-	var scope = {
-		C: [0, 0, 0]
-	};
+    var scope = {
+        C: [0, 0, 0]
+    };
 
-	// 根据缩放比例返回缩放后位置
-	// flag表示是否把这次缩放后位置标记为下次缩放开始位置
-	var scale = function (m, flag) {
+    // 根据缩放比例返回缩放后位置
+    // flag表示是否把这次缩放后位置标记为下次缩放开始位置
+    var scale = function (m, flag) {
 
-		if (scope.P) {
-			if (typeof m !== 'number') throw new Error('Unsupported data!');
-			var temp = [
-				m * (scope.P[0] - scope.C[0]) + scope.C[0],
-				m * (scope.P[1] - scope.C[1]) + scope.C[1],
-				m * (scope.P[2] - scope.C[2]) + scope.C[2]
-			];
-			// 如果flag为true，标记为下次缩放开始位置
-			if (flag) {
-				scope.P = temp;
-			}
-			return temp;
-		} else {
-			throw new Error('You shoud first set the position!');
-		}
+        if (scope.P) {
+            var temp = [
+                m * (scope.P[0] - scope.C[0]) + scope.C[0],
+                m * (scope.P[1] - scope.C[1]) + scope.C[1],
+                m * (scope.P[2] - scope.C[2]) + scope.C[2]
+            ];
+            // 如果flag为true，标记为下次缩放开始位置
+            if (flag) {
+                scope.P = temp;
+            }
+            return temp;
+        } else {
+            throw new Error('You shoud first set the position!');
+        }
 
-	};
+    };
 
-	// 设置缩放中心
-	scale.setC = function (a, b, c) {
+    // 设置缩放中心
+    scale.setC = function (a, b, c) {
 
-		if (typeof a !== 'number' || typeof b !== 'number') throw new Error('Unsupported data!');
-		if (typeof c !== 'number') c = 0;
-		scope.C = [a, b, c];
-		return scale;
+        if (typeof c !== 'number') c = 0;
+        scope.C = [a, b, c];
+        return scale;
 
-	};
+    };
 
-	// 设置点最初的位置
-	scale.setP = function (x, y, z) {
+    // 设置点最初的位置
+    scale.setP = function (x, y, z) {
 
-		if (typeof x !== 'number' || typeof y !== 'number') throw new Error('Unsupported data!');
-		if (typeof z !== 'number') z = 0;
-		scope.P = [x, y, z];
-		return scale;
+        if (typeof z !== 'number') z = 0;
+        scope.P = [x, y, z];
+        return scale;
 
-	};
+    };
 
-	return scale;
+    return scale;
 
 };
 
@@ -927,93 +929,85 @@ var _canvas = function (_selector, config, painterback, param) {
 // config={init,draw,end}
 var _line = function (config) {
 
-	var scope = {
-		interpolate: 'line',
-		dis: 5,
-		t: 0,
-		flag: false
-	};
+    var scope = {
+        interpolate: 'line',
+        dis: 5,
+        t: 0,
+        flag: false
+    };
 
-	// points代表曲线的点集合[[x,y],[x,y],...]
-	var line = function (points) {
+    // points代表曲线的点集合[[x,y],[x,y],...]
+    var line = function (points) {
 
-		if (typeof scope.h === 'number') {
-			var cardinal, i,
-				result = config.init(points[0][0], scope.flag ? points[0][1] : scope.h - points[0][1]);
+        if (typeof scope.h === 'number') {
+            var cardinal, i,
+                result = config.init(points[0][0], scope.flag ? points[0][1] : scope.h - points[0][1]);
 
-			// cardinal插值法
-			if (scope.interpolate === 'cardinal') {
-				cardinal = clay.math.cardinal().setU(scope.t).setP(points);
-				for (i = points[0][0] + scope.dis; i < points[points.length - 1][0]; i += scope.dis)
-					result = config.draw(result, i, scope.flag ? cardinal(i) : scope.h - cardinal(i));
-			}
+            // cardinal插值法
+            if (scope.interpolate === 'cardinal') {
+                cardinal = clay.math.cardinal().setU(scope.t).setP(points);
+                for (i = points[0][0] + scope.dis; i < points[points.length - 1][0]; i += scope.dis)
+                    result = config.draw(result, i, scope.flag ? cardinal(i) : scope.h - cardinal(i));
+            }
 
-			// 默认或错误设置都归结为line
-			else {
-				for (i = 1; i < points.length; i++)
-					result = config.draw(result, points[i][0], scope.flag ? points[i][1] : scope.h - points[i][1]);
-			}
+            // 默认或错误设置都归结为line
+            else {
+                for (i = 1; i < points.length; i++)
+                    result = config.draw(result, points[i][0], scope.flag ? points[i][1] : scope.h - points[i][1]);
+            }
 
-			return config.end(result);
-		} else {
-			throw new Error('You need to set the height first!');
-		}
+            return config.end(result);
+        } else {
+            throw new Error('You need to set the height first!');
+        }
 
-	};
+    };
 
-	// flag可以不传递，默认false，表示y坐标轴方向和数学上保存一致
-	// 只有在设置为true的时候，才会使用浏览器的方式
-	line.setFlag = function (flag) {
+    // flag可以不传递，默认false，表示y坐标轴方向和数学上保存一致
+    // 只有在设置为true的时候，才会使用浏览器的方式
+    line.setFlag = function (flag) {
 
-		scope.flag = flag;
-		return line;
+        scope.flag = flag;
+        return line;
 
-	};
+    };
 
-	// 设置所在组的高
-	// 参数应该是一个数字
-	line.setHeight = function (height) {
+    // 设置所在组的高
+    // 参数应该是一个数字
+    line.setHeight = function (height) {
 
-		if (typeof height !== 'number' || height <= 0)
-			throw new Error('Unsupported data!');
-		scope.h = height;
-		return line;
+        if (typeof height !== 'number' || height <= 0)
+            throw new Error('Unsupported data!');
+        scope.h = height;
+        return line;
 
-	};
+    };
 
-	// 设置张弛系数
-	line.setT = function (t) {
+    // 设置张弛系数
+    line.setT = function (t) {
 
-		if (typeof t === 'number') {
-			scope.t = t;
-		} else {
-			throw new Error('Unsupported data!');
-		}
-		return line;
+        scope.t = t;
+        return line;
 
-	};
+    };
 
-	// 设置精度
-	line.setPrecision = function (dis) {
+    // 设置精度
+    line.setPrecision = function (dis) {
 
-		if (typeof dis === 'number') {
-			scope.dis = dis;
-		} else {
-			throw new Error('Unsupported data!');
-		}
-		return line;
+        scope.dis = dis;
+        return line;
 
-	};
+    };
 
-	// 设置曲线插值方法
-	line.interpolate = function (type) {
+    // 设置曲线插值方法
+    line.interpolate = function (type) {
 
-		scope.interpolate = type;
-		return line;
+        scope.interpolate = type;
+        return line;
 
-	};
+    };
 
-	return line;
+    return line;
 
 };
 
@@ -1068,8 +1062,6 @@ var _arc = function (painter) {
 	// 设置内外半径
 	arc.setRadius = function (r1, r2) {
 
-		if (typeof r1 !== 'number' || typeof r2 !== 'number')
-			throw new Error('Unsupported data!');
 		scope.r = [r1, r2];
 		return arc;
 
@@ -1078,8 +1070,6 @@ var _arc = function (painter) {
 	// 设置弧中心
 	arc.setCenter = function (x, y) {
 
-		if (typeof x !== 'number' || typeof y !== 'number')
-			throw new Error('Unsupported data!');
 		rotate.setL(x, y);
 		scope.c = [x, y];
 		return arc;
@@ -1092,32 +1082,32 @@ var _arc = function (painter) {
 
 clay.svg.arc = function () {
 
-	return _arc(
-		// 圆心（cx,cy）
-		// 内半径，外半径
-		// 开始弧度，结束弧度
-		function (
-			cx, cy,
-			rmin, rmax,
-			beginA, endA,
-			begInnerX, begInnerY,
-			begOuterX, begOuterY,
-			endInnerX, endInnerY,
-			endOuterX, endOuterY
-		) {
+    return _arc(
+        // 圆心（cx,cy）
+        // 内半径，外半径
+        // 开始弧度，结束弧度
+        function (
+            cx, cy,
+            rmin, rmax,
+            beginA, endA,
+            begInnerX, begInnerY,
+            begOuterX, begOuterY,
+            endInnerX, endInnerY,
+            endOuterX, endOuterY
+        ) {
 
-			var f = (endA - beginA) > Math.PI ? 1 : 0,
-				d = "M" + begInnerX + " " + begInnerY;
-			d +=
-				// 横半径 竖半径 x轴偏移角度 0小弧/1大弧 0逆时针/1顺时针 终点x 终点y
-				"A" + rmin + " " + rmin + " 0 " + f + " 1 " + endInnerX + " " + endInnerY;
-			d += "L" + endOuterX + " " + endOuterY;
-			d += "A" + rmax + " " + rmax + " 0 " + f + " 0 " + begOuterX + " " + begOuterY;
-			d += "L" + begInnerX + " " + begInnerY;
+            var f = (endA - beginA) > Math.PI ? 1 : 0,
+                d = "M" + begInnerX + " " + begInnerY;
+            d +=
+                // 横半径 竖半径 x轴偏移角度 0小弧/1大弧 0逆时针/1顺时针 终点x 终点y
+                "A" + rmin + " " + rmin + " 0 " + f + " 1 " + endInnerX + " " + endInnerY;
+            d += "L" + endOuterX + " " + endOuterY;
+            d += "A" + rmax + " " + rmax + " 0 " + f + " 0 " + begOuterX + " " + begOuterY;
+            d += "L" + begInnerX + " " + begInnerY;
 
-			return d;
+            return d;
 
-		});
+        });
 
 };
 

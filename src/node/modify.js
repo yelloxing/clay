@@ -67,7 +67,7 @@ clay.prototype.attr = function (attr, val) {
 	} else {
 		var flag, _val;
 		for (flag = 0; flag < this.length; flag++) {
-			_val = typeof val === 'function' ? val(this[flag]._data, flag) : val;
+			_val = typeof val === 'function' ? val(this[flag]._data, flag,this.eq(flag)) : val;
 			// 如果是xml元素
 			// 针对xlink使用特殊方法赋值
 			if (/[A-Z]/.test(this[flag].tagName) && _xlink.indexOf(attr) >= 0) {
