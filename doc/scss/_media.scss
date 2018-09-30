@@ -2,119 +2,31 @@ html {
     height: 100vh !important;
 }
 
-@media only screen and (max-width: 1200px),
-only screen and (max-device-width:1200px) {
-    body {
-        transform: scale(0.9) !important;
-        transform-origin: 0 0 !important;
-        width: 111vw !important;
-        &>section {
-            border-width: 0 calc(55.5vw - #{$frame-width / 2}) !important;
-            min-height: calc(111vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
+// 需要缩放的阶段，配置
+$mediaSet: (
+    (maxWidth:1200, scale:0.9),
+    (maxWidth:1100, scale:0.8),
+    (maxWidth:980, scale:0.7),
+    (maxWidth:830, scale:0.6),
+    (maxWidth:630, scale:0.4),
+    (maxWidth:500, scale:0.35),
+    (maxWidth:440, scale:0.3),
+    (maxWidth:370, scale:0.25)
+);
 
-@media only screen and (max-width: 1100px),
-only screen and (max-device-width:1100px) {
-    body {
-        transform: scale(0.8) !important;
-        transform-origin: 0 0 !important;
-        width: 125vw !important;
-        &>section {
-            border-width: 0 calc(62.5vw - #{$frame-width / 2}) !important;
-            min-height: calc(125vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
-
-@media only screen and (max-width: 980px),
-only screen and (max-device-width:980px) {
-    body {
-        transform: scale(0.7) !important;
-        transform-origin: 0 0 !important;
-        width: 143vw !important;
-        &>section {
-            border-width: 0 calc(71.5vw - #{$frame-width / 2}) !important;
-            min-height: calc(143vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
-
-@media only screen and (max-width: 830px),
-only screen and (max-device-width:830px) {
-    body {
-        transform: scale(0.6) !important;
-        transform-origin: 0 0 !important;
-        width: 167.7vw !important;
-        &>section {
-            border-width: 0 calc(83.85vw - #{$frame-width / 2}) !important;
-            min-height: calc(167.7vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
-
-@media only screen and (max-width: 740px),
-only screen and (max-device-width:740px) {
-    body {
-        transform: scale(0.5) !important;
-        transform-origin: 0 0 !important;
-        width: 200vw !important;
-        &>section {
-            border-width: 0 calc(100vw - #{$frame-width / 2}) !important;
-            min-height: calc(200vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
-
-@media only screen and (max-width: 630px),
-only screen and (max-device-width:630px) {
-    body {
-        transform: scale(0.4) !important;
-        transform-origin: 0 0 !important;
-        width: 250vw !important;
-        &>section {
-            border-width: 0 calc(125vw - #{$frame-width / 2}) !important;
-            min-height: calc(250vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
-
-@media only screen and (max-width: 500px),
-only screen and (max-device-width:500px) {
-    body {
-        transform: scale(0.35) !important;
-        transform-origin: 0 0 !important;
-        width: 285.7vw !important;
-        &>section {
-            border-width: 0 calc(142.85vw - #{$frame-width / 2}) !important;
-            min-height: calc(285.7vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
-
-@media only screen and (max-width: 440px),
-only screen and (max-device-width:440px) {
-    body {
-        transform: scale(0.3) !important;
-        transform-origin: 0 0 !important;
-        width: 333.3vw !important;
-        &>section {
-            border-width: 0 calc(166.6vw - #{$frame-width / 2}) !important;
-            min-height: calc(333.3vh - #{$head-height} - #{$footer-height}) !important;
-        }
-    }
-}
-
-@media only screen and (max-width: 370px),
-only screen and (max-device-width:370px) {
-    body {
-        transform: scale(0.25) !important;
-        transform-origin: 0 0 !important;
-        width: 400vw !important;
-        &>section {
-            border-width: 0 calc(200vw - #{$frame-width / 2}) !important;
-            min-height: calc(400vh - #{$head-height} - #{$footer-height}) !important;
+// 迭代生成媒体查询适配
+@for $i from 1 through length($mediaSet) {
+    $item: nth($mediaSet, $i);
+    @media only screen and (max-width: #{map-get($item,maxWidth)}px),
+    only screen and (max-device-width: 1200px) {
+        body {
+            transform: scale(#{map-get($item,scale)}) !important;
+            transform-origin: 0 0 !important;
+            width: #{100 / map-get($item,scale)}vw !important;
+            &>section {
+                border-width: 0 calc(#{50 / map-get($item,scale)}vw - #{$frame-width / 2}) !important;
+                min-height: calc(#{100 / map-get($item,scale)}vh - #{$head-height} - #{$footer-height}) !important;
+            }
         }
     }
 }
