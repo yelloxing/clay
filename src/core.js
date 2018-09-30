@@ -44,6 +44,7 @@
             for (flag = 0; flag < nodes.length; flag++) {
                 this[flag] = nodes[flag];
             }
+            this.selector=selector;
             this.length = nodes.length;
         }
         return this;

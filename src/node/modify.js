@@ -28,10 +28,12 @@ function _toNode(str) {
     return child;
 }
 
+// 当前维护的第一个结点作为上下文查找
 clay.prototype.find = function (selector) {
     if (this.length <= 0) return clay();
     var newClay = clay(),
         nodes = _sizzle(selector, this[0]), flag;
+    newClay.selector = selector;
     for (flag = 0; flag < nodes.length; flag++) {
         newClay[flag] = nodes[flag];
         newClay.length += 1;
@@ -57,6 +59,21 @@ clay.prototype.remove = function () {
     var flag;
     for (flag = 0; flag < this.length; flag++)
         this[flag].parentNode.removeChild(this[flag]);
+    return this;
+};
+
+// 选择器重新查找一次
+clay.prototype.refresh = function () {
+
+    var nodes = _sizzle(this.selector, this.context), flag, length = this.length;
+    this.length = 0;
+    for (flag = 0; flag < nodes.length; flag++) {
+        this[flag] = nodes[flag];
+        this.length+=1;
+    }
+    for (; flag < length; flag++) {
+        delete this[flag];
+    }
     return this;
 };
 

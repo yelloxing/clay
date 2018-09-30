@@ -22,6 +22,7 @@ clay.prototype.data = function (datas, calcback) {
     if (datas && datas.constructor === Array) {
         // 创建新的对象返回，不修改原来对象
         var newClay = clay();
+        newClay.selector=this.selector;
         for (flag = 0; flag < datas.length && flag < this.length; flag++) {
             this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag];
             newClay[flag] = this[flag];
@@ -38,6 +39,7 @@ clay.prototype.data = function (datas, calcback) {
         }
         return newClay;
     } else {
+        // 获取数据
         for (flag = 0; flag < this.length; flag++) {
             temp[flag] = this[flag]._data;
         }
@@ -50,6 +52,7 @@ clay.prototype.data = function (datas, calcback) {
 clay.prototype.enter = function (str) {
 
     var flag, node, newClay = clay();
+    newClay.selector=this.selector;
     for (flag = 0; this._enter && flag < this._enter.length; flag++) {
         node = _toNode(str);
         node._data = this._enter[flag];
@@ -64,6 +67,7 @@ clay.prototype.enter = function (str) {
 clay.prototype.exit = function () {
 
     var flag, newClay = clay();
+    newClay.selector=this.selector;
     for (flag = 0; this._exit && flag < this._exit.length; flag++) {
         newClay[flag] = this._exit[flag];
         newClay.length += 1;

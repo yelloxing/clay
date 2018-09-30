@@ -79,7 +79,7 @@ clay.canvas.layer = function (selector, width, height) {
                 painter.save();
                 // 混合模式等先不考虑
                 for (flag = 0; flag < canvas.length; flag++) {
-                    painter.drawImage(canvas[flag], 0, 0, width, height, 0, 0, width, height)
+                    painter.drawImage(canvas[flag], 0, 0, width, height, 0, 0, width, height);
                 }
                 painter.restore();
             }

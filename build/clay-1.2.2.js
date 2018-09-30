@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Sep 29 2018 17:48:31 GMT+0800 (CST)
+* Date:Sun Sep 30 2018 23:51:22 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -60,6 +60,7 @@
             for (flag = 0; flag < nodes.length; flag++) {
                 this[flag] = nodes[flag];
             }
+            this.selector=selector;
             this.length = nodes.length;
         }
         return this;
@@ -250,10 +251,12 @@ function _toNode(str) {
     return child;
 }
 
+// 当前维护的第一个结点作为上下文查找
 clay.prototype.find = function (selector) {
     if (this.length <= 0) return clay();
     var newClay = clay(),
         nodes = _sizzle(selector, this[0]), flag;
+    newClay.selector = selector;
     for (flag = 0; flag < nodes.length; flag++) {
         newClay[flag] = nodes[flag];
         newClay.length += 1;
@@ -279,6 +282,21 @@ clay.prototype.remove = function () {
     var flag;
     for (flag = 0; flag < this.length; flag++)
         this[flag].parentNode.removeChild(this[flag]);
+    return this;
+};
+
+// 选择器重新查找一次
+clay.prototype.refresh = function () {
+
+    var nodes = _sizzle(this.selector, this.context), flag, length = this.length;
+    this.length = 0;
+    for (flag = 0; flag < nodes.length; flag++) {
+        this[flag] = nodes[flag];
+        this.length+=1;
+    }
+    for (; flag < length; flag++) {
+        delete this[flag];
+    }
     return this;
 };
 
@@ -351,6 +369,7 @@ clay.prototype.data = function (datas, calcback) {
     if (datas && datas.constructor === Array) {
         // 创建新的对象返回，不修改原来对象
         var newClay = clay();
+        newClay.selector=this.selector;
         for (flag = 0; flag < datas.length && flag < this.length; flag++) {
             this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag];
             newClay[flag] = this[flag];
@@ -367,6 +386,7 @@ clay.prototype.data = function (datas, calcback) {
         }
         return newClay;
     } else {
+        // 获取数据
         for (flag = 0; flag < this.length; flag++) {
             temp[flag] = this[flag]._data;
         }
@@ -379,6 +399,7 @@ clay.prototype.data = function (datas, calcback) {
 clay.prototype.enter = function (str) {
 
     var flag, node, newClay = clay();
+    newClay.selector=this.selector;
     for (flag = 0; this._enter && flag < this._enter.length; flag++) {
         node = _toNode(str);
         node._data = this._enter[flag];
@@ -393,6 +414,7 @@ clay.prototype.enter = function (str) {
 clay.prototype.exit = function () {
 
     var flag, newClay = clay();
+    newClay.selector=this.selector;
     for (flag = 0; this._exit && flag < this._exit.length; flag++) {
         newClay[flag] = this._exit[flag];
         newClay.length += 1;
@@ -965,7 +987,7 @@ clay.canvas.layer = function (selector, width, height) {
                 painter.save();
                 // 混合模式等先不考虑
                 for (flag = 0; flag < canvas.length; flag++) {
-                    painter.drawImage(canvas[flag], 0, 0, width, height, 0, 0, width, height)
+                    painter.drawImage(canvas[flag], 0, 0, width, height, 0, 0, width, height);
                 }
                 painter.restore();
             }

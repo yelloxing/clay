@@ -42,9 +42,12 @@
                     });
                 }
                 return temp;
-            })()).enter('<line class="left-num">').appendTo('.ruler');
+            })())
 
-            $$('.left-num')
+                // 不足绑定
+                .enter('<line class="left-num">').appendTo('.ruler').refresh()
+
+                // 编辑结点
                 .attr('x1', function (num) { return num.x; })
                 .attr('y1', function (num) { return num.y; })
                 .attr('x2', function (num) { return num.x - 10; })
