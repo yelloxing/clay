@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Oct 01 2018 20:33:31 GMT+0800 (CST)
+* Date:Tue Oct 02 2018 00:01:08 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -69,7 +69,7 @@
 
     clay.prototype.init.prototype = clay.prototype;
 
-// 命名空间路径
+    // 命名空间路径
 var _namespace = {
     svg: "http://www.w3.org/2000/svg",
     xhtml: "http://www.w3.org/1999/xhtml",
@@ -453,8 +453,20 @@ clay.prototype.unbind = function (eventType, callback) {
 
 /*
  ************************************
- * 针对canvas的事件相关方法
+ * 事件相关计算方法
  */
+
+//  获取鼠标相对特定元素左上角位置
+clay.prototype.position = function (event) {
+
+    var bounding = this[0].getBoundingClientRect();
+
+    return {
+        "x": event.clientX - bounding.left,
+        "y": event.clientY - bounding.top
+    };
+
+};
 
 var _clock = {
 	//当前正在运动的动画的tick函数堆栈
@@ -1012,6 +1024,10 @@ clay.canvas.layer = function (selector, width, height) {
                 painter = _getCanvas2D(selector);
             return painter;
         },
+        "clean": function (ctx2D) {
+            ctx2D.clearRect(0, 0, width, height);
+            return layerManager;
+        },
         "update": function () {
             if (painter && painter.constructor === CanvasRenderingContext2D) {
                 var flag;
@@ -1291,6 +1307,7 @@ clay.canvas.line = function (selector, config) {
 	return obj;
 
 };
+
 
     clay.__isLoad__ = false;
 

@@ -5,6 +5,8 @@ body>section>.head {
     padding-left: .3rem;
     background-size: 100% auto;
     color: #fff;
+    background-repeat: no-repeat;
+    background-position:top center;
 }
 
 body>section>.head>span {
