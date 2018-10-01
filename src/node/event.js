@@ -27,5 +27,17 @@ clay.prototype.unbind = function (eventType, callback) {
 
 /*
  ************************************
- * 针对canvas的事件相关方法
+ * 事件相关计算方法
  */
+
+//  获取鼠标相对特定元素左上角位置
+clay.prototype.position = function (event) {
+
+    var bounding = this[0].getBoundingClientRect();
+
+    return {
+        "x": event.clientX - bounding.left,
+        "y": event.clientY - bounding.top
+    };
+
+};

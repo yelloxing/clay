@@ -177,6 +177,42 @@
                 }
 
                 layer.update();
+
+                // 动画结束添加虚线
+                painter2.setLineDash([2]);
+                painter2.lineWidth = 2;
+                painter2.textAlign = 'right';
+                painter2.textBaseline = 'middle';
+                var canvasClay = $$('canvas').bind('mousemove', function (event) {
+
+                    event = event || window.event;
+                    var pos = canvasClay.position(event);
+
+                    layer.clean(painter2);
+
+                    if (pos.x > 60 && pos.x < 540 && pos.y > 60 && pos.y < 360) {
+                        painter2.beginPath();
+                        painter2.moveTo(60, pos.y);
+                        painter2.lineTo(540, pos.y);
+                        painter2.stroke();
+
+                        painter2.beginPath();
+                        painter2.moveTo(pos.x, 60);
+                        painter2.lineTo(pos.x, 360);
+                        painter2.stroke();
+
+                        // 绘制提示文字
+                        painter2.beginPath();
+                        painter2.rect(10, pos.y - 10, 50, 20);
+                        painter2.fillStyle = '#000';
+                        painter2.fill();
+                        painter2.fillStyle = '#fff';
+                        painter2.fillText((250 - (pos.y - 60) / 300 * 250).toFixed(2), 55, pos.y);
+
+                    }
+
+                    layer.update();
+                });
             });
 
             // 绘制提示信息

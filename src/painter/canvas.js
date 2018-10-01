@@ -72,6 +72,10 @@ clay.canvas.layer = function (selector, width, height) {
                 painter = _getCanvas2D(selector);
             return painter;
         },
+        "clean": function (ctx2D) {
+            ctx2D.clearRect(0, 0, width, height);
+            return layerManager;
+        },
         "update": function () {
             if (painter && painter.constructor === CanvasRenderingContext2D) {
                 var flag;
