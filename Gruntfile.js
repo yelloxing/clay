@@ -9,6 +9,7 @@ var source = [
     './src/node/sizzle.js',
     './src/node/modify.js',
     './src/node/data.js',
+    './src/node/event.js',
 
     // 工具
     './src/tool/animation.js',
