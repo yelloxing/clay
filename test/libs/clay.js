@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 03 2018 16:12:29 GMT+0800 (GMT+08:00)
+* Date:Wed Oct 03 2018 21:48:26 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1054,7 +1054,6 @@ var _line = function (config) {
     var scope = {
         interpolate: 'line',
         dis: 5,
-        t: 0,
         flag: false
     };
 
@@ -1068,7 +1067,7 @@ var _line = function (config) {
 
             // cardinal插值法
             if (scope.interpolate === 'cardinal') {
-                hermite = clay.math.hermite().setU(scope.t);
+                hermite = clay.math.hermite().setU(-1);
 
                 // 补足开头和结尾的辅助点
                 points.unshift(isClose ? points[points.length - 1] : points[0]);
@@ -1079,9 +1078,9 @@ var _line = function (config) {
                     // 计算i，i+1段
                     if (points[i][0] == points[i + 1][0]) {
 
-
                         p1 = (points[i + 1][0] - points[i - 1][0]) / (points[i + 1][1] - points[i - 1][1]);
                         p2 = (points[i + 2][0] - points[i][0]) / (points[i + 2][1] - points[i][1]);
+
                         // 如果二个x坐标相同，交换坐标轴
                         if (points[i][1] < points[i + 1][1]) {
 
@@ -1099,6 +1098,7 @@ var _line = function (config) {
 
                         p1 = (points[i + 1][1] - points[i - 1][1]) / (points[i + 1][0] - points[i - 1][0]);
                         p2 = (points[i + 2][1] - points[i][1]) / (points[i + 2][0] - points[i][0]);
+
                         if (points[i][0] < points[i + 1][0]) {
 
                             hermite.setP(points[i][0], points[i][1], points[i + 1][0], points[i + 1][1], p1, p2);
@@ -1145,14 +1145,6 @@ var _line = function (config) {
         if (typeof height !== 'number' || height <= 0)
             throw new Error('Unsupported data!');
         scope.h = height;
-        return line;
-
-    };
-
-    // 设置张弛系数
-    line.setT = function (t) {
-
-        scope.t = t;
         return line;
 
     };
