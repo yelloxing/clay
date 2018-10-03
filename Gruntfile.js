@@ -29,16 +29,13 @@ var source = [
 
     // 图形对象
     './src/painter/canvas.js',
-    './src/painter/line.js',
     './src/painter/arc.js',
 
     // svg绘图
     './src/painter/svg/arc.js',
-    './src/painter/svg/line.js',
 
     // Canvas2D绘图
     './src/painter/canvas/arc.js',
-    './src/painter/canvas/line.js',
 
     // WebGL3D绘图
 
