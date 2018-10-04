@@ -105,7 +105,7 @@
 
                     var node, p;
                     for (node in nodes) {
-                        nodes[node].deg = (nodes[node].top / size * 2 + 0.35) * Math.PI;
+                        nodes[node].deg = (nodes[node].top / (size - 2) * 2 + 0.35) * Math.PI;
                         p = rotate.setP(350 + 60 * (nodes[node].left - 0.5), 350)(nodes[node].deg);
                         nodes[node].x = p[0];
                         nodes[node].y = p[1];
