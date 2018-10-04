@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Oct 04 2018 15:56:01 GMT+0800 (CST)
+* Date:Fri Oct 05 2018 00:28:32 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -961,8 +961,6 @@ clay.layout.tree = function () {
         size = 0,
 
         update = function () {
-            // 更新前调用
-            if (scope.e.live && typeof scope.e.live[0] === 'function') scope.e.live[0]();
 
             var beforeDis = [];
             (function positionCalc(pNode, deep) {
@@ -992,20 +990,8 @@ clay.layout.tree = function () {
             })(alltreedata[rootid], 0);
 
             // 画图
-            (function treeDrawer(pNode) {
+            scope.e.drawer(alltreedata, rootid, size);
 
-                var flag;
-                for (flag = 0; flag < pNode.children.length; flag++) {
-                    // 画线条
-                    scope.e.drawer[1](pNode, alltreedata[pNode.children[flag]], size);
-                    treeDrawer(alltreedata[pNode.children[flag]]);
-                }
-                //  画结点
-                scope.e.drawer[0](pNode, size);
-            })(alltreedata[rootid]);
-
-            // 更新结束调用
-            if (scope.e.live && typeof scope.e.live[1] === 'function') scope.e.live[1]();
         };
 
     // 可以传递任意格式的树原始数据
@@ -1047,13 +1033,9 @@ clay.layout.tree = function () {
     // 获取根结点的方法:root(initTree)
     // 获取子结点的方法:child(parentTree,initTree)
     // 获取结点ID方法:id(treedata)
-    // 生命钩子 live([beforback(),afterback()])
-    // 结点更新处理方法 drawer(nodeback(node), linkback(pNode, node))
+    // 结点更新处理方法 drawer(alltreedata, rootid, size)
     tree.bind = function (backname, callback, moreback) {
-        if (/^(live|drawer)$/.test(backname))
-            scope.e[backname] = [callback, moreback];
-        else
-            scope.e[backname] = callback;
+        scope.e[backname] = callback;
         return tree;
     };
 
