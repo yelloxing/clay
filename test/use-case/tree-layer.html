@@ -24,6 +24,9 @@
             var rotate = clay.math.rotate().setL(350, 350),
                 move = clay.math.move();
 
+            // 建立树布局
+            var tree = clay.layout.tree();
+
             function drawer(nodes, rootid, isPid) {
                 var flag, deg;
                 for (flag = 0; flag < nodes[rootid].children.length; flag++) {
@@ -47,10 +50,35 @@
 
             function drawerNode(x, y, deg, text) {
                 // 画圆圈
-                $$('<circle r="3" fill="white" stroke="red" stroke-width="1"/>')
+                var circle = $$('<circle id="circle-' + text + '" r="3" fill="white" stroke="red" stroke-width="1"/>')
                     .appendTo('.circle')
                     .attr('cx', x)
                     .attr('cy', y);
+
+                if (text == 'operator')
+                    circle
+                        .attr('stroke', 'gray')
+                        .bind('click', function () {
+                            if ($$('#circle-layout').length <= 0)
+                                // 测试添加方法
+                                tree.add('operator', addTreeData);
+                        });
+
+                if (text == 'controls')
+                    circle
+                        .attr('stroke', 'green')
+                        .bind('click', function () {
+                            // 测试删除方法
+                            tree.delete('controls');
+                        });
+
+                if (text == 'flare')
+                    circle
+                        .attr('stroke', 'blue')
+                        .bind('click', function () {
+                            // 测试toggle方法
+                            tree.toggle('querylibrary');
+                        });
 
                 // 写文字
                 $$('<text style="font-size:8px;">&nbsp;&nbsp;' + text + '</text>')
@@ -87,13 +115,12 @@
                     );
             }
 
-            // 建立树布局
-            var tree = clay.layout.tree()
 
-                // 基本配置
-                .bind('root', function (initTree) {
-                    return initTree;
-                })
+
+            // 基本配置
+            tree.bind('root', function (initTree) {
+                return initTree;
+            })
                 .bind('child', function (parentTree) {
                     return parentTree.children;
                 })
@@ -101,11 +128,16 @@
                     return treedata.name;
                 })
                 .bind('drawer', function (nodes, rootid, size) {
+
+                    $$('.line')[0].innerHTML = '';
+                    $$('.text')[0].innerHTML = '';
+                    $$('.circle')[0].innerHTML = '';
+
                     drawerNode(350, 350, Math.PI / 4 * 5, nodes[rootid].data.name);
 
                     var node, p;
                     for (node in nodes) {
-                        nodes[node].deg = (nodes[node].top / (size - 2) * 2 + 0.35) * Math.PI;
+                        nodes[node].deg = (nodes[node].top / size * 2 + 0.35) * Math.PI;
                         p = rotate.setP(350 + 60 * (nodes[node].left - 0.5), 350)(nodes[node].deg);
                         nodes[node].x = p[0];
                         nodes[node].y = p[1];

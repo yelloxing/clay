@@ -7,11 +7,10 @@ clay.layout.tree = function () {
         alltreedata,
         // 根结点ID
         rootid,
-        size = 0,
 
         update = function () {
 
-            var beforeDis = [];
+            var beforeDis = [], size = 0;
             (function positionCalc(pNode, deep) {
 
                 var flag;
@@ -43,36 +42,46 @@ clay.layout.tree = function () {
 
         };
 
-    // 可以传递任意格式的树原始数据
-    // 只要配置对应的解析方法即可
-    var tree = function (initTree) {
+    var toInnerTree = function (initTree) {
 
-        alltreedata = {};
+        var tempTree = {};
         // 根结点
-        var temp = scope.e.root(initTree), id;
-        id = rootid = scope.e.id(temp);
-        alltreedata[id] = {
+        var temp = scope.e.root(initTree), id, rid;
+        id = rid = scope.e.id(temp);
+        tempTree[id] = {
             "data": temp,
             "pid": null,
             "id": id,
-            "children": []
+            "children": [],
+            "show": true
         };
         // 根据传递的原始数据，生成内部统一结构
         (function createTree(pdata, pid) {
             var children = scope.e.child(pdata, initTree), flag;
             for (flag = 0; children && flag < children.length; flag++) {
                 id = scope.e.id(children[flag]);
-                alltreedata[pid].children.push(id);
-                alltreedata[id] = {
+                tempTree[pid].children.push(id);
+                tempTree[id] = {
                     "data": children[flag],
                     "pid": pid,
                     "id": id,
-                    "children": []
+                    "children": [],
+                    "show": true
                 };
                 createTree(children[flag], id);
             }
         })(temp, id);
 
+        return [rid, tempTree];
+    };
+
+    // 可以传递任意格式的树原始数据
+    // 只要配置对应的解析方法即可
+    var tree = function (initTree) {
+
+        var treeData = toInnerTree(initTree);
+        alltreedata = treeData[1];
+        rootid = treeData[0];
         update();
         return tree;
 
@@ -85,6 +94,60 @@ clay.layout.tree = function () {
     // 结点更新处理方法 drawer(alltreedata, rootid, size)
     tree.bind = function (backname, callback, moreback) {
         scope.e[backname] = callback;
+        return tree;
+    };
+
+    // 第三个参数为true的时候不会自动更新
+    tree.add = function (pid, newnodes, notUpdate) {
+
+        var treeData = toInnerTree(newnodes), id;
+        treeData[1][treeData[0]].pid = pid;
+        alltreedata[pid].children.push(treeData[0]);
+        for (id in treeData[1])
+            alltreedata[id] = treeData[1][id];
+        if (!notUpdate) update();
+        return tree;
+
+    };
+    tree.delete = function (id, notUpdate) {
+
+        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
+        if (index > -1)
+            alltreedata[alltreedata[id].pid].children.splice(index, 1);
+
+        // 删除多余结点
+        (function deleteNode(pid) {
+            var flag;
+            for (flag = 0; flag < alltreedata[pid].children.length; flag++) {
+                deleteNode(alltreedata[alltreedata[pid].children[flag]].id);
+            }
+            delete alltreedata[pid];
+        })(id);
+
+        if (!notUpdate) update();
+        return tree;
+
+    };
+
+    // 控制结点显示还是隐藏
+    // flag可选，"show"：显示，"hidden"：隐藏，不传递就是切换
+    tree.toggle = function (id, notUpdate, flag) {
+
+        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
+        if (index > -1 && flag != 'show') {
+            alltreedata[alltreedata[id].pid].children.splice(index, 1);
+            alltreedata[id]._index = index;
+        }
+        else if (flag != 'hidden')
+            alltreedata[alltreedata[id].pid].children.splice(alltreedata[id]._index, 0, id);
+        if (!notUpdate) update();
+        return tree;
+
+    };
+
+    tree.update = function () {
+
+        update();
         return tree;
     };
 
