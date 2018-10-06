@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Oct 06 2018 22:02:10 GMT+0800 (CST)
+* Date:Sat Oct 06 2018 22:53:42 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1286,19 +1286,20 @@ var _ruler = function (painter) {
 
     var ruler = function (begin, end) {
 
-        var flag, dis = (end - begin) / scope.n;
+        var flag, dis = (end - begin) / scope.n, tempResult = [];
         for (flag = begin; (dis > 0 && flag <= end) || (dis < 0 && flag >= end); flag += dis) {
             // 大刻度
-            painter(flag, scope.big[0], scope.big[1], scope.big[2], typeof scope.color == 'function' ? scope.color(flag) : scope.color, scope);
+            tempResult.push(painter(flag, scope.big[0], scope.big[1], scope.big[2], typeof scope.color == 'function' ? scope.color(flag) : scope.color, scope));
             if (flag + dis / 5 * 4 < end) {
 
                 // 小刻度
-                painter(flag + dis / 5, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5) : scope.color, scope);
-                painter(flag + dis / 5 * 2, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 2) : scope.color, scope);
-                painter(flag + dis / 5 * 3, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 3) : scope.color, scope);
-                painter(flag + dis / 5 * 4, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 4) : scope.color, scope);
+                tempResult.push(painter(flag + dis / 5, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 2, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 2) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 3, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 3) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 4, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 4) : scope.color, scope));
             }
         }
+        return tempResult;
 
     };
 
@@ -1320,7 +1321,7 @@ var _ruler = function (painter) {
     //     "radius":number,
 
     //  【直线刻度尺特有参数】
-    //     "direction":"horizontal|vertical",
+    //     "direction":"horizontal|vertical",缺省水平的
     //     "seat":number
 
     // }
@@ -1377,7 +1378,51 @@ clay.svg.arc = function () {
 
 };
 
+clay.svg.arcRuler = function () {
 
+    return _ruler(
+        function (
+            value,
+            leftWidth, rightWidth, size,
+            color,
+            pageini
+        ) {
+
+            return [
+                clay.svg.arc()
+                    .setCenter(pageini.cx, pageini.cy)
+                    (value - size / 2, size, pageini.radius - rightWidth, pageini.radius + leftWidth), color];
+
+        });
+
+};
+
+clay.svg.lineRuler = function () {
+
+    return _ruler(
+        function (
+            value,
+            leftWidth, rightWidth, size,
+            color,
+            pageini
+        ) {
+
+            return [
+                pageini.direction === 'vertical' ?
+                    'M' + (pageini.seat - rightWidth) + "," + (value - size / 2) +
+                    'L' + (pageini.seat + leftWidth) + "," + (value - size / 2) +
+                    'L' + (pageini.seat + leftWidth) + "," + (value + size / 2) +
+                    'L' + (pageini.seat - rightWidth) + "," + (value + size / 2) +
+                    'L' + (pageini.seat - rightWidth) + "," + (value - size / 2) :
+                    'M' + (value - size / 2) + "," + (pageini.seat - leftWidth) +
+                    'L' + (value + size / 2) + "," + (pageini.seat - leftWidth) +
+                    'L' + (value + size / 2) + "," + (pageini.seat + rightWidth) +
+                    'L' + (value - size / 2) + "," + (pageini.seat + rightWidth) +
+                    'L' + (value - size / 2) + "," + (pageini.seat - leftWidth), color];
+
+        });
+
+};
 
 clay.canvas.arc = function (selector, config) {
 
@@ -1444,6 +1489,45 @@ clay.canvas.arcRuler = function (selector, config) {
 
 };
 
+clay.canvas.lineRuler = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _ruler, function (
+                value,
+                leftWidth, rightWidth, size,
+                color,
+                pageini
+            ) {
+                obj._painter.beginPath();
+                for (key in obj._config)
+                    obj._painter[key] = obj._config[key];
+
+                obj._painter.fillStyle = color;
+
+                // 绘制刻度
+                if (pageini.direction === 'vertical') {
+                    obj._painter.moveTo(pageini.seat - rightWidth, value - size / 2);
+                    obj._painter.lineTo(pageini.seat + leftWidth, value - size / 2);
+                    obj._painter.lineTo(pageini.seat + leftWidth, value + size / 2);
+                    obj._painter.lineTo(pageini.seat - rightWidth, value + size / 2);
+                } else {
+                    obj._painter.moveTo(value - size / 2, pageini.seat - leftWidth);
+                    obj._painter.lineTo(value + size / 2, pageini.seat - leftWidth);
+                    obj._painter.lineTo(value + size / 2, pageini.seat + rightWidth);
+                    obj._painter.lineTo(value - size / 2, pageini.seat + rightWidth);
+                }
+
+                obj._painter.closePath();
+                obj._painter.fill();
+
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
 
 
     clay.__isLoad__ = false;

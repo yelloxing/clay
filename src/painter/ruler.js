@@ -12,19 +12,20 @@ var _ruler = function (painter) {
 
     var ruler = function (begin, end) {
 
-        var flag, dis = (end - begin) / scope.n;
+        var flag, dis = (end - begin) / scope.n, tempResult = [];
         for (flag = begin; (dis > 0 && flag <= end) || (dis < 0 && flag >= end); flag += dis) {
             // 大刻度
-            painter(flag, scope.big[0], scope.big[1], scope.big[2], typeof scope.color == 'function' ? scope.color(flag) : scope.color, scope);
+            tempResult.push(painter(flag, scope.big[0], scope.big[1], scope.big[2], typeof scope.color == 'function' ? scope.color(flag) : scope.color, scope));
             if (flag + dis / 5 * 4 < end) {
 
                 // 小刻度
-                painter(flag + dis / 5, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5) : scope.color, scope);
-                painter(flag + dis / 5 * 2, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 2) : scope.color, scope);
-                painter(flag + dis / 5 * 3, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 3) : scope.color, scope);
-                painter(flag + dis / 5 * 4, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 4) : scope.color, scope);
+                tempResult.push(painter(flag + dis / 5, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 2, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 2) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 3, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 3) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 4, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 4) : scope.color, scope));
             }
         }
+        return tempResult;
 
     };
 
@@ -46,7 +47,7 @@ var _ruler = function (painter) {
     //     "radius":number,
 
     //  【直线刻度尺特有参数】
-    //     "direction":"horizontal|vertical",
+    //     "direction":"horizontal|vertical",缺省水平的
     //     "seat":number
 
     // }
