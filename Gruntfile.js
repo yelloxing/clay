@@ -30,12 +30,17 @@ var source = [
     // 图形对象
     './src/painter/canvas.js',
     './src/painter/arc.js',
+    './src/painter/ruler.js',
 
     // svg绘图
     './src/painter/svg/arc.js',
+    './src/painter/svg/arcRuler.js',
+    './src/painter/svg/lineRuler.js',
 
     // Canvas2D绘图
     './src/painter/canvas/arc.js',
+    './src/painter/canvas/arcRuler.js',
+    './src/painter/canvas/lineRuler.js',
 
     // WebGL3D绘图
 
