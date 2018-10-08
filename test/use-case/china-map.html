@@ -14,21 +14,21 @@
 
             // 由于默认参数就是绘制中国地图的最佳参数
             // 不需要调整
-            var map = clay.math.map.polar();
+            var map = clay.math.map();
 
             $$('<svg></svg>').appendTo('body')
-                .attr("width", 1600)
-                .attr("height", 1500);
+                .attr("width", 700)
+                .attr("height", 500);
 
             var colors = $$.getColors(chinaMapData.features.length);
 
             function createImg(index, points) {
                 temp = map(points[0][0], points[0][1]);
 
-                result = "M" + (300 + temp[0]) + "," + (temp[1] + 250);
+                result = "M" + (350 + temp[0]) + "," + (temp[1] + 250);
                 for (flag = 1; flag < points.length; flag++) {
                     temp = map(points[flag][0], points[flag][1]);
-                    result += "L" + (300 + temp[0]) + "," + (temp[1] + 250);
+                    result += "L" + (350 + temp[0]) + "," + (temp[1] + 250);
                 }
                 $$('<path fill=' + colors[index] + ' d=' + result + '></path>').appendTo($$('g').eq(index));
             };

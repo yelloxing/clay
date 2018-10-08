@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Oct 08 2018 23:51:05 GMT+0800 (CST)
+* Date:Tue Oct 09 2018 00:35:48 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -960,7 +960,8 @@ clay.math.scale = function () {
 
 };
 
-//中心点平行投影 = 等角正切方位投影+等积斜切方位投影
+// 目前不考虑太多，先提供这一种投影方式
+// 别的后期再说
 
 // 假定了地球是小圆球
 
@@ -970,61 +971,48 @@ clay.math.scale = function () {
  * 然后垂直纸面的视线
  */
 
-clay.math.map.polar = function () {
+clay.math.map = function () {
 
     var scope = {
         // 默认采用中国地理中心经纬度
-        c: [107, 46],
+        c: [107, 31],
         // 缩放比例，默认缩小一万倍
         s: 10000
     };
 
+    var rotate_z = clay.math.rotate().setL(0, 0, 0, 0, 0, 1);
+    var rotate_x = clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
+
     // 计算出来的位置是偏离中心点的距离
-    var polar = function (longitude, latitude) {
+    var map = function (longitude, latitude) {
 
-        // 这样统一转成以北极为中心点
-        // 问题简单化
-        longitude += (90 - scope.c[0]);
-        var cos1 = Math.cos(longitude / 180 * Math.PI),
-            sin1 = Math.sin(longitude / 180 * Math.PI),
-            sin2 = Math.sin(latitude / 180 * Math.PI),
-            cos2 = Math.cos(latitude / 180 * Math.PI),
-            cosN = Math.cos((latitude - 90 + scope.c[1]) / 180 * Math.PI),
-            sinN = Math.sin((latitude - 90 + scope.c[1]) / 180 * Math.PI),
+        var p = rotate_z.setP(_Geography[0].R / scope.s, 0, 0)(longitude / 180 * Math.PI);
+        p = rotate_x.setP(p[0], p[1], p[2])(latitude / 180 * Math.PI);
+        p = rotate_z.setP(p[0], p[1], p[2])((90 - scope.c[0]) / 180 * Math.PI);
+        p = rotate_x.setP(p[0], p[1], p[2])((90 - scope.c[1]) / 180 * Math.PI);
 
-            cos2new = Math.sqrt(
-                (_Geography[0].R * cos1 * cos2) * (_Geography[0].R * cos1 * cos2) /
-                (
-                    (_Geography[0].R * cos1 * cos2) * (_Geography[0].R * cos1 * cos2) +
-                    ((
-                        _Geography[0].R * cos1 * sin2 * cosN / cos2
-                    ) * (
-                            _Geography[0].R * cos1 * sin2 * cosN / cos2
-                        ))
-                ));
-        var temp = _Geography[0].R * cos2new / scope.s;
         var result = [
-            -temp * cos1,
-            temp * sin1
+            -p[0],
+            p[1]
         ];
 
         return result;
 
     };
 
-    polar.scale = function (scale) {
+    map.scale = function (scale) {
         if (typeof scale === 'number') scope.s = scale;
         else return scope.s;
-        return polar;
+        return map;
     };
 
-    polar.center = function (longitude, latitude) {
+    map.center = function (longitude, latitude) {
         if (typeof longitude === 'number' && typeof latitude === 'number') scope.c = [longitude, latitude];
         else return scope.c;
-        return polar;
+        return map;
     };
 
-    return polar;
+    return map;
 
 };
 
