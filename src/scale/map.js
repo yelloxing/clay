@@ -9,7 +9,7 @@
  * 然后垂直纸面的视线
  */
 
-clay.math.map = function () {
+clay.scale.map = function () {
 
     var scope = {
         c: [107, 36],

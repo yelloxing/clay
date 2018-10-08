@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Oct 09 2018 01:10:57 GMT+0800 (CST)
+* Date:Tue Oct 09 2018 01:23:46 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -87,10 +87,7 @@ var _regexp = {
 };
 
 // 数学计算、物理计算、映射计算、绘图方案svg+canvas+webgl、布局
-clay.math = {
-    // 地图投影计算
-    "map": {}
-};
+clay.math = {};
 clay.physics = {};
 clay.scale = {};
 clay.svg = {}; clay.canvas = {}; clay.webgl = {};
@@ -971,7 +968,7 @@ clay.math.scale = function () {
  * 然后垂直纸面的视线
  */
 
-clay.math.map = function () {
+clay.scale.map = function () {
 
     var scope = {
         c: [107, 36],

@@ -16,10 +16,7 @@ var _regexp = {
 };
 
 // 数学计算、物理计算、映射计算、绘图方案svg+canvas+webgl、布局
-clay.math = {
-    // 地图投影计算
-    "map": {}
-};
+clay.math = {};
 clay.physics = {};
 clay.scale = {};
 clay.svg = {}; clay.canvas = {}; clay.webgl = {};

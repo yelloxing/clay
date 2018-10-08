@@ -21,11 +21,11 @@ var source = [
     './src/math/transform3D/rotate.js',
     './src/math/transform3D/move.js',
     './src/math/transform3D/scale.js',
-    './src/math/map.js',
 
     // 物理计算
 
     // 映射计算
+    './src/scale/map.js',
 
     // 布局
     './src/layout/tree.js',
