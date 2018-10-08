@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Oct 09 2018 00:35:48 GMT+0800 (CST)
+* Date:Tue Oct 09 2018 00:57:37 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -974,8 +974,7 @@ clay.math.scale = function () {
 clay.math.map = function () {
 
     var scope = {
-        // 默认采用中国地理中心经纬度
-        c: [107, 31],
+        c: [90, 31],
         // 缩放比例，默认缩小一万倍
         s: 10000
     };
