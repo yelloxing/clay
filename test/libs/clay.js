@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Oct 09 2018 00:57:37 GMT+0800 (CST)
+* Date:Tue Oct 09 2018 01:10:57 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -974,28 +974,27 @@ clay.math.scale = function () {
 clay.math.map = function () {
 
     var scope = {
-        c: [90, 31],
+        c: [107, 36],
         // 缩放比例，默认缩小一万倍
         s: 10000
     };
 
     var rotate_z = clay.math.rotate().setL(0, 0, 0, 0, 0, 1);
     var rotate_x = clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
+    var rotate_y = clay.math.rotate().setL(0, 1, 0, 0, 0, 0);
 
     // 计算出来的位置是偏离中心点的距离
     var map = function (longitude, latitude) {
 
-        var p = rotate_z.setP(_Geography[0].R / scope.s, 0, 0)(longitude / 180 * Math.PI);
-        p = rotate_x.setP(p[0], p[1], p[2])(latitude / 180 * Math.PI);
+        var p = rotate_y.setP(_Geography[0].R / scope.s, 0, 0)(latitude / 180 * Math.PI);
+        p = rotate_z.setP(p[0], p[1], p[2])(longitude / 180 * Math.PI);
         p = rotate_z.setP(p[0], p[1], p[2])((90 - scope.c[0]) / 180 * Math.PI);
         p = rotate_x.setP(p[0], p[1], p[2])((90 - scope.c[1]) / 180 * Math.PI);
 
-        var result = [
+        return [
             -p[0],
             p[1]
         ];
-
-        return result;
 
     };
 
