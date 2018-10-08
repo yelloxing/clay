@@ -14,26 +14,26 @@
 
     var clay = function (selector, context) {
         return new clay.prototype.init(selector, context);
-    };
+    }, __isLoad__;
 
     clay.prototype.init = function (selector, context) {
 
         if (typeof selector === 'function') {
-            if (clay.__isLoad__) {
+            if (__isLoad__) {
                 selector();
             } else {
                 if (document.addEventListener) {//Mozilla, Opera and webkit
                     document.addEventListener("DOMContentLoaded", function doListenter() {
                         document.removeEventListener("DOMContentLoaded", doListenter, false);
                         selector();
-                        clay.__isLoad__ = true;
+                        __isLoad__ = true;
                     });
                 } else if (document.attachEvent) {//IE
                     document.attachEvent("onreadystatechange", function doListenter() {
                         if (document.readyState === "complete") {
                             document.detachEvent("onreadystatechange", doListenter);
                             selector();
-                            clay.__isLoad__ = true;
+                            __isLoad__ = true;
                         }
                     });
                 }
@@ -44,7 +44,7 @@
             for (flag = 0; flag < nodes.length; flag++) {
                 this[flag] = nodes[flag];
             }
-            this.selector=selector;
+            this.selector = selector;
             this.length = nodes.length;
         }
         return this;
@@ -55,7 +55,7 @@
 
     // @CODE build.js inserts compiled clay here
 
-    clay.__isLoad__ = false;
+    __isLoad__ = false;
 
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';

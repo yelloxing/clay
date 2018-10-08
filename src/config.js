@@ -15,8 +15,12 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、比例尺、绘图方案svg+canvas+webgl、布局
-clay.math = {};
+// 数学计算、物理计算、映射计算、绘图方案svg+canvas+webgl、布局
+clay.math = {
+    // 地图投影计算
+    "map": {}
+};
+clay.physics = {};
 clay.scale = {};
 clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
@@ -29,3 +33,10 @@ var _physics = {
     K: 8988000000,
     G: 0.00000000667
 };
+
+var _Geography = [
+    // 地球
+    {
+        R: 6317000// 半径
+    }
+];

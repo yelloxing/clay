@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
+    <script src="../libs/clay.js"></script>
+    <script src="./data.clay.frame.json.js"></script>
+    <title>clay架构图</title>
+    <script>
+        $$(function () {
+
+            var width = 1000, height = 1600;
+            $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+                .appendTo('body')
+                .attr('width', width)
+                .attr('height', height);
+
+            var painter = $$('canvas')[0].getContext("2d");
+
+            // 建立树布局
+            var tree = clay.layout.tree();
+
+            // 基本配置
+            tree.bind('root', function (initTree) {
+                return initTree;
+            })
+                .bind('child', function (parentTree) {
+                    return parentTree.content;
+                })
+                .bind('id', function (treedata) {
+                    return treedata.name;
+                })
+                .bind('drawer', function (nodes, rootid, size) {
+
+                    var dis = (height - 20) / size;
+                    // 画根
+                    painter.beginPath();
+                    painter.fillStyle = '#f00';
+                    painter.strokeStyle = '#f00';
+                    painter.textBaseline = 'middle';
+                    painter.moveTo(nodes[rootid].left * 160 - 5, nodes[rootid].top * dis);
+                    painter.arc(nodes[rootid].left * 160, nodes[rootid].top * dis, 5, 0, Math.PI * 2);
+                    painter.fill();
+                    painter.fillText(rootid, nodes[rootid].left * 160, nodes[rootid].top * dis + 20);
+
+                    (function drawer(pid) {
+                        var flag;
+                        for (flag = 0; flag < nodes[pid].children.length; flag++) {
+                            painter.beginPath();
+                            painter.moveTo(nodes[pid].left * 160 + 5, nodes[pid].top * dis);
+                            painter.bezierCurveTo(
+                                nodes[pid].left * 160 + 60, nodes[pid].top * dis,
+                                nodes[nodes[pid].children[flag]].left * 160 - 60, nodes[nodes[pid].children[flag]].top * dis,
+                                nodes[nodes[pid].children[flag]].left * 160 - 5, nodes[nodes[pid].children[flag]].top * dis
+                            );
+                            painter.stroke();
+                            painter.beginPath();
+                            painter.moveTo(nodes[nodes[pid].children[flag]].left * 160 - 5, nodes[nodes[pid].children[flag]].top * dis);
+                            painter.arc(nodes[nodes[pid].children[flag]].left * 160, nodes[nodes[pid].children[flag]].top * dis, 5, 0, Math.PI * 2);
+                            painter.fill();
+                            drawer(nodes[pid].children[flag]);
+                            if (nodes[nodes[pid].children[flag]].children.length > 0) {
+                                painter.textAlign = 'center';
+                                painter.fillText(nodes[pid].children[flag], nodes[nodes[pid].children[flag]].left * 160, nodes[nodes[pid].children[flag]].top * dis + 20);
+                            } else {
+                                painter.textAlign = 'left';
+                                painter.fillText(nodes[pid].children[flag], nodes[nodes[pid].children[flag]].left * 160 + 10, nodes[nodes[pid].children[flag]].top * dis);
+                            }
+                        }
+                    })(rootid);
+
+                });
+
+            tree(clayFrame);
+
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>

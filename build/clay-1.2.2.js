@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Oct 06 2018 22:53:42 GMT+0800 (CST)
+* Date:Mon Oct 08 2018 22:37:11 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -30,26 +30,26 @@
 
     var clay = function (selector, context) {
         return new clay.prototype.init(selector, context);
-    };
+    }, __isLoad__;
 
     clay.prototype.init = function (selector, context) {
 
         if (typeof selector === 'function') {
-            if (clay.__isLoad__) {
+            if (__isLoad__) {
                 selector();
             } else {
                 if (document.addEventListener) {//Mozilla, Opera and webkit
                     document.addEventListener("DOMContentLoaded", function doListenter() {
                         document.removeEventListener("DOMContentLoaded", doListenter, false);
                         selector();
-                        clay.__isLoad__ = true;
+                        __isLoad__ = true;
                     });
                 } else if (document.attachEvent) {//IE
                     document.attachEvent("onreadystatechange", function doListenter() {
                         if (document.readyState === "complete") {
                             document.detachEvent("onreadystatechange", doListenter);
                             selector();
-                            clay.__isLoad__ = true;
+                            __isLoad__ = true;
                         }
                     });
                 }
@@ -60,7 +60,7 @@
             for (flag = 0; flag < nodes.length; flag++) {
                 this[flag] = nodes[flag];
             }
-            this.selector=selector;
+            this.selector = selector;
             this.length = nodes.length;
         }
         return this;
@@ -86,8 +86,12 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、比例尺、绘图方案svg+canvas+webgl、布局
-clay.math = {};
+// 数学计算、物理计算、映射计算、绘图方案svg+canvas+webgl、布局
+clay.math = {
+    // 地图投影计算
+    "map": {}
+};
+clay.physics = {};
 clay.scale = {};
 clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
@@ -100,6 +104,13 @@ var _physics = {
     K: 8988000000,
     G: 0.00000000667
 };
+
+var _Geography = [
+    // 地球
+    {
+        R: 6317000// 半径
+    }
+];
 
 // 负责查找结点
 function _sizzle(selector, context) {
@@ -949,6 +960,73 @@ clay.math.scale = function () {
 
 };
 
+//中心点平行投影 = 等角正切方位投影+等积斜切方位投影
+
+// 假定了地球是小圆球
+
+/**
+ * 确定中心点以后，
+ * 旋转地球，使得中心点作为最高点，
+ * 然后垂直纸面的视线
+ */
+
+clay.math.map.polar = function () {
+
+    var scope = {
+        // 默认采用中国地理中心经纬度
+        c: [104, 31],
+        // 缩放比例，默认缩小五千倍
+        s: 5000
+    };
+
+    // 计算出来的位置是偏离中心点的距离
+    var polar = function (longitude, latitude) {
+
+        // 这样统一转成以北极为中心点
+        // 问题简单化
+        longitude += (90 - scope.c[0]);
+        var cos1 = Math.cos(longitude / 180 * Math.PI),
+            sin1 = Math.cos(longitude / 180 * Math.PI),
+            sin2 = Math.sin(latitude / 180 * Math.PI),
+            cos2 = Math.cos(latitude / 180 * Math.PI),
+            cosN = Math.cos((latitude - 90 + scope.c[1]) / 180 * Math.PI),
+
+            cosLatitude = Math.sqrt(
+                (_Geography[0].R * cos1 * cos2) * (_Geography[0].R * cos1 * cos2) /
+                (
+                    (_Geography[0].R * cos1 * cos2) * (_Geography[0].R * cos1 * cos2) +
+                    ((
+                        _Geography[0].R * cos1 * sin2 * cosN / cos2
+                    ) * (
+                            _Geography[0].R * cos1 * sin2 * cosN / cos2
+                        ))
+                ));
+        var temp = _Geography[0].R * cos2 / scope.s,
+            result = [
+                -temp * cos1,
+                temp * sin1
+            ];
+
+        return result;
+
+    };
+
+    polar.scale = function (scale) {
+        if (typeof scale === 'number') scope.s = scale;
+        else return scope.s;
+        return polar;
+    };
+
+    polar.center = function (longitude, latitude) {
+        if (typeof longitude === 'number' && typeof latitude === 'number') scope.c = [longitude, latitude];
+        else return scope.c;
+        return polar;
+    };
+
+    return polar;
+
+};
+
 clay.layout.tree = function () {
 
     var scope = {
@@ -1105,6 +1183,7 @@ clay.layout.tree = function () {
     return tree;
 
 };
+
 
 // 获取canvas2D对象
 function _getCanvas2D(selector) {
@@ -1530,7 +1609,7 @@ clay.canvas.lineRuler = function (selector, config) {
 };
 
 
-    clay.__isLoad__ = false;
+    __isLoad__ = false;
 
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
