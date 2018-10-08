@@ -17,18 +17,18 @@
             var map = clay.math.map.polar();
 
             $$('<svg></svg>').appendTo('body')
-                .attr("width", 2000)
-                .attr("height", 2000);
+                .attr("width", 1600)
+                .attr("height", 1500);
 
             var colors = $$.getColors(chinaMapData.features.length);
 
             function createImg(index, points) {
                 temp = map(points[0][0], points[0][1]);
 
-                result = "M" + (1000 + temp[0]) + "," + (temp[1] + 1000);
+                result = "M" + (300 + temp[0]) + "," + (temp[1] + 250);
                 for (flag = 1; flag < points.length; flag++) {
                     temp = map(points[flag][0], points[flag][1]);
-                    result += "L" + (1000 + temp[0]) + "," + (temp[1] + 1000);
+                    result += "L" + (300 + temp[0]) + "," + (temp[1] + 250);
                 }
                 $$('<path fill=' + colors[index] + ' d=' + result + '></path>').appendTo($$('g').eq(index));
             };

@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Oct 08 2018 22:37:11 GMT+0800 (CST)
+* Date:Mon Oct 08 2018 23:51:05 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -974,9 +974,9 @@ clay.math.map.polar = function () {
 
     var scope = {
         // 默认采用中国地理中心经纬度
-        c: [104, 31],
-        // 缩放比例，默认缩小五千倍
-        s: 5000
+        c: [107, 46],
+        // 缩放比例，默认缩小一万倍
+        s: 10000
     };
 
     // 计算出来的位置是偏离中心点的距离
@@ -986,12 +986,13 @@ clay.math.map.polar = function () {
         // 问题简单化
         longitude += (90 - scope.c[0]);
         var cos1 = Math.cos(longitude / 180 * Math.PI),
-            sin1 = Math.cos(longitude / 180 * Math.PI),
+            sin1 = Math.sin(longitude / 180 * Math.PI),
             sin2 = Math.sin(latitude / 180 * Math.PI),
             cos2 = Math.cos(latitude / 180 * Math.PI),
             cosN = Math.cos((latitude - 90 + scope.c[1]) / 180 * Math.PI),
+            sinN = Math.sin((latitude - 90 + scope.c[1]) / 180 * Math.PI),
 
-            cosLatitude = Math.sqrt(
+            cos2new = Math.sqrt(
                 (_Geography[0].R * cos1 * cos2) * (_Geography[0].R * cos1 * cos2) /
                 (
                     (_Geography[0].R * cos1 * cos2) * (_Geography[0].R * cos1 * cos2) +
@@ -1001,11 +1002,11 @@ clay.math.map.polar = function () {
                             _Geography[0].R * cos1 * sin2 * cosN / cos2
                         ))
                 ));
-        var temp = _Geography[0].R * cos2 / scope.s,
-            result = [
-                -temp * cos1,
-                temp * sin1
-            ];
+        var temp = _Geography[0].R * cos2new / scope.s;
+        var result = [
+            -temp * cos1,
+            temp * sin1
+        ];
 
         return result;
 
