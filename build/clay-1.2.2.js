@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Oct 09 2018 01:23:46 GMT+0800 (CST)
+* Date:Tue Oct 09 2018 10:08:15 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -620,10 +620,9 @@ clay.min = function (array, valback) {
 
 // 给一组数据，轮询执行一遍
 clay.loop = function (datas, callback) {
-
     var flag = 0, data;
     for (data in datas) {
-        callback(datas[flag], flag);
+        callback(datas[data], flag, data);
         flag += 1;
     }
     return clay;
