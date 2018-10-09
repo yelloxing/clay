@@ -15,21 +15,14 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、物理计算、映射计算、绘图方案svg+canvas+webgl、布局
+// 数学计算、映射计算、绘图方案svg+canvas、布局
 clay.math = {};
-clay.physics = {};
 clay.scale = {};
-clay.svg = {}; clay.canvas = {}; clay.webgl = {};
+clay.svg = {}; clay.canvas = {};
 clay.layout = {};
 
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
-
-// 库仑常数、引力常数
-var _physics = {
-    K: 8988000000,
-    G: 0.00000000667
-};
 
 var _Geography = [
     // 地球

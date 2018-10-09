@@ -22,14 +22,11 @@ var source = [
     './src/math/transform3D/move.js',
     './src/math/transform3D/scale.js',
 
-    // 物理计算
-
     // 映射计算
     './src/scale/map.js',
 
     // 布局
     './src/layout/tree.js',
-    './src/layout/force.js',
 
     // 图形对象
     './src/painter/canvas.js',
@@ -44,9 +41,7 @@ var source = [
     // Canvas2D绘图
     './src/painter/canvas/arc.js',
     './src/painter/canvas/arcRuler.js',
-    './src/painter/canvas/lineRuler.js',
-
-    // WebGL3D绘图
+    './src/painter/canvas/lineRuler.js'
 
 ];
 
