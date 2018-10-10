@@ -1,0 +1,27 @@
+<link rel="stylesheet" href="./style.css">
+<h2 id='svg'>
+    SVG绘图
+</h2>
+<p>
+    并不是真的绘制出来图形，只是根据输入的数据返回特定图形的路径值等，可以看下面具体的说明。
+</p>
+<h3 id='svg-arc'>
+    扇形
+</h3>
+<pre class="code">
+var arc = $$.svg.arc()
+//圆心默认（0,0），这里修改一下
+.setCenter(200, 200);
+
+$$('&lt;path&gt;').appendTo('svg').attr('d', function () {
+//调用绘图工具返回前面提到的路径
+//参数分别表示开始角度，跨越角度，内半径和外半径
+return arc(Math.PI / 4, Math.PI*3/2, 100, 200);
+}).attr('fill', 'blue');</pre>
+<p>
+    配置好绘图工具，就可以传递不同的参数返回不同的路径。
+</p>
+<p>
+    和设置圆心类似，内外半径也有默认值，可以通过arc.setRadius(r1,r2)方法修改，因此最后的arc方法如果只传递二个参数，半径就会采用默认值，canvas2D绘制扇形图也是一样。
+</p>
+<span class="warn">温馨提示：第二个参数弧度跨度值域为[0,2PI)。</span>

@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="./style.css">
+<h2 id='canvas2d'>
+    Canvas2D绘图
+</h2>
+<p>
+    和SVG不同，这里是绘制具体的图形，这些差异是由特定的绘图环境决定的。
+</p>
+<h3 id='canvas2d-arc'>
+    扇形
+</h3>
+<pre class="code">
+var arc = $$.canvas.arc('canvas', {
+fillStyle: 'red'
+}).setCenter(200, 200);
+
+arc(Math.PI / 4, Math.PI / 2 * 3, 100, 200);</pre>
+<p>
+    绘制扇形的配置等和SVG部分完全一样，这里需要说明一下canvas2D绘图特有的一些细节。
+</p>
+<p>
+    如上面，获取arc对象时，可以传递画笔和对画笔的配置json（画笔只要是一个合法的选择器就可以了），当然也可以不传递，在后面调用canvas和config方法配置也可以。
+</p>
+<p>
+    需要注意的是，这是对所有canvas2D绘图对象都通用的API，下面绘制曲线会给出例子，后面不再说明。
+</p>

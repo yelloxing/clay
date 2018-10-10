@@ -62,6 +62,9 @@ body {
         min-height: calc(100vh - #{$head-height} - #{$footer-height});
         padding: .2rem .5rem;
     }
+    .special-height {
+        min-height: calc(100vh - #{$head-height} - #{$footer-height});
+    }
     &>footer {
         margin: auto;
         max-width: $frame-width;

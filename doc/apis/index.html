@@ -10,6 +10,44 @@
     <script src="../../build/clay-1.2.2.min.js"></script>
     <link rel="stylesheet" href="../easycss-1.2.1.min.css">
     <link rel="stylesheet" href="../style.css">
+    <style>
+        body>section {
+            font-size: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+
+        body>section>div {
+            display: inline-block;
+            vertical-align: top;
+            font-size: .16rem;
+        }
+
+        body>section>.content {
+            width: calc(100% - 2rem);
+            display: inline-block;
+        }
+
+        body>section>div.menu {
+            width: 2rem;
+            padding: .1rem;
+            margin-top: .4rem;
+            border-left: 1px solid #e3e2e2;
+        }
+
+        body>section>div.menu>a:first-child {
+            border-top: 1px solid #e3e2e2;
+        }
+
+        body>section>div.menu>a {
+            display: block;
+            border-bottom: 1px solid #e3e2e2;
+            line-height: 1.8;
+            font-size: .14rem;
+            padding: .1rem;
+            color: #657d8a;
+        }
+    </style>
     <script>
         function changePage(target) {
 
@@ -27,46 +65,14 @@
                 color: "#0063f7"
             });
 
+            $$('iframe').attr('src','./'+target+'.html');
+
         }
         function goto(target) {
             window.location.href = "#" + target;
             changePage(target);
         }
     </script>
-    <style>
-        body>section {
-            font-size: 0;
-        }
-
-        body>section>div {
-            display: inline-block;
-            vertical-align: top;
-            font-size: .16rem;
-        }
-
-        body>section>div.content {
-            width: calc(100% - 2rem);
-        }
-
-        body>section>div.menu {
-            width: 2rem;
-            padding: .1rem;
-            border-left: 1px solid #e3e2e2;
-        }
-
-        body>section>div.menu>a:first-child {
-            border-top: 1px solid #e3e2e2;
-        }
-
-        body>section>div.menu>a {
-            display: block;
-            border-bottom: 1px solid #e3e2e2;
-            line-height: 1.8;
-            font-size: .14rem;
-            padding: .1rem;
-            color: #657d8a;
-        }
-    </style>
 </head>
 
 <body>
@@ -91,9 +97,7 @@
         </a>
     </header>
     <section>
-        <div class="content">
-
-        </div>
+        <iframe class="special-height content" frameborder="0"></iframe>
         <div class="menu">
             <a href="javascript:void(0)" onclick="goto('basic')">基本说明</a>
             <a href="javascript:void(0)" onclick="goto('node')">结点操作</a>
