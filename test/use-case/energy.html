@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
+    <script src="../libs/clay.js"></script>
+    <script src="./energy.json.js"></script>
+    <title>关系图</title>
+    <script>
+        $$(function () {
+
+            $$('<svg>' +
+                '<g class="line"></g>' +
+                '<g class="circle"></g>' +
+                '<g class="text"></g>' +
+                '</svg>').appendTo('body')
+                .attr('width', '700')
+                .attr('height', '700');
+
+            // 计算角度
+            var i, j, allsize = 0, max = 0;
+            var nameToIndex = {};
+            for (i = 0; i < energyData.nodes.length; i++) {
+                energyData.nodes[i].size = 0;
+                for (j = 0; j < energyData.links.length; j++) {
+                    if (
+                        energyData.links[j].source == energyData.nodes[i].name ||
+                        energyData.links[j].target == energyData.nodes[i].name
+                    ) {
+                        energyData.nodes[i].size += energyData.links[j].value;
+                    }
+                }
+                nameToIndex[energyData.nodes[i].name] = i;
+                if (energyData.nodes[i].size > max) max = energyData.nodes[i].size;
+                allsize += energyData.nodes[i].size;
+            }
+
+            var begindeg = 0;
+            for (i = 0; i < energyData.nodes.length; i++) {
+                energyData.nodes[i].beginDeg = begindeg;
+                energyData.nodes[i].engDeg = begindeg + (energyData.nodes[i].size / allsize * Math.PI * 2);
+                begindeg = energyData.nodes[i].engDeg;
+            }
+
+            // 绘制图形
+            var rotate = clay.math.rotate().setP(580, 350).setL(350, 350);
+            var colors = $$.getColors(energyData.nodes.length);
+            var arc = $$.svg.arc().setCenter(350, 350).setRadius(200, 260);
+            for (i = 0; i < energyData.nodes.length; i++) {
+                energyData.nodes[i].color = colors[i];
+                var p = rotate((energyData.nodes[i].beginDeg + energyData.nodes[i].engDeg) / 2);
+                energyData.nodes[i].cx = p[0];
+                energyData.nodes[i].cy = p[1];
+                $$('<circle></circle>').appendTo('.circle')
+                    .attr('fill', colors[i])
+                    .attr('r', 60 * energyData.nodes[i].size / max)
+                    .attr('cx', p[0])
+                    .attr('cy', p[1])
+                    .attr('name', energyData.nodes[i].name);
+
+                var color = clay.color(colors[i]);
+
+                $$('<text>' + energyData.nodes[i].name + '</text>')
+                    .css({
+                        "text-anchor": "middle",  /* 文本水平居中 */
+                        "dominant-baseline": "middle", /* 文本垂直居中 */
+                        "font-size": (20 * energyData.nodes[i].size / max) + "px",
+                        "stroke": "rgb(" + color[0] + "," + (255 - color[1]) + "," + (255 - color[2]) + ")"
+                    })
+                    .appendTo('.text')
+                    .attr('x', p[0])
+                    .attr('y', p[1]);
+            }
+
+            // 绘制关系线
+            for (j = 0; j < energyData.links.length; j++) {
+
+                var bindex = nameToIndex[energyData.links[j].source];
+                var eindex = nameToIndex[energyData.links[j].target];
+                $$('<path>').appendTo('.line')
+                    .attr('d',
+                    "M" +
+                    energyData.nodes[bindex].cx + "," + energyData.nodes[bindex].cy +
+                    "C" +
+                    ((energyData.nodes[bindex].cx + 350) / 2) + "," + ((energyData.nodes[bindex].cy + 350) / 2) + " " +
+                    ((energyData.nodes[eindex].cx + 350) / 2) + "," + ((energyData.nodes[eindex].cy + 350) / 2) + " " +
+                    energyData.nodes[eindex].cx + "," + energyData.nodes[eindex].cy
+                    )
+                    .attr('stroke', colors[bindex])
+                    .attr('fill', 'none');
+
+
+            }
+
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>
