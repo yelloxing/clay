@@ -23,6 +23,23 @@ arc(Math.PI / 4, Math.PI / 2 * 3, 100, 200);</pre>
 <p>
     需要注意的是，这是对所有canvas2D绘图对象都通用的API，下面绘制曲线会给出例子，后面不再说明。
 </p>
+<h3 id="canvas2d-layer">
+    图层
+</h3>
+<p>
+    canvas的绘制和svg不同，为了方便绘制，模拟出来图层的概念。
+</p>
+<pre class="code">var layer = clay.canvas.layer(canvas2D, width, height),
+    // 温馨提示：后获取的图层在上层
+    painter1 = layer.get('layer1'),
+    painter2 = layer.get('layer2');</pre>
+<p>
+    之前在绘制的时候使用canvas2D作为画笔，此刻，为了绘制在不同图层，选择painter1或painter2绘制即可。
+</p>
+<pre class="code">layer.update();</pre>
+<p>
+    因为最终还是要显示在canvas2D上，最后要调用这个方法刷新。
+</p>
 <h3 id="canvas2d-ruler">
     刻度尺
 </h3>

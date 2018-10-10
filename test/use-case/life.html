@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
+    <script src="../libs/clay.js"></script>
+    <script src="./data.life.json.js"></script>
+    <title>树图</title>
+    <style>
+        body {
+            position: relative;
+            margin: 0;
+        }
+    </style>
+    <script>
+        $$(function () {
+
+            $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+                .appendTo('body')
+                .attr('width', 900)
+                .attr('height', 500);
+
+            // 需要二个图层
+            var layer = clay.canvas.layer('canvas', 900, 500),
+                // 温馨提示：后获取的图层在上层
+                painter1 = layer.get('lineCircle'),
+                painter2 = layer.get('text');
+
+
+            // 建立树布局
+            var tree = clay.layout.tree();
+
+            // 基本配置
+            tree.bind('root', function (initTree) {
+                return initTree;
+            })
+                .bind('child', function (parentTree) {
+                    return parentTree.children;
+                })
+                .bind('id', function (treedata) {
+                    return treedata.name;
+                })
+                .bind('drawer', function (nodes, rootid, size) {
+                    var node = nodes[rootid];
+                    var s = 900 / size;
+                    var x = node.top * s, y = node.left * 140;
+                    painter1.beginPath();
+                    painter1.strokeStyle = '#009688';
+                    painter1.fillStyle = '#009688';
+                    painter1.moveTo(x - 6, y);
+                    painter1.arc(x, y, 6, Math.PI, Math.PI * 3);
+                    painter1.fill();
+
+                    (function drawer(pid, px, py) {
+
+                        $$('<span>' + pid + '</span>').appendTo('body').css({
+                            "left": (px + 5) + "px",
+                            "top": (py - 19) + "px",
+                            "position": "absolute",
+                            "padding": "10px",
+                            "background-color": "#009688",
+                            "border-radius": "20px",
+                            "color": "#fff",
+                            "font-size": "12px"
+                        });
+
+                        var children = nodes[pid].children, flag;
+                        var child, cx, cy;
+                        for (flag = 0; flag < children.length; flag++) {
+
+                            // 画点
+                            child = nodes[children[flag]];
+                            cx = child.top * s;
+                            cy = child.left * 140;
+                            painter1.beginPath();
+                            painter1.moveTo(cx - 6, cy);
+                            painter1.arc(cx, cy, 6, Math.PI, Math.PI * 3);
+                            painter1.fill();
+
+                            // 绘制曲线
+                            painter1.beginPath();
+                            painter1.moveTo(px, py + 6);
+                            painter1.bezierCurveTo(px, py + 70, cx, cy - 70, cx, cy - 6);
+                            painter1.stroke();
+
+                            // 绘制孩子
+                            drawer(children[flag], cx, cy);
+                        }
+
+                    })(rootid, x, y);
+
+                    layer.update();
+                });
+
+            tree(treeData);
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>
