@@ -1,0 +1,44 @@
+<link rel="stylesheet" href="./style.css">
+<h2 id='tool'>
+    工具类
+</h2>
+<p>
+    主要是绘图时可能用到的一些零碎方法，所有不方便分类的方法都被归结到此处，因此可能会有点杂乱。
+</p>
+<h3 id='tool-animation'>
+    轮播方法
+</h3>
+<pre class="code">
+$$.animation(function(deep){
+    //不断调用，deep代表进度，0-1
+},200,function(){
+    //动画结束时调用
+});</pre>
+<h3 id='tool-color'>
+    色彩
+</h3>
+<pre class="code">var formatColor=clay.color('#f00');</pre>
+<p>
+    把任意合法的颜色值转变成rgba(x,x,x,x)格式，返回数字数组[r,g,b,a]，比如上面的例子返回值：[255, 0, 0, 1]。
+</p>
+<pre class="code">var colors=clay.getColors(4);</pre>
+<p>
+    有时候绘图的时候，希望用不同的色彩来区分不同的内容，上面的例子就是返回四种不同的随机颜色。
+</p>
+<h3 id='tool-max-min'>
+    最大值和最小值
+</h3>
+<pre class="code">var data=[3,5,3,8,2,19],min=clay.min(data),max=clay.max(data);</pre>
+<p>
+    分别用于返回数组最大值和最小值。
+</p>
+<p>
+    除此之外，这二个方法都支持第二个参数，传递一个函数，传递的函数有二个参数，分别表示元素值和对应索引，函数返回一个数字表示该元素用于比较的值是多少，当然，最终返回的最大值或最小值依旧是原元素值。
+</p>
+<h3 id="tool-loop">
+    轮询执行
+</h3>
+<pre class="code">clay.loop(datas,function(val,flag,key){});</pre>
+<p>
+    传递一个可迭代的数据和处理函数，会自动正对每个条目调用处理函数处理（一层迭代）。
+</p>
