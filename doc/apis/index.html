@@ -58,14 +58,16 @@
                 "node": 1,
                 "tool": 2,
                 "math": 3,
-                "layout": 4,
-                "svg": 5,
-                "canvas": 6
+                "scale": 4,
+                "layout": 5,
+                "svg": 6,
+                "canvas": 7
+
             }[target]).css({
                 color: "#0063f7"
             });
 
-            $$('iframe').attr('src','./'+target+'.html');
+            $$('iframe').attr('src', './' + target + '.html');
 
         }
         function goto(target) {
@@ -103,6 +105,7 @@
             <a href="javascript:void(0)" onclick="goto('node')">结点操作</a>
             <a href="javascript:void(0)" onclick="goto('tool')">工具类</a>
             <a href="javascript:void(0)" onclick="goto('math')">数学计算</a>
+            <a href="javascript:void(0)" onclick="goto('scale')">映射计算</a>
             <a href="javascript:void(0)" onclick="goto('layout')">布局</a>
             <a href="javascript:void(0)" onclick="goto('svg')">SVG绘图</a>
             <a href="javascript:void(0)" onclick="goto('canvas')">Canvas绘图</a>
