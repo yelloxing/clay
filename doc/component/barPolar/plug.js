@@ -15,7 +15,11 @@
                 "R": config.R,
                 "start": config.start,
                 "direction": config.direction ? 1 : -1,
-                "max": 0
+                "max": 0,
+                "during": config.during || 1000,
+                "text": config.text,
+                "valColor": config.valColor || "#b2453e",
+                "averageColor": config.averageColor || "#334553"
             }, i, j;
 
             // 求值
@@ -69,9 +73,9 @@
 
             // 标记刻度
             var rotate = clay.math.rotate()
-                .setP(data.cx, data.cy - data.R - 30)
+                .setP(data.cx + data.R + 30, data.cy)
                 .setL(data.cx, data.cy), p;
-            rotate(deg * (-0.5), true);
+            rotate(data.start + deg * (-0.5), true);
             painter_other.textAlign = 'center';//左右居中
             painter_other.textBaseline = 'middle';//上下居中
             painter_other.strokeStyle = '#000';
@@ -83,7 +87,7 @@
             // 垂直刻度尺
             painter_other.fillStyle = '#000';
             var lineRuler = clay.canvas.lineRuler(painter_other).set({
-                "bigRight": 10,
+                "bigLeft": 10,
                 "bigSize": 1,
                 "num": 5,
                 "direction": "vertical",
@@ -102,27 +106,49 @@
 
             // 绘制区域扇形
             var arc = $$.canvas.arc(painter_arc, {
-                fillStyle: "#b2453e"
+                fillStyle: data.valColor
             }).setCenter(data.cx, data.cy);
 
             deg = deg * .8;
+            var _this = this;
             clay.animation(function (deep) {
                 layer.clean(painter_arc);
                 for (i = 0; i < data.vals.length; i++) {
                     painter_arc.beginPath();
-                    arc(data.vals[i].deg - deg * deep / 2, deg * deep, data.vals[i].minR * deep, (data.vals[i].maxR - data.vals[i].minR) * deep + data.vals[i].minR);
+                    arc(data.vals[i].deg - deg * deep / 2, deg * deep, data.vals[i].minR * deep, (data.vals[i].maxR - data.vals[i].minR) * deep + data.vals[i].minR * deep);
                 }
                 layer.update();
-            }, 1000, function () {
+            }, data.during, function () {
+
                 // 绘制平均值
                 arc.canvas(painter_average).config({
-                    fillStyle: "#334553"
+                    fillStyle: data.averageColor
                 });
                 for (i = 0; i < data.vals.length; i++) {
                     painter_average.beginPath();
                     arc(data.vals[i].deg - deg / 2, deg, data.vals[i].averageR - 2, data.vals[i].averageR + 2);
                 }
                 layer.update();
+
+                if (data.text) {
+                    var pos, width, height;
+                    // 获取字符长度，单位是一个汉字
+                    var length = function (str) {
+                        return str.replace(/[\u0391-\uFFE5]/g, "aa").length / 2;
+                    };
+                    _this.bind('mousemove', function (event) {
+                        layer.clean(painter_info);
+
+                        event = event || window.event;
+                        var pos = _this.position(event);
+
+                        // 等图形位置是否包含开发结束后添加
+                        console.log(pos.x - 350, pos.y - 350);
+
+                        layer.update();
+                    });
+                }
+
             });
 
         }

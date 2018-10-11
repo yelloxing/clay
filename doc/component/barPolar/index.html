@@ -47,16 +47,20 @@
                 // 调用插件绘图
                 .barPolar({
                     // 进行配置
+                    "text": (val, key) => [key, "最低：" + val[0], "最高：" + val[1], "平均：" + val[2]],
                     "cx": 350,
                     "cy": 350,
                     "R": 300,
-                    "start": Math.PI / 2 * 3,//起始角度
+                    "during": 700,
+                    "start": -Math.PI / 2,//起始角度
                     "direction": true,//true表示顺时针，false表示逆时针
                     "keys": cities,
                     "vals": data,
                     "min": val => val[0],
                     "max": val => val[1],
-                    "average": val => val[2]
+                    "average": val => val[2],
+                    "valColor": "#b2453e",
+                    "averageColor": "#334553"
                 });
 
         });

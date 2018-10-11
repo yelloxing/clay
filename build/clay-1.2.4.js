@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Oct 11 2018 14:17:16 GMT+0800 (CST)
+* Date:Thu Oct 11 2018 23:05:35 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1248,11 +1248,6 @@ clay.canvas.layer = function (selector, width, height) {
             }
             return layer[index];
         },
-        "clearn": function () {
-            layer = {};
-            canvas = {};
-            return layerManager;
-        },
         "painter": function (selector) {
             if (selector)
                 painter = _getCanvas2D(selector);
@@ -1487,16 +1482,16 @@ clay.svg.lineRuler = function () {
 
             return [
                 pageini.direction === 'vertical' ?
-                    'M' + (pageini.seat - rightWidth) + "," + (value - size / 2) +
+                    'M' + (pageini.seat - leftWidth) + "," + (value - size / 2) +
                     'L' + (pageini.seat + leftWidth) + "," + (value - size / 2) +
-                    'L' + (pageini.seat + leftWidth) + "," + (value + size / 2) +
+                    'L' + (pageini.seat + rightWidth) + "," + (value + size / 2) +
                     'L' + (pageini.seat - rightWidth) + "," + (value + size / 2) +
-                    'L' + (pageini.seat - rightWidth) + "," + (value - size / 2) :
-                    'M' + (value - size / 2) + "," + (pageini.seat - leftWidth) +
-                    'L' + (value + size / 2) + "," + (pageini.seat - leftWidth) +
-                    'L' + (value + size / 2) + "," + (pageini.seat + rightWidth) +
-                    'L' + (value - size / 2) + "," + (pageini.seat + rightWidth) +
-                    'L' + (value - size / 2) + "," + (pageini.seat - leftWidth), color];
+                    'L' + (pageini.seat - leftWidth) + "," + (value - size / 2) :
+                    'M' + (value - size / 2) + "," + (pageini.seat - rightWidth) +
+                    'L' + (value + size / 2) + "," + (pageini.seat - rightWidth) +
+                    'L' + (value + size / 2) + "," + (pageini.seat + leftWidth) +
+                    'L' + (value - size / 2) + "," + (pageini.seat + leftWidth) +
+                    'L' + (value - size / 2) + "," + (pageini.seat - rightWidth), color];
 
         });
 
@@ -1585,15 +1580,15 @@ clay.canvas.lineRuler = function (selector, config) {
 
                 // 绘制刻度
                 if (pageini.direction === 'vertical') {
-                    obj._painter.moveTo(pageini.seat - rightWidth, value - size / 2);
-                    obj._painter.lineTo(pageini.seat + leftWidth, value - size / 2);
-                    obj._painter.lineTo(pageini.seat + leftWidth, value + size / 2);
-                    obj._painter.lineTo(pageini.seat - rightWidth, value + size / 2);
+                    obj._painter.moveTo(pageini.seat - leftWidth, value - size / 2);
+                    obj._painter.lineTo(pageini.seat + rightWidth, value - size / 2);
+                    obj._painter.lineTo(pageini.seat + rightWidth, value + size / 2);
+                    obj._painter.lineTo(pageini.seat - leftWidth, value + size / 2);
                 } else {
-                    obj._painter.moveTo(value - size / 2, pageini.seat - leftWidth);
-                    obj._painter.lineTo(value + size / 2, pageini.seat - leftWidth);
-                    obj._painter.lineTo(value + size / 2, pageini.seat + rightWidth);
-                    obj._painter.lineTo(value - size / 2, pageini.seat + rightWidth);
+                    obj._painter.moveTo(value - size / 2, pageini.seat - rightWidth);
+                    obj._painter.lineTo(value + size / 2, pageini.seat - rightWidth);
+                    obj._painter.lineTo(value + size / 2, pageini.seat + leftWidth);
+                    obj._painter.lineTo(value - size / 2, pageini.seat + leftWidth);
                 }
 
                 obj._painter.closePath();
