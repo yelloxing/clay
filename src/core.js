@@ -51,6 +51,30 @@
 
     };
 
+    clay.prototype.extend = clay.extend = function () {
+
+        var target = arguments[0] || {},
+            source = arguments[1] || {},
+            length = arguments.length;
+
+        //如果只有一个参数，目标对象是自己
+        if (length === 1) {
+            source = target;
+            target = this;
+        }
+
+        //如果目标不是对象或函数，则初始化为空对象
+        if (typeof target !== "object" && typeof target !== 'function')
+            target = {};
+
+        for (var key in source) {
+            if (target[key]) console.warn('Extension may lead to coverage！');
+            target[key] = source[key];
+        }
+
+        return target;
+    };
+
     clay.prototype.init.prototype = clay.prototype;
 
     // @CODE build.js inserts compiled clay here

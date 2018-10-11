@@ -62,11 +62,6 @@ clay.canvas.layer = function (selector, width, height) {
             }
             return layer[index];
         },
-        "clearn": function () {
-            layer = {};
-            canvas = {};
-            return layerManager;
-        },
         "painter": function (selector) {
             if (selector)
                 painter = _getCanvas2D(selector);

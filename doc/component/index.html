@@ -14,6 +14,71 @@
             window.location.href = target;
         }
     </script>
+    <style>
+        body>section {
+            column-count: 4;
+        }
+
+        body>section>div>* {
+            font-size: .16rem;
+            display: block;
+            padding: .1rem;
+        }
+
+        body>section>div {
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+            border: 0px solid #ccc;
+            box-shadow: 0px 0px 1px #999;
+            margin-top: 2.5%;
+            margin-bottom: 2.5%;
+            background-color: #fff;
+        }
+
+        body>section>div .preview {
+            width: calc(100% - .2rem);
+        }
+
+        body>section>div .info {
+            line-height: .2rem;
+            text-overflow: ellipsis;
+            border-bottom: 1px solid #ccc;
+            color: #666;
+            font-size: .12rem;
+        }
+
+        body>section>div .type {
+            background: #f6f6f6;
+            height: .45rem;
+            background-image: url('../images/clay.png');
+            background-position-y: center;
+            background-position-x: .05rem;
+            background-repeat: no-repeat;
+            background-size: .35rem auto;
+            padding-left: .45rem;
+            line-height: .25rem;
+            font-size: .14rem;
+            color: #657d8a;
+        }
+
+        body>section>div .link {
+            background: #f6f6f6;
+            border-top: 1px dashed #ccc;
+            height: .45rem;
+            text-align: center;
+            line-height: .25rem;
+            font-size: 0;
+        }
+
+        body>section>div .link>a {
+            width: 50%;
+            display: inline-block;
+            font-size: .16rem;
+            color: #2196F3;
+            font-weight: 400;
+        }
+    </style>
 </head>
 
 <body>
@@ -41,7 +106,19 @@
         </a>
     </header>
     <section>
-
+        <div>
+            <img class='preview' src="./barPolar/preview.png">
+            <span class='info'>
+                鼠标悬浮提示的canvas旋转统计图
+            </span>
+            <span class='type' style='background-image:url("./authors/yelloxing.jpg");'>
+                yelloxing@gmail.com
+            </span>
+            <span class='link'>
+                <a href="./barPolar/index.html">浏览</a>
+                <a href="./barPolar/plug.js" download="clay.barPolar.js">下载</a>
+            </span>
+        </div>
     </section>
     <footer>
         心叶 &copy;2007-2018 走一步，再走一步
