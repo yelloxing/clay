@@ -115,13 +115,13 @@
                 line2 = $$('.data').find('line.line-2');
             $$.animation(function (deep) {
                 line0.attr('y2', function (num, index) {
-                    return 380 - data[index][0] / 500 * 300 * deep;
+                    return 360 - data[index][0] / 500 * 300 * deep;
                 });
                 line1.attr('y2', function (num, index) {
-                    return 380 - data[index][1] / 500 * 300 * deep;
+                    return 360 - data[index][1] / 500 * 300 * deep;
                 });
                 line2.attr('y2', function (num, index) {
-                    return 380 - data[index][2] / 500 * 300 * deep;
+                    return 360 - data[index][2] / 500 * 300 * deep;
                 });
             }, 700);
 
