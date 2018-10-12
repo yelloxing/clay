@@ -160,17 +160,18 @@
                     var showText = function (x, y, texts, num) {
                         x += 10;
                         y += 10;
-                        height = texts.length * 14 + 8;
-                        width = num * 14 + 8;
+                        height = texts.length * 16 + 8;
+                        width = num * 16;
                         painter_info.beginPath();
                         painter_info.rect(x, y, width, height);
                         painter_info.fill();
                         for (i = 0; i < texts.length; i++)
-                            painter_info.strokeText(texts[i], x + 4, y + i * 14 + 7 + 4);
+                            painter_info.strokeText(texts[i], x + 8, y + i * 16 + 7 + 4);
                     }
 
                     painter_info.textBaseline = 'middle';//上下居中
-                    painter_info.fillStyle = '#aaa';
+                    painter_info.fillStyle = 'rgba(120,120,120,.7)';
+                    painter_info.strokeStyle = 'rgb(250,250,250)';
                     _this.bind('mousemove', function (event) {
                         layer.clean(painter_info);
 
