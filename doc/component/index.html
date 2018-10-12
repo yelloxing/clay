@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../images/clay.png" type="image/x-png">
+    <title>clay - 实例</title>
+    <link rel="stylesheet" href="../easycss-1.2.1.min.css">
+    <link rel="stylesheet" href="../style.css">
+    <script>
+        function goto(target) {
+            window.location.href = target;
+        }
+    </script>
+    <style>
+        body>section {
+            column-count: 4;
+        }
+
+        body>section>div>* {
+            font-size: .16rem;
+            display: block;
+            padding: .1rem;
+        }
+
+        body>section>div {
+            display: inline-block;
+            vertical-align: middle;
+            cursor: pointer;
+            border: 0px solid #ccc;
+            box-shadow: 0px 0px 1px #999;
+            margin-top: 2.5%;
+            margin-bottom: 2.5%;
+            background-color: #fff;
+        }
+
+        body>section>div .preview {
+            width: calc(100% - .2rem);
+        }
+
+        body>section>div .info {
+            line-height: .2rem;
+            text-overflow: ellipsis;
+            border-bottom: 1px solid #ccc;
+            color: #666;
+            font-size: .12rem;
+        }
+
+        body>section>div .type {
+            background: #f6f6f6;
+            height: .45rem;
+            background-image: url('../images/clay.png');
+            background-position-y: center;
+            background-position-x: .05rem;
+            background-repeat: no-repeat;
+            background-size: .35rem auto;
+            padding-left: .45rem;
+            line-height: .25rem;
+            font-size: .14rem;
+            color: #657d8a;
+        }
+
+        body>section>div .link {
+            background: #f6f6f6;
+            border-top: 1px dashed #ccc;
+            height: .45rem;
+            text-align: center;
+            line-height: .25rem;
+            font-size: 0;
+        }
+
+        body>section>div .link>a {
+            width: 50%;
+            display: inline-block;
+            font-size: .16rem;
+            color: #2196F3;
+            font-weight: 400;
+        }
+    </style>
+</head>
+
+<body>
+    <header id='top'>
+        clay v1.2.4
+        <ul>
+            <li>
+                <a href="../index.html">首页</a>
+            </li>
+            <li>
+                <a href="../examples/index.html">实例</a>
+            </li>
+            <li>
+                <a href="./index.html" class='click'>组件库</a>
+            </li>
+            <li>
+                <a href="../apis/index.html">文档</a>
+            </li>
+            <li>
+                <a href="../aboutUs.html">加入我们</a>
+            </li>
+        </ul>
+        <a href="https://github.com/yelloxing/clay" class="github">
+            Fork me on GitHub
+        </a>
+    </header>
+    <section>
+        <div>
+            <img onclick='goto("./barPolar/index.html")' class='preview' src="./barPolar/preview.png">
+            <span class='info'>
+                鼠标悬浮提示的canvas旋转统计图
+            </span>
+            <span onclick='goto("https://github.com/yelloxing")' class='type' style='background-image:url("./authors/yelloxing.jpg");'>
+                yelloxing@gmail.com
+            </span>
+            <span class='link'>
+                <a href="./barPolar/index.html">浏览</a>
+                <a href="./barPolar/plug.js" download="clay.barPolar.js">下载</a>
+            </span>
+        </div>
+    </section>
+    <footer>
+        心叶 &copy;2007-2018 走一步，再走一步
+        <a href="#top">回到顶部</a>
+    </footer>
+</body>
+<script>
+    window.setTimeout(function () {
+        var target = /(#.*)/.exec(window.location.href + "");
+        if (target) window.location.href = target[1];
+    }, 200);
+</script>
+
+</html>

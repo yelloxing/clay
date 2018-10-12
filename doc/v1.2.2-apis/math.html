@@ -1,0 +1,104 @@
+<link rel="stylesheet" href="./style.css">
+<h2 id='mathematics'>
+    数学计算
+</h2>
+<p>
+    主要是针对比较麻烦的数学计算对外提供接口，为的是最大程度的不限制灵活度，即使所有的图形接口都无益于图形的绘制，依旧可以借助这里提供的计算方法大大提高开发效率。
+</p>
+<h3 id='mathematics-hermite'>
+    Hermite三次插值
+</h3>
+<pre class="code">
+var hermite=clay.math.hermite()
+//设置张弛系数,用于控制回归曲线是比较陡峭还是更平缓，应该在点的位置设置前设置
+.setU(-1)
+//设置点的位置，前四个参数代表二个点的位置，最后二个参数代表前二个点处的斜率
+.setP(-1,0,1,2,3,3);</pre>
+<p>
+    像这样子，返回的hermite就是对这二个点获得的插值函数。
+</p>
+<pre class="code">var y=hermite(0.5);//返回1.125</pre>
+<p>
+    上面返回的就是在x=0.5处插入的点y值应该是1.125。
+</p>
+<h3 id='mathematics-cardinal'>
+    Cardinal三次插值
+</h3>
+<pre class="code">
+var cardinal=clay.math.cardinal()
+//设置张弛系数
+.setU(1)
+//设置点的位置，参数格式：[[x,y],[x,y],...]，至少二个点
+.setP([[-1,0],[0,1],[1,2]]);</pre>
+<p>
+    根据多个点，获取一个插值函数。
+</p>
+<h3 id='mathematics-move'>
+    移动变换
+</h3>
+<pre class="code">
+var move=clay.math.move()
+//设置点最初的位置
+.setP(1,0)
+//设置移动方向
+.setD(1,1);</pre>
+<p>
+    上面获取的是一个把点（1，0）作为起点，沿着（1，1）方向移动的位移函数（移动方向可以随时改变）。
+</p>
+<pre class="code">var xy=move(1);// [1.7071067811865475, 0.7071067811865475, 0]</pre>
+<p>
+    这样就可以获取点移动距离1后的位置。
+</p>
+<span class="warn">
+    返回的值分别代表x,y,z的大小，因为变换系列（包括缩放和旋转）计算的是三维空间，不传递默认0，下同。
+</span>
+<p>
+    返回的move移动函数还支持第二个参数传入一个boolean值，表示是否把这次移动后位置标记为下次移动开始位置。
+</p>
+<pre class="code">var xy1f=move(1),xy2f=move(1);//xy1f=xy2f=[1.7071067811865475, 0.7071067811865475, 0];</pre>
+<pre class="code">var xy1t=move(1,true),xy2t=move(1);//xy1t!=xy2t,xy2t=[2.414213562373095, 1.414213562373095, 0];</pre>
+<h3 id='mathematics-scale'>
+    缩放变换
+</h3>
+<pre class="code">
+var scale=clay.math.scale()
+//设置缩放中心
+.setC(1,1)
+//设置点最初的位置
+.setP(0,0);
+    </pre>
+<p>
+    和移动类似返回一个缩放函数。
+</p>
+<pre class="code">var xy=scale(2);//[-1, -1, 0]</pre>
+<p>
+    同样的可以传递第二个boolean类型的参数，包括别的注意事项也都一样，不再赘述，下同。
+</p>
+<h3 id='mathematics-rotate'>
+    旋转变换
+</h3>
+<p>
+    旋转可能要复杂一点，无论是计算本身还是提供的接口，还是看一个例子（和前面二个整体类似，不再说明）：
+</p>
+<pre class="code">
+var rotate=clay.math.rotate()
+//设置点最初的位置
+.setP(1, 1, 1)
+//设置旋转射线：(a1,b1,c1)->(a2,b2,c2)
+.setL(1, 0, 1, 2, 1, 2);
+    </pre>
+<p>
+    同样的，返回了一个旋转函数。
+</p>
+<pre class="code">var xyz=rotate(Math.PI / 3 * 4);//[2, 0, 1]</pre>
+<p>
+    整体的调用方法还是和之前的一样，虽然这里的例子举的是三维的任意射线旋转。需要注意的是setL方法，一共分三种情况：
+</p>
+<ul class="inner">
+    <li>第一种:(x,y)，代表围绕二维平面上点（x,y）旋转，或说围绕射线(x,y,0)->(x,y,1)，三维总是支持的；</li>
+    <li>第二种:(x,y,z)，代表围绕射线(0,0,0)->(x,y,z)旋转；</li>
+    <li>第三种:(a1, b1, c1, a2, b2, c2)，代表围绕射线(a1,b1,c1)->(a2,b2,c2)旋转。</li>
+</ul>
+<p>
+    之所以提供不同的接口，虽然最后一种就可以解决使用问题，主要是考虑到调用的方便和后期效率改进。
+</p>

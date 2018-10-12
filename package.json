@@ -1,6 +1,6 @@
 {
   "name": "clay",
-  "version": "1.2.2",
+  "version": "1.2.4",
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
     "release": "node_modules/.bin/grunt release",

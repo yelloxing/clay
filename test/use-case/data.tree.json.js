@@ -62,7 +62,7 @@ window.treeData = {
             ]
         },
         {
-            "name": "dataAttr",
+            "name": "data1",
             "children": [
                 {
                     "name": "converters",
@@ -111,7 +111,7 @@ window.treeData = {
             ]
         },
         {
-            "name": "query",
+            "name": "querylibrary",
             "children": [
                 { "name": "AggregateExpression", "value": 1616 },
                 { "name": "And", "value": 1027 },
@@ -131,6 +131,43 @@ window.treeData = {
                 { "name": "Literal", "value": 1214 },
                 { "name": "Match", "value": 3748 },
                 { "name": "Maximum", "value": 843 },
+                {
+                    "name": "methods",
+                    "children": [
+                        { "name": "add", "value": 593 },
+                        { "name": "and", "value": 330 },
+                        { "name": "average", "value": 287 },
+                        { "name": "count", "value": 277 },
+                        { "name": "distinct", "value": 292 },
+                        { "name": "div", "value": 595 },
+                        { "name": "eq", "value": 594 },
+                        { "name": "fn", "value": 460 },
+                        { "name": "gt", "value": 603 },
+                        { "name": "gte", "value": 625 },
+                        { "name": "iff", "value": 748 },
+                        { "name": "isa", "value": 461 },
+                        { "name": "lt", "value": 597 },
+                        { "name": "lte", "value": 619 },
+                        { "name": "max", "value": 283 },
+                        { "name": "min", "value": 283 },
+                        { "name": "mod", "value": 591 },
+                        { "name": "mul", "value": 603 },
+                        { "name": "neq", "value": 599 },
+                        { "name": "not", "value": 386 },
+                        { "name": "or", "value": 323 },
+                        { "name": "orderby", "value": 307 },
+                        { "name": "range", "value": 772 },
+                        { "name": "select", "value": 296 },
+                        { "name": "stddev", "value": 363 },
+                        { "name": "sub", "value": 600 },
+                        { "name": "sum", "value": 280 },
+                        { "name": "update", "value": 307 },
+                        { "name": "variance", "value": 335 },
+                        { "name": "where", "value": 299 },
+                        { "name": "xor", "value": 354 },
+                        { "name": "-", "value": 264 }
+                    ]
+                },
                 { "name": "Minimum", "value": 843 },
                 { "name": "Not", "value": 1554 },
                 { "name": "Or", "value": 970 },
@@ -140,8 +177,7 @@ window.treeData = {
                 { "name": "Sum", "value": 791 },
                 { "name": "Variable", "value": 1124 },
                 { "name": "Variance", "value": 1876 },
-                { "name": "Xor", "value": 1101 },
-                { "name": "methods" }
+                { "name": "Xor", "value": 1101 }
             ]
         },
         {
@@ -234,7 +270,7 @@ window.treeData = {
                     ]
                 },
                 {
-                    "name": "dataType",
+                    "name": "data",
                     "children": [
                         { "name": "Data", "value": 20544 },
                         { "name": "DataList", "value": 19788 },
@@ -310,7 +346,6 @@ window.treeData = {
                                 { "name": "StackedAreaLabeler", "value": 3202 }
                             ]
                         },
-                        { "name": "layout", "value": 1000 },
                         { "name": "Operator", "value": 2490 },
                         { "name": "OperatorList", "value": 5248 },
                         { "name": "OperatorSequence", "value": 4190 },
@@ -321,5 +356,26 @@ window.treeData = {
                 { "name": "Visualization", "value": 16540 }
             ]
         }
+    ]
+};
+
+window.addTreeData = {
+    "name": "layout",
+    "children": [
+        { "name": "AxisLayout", "value": 6725 },
+        { "name": "BundledEdgeRouter", "value": 3727 },
+        { "name": "CircleLayout", "value": 9317 },
+        { "name": "CirclePackingLayout", "value": 12003 },
+        { "name": "DendrogramLayout", "value": 4853 },
+        { "name": "ForceDirectedLayout", "value": 8411 },
+        { "name": "IcicleTreeLayout", "value": 4864 },
+        { "name": "IndentedTreeLayout", "value": 3174 },
+        { "name": "Layout", "value": 7881 },
+        { "name": "NodeLinkTreeLayout", "value": 12870 },
+        { "name": "PieLayout", "value": 2728 },
+        { "name": "RadialTreeLayout", "value": 12348 },
+        { "name": "RandomLayout", "value": 870 },
+        { "name": "StackedAreaLayout", "value": 9121 },
+        { "name": "TreeMapLayout", "value": 9191 }
     ]
 };

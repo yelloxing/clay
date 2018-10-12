@@ -14,17 +14,32 @@
             window.location.href = target;
         }
     </script>
+    <style>
+        body>section {
+            font-size: 0;
+        }
+
+        body>section>img {
+            display: inline-block;
+            width: 33.333333%;
+            vertical-align: middle;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
     <header id='top'>
-        clay v1.2.2
+        clay v1.2.4
         <ul>
             <li>
                 <a href="../index.html">首页</a>
             </li>
             <li>
                 <a href="./index.html" class='click'>实例</a>
+            </li>
+            <li>
+                <a href="../component/index.html">组件库</a>
             </li>
             <li>
                 <a href="../apis/index.html">文档</a>
@@ -38,7 +53,13 @@
         </a>
     </header>
     <section>
-
+        <img onclick='goto("../../test/use-case/Bar-graph.html")' src="./Bar-graph.png" alt="条形图">
+        <img onclick='goto("../../test/use-case/china-map.html")' src="./china-map.png" alt="中国地图">
+        <img onclick='goto("../../test/use-case/curve-graph.html")' src="./curve-graph.png" alt="曲线图">
+        <img onclick='goto("../../test/use-case/gauge-car.html")' src="./gauge-car.png" alt="汽车仪表盘">
+        <img onclick='goto("../../test/use-case/tree-layer.html")' src="./tree-layer.png" alt="树图">
+        <img onclick='goto("../../test/use-case/life.html")' src="./life.png" alt="生物关系图">
+        <img onclick='goto("../../test/use-case/energy.html")' src="./energy.png" alt="关系图">
     </section>
     <footer>
         心叶 &copy;2007-2018 走一步，再走一步

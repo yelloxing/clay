@@ -22,7 +22,8 @@ var source = [
     './src/math/transform3D/move.js',
     './src/math/transform3D/scale.js',
 
-    // 物理计算
+    // 映射计算
+    './src/scale/map.js',
 
     // 布局
     './src/layout/tree.js',
@@ -30,14 +31,17 @@ var source = [
     // 图形对象
     './src/painter/canvas.js',
     './src/painter/arc.js',
+    './src/painter/ruler.js',
 
     // svg绘图
     './src/painter/svg/arc.js',
+    './src/painter/svg/arcRuler.js',
+    './src/painter/svg/lineRuler.js',
 
     // Canvas2D绘图
     './src/painter/canvas/arc.js',
-
-    // WebGL3D绘图
+    './src/painter/canvas/arcRuler.js',
+    './src/painter/canvas/lineRuler.js'
 
 ];
 

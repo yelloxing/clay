@@ -5,14 +5,14 @@
 * 
 * author 心叶
 *
-* version 1.2.2
+* version 1.2.4
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 03 2018 22:36:21 GMT+0800 (GMT+08:00)
+* Date:Thu Oct 11 2018 23:05:35 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -30,26 +30,26 @@
 
     var clay = function (selector, context) {
         return new clay.prototype.init(selector, context);
-    };
+    }, __isLoad__;
 
     clay.prototype.init = function (selector, context) {
 
         if (typeof selector === 'function') {
-            if (clay.__isLoad__) {
+            if (__isLoad__) {
                 selector();
             } else {
                 if (document.addEventListener) {//Mozilla, Opera and webkit
                     document.addEventListener("DOMContentLoaded", function doListenter() {
                         document.removeEventListener("DOMContentLoaded", doListenter, false);
                         selector();
-                        clay.__isLoad__ = true;
+                        __isLoad__ = true;
                     });
                 } else if (document.attachEvent) {//IE
                     document.attachEvent("onreadystatechange", function doListenter() {
                         if (document.readyState === "complete") {
                             document.detachEvent("onreadystatechange", doListenter);
                             selector();
-                            clay.__isLoad__ = true;
+                            __isLoad__ = true;
                         }
                     });
                 }
@@ -60,11 +60,35 @@
             for (flag = 0; flag < nodes.length; flag++) {
                 this[flag] = nodes[flag];
             }
-            this.selector=selector;
+            this.selector = selector;
             this.length = nodes.length;
         }
         return this;
 
+    };
+
+    clay.prototype.extend = clay.extend = function () {
+
+        var target = arguments[0] || {},
+            source = arguments[1] || {},
+            length = arguments.length;
+
+        //如果只有一个参数，目标对象是自己
+        if (length === 1) {
+            source = target;
+            target = this;
+        }
+
+        //如果目标不是对象或函数，则初始化为空对象
+        if (typeof target !== "object" && typeof target !== 'function')
+            target = {};
+
+        for (var key in source) {
+            if (target[key]) console.warn('Extension may lead to coverage！');
+            target[key] = source[key];
+        }
+
+        return target;
     };
 
     clay.prototype.init.prototype = clay.prototype;
@@ -86,20 +110,21 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、比例尺、绘图方案svg+canvas+webgl、布局
+// 数学计算、映射计算、绘图方案svg+canvas、布局
 clay.math = {};
 clay.scale = {};
-clay.svg = {}; clay.canvas = {}; clay.webgl = {};
+clay.svg = {}; clay.canvas = {};
 clay.layout = {};
 
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
 
-// 库仑常数、引力常数
-var _physics = {
-    K: 8988000000,
-    G: 0.00000000667
-};
+var _Geography = [
+    // 地球
+    {
+        R: 6317000// 半径
+    }
+];
 
 // 负责查找结点
 function _sizzle(selector, context) {
@@ -469,88 +494,88 @@ clay.prototype.position = function (event) {
 };
 
 var _clock = {
-	//当前正在运动的动画的tick函数堆栈
-	timers: [],
-	//唯一定时器的定时间隔
-	interval: 13,
-	//指定了动画时长duration默认值
-	speeds: 400,
-	//定时器ID
-	timerId: null
+    //当前正在运动的动画的tick函数堆栈
+    timers: [],
+    //唯一定时器的定时间隔
+    interval: 13,
+    //指定了动画时长duration默认值
+    speeds: 400,
+    //定时器ID
+    timerId: null
 };
 
 // 提供间隔执行方法
 clay.animation = function (doback, duration, callback) {
-	_clock.timer(function (deep) {
-		//其中deep为0-1，表示改变的程度
-		doback(deep);
-	}, duration, callback);
+    _clock.timer(function (deep) {
+        //其中deep为0-1，表示改变的程度
+        doback(deep);
+    }, duration, callback);
 };
 
 //把tick函数推入堆栈
 _clock.timer = function (tick, duration, callback) {
-	if (typeof tick !== 'function') {
-		throw new Error('tick is required!');
-	}
-	duration = typeof duration === 'number' ? duration : _clock.speeds;
-	if (duration < 0) duration = -duration;
-	_clock.timers.push({
-		"createTime": new Date(),
-		"tick": tick,
-		"duration": duration,
-		"callback": callback
-	});
-	_clock.start();
+    if (typeof tick !== 'function') {
+        throw new Error('tick is required!');
+    }
+    duration = typeof duration === 'number' ? duration : _clock.speeds;
+    if (duration < 0) duration = -duration;
+    _clock.timers.push({
+        "createTime": new Date(),
+        "tick": tick,
+        "duration": duration,
+        "callback": callback
+    });
+    _clock.start();
 };
 
 //开启唯一的定时器timerId
 _clock.start = function () {
-	if (!_clock.timerId) {
-		_clock.timerId = setInterval(_clock.tick, _clock.interval);
-	}
+    if (!_clock.timerId) {
+        _clock.timerId = setInterval(_clock.tick, _clock.interval);
+    }
 };
 
 //被定时器调用，遍历timers堆栈
 _clock.tick = function () {
-	var createTime, flag, tick, callback, timer, duration, passTime, needStop, deep,
-		timers = _clock.timers;
-	_clock.timers = [];
-	_clock.timers.length = 0;
-	for (flag = 0; flag < timers.length; flag++) {
-		//初始化数据
-		timer = timers[flag];
-		createTime = timer.createTime;
-		tick = timer.tick;
-		duration = timer.duration;
-		callback = timer.callback;
-		needStop = false;
+    var createTime, flag, tick, callback, timer, duration, passTime, needStop, deep,
+        timers = _clock.timers;
+    _clock.timers = [];
+    _clock.timers.length = 0;
+    for (flag = 0; flag < timers.length; flag++) {
+        //初始化数据
+        timer = timers[flag];
+        createTime = timer.createTime;
+        tick = timer.tick;
+        duration = timer.duration;
+        callback = timer.callback;
+        needStop = false;
 
-		//执行
-		passTime = (+new Date() - createTime) / duration;
-		if (passTime >= 1) {
-			needStop = true;
-		}
-		passTime = passTime > 1 ? 1 : passTime;
-		deep = passTime;
-		tick(deep);
-		if (passTime < 1) {
-			//动画没有结束再添加
-			_clock.timers.push(timer);
-		} else if (callback) {
-			callback();
-		}
-	}
-	if (_clock.timers.length <= 0) {
-		_clock.stop();
-	}
+        //执行
+        passTime = (+new Date() - createTime) / duration;
+        if (passTime >= 1) {
+            needStop = true;
+        }
+        passTime = passTime > 1 ? 1 : passTime;
+        deep = passTime;
+        tick(deep);
+        if (passTime < 1) {
+            //动画没有结束再添加
+            _clock.timers.push(timer);
+        } else if (callback) {
+            callback();
+        }
+    }
+    if (_clock.timers.length <= 0) {
+        _clock.stop();
+    }
 };
 
 //停止定时器，重置timerId=null
 _clock.stop = function () {
-	if (_clock.timerId) {
-		clearInterval(_clock.timerId);
-		_clock.timerId = null;
-	}
+    if (_clock.timerId) {
+        clearInterval(_clock.timerId);
+        _clock.timerId = null;
+    }
 };
 
 // 把颜色统一转变成rgba(x,x,x,x)格式
@@ -612,10 +637,9 @@ clay.min = function (array, valback) {
 
 // 给一组数据，轮询执行一遍
 clay.loop = function (datas, callback) {
-
     var flag = 0, data;
     for (data in datas) {
-        callback(datas[flag], flag);
+        callback(datas[data], flag, data);
         flag += 1;
     }
     return clay;
@@ -949,6 +973,216 @@ clay.math.scale = function () {
 
 };
 
+// 目前不考虑太多，先提供这一种投影方式
+// 别的后期再说
+
+// 假定了地球是小圆球
+
+/**
+ * 确定中心点以后，
+ * 旋转地球，使得中心点作为最高点，
+ * 然后垂直纸面的视线
+ */
+
+clay.scale.map = function () {
+
+    var scope = {
+        c: [107, 36],
+        // 缩放比例，默认缩小一万倍
+        s: 10000
+    };
+
+    var rotate_z = clay.math.rotate().setL(0, 0, 0, 0, 0, 1);
+    var rotate_x = clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
+    var rotate_y = clay.math.rotate().setL(0, 1, 0, 0, 0, 0);
+
+    // 计算出来的位置是偏离中心点的距离
+    var map = function (longitude, latitude) {
+
+        var p = rotate_y.setP(_Geography[0].R / scope.s, 0, 0)(latitude / 180 * Math.PI);
+        p = rotate_z.setP(p[0], p[1], p[2])(longitude / 180 * Math.PI);
+        p = rotate_z.setP(p[0], p[1], p[2])((90 - scope.c[0]) / 180 * Math.PI);
+        p = rotate_x.setP(p[0], p[1], p[2])((90 - scope.c[1]) / 180 * Math.PI);
+
+        return [
+            -p[0],
+            p[1]
+        ];
+
+    };
+
+    map.scale = function (scale) {
+        if (typeof scale === 'number') scope.s = scale;
+        else return scope.s;
+        return map;
+    };
+
+    map.center = function (longitude, latitude) {
+        if (typeof longitude === 'number' && typeof latitude === 'number') scope.c = [longitude, latitude];
+        else return scope.c;
+        return map;
+    };
+
+    return map;
+
+};
+
+clay.layout.tree = function () {
+
+    var scope = {
+        "e": {}
+    },
+        // 维护的树
+        alltreedata,
+        // 根结点ID
+        rootid,
+
+        update = function () {
+
+            var beforeDis = [], size = 0;
+            (function positionCalc(pNode, deep) {
+
+                var flag;
+                for (flag = 0; flag < pNode.children.length; flag++)
+                    positionCalc(alltreedata[pNode.children[flag]], deep + 1);
+
+                alltreedata[pNode.id].left = deep + 0.5;
+                if (flag == 0) {
+
+                    // 如果是叶子结点
+                    if (beforeDis[deep] == undefined) beforeDis[deep] = -0.5;
+                    if (beforeDis[deep - 1] == undefined) beforeDis[deep - 1] = -0.5;
+                    alltreedata[pNode.id].top = beforeDis[deep] + 1;
+                    var pTop = beforeDis[deep] + 1 + (alltreedata[pNode.pid].children.length - 1) * 0.5;
+                    if (pTop - 1 < beforeDis[deep - 1])
+                        // 必须保证父亲结点和父亲的前一个兄弟保存1的距离，至少
+                        alltreedata[pNode.id].top = beforeDis[deep - 1] + 1 - (alltreedata[pNode.pid].children.length - 1) * 0.5;
+
+                } else {
+                    alltreedata[pNode.id].top = (alltreedata[pNode.children[0]].top + alltreedata[pNode.children[flag - 1]].top) * 0.5;
+                }
+                beforeDis[deep] = alltreedata[pNode.id].top;
+                if (alltreedata[pNode.id].top + 0.5 > size) size = alltreedata[pNode.id].top + 0.5;
+
+            })(alltreedata[rootid], 0);
+
+            // 画图
+            scope.e.drawer(alltreedata, rootid, size);
+
+        };
+
+    var toInnerTree = function (initTree) {
+
+        var tempTree = {};
+        // 根结点
+        var temp = scope.e.root(initTree), id, rid;
+        id = rid = scope.e.id(temp);
+        tempTree[id] = {
+            "data": temp,
+            "pid": null,
+            "id": id,
+            "children": [],
+            "show": true
+        };
+        // 根据传递的原始数据，生成内部统一结构
+        (function createTree(pdata, pid) {
+            var children = scope.e.child(pdata, initTree), flag;
+            for (flag = 0; children && flag < children.length; flag++) {
+                id = scope.e.id(children[flag]);
+                tempTree[pid].children.push(id);
+                tempTree[id] = {
+                    "data": children[flag],
+                    "pid": pid,
+                    "id": id,
+                    "children": [],
+                    "show": true
+                };
+                createTree(children[flag], id);
+            }
+        })(temp, id);
+
+        return [rid, tempTree];
+    };
+
+    // 可以传递任意格式的树原始数据
+    // 只要配置对应的解析方法即可
+    var tree = function (initTree) {
+
+        var treeData = toInnerTree(initTree);
+        alltreedata = treeData[1];
+        rootid = treeData[0];
+        update();
+        return tree;
+
+    };
+
+    // 挂载处理事件
+    // 获取根结点的方法:root(initTree)
+    // 获取子结点的方法:child(parentTree,initTree)
+    // 获取结点ID方法:id(treedata)
+    // 结点更新处理方法 drawer(alltreedata, rootid, size)
+    tree.bind = function (backname, callback, moreback) {
+        scope.e[backname] = callback;
+        return tree;
+    };
+
+    // 第三个参数为true的时候不会自动更新
+    tree.add = function (pid, newnodes, notUpdate) {
+
+        var treeData = toInnerTree(newnodes), id;
+        treeData[1][treeData[0]].pid = pid;
+        alltreedata[pid].children.push(treeData[0]);
+        for (id in treeData[1])
+            alltreedata[id] = treeData[1][id];
+        if (!notUpdate) update();
+        return tree;
+
+    };
+    tree.delete = function (id, notUpdate) {
+
+        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
+        if (index > -1)
+            alltreedata[alltreedata[id].pid].children.splice(index, 1);
+
+        // 删除多余结点
+        (function deleteNode(pid) {
+            var flag;
+            for (flag = 0; flag < alltreedata[pid].children.length; flag++) {
+                deleteNode(alltreedata[alltreedata[pid].children[flag]].id);
+            }
+            delete alltreedata[pid];
+        })(id);
+
+        if (!notUpdate) update();
+        return tree;
+
+    };
+
+    // 控制结点显示还是隐藏
+    // flag可选，"show"：显示，"hidden"：隐藏，不传递就是切换
+    tree.toggle = function (id, notUpdate, flag) {
+
+        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
+        if (index > -1 && flag != 'show') {
+            alltreedata[alltreedata[id].pid].children.splice(index, 1);
+            alltreedata[id]._index = index;
+        }
+        else if (flag != 'hidden')
+            alltreedata[alltreedata[id].pid].children.splice(alltreedata[id]._index, 0, id);
+        if (!notUpdate) update();
+        return tree;
+
+    };
+
+    tree.update = function () {
+
+        update();
+        return tree;
+    };
+
+    return tree;
+
+};
 
 // 获取canvas2D对象
 function _getCanvas2D(selector) {
@@ -1013,11 +1247,6 @@ clay.canvas.layer = function (selector, width, height) {
                 layer[index] = canvas[canvas.length - 1].getContext('2d');
             }
             return layer[index];
-        },
-        "clearn": function () {
-            layer = {};
-            canvas = {};
-            return layerManager;
         },
         "painter": function (selector) {
             if (selector)
@@ -1116,6 +1345,81 @@ var _arc = function (painter) {
 
 };
 
+// 2D刻度尺
+var _ruler = function (painter) {
+
+    var scope = {
+        // 间距个数
+        'n': 1,
+        // 前进方向左侧刻度长度和右侧长度、粗度
+        'small': [0, 0, 1],
+        'big': [0, 0, 2],
+        'color': '#000'
+    };
+
+    var ruler = function (begin, end) {
+
+        var flag, dis = (end - begin) / scope.n, tempResult = [];
+        for (flag = begin; (dis > 0 && flag <= end) || (dis < 0 && flag >= end); flag += dis) {
+            // 大刻度
+            tempResult.push(painter(flag, scope.big[0], scope.big[1], scope.big[2], typeof scope.color == 'function' ? scope.color(flag) : scope.color, scope));
+            if (flag + dis / 5 * 4 < end) {
+
+                // 小刻度
+                tempResult.push(painter(flag + dis / 5, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 2, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 2) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 3, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 3) : scope.color, scope));
+                tempResult.push(painter(flag + dis / 5 * 4, scope.small[0], scope.small[1], scope.small[2], typeof scope.color == 'function' ? scope.color(flag + dis / 5 * 4) : scope.color, scope));
+            }
+        }
+        return tempResult;
+
+    };
+
+    // set={
+
+    // 【公共参数】
+    //     "smallLeft":number
+    //     "smallRight":number
+    //     "smallSize":number
+    //     "bigLeft":number
+    //     "bigRight":number
+    //     "bigSize":number
+    //     "color":string/function
+    //     "num":number
+
+    // 【扇形刻度尺特有参数】
+    //     "cx":number,
+    //     "cy":number,
+    //     "radius":number,
+
+    //  【直线刻度尺特有参数】
+    //     "direction":"horizontal|vertical",缺省水平的
+    //     "seat":number
+
+    // }
+    ruler.set = function (config) {
+
+        if (typeof config.smallLeft === 'number') scope.small[0] = config.smallLeft;
+        if (typeof config.smallRight === 'number') scope.small[1] = config.smallRight;
+        if (typeof config.smallSize === 'number') scope.small[2] = config.smallSize;
+        if (typeof config.bigLeft === 'number') scope.big[0] = config.bigLeft;
+        if (typeof config.bigRight === 'number') scope.big[1] = config.bigRight;
+        if (typeof config.bigSize === 'number') scope.big[2] = config.bigSize;
+        if (typeof config.color === 'string' || typeof config.color === 'function') scope.color = config.color;
+        if (typeof config.num === 'number') scope.n = config.num;
+        if (typeof config.cx === 'number') scope.cx = config.cx;
+        if (typeof config.cy === 'number') scope.cy = config.cy;
+        if (typeof config.radius === 'number') scope.radius = config.radius;
+        if (typeof config.seat === 'number') scope.seat = config.seat;
+        if (config.direction === 'horizontal' || config.direction === 'vertical') scope.direction = config.direction;
+        return ruler;
+    };
+
+    return ruler;
+
+};
+
 clay.svg.arc = function () {
 
     return _arc(
@@ -1142,6 +1446,52 @@ clay.svg.arc = function () {
             d += "L" + begInnerX + " " + begInnerY;
 
             return d;
+
+        });
+
+};
+
+clay.svg.arcRuler = function () {
+
+    return _ruler(
+        function (
+            value,
+            leftWidth, rightWidth, size,
+            color,
+            pageini
+        ) {
+
+            return [
+                clay.svg.arc()
+                    .setCenter(pageini.cx, pageini.cy)
+                    (value - size / 2, size, pageini.radius - rightWidth, pageini.radius + leftWidth), color];
+
+        });
+
+};
+
+clay.svg.lineRuler = function () {
+
+    return _ruler(
+        function (
+            value,
+            leftWidth, rightWidth, size,
+            color,
+            pageini
+        ) {
+
+            return [
+                pageini.direction === 'vertical' ?
+                    'M' + (pageini.seat - leftWidth) + "," + (value - size / 2) +
+                    'L' + (pageini.seat + leftWidth) + "," + (value - size / 2) +
+                    'L' + (pageini.seat + rightWidth) + "," + (value + size / 2) +
+                    'L' + (pageini.seat - rightWidth) + "," + (value + size / 2) +
+                    'L' + (pageini.seat - leftWidth) + "," + (value - size / 2) :
+                    'M' + (value - size / 2) + "," + (pageini.seat - rightWidth) +
+                    'L' + (value + size / 2) + "," + (pageini.seat - rightWidth) +
+                    'L' + (value + size / 2) + "," + (pageini.seat + leftWidth) +
+                    'L' + (value - size / 2) + "," + (pageini.seat + leftWidth) +
+                    'L' + (value - size / 2) + "," + (pageini.seat - rightWidth), color];
 
         });
 
@@ -1183,12 +1533,81 @@ clay.canvas.arc = function (selector, config) {
 
 };
 
+clay.canvas.arcRuler = function (selector, config) {
 
-    clay.__isLoad__ = false;
+    var key,
+        obj =
+            _canvas(selector, config, _ruler, function (
+                value,
+                leftWidth, rightWidth, size,
+                color,
+                pageini
+            ) {
+                obj._painter.beginPath();
+                for (key in obj._config)
+                    obj._painter[key] = obj._config[key];
+
+                // 绘制刻度
+                clay.canvas.arc(obj._painter, {
+                    'fillStyle': color
+                })
+                    .setCenter(pageini.cx, pageini.cy)
+                    (value - size / 2, size, pageini.radius - rightWidth, pageini.radius + leftWidth);
+
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
+
+clay.canvas.lineRuler = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _ruler, function (
+                value,
+                leftWidth, rightWidth, size,
+                color,
+                pageini
+            ) {
+                obj._painter.beginPath();
+                for (key in obj._config)
+                    obj._painter[key] = obj._config[key];
+
+                obj._painter.fillStyle = color;
+
+                // 绘制刻度
+                if (pageini.direction === 'vertical') {
+                    obj._painter.moveTo(pageini.seat - leftWidth, value - size / 2);
+                    obj._painter.lineTo(pageini.seat + rightWidth, value - size / 2);
+                    obj._painter.lineTo(pageini.seat + rightWidth, value + size / 2);
+                    obj._painter.lineTo(pageini.seat - leftWidth, value + size / 2);
+                } else {
+                    obj._painter.moveTo(value - size / 2, pageini.seat - rightWidth);
+                    obj._painter.lineTo(value + size / 2, pageini.seat - rightWidth);
+                    obj._painter.lineTo(value + size / 2, pageini.seat + leftWidth);
+                    obj._painter.lineTo(value - size / 2, pageini.seat + leftWidth);
+                }
+
+                obj._painter.closePath();
+                obj._painter.fill();
+
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
+
+
+    __isLoad__ = false;
 
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.2.2';
+    clay.version = '1.2.4';
 
     global.clay = global.$$ = clay;
 
