@@ -17,10 +17,11 @@
                 "direction": config.direction ? 1 : -1,
                 "max": 0,
                 "during": config.during || 1000,
-                "text": config.text,
+                "text": [],
+                "textMaxChart": [],
                 "valColor": config.valColor || "#b2453e",
                 "averageColor": config.averageColor || "#334553"
-            }, i, j;
+            }, i, j, k, temp;
 
             // 求值
             for (i in config.vals) {
@@ -30,6 +31,17 @@
                     "max": j,
                     "average": config.average(config.vals[i])
                 });
+                if (config.text) {
+                    data.textMaxChart[i] = 0;
+                    data.text.push(config.text(config.vals[i], config.keys[i]));
+                    for (k = 0; k < data.text[i].length; k++) {
+                        temp = data.text[i][k].replace(/[\u0391-\uFFE5]/g, "aa").length / 2;
+                        if (temp > data.textMaxChart[i]) {
+                            data.textMaxChart[i] = temp;
+                        }
+                    }
+                }
+
                 if (j > data.max) data.max = j;
             }
 
@@ -110,7 +122,7 @@
             }).setCenter(data.cx, data.cy);
 
             deg = deg * .8;
-            var _this = this;
+            var _this = this, cos1, cos2, sin1, sin2;
             clay.animation(function (deep) {
                 layer.clean(painter_arc);
                 for (i = 0; i < data.vals.length; i++) {
@@ -127,23 +139,62 @@
                 for (i = 0; i < data.vals.length; i++) {
                     painter_average.beginPath();
                     arc(data.vals[i].deg - deg / 2, deg, data.vals[i].averageR - 2, data.vals[i].averageR + 2);
+
+                    // 记录边界sin和cos值
+                    cos1 = Math.cos(data.vals[i].deg - deg / 2);
+                    cos2 = Math.cos(data.vals[i].deg - deg / 2 + deg);
+                    sin1 = Math.sin(data.vals[i].deg - deg / 2);
+                    sin2 = Math.sin(data.vals[i].deg - deg / 2 + deg);
+                    if (cos1 > cos2) {
+                        data.vals[i].cos1 = cos2; data.vals[i].cos2 = cos1;
+                    } else { data.vals[i].cos1 = cos1; data.vals[i].cos2 = cos2; }
+                    if (sin1 > sin2) {
+                        data.vals[i].sin1 = sin2; data.vals[i].sin2 = sin1;
+                    } else { data.vals[i].sin1 = sin1; data.vals[i].sin2 = sin2; }
                 }
                 layer.update();
 
                 if (data.text) {
-                    var pos, width, height;
-                    // 获取字符长度，单位是一个汉字
-                    var length = function (str) {
-                        return str.replace(/[\u0391-\uFFE5]/g, "aa").length / 2;
-                    };
+                    var pos, width, height, d2, cos, sin;
+
+                    var showText = function (x, y, texts, num) {
+                        x += 10;
+                        y += 10;
+                        height = texts.length * 14 + 8;
+                        width = num * 14 + 8;
+                        painter_info.beginPath();
+                        painter_info.rect(x, y, width, height);
+                        painter_info.fill();
+                        for (i = 0; i < texts.length; i++)
+                            painter_info.strokeText(texts[i], x + 4, y + i * 14 + 7 + 4);
+                    }
+
+                    painter_info.textBaseline = 'middle';//上下居中
+                    painter_info.fillStyle = '#aaa';
                     _this.bind('mousemove', function (event) {
                         layer.clean(painter_info);
 
                         event = event || window.event;
-                        var pos = _this.position(event);
+                        pos = _this.position(event);
 
-                        // 等图形位置是否包含开发结束后添加
-                        console.log(pos.x - 350, pos.y - 350);
+                        d2 = Math.sqrt((pos.x - data.cx) * (pos.x - data.cx) + (pos.y - data.cy) * (pos.y - data.cy));
+                        cos = (pos.x - data.cx) / d2;
+                        sin = (pos.y - data.cy) / d2;
+
+                        for (i = 0; i < data.vals.length; i++) {
+
+                            if (
+                                data.vals[i].cos1 <= cos && cos <= data.vals[i].cos2 &&
+                                data.vals[i].sin1 <= sin && sin <= data.vals[i].sin2
+                            ) {
+                                if (d2 >= data.vals[i].minR && d2 <= data.vals[i].maxR) {
+                                    showText(pos.x, pos.y, data.text[i], data.textMaxChart[i]);
+                                    _this.css('cursor', 'pointer');
+                                }
+                                break
+                            }
+                            _this.css('cursor', 'auto');
+                        }
 
                         layer.update();
                     });
