@@ -40,6 +40,14 @@ arc(Math.PI / 4, Math.PI / 2 * 3, 100, 200);</pre>
 <p>
     因为最终还是要显示在canvas2D上，最后要调用这个方法刷新。
 </p>
+<pre class="code">layer.clean(painter1);</pre>
+<p>
+    调用该方法会清除传入的图层里面的图案。
+</p>
+<pre class="code">layer.painter()</pre>
+<p>
+    可以传递一个可选参数，用于设置最终绘制的画布，不传递表示获取设置的画布的2D对象。
+</p>
 <h3 id="canvas2d-ruler">
     刻度尺
 </h3>
