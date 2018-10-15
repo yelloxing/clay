@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Oct 12 2018 14:07:57 GMT+0800 (中国标准时间)
+* Date:Mon Oct 15 2018 18:59:56 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -594,7 +594,7 @@ clay.getColors = function (num) {
 
         var temp = [], flag = 0;
         for (flag = 1; flag <= num; flag++)
-            temp.push('rgb(' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ')');
+            temp.push('rgb(' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ')');
         return temp;
 
     } else {
