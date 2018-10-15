@@ -90,6 +90,7 @@
                     rgba = pen.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
                     k = colorsJSON["rgb(" + rgba[0] + "," + rgba[1] + "," + rgba[2] + ")"];
                     if (k != undefined) {
+                        _this.css('cursor', 'pointer');
                         temp = config.text(config.geoJSON.features[k]);
                         len = 0;
                         for (j = 0; j < temp.length; j++) {
@@ -99,6 +100,8 @@
                         }
                         // 调用方法绘制提示信息
                         showText(pos.x, pos.y, temp, len);
+                    } else {
+                        _this.css('cursor', 'auto');
                     }
 
                     layer.update();
