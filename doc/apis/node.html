@@ -120,3 +120,18 @@ $$('footer').css({
 <p>
     过滤出来多于数据的结点部分返回。
 </p>
+<h3 id='node-event'>
+    事件绑定
+</h3>
+<p>
+    由于此处整体设计还在构思中，目前只包括绑定和解除绑定，包括一些计算方法。
+</p>
+<pre class="code">clay('body').bind(eventType, callback);
+clay('body').unbind(eventType, callback);</pre>
+<p>
+    上面分别是绑定和解除绑定的方法。
+</p>
+<pre class="code">clay('body').position(event);</pre>
+<p>
+    选择的结点调用position方法会获取鼠标相对该元素左上角的位置。
+</p>
