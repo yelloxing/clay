@@ -11,6 +11,10 @@ var source = [
     './src/node/data.js',
     './src/node/event.js',
 
+    // 区域
+    './src/region/modify.js',
+    './src/region/index.js',
+
     // 工具
     './src/tool/animation.js',
     './src/tool/calc.js',
