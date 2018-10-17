@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../images/clay.png" type="image/x-png">
+    <title>caly · mapData</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="../../../build/clay-1.2.4.js"></script>
+    <script src="./plug.js"></script>
+    <script src="../../../data/geoJSON/china.json.js"></script>
+    <script>
+        function goto(target) {
+            window.location.href = target;
+        }
+    </script>
+    <script>
+
+        $$(function () {
+
+            $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+                .appendTo('.content')
+                .attr('width', '1000')
+                .attr('height', '600')
+
+                // 调用插件绘图
+                .mapData({
+                    "geoJSON": chinaMapData,
+                    "text": (item) => ["名称：" + item.properties.name, "编号：" + item.properties.id],
+                    // 中心经纬度
+                    "longitude": 107,
+                    "latitude": 36,
+                    // 缩放比例
+                    "s": 7000,
+                    "cx": 500,
+                    "cy": 300,
+                    // 唯一标识
+                    "id": (item) => item.properties.id,
+                    // 显示名称
+                    "name": (item) => item.properties.name,
+                    // 名称显示坐标
+                    "center": (item) => item.properties.cp
+                });
+
+        });
+
+    </script>
+</head>
+
+<body>
+    <img src="../authors/paper520.jpg" alt="小拳头" onclick='goto("https://github.com/paper520")'>
+    <section class='content'></section>
+    <div class="btn-list">
+        <a href="../index.html">组件首页</a>
+        <a href="../../../build/clay-1.2.4.min.js" download="clay-1.2.4.min.js">库下载</a>
+        <a href="./plug.js" download="clay-mapData.js">组件下载</a>
+    </div>
+    <pre class='code'>
+$$('&lt;canvas&gt;非常抱歉，您的浏览器不支持canvas!&lt;/canvas&gt;')
+    .appendTo('.content')
+    .attr('width', '1000')
+    .attr('height', '600')
+
+    // 调用插件绘图
+    .mapData({
+        "geoJSON": chinaMapData,
+        "text": (item) => ["名称：" + item.properties.name, "编号：" + item.properties.id],
+        // 中心经纬度
+        "longitude": 107,
+        "latitude": 36,
+        // 缩放比例
+        "s": 7000,
+        "cx": 500,
+        "cy": 300,
+        // 唯一标识
+        "id": (item) => item.properties.id,
+        // 显示名称
+        "name": (item) => item.properties.name,
+        // 名称显示坐标
+        "center": (item) => item.properties.cp
+    });
+    </pre>
+</body>
+
+</html>

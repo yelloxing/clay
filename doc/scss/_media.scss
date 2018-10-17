@@ -3,12 +3,12 @@ html {
 }
 
 // 需要缩放的阶段，配置
-$mediaSet: ( (maxWidth:1200, scale:0.9), (maxWidth:1100, scale:0.8), (maxWidth:980, scale:0.7), (maxWidth:830, scale:0.6), (maxWidth:630, scale:0.4), (maxWidth:500, scale:0.35), (maxWidth:440, scale:0.3), (maxWidth:370, scale:0.25));
+$mediaSet: ( (maxWidth:1200, scale:0.9), (maxWidth:1100, scale:0.85), (maxWidth:980, scale:0.75), (maxWidth:830, scale:0.6), (maxWidth:630, scale:0.45), (maxWidth:500, scale:0.35), (maxWidth:440, scale:0.3), (maxWidth:370, scale:0.25));
 // 迭代生成媒体查询适配
 @for $i from 1 through length($mediaSet) {
     $item: nth($mediaSet, $i);
     @media only screen and (max-width: #{map-get($item,maxWidth)}px),
-    only screen and (max-device-width: 1200px) {
+    only screen and (max-device-width: #{map-get($item,maxWidth)}px) {
         body {
             transform: scale(#{map-get($item,scale)}) !important;
             transform-origin: 0 0 !important;

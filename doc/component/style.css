@@ -1,0 +1,27 @@
+body {
+    text-align: center;
+}
+
+body>img {
+    border-radius: 50%;
+    float: right;
+    cursor: pointer;
+    width: 50px;
+}
+
+body>.code {
+    text-align: left;
+    width: 700px;
+    margin: auto;
+}
+
+.btn-list>a {
+    border-radius: .3rem;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    padding: .2rem;
+    margin: .3rem;
+    color: white;
+    background-color: #607D8B;
+}

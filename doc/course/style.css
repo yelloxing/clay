@@ -1,0 +1,96 @@
+body>section {
+    font-size: 0;
+}
+
+body>section>* {
+    display: inline-block;
+    vertical-align: top;
+    font-size: .16rem;
+}
+
+body>section>nav {
+    width: 2rem;
+}
+
+body>section>nav>ul {
+    border: 1px solid rgb(212, 207, 207);
+    border-radius: .1rem;
+}
+
+body>section>nav>ul>li {
+    line-height: .3rem;
+    padding: .1rem;
+    color: #606567;
+    cursor: pointer;
+}
+
+body>section>nav>ul>li:not(:last-child) {
+    border-bottom: 1px solid rgb(212, 207, 207);
+}
+
+body>section>article {
+    width: calc(100% - 2rem);
+    padding: .1rem;
+}
+
+body>section>article h1,
+body>section>article h2,
+body>section>article h3 {
+    line-height: 1.8;
+}
+
+body>section>article h1,
+body>section>article h2 {
+    border-bottom: 1px solid #ddd;
+}
+
+body>section>article h1 {
+    font-size: .22rem;
+}
+
+body>section>article h2 {
+    font-size: .2rem;
+}
+
+body>section>article h3 {
+    font-size: .18rem;
+}
+
+body>section>article p {
+    text-indent: 2em;
+    line-height: 1.8;
+}
+
+body>section>article ul {
+    margin-left: .3rem;
+}
+
+body>section>article ul>li {
+    list-style-type: disc;
+    line-height: 1.8;
+}
+
+body>section>article ul.inner>li {
+    list-style-type: none;
+    line-height: 1.6;
+    font-size: .14rem;
+}
+
+body>section>article pre.code {
+    padding: .1rem;
+    font-size: .14rem;
+    color: #333;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-radius: .05rem;
+    line-height: 1.428571429;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    overflow: auto;
+}
+
+body>section>article span.warn {
+    display: block;
+    color: #e2921b;
+    font-size: .12rem;
+    text-indent: 2em;
+}

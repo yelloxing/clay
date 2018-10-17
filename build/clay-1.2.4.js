@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Oct 11 2018 23:05:35 GMT+0800 (CST)
+* Date:Wed Oct 17 2018 14:27:04 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -493,6 +493,116 @@ clay.prototype.position = function (event) {
 
 };
 
+// 用特定色彩绘制区域
+// 预定义部分常用图形
+// 默认支持自定义绘图方法
+var drawerRegion = function (pen, color, type, data) {
+    pen.beginPath();
+    pen.fillStyle = color;
+    switch (type) {
+        // 矩形
+        case 'rectangle':
+            // data=[x,y,width,height]
+            pen.moveTo(data[0], data[1]);
+            pen.lineTo(data[0] + data[2], data[1]);
+            pen.lineTo(data[0] + data[2], data[1] + data[3]);
+            pen.lineTo(data[0], data[1] + data[3]);
+            break;
+        // 圆
+        case 'round':
+            // data=[cx,cy,r]
+            pen.moveTo(data[0] + data[2], data[1]);
+            pen.arc(data[0], data[1], data[2], 0, Math.PI * 2);
+            break;
+        // 多边形
+        case 'polygon':
+            // data=[[x,y],[x,y],...]
+            pen.moveTo(data[0][0], data[0][1]);
+            var i;
+            for (i = 1; i < data.length; i++)
+                pen.lineTo(data[i][0], data[i][1]);
+            break;
+        default:
+            // 默认传递绘制函数，此时data不需要传递
+            type(pen);
+    }
+    pen.fill();
+};
+
+// 区域对象，用于存储区域信息
+// 初衷是解决类似canvas交互问题
+// 可以用于任何标签的区域控制
+clay.region = function (selector, width, height) {
+
+    var regions = {},//区域映射表
+        canvas = document.createElement('canvas'),
+        rgb = [0, 0, 0],//区域标识色彩,rgb(0,0,0)表示空白区域
+        p = 'r';//色彩增值位置
+
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
+
+    var _this = clay(selector);
+
+    // 用于计算包含关系的画板
+    var canvas2D = canvas.getContext("2d"),
+
+        regionManger = {
+
+            // 绘制（添加）区域范围
+            /**
+             * region_id：区域唯一标识（一个标签上可以维护多个区域）
+             * type：扩展区域类型
+             * data：区域位置数据
+             */
+            "drawer": function (region_id, type, data) {
+                if (regions[region_id] == undefined) regions[region_id] = {
+                    'r': function () {
+                        rgb[0] += 1;
+                        p = 'g';
+                        return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+                    },
+                    'g': function () {
+                        rgb[1] += 1;
+                        p = 'b';
+                        return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+                    },
+                    'b': function () {
+                        rgb[2] += 1;
+                        p = 'r';
+                        return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
+                    }
+                }[p];
+                drawerRegion(canvas2D, regions[region_id], type, data);
+                return regionManger;
+            },
+
+            // 擦除区域范围
+            "erase": function (type, data) {
+                drawerRegion(canvas2D, 'rgb(0,0,0)', type, data);
+                return regionManger;
+            },
+
+            // 在指定区域绑定事件
+            "bind": function (region_id, eventType, callback) {
+                var targetColor = regions[region_id], currentRGBA, pos;
+                _this.bind(eventType, function (event) {
+
+                    event = event || window.event;
+                    pos = _this.position(event);
+                    currentRGBA = canvas2D.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
+                    if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == targetColor)
+                        callback(event, pos.x, pos.y);
+
+                });
+                return regionManger;
+            }
+        };
+
+    return regionManger;
+
+};
+
 var _clock = {
     //当前正在运动的动画的tick函数堆栈
     timers: [],
@@ -594,7 +704,7 @@ clay.getColors = function (num) {
 
         var temp = [], flag = 0;
         for (flag = 1; flag <= num; flag++)
-            temp.push('rgb(' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ',' + (Math.random(1) * 230 + 20) + ')');
+            temp.push('rgb(' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ')');
         return temp;
 
     } else {
