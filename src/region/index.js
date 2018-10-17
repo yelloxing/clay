@@ -61,9 +61,10 @@ clay.region = function (selector, width, height) {
                     pos = _this.position(event);
                     currentRGBA = canvas2D.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
                     if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == targetColor)
-                        callback(event);
+                        callback(event, pos.x, pos.y);
 
                 });
+                return regionManger;
             }
         };
 
