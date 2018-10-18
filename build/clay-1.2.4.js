@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Oct 16 2018 20:23:19 GMT+0800 (CST)
+* Date:Wed Oct 17 2018 14:27:04 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -592,9 +592,10 @@ clay.region = function (selector, width, height) {
                     pos = _this.position(event);
                     currentRGBA = canvas2D.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
                     if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == targetColor)
-                        callback(event);
+                        callback(event, pos.x, pos.y);
 
                 });
+                return regionManger;
             }
         };
 

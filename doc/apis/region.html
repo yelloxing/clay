@@ -1,0 +1,41 @@
+<link rel="stylesheet" href="./style.css">
+<h2 id='region'>
+    结点区域操作
+</h2>
+<p>
+    控制某个指定标签指定区域的修改和事件绑定等。
+</p>
+<pre class="code">var region=clay.region(selector, width, height);</pre>
+<p>
+    selector可以是任意一个合法的选择器，设置控制区域总尺寸，就返回了区域控制对象。
+</p>
+<h3 id='region-modify'>
+    区域修改
+</h3>
+<p>
+    一个区域管理器可以管理最多255*255*255=16581375个区域，每个区域提供一个区域标识来修改和获取，包括事件绑定等，区域标识。
+</p>
+<pre class="code">region.drawer(region_id, type, data);</pre>
+<p>
+    region_id是必须的，表示区域标识，如果已经存在是编辑，如果不存在是添加新区域。
+</p>
+<p>
+    type和data是关联的，有如下选择：
+</p>
+<ul class='inner'>
+    <li>第一类：type='rectangle'，表示绘制矩形区域，data=[x,y,width,height]；</li>
+    <li>第二类：type='round'，表示绘制圆区域，data=[cx,cy,r]；</li>
+    <li>第三类：type='polygon'，表示绘制多边形区域，data=[[x,y],[x,y],...]；</li>
+    <li>第四类：type=Function，表示自定义区域绘制方法，传递的函数有一个形参，是2D画笔。</li>
+</ul>
+<pre class="code">region.erase(type, data);</pre>
+<p>
+    参数和上面一样，表示擦除区域范围。
+</p>
+<h3 id="region-event">
+    区域事件
+</h3>
+<pre class="code">region.bind(region_id, eventType, callback);</pre>
+<p>
+    callback有三个形参可以选择，分别是event、posX和posY。
+</p>

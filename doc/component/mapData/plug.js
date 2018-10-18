@@ -67,8 +67,6 @@
             if (config.text) {
                 var _pen = layer.get('info');
                 _pen.textBaseline = 'middle';
-                _pen.fillStyle = 'rgba(120,120,120,.7)';
-                _pen.strokeStyle = 'rgb(250,250,250)';
                 var _this = this, rgba, temp, len, tempLen, height, width;
                 var showText = function (x, y, texts, num) {
                     x += 10;
@@ -77,9 +75,11 @@
                     width = num * 16;
                     _pen.beginPath();
                     _pen.rect(x, y, width, height);
+                    _pen.fillStyle = 'rgba(120,120,120,.7)';
                     _pen.fill();
+                    _pen.fillStyle = 'rgb(250,250,250)';
                     for (i = 0; i < texts.length; i++)
-                        _pen.strokeText(texts[i], x + 8, y + i * 16 + 7 + 4);
+                        _pen.fillText(texts[i], x + 8, y + i * 16 + 7 + 4);
                 }
                 pen = _this[0].getContext('2d');
                 _this.bind('mousemove', function (event) {
