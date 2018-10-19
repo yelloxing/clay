@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 17 2018 14:27:04 GMT+0800 (CST)
+* Date:Fri Oct 19 2018 15:17:21 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -799,6 +799,11 @@ clay.math.hermite = function () {
             // 缩放到[0,1]定义域
             y1 /= (x2 - x1);
             y2 /= (x2 - x1);
+            // MR是提前计算好的多项式通解矩阵
+            // 为了加速计算
+            // 如上面说的
+            // 统一在[0,1]上计算后再通过缩放和移动恢复
+            // 避免了动态求解矩阵的麻烦
             scope.MR = [
                 2 * y1 - 2 * y2 + p3 + p4,
                 3 * y2 - 3 * y1 - 2 * p3 - p4,
@@ -815,7 +820,6 @@ clay.math.hermite = function () {
     return hermite;
 };
 
-// Cardinal三次插值
 clay.math.cardinal = function () {
 
     var scope = { "t": 0 };
@@ -826,6 +830,8 @@ clay.math.cardinal = function () {
 
         if (scope.hs) {
             i = -1;
+            // 寻找记录x实在位置的区间
+            // 这里就是寻找对应的拟合函数
             while (i + 1 < scope.hs.x.length && (x > scope.hs.x[i + 1] || (i == -1 && x >= scope.hs.x[i + 1]))) {
                 i += 1;
             }
@@ -870,6 +876,9 @@ clay.math.cardinal = function () {
             temp = flag < points.length - 1 ?
                 (points[flag + 1][1] - points[flag - 1][1]) / (points[flag + 1][0] - points[flag - 1][0]) :
                 (points[flag][1] - points[flag - 1][1]) / (points[flag][0] - points[flag - 1][0]);
+            // 求解二个点直接的拟合方程
+            // 第一个点的前一个点直接取第一个点
+            // 最后一个点的后一个点直接取最后一个点
             scope.hs.h[flag - 1] = clay.math.hermite().setU(scope.t).setP(points[flag - 1][0], points[flag - 1][1], points[flag][0], points[flag][1], slope, temp);
             slope = temp;
         }
@@ -880,7 +889,6 @@ clay.math.cardinal = function () {
     return cardinal;
 };
 
-// 围绕任意射线旋转
 clay.math.rotate = function () {
 
     var scope = {};
@@ -1109,6 +1117,25 @@ clay.scale.map = function () {
     // 计算出来的位置是偏离中心点的距离
     var map = function (longitude, latitude) {
 
+        /**
+         * 通过旋转的方法
+         * 先旋转出点的位置
+         * 然后根据把地心到旋转中心的这条射线变成OZ这条射线的变换应用到初始化点上
+         * 这样求的的点的x,y就是最终结果
+         *
+         *  计算过程：
+         *  1.初始化点的位置是p（x,0,0）,其中x的值是地球半径除以缩放倍速
+         *  2.根据点的纬度对p进行旋转，旋转后得到的p的坐标纬度就是目标纬度
+         *  3.同样的对此刻的p进行经度的旋转，这样就获取了极点作为中心点的坐标
+         *  4.接着想象一下为了让旋转中心移动到极点需要进行旋转的经纬度是多少，记为lo和la
+         *  5.然后再对p进行经度度旋转lo获得新的p
+         *  6.然后再对p进行纬度旋转la获得新的p
+         *  7.旋转结束
+         *
+         * 特别注意：第5和第6步顺序一定不可以调换，原因来自经纬度定义上
+         * 【除了经度为0的位置，不然纬度的旋转会改变原来的经度值，反过来不会】
+         *
+         */
         var p = rotate_y.setP(_Geography[0].R / scope.s, 0, 0)(latitude / 180 * Math.PI);
         p = rotate_z.setP(p[0], p[1], p[2])(longitude / 180 * Math.PI);
         p = rotate_z.setP(p[0], p[1], p[2])((90 - scope.c[0]) / 180 * Math.PI);
@@ -1121,12 +1148,14 @@ clay.scale.map = function () {
 
     };
 
+    // 设置或获取缩放比例
     map.scale = function (scale) {
         if (typeof scale === 'number') scope.s = scale;
         else return scope.s;
         return map;
     };
 
+    // 设置或获取旋转中心
     map.center = function (longitude, latitude) {
         if (typeof longitude === 'number' && typeof latitude === 'number') scope.c = [longitude, latitude];
         else return scope.c;
@@ -1147,6 +1176,10 @@ clay.layout.tree = function () {
         // 根结点ID
         rootid,
 
+        /**
+         * 把内部保存的树结点数据
+         * 计算结束后会调用配置的绘图方法
+         */
         update = function () {
 
             var beforeDis = [], size = 0;
@@ -1154,33 +1187,68 @@ clay.layout.tree = function () {
 
                 var flag;
                 for (flag = 0; flag < pNode.children.length; flag++)
+                    // 因为全部的子结点的位置确定了，父结点的y位置就是子结点的中间位置
+                    // 因此有子结点的，先计算子结点
                     positionCalc(alltreedata[pNode.children[flag]], deep + 1);
 
+                // left的位置比较简单，deep从0开始编号
+                // 比如deep=0，第一层，left=0+0.5=0.5，也就是根结点
                 alltreedata[pNode.id].left = deep + 0.5;
                 if (flag == 0) {
 
-                    // 如果是叶子结点
+                    // beforeDis是一个数组，用以记录每一层此刻top下边缘（每一层是从上到下）
+                    // 比如一层的第一个，top值最小可以取top=0.5
+                    // 为了方便计算，beforeDis[deep] == undefined的时候表示现在准备计算的是这层的第一个结点
+                    // 因此设置最低上边缘为-0.5
                     if (beforeDis[deep] == undefined) beforeDis[deep] = -0.5;
+                    // 父边缘同意的进行初始化
                     if (beforeDis[deep - 1] == undefined) beforeDis[deep - 1] = -0.5;
+
+                    // 添加的新结点top值第一种求法：本层上边缘+1（比如上边缘是-0.5，那么top最小是top=-0.5+1=0.5）
                     alltreedata[pNode.id].top = beforeDis[deep] + 1;
+
                     var pTop = beforeDis[deep] + 1 + (alltreedata[pNode.pid].children.length - 1) * 0.5;
+                    // 计算的原则是：如果第一种可行，选择第一种，否则必须选择第二种
+                    // 判断第一种是否可行的方法就是：如果第一种计算后确定的孩子上边缘不对导致孩子和孩子的前兄弟重合就是可行的
                     if (pTop - 1 < beforeDis[deep - 1])
                         // 必须保证父亲结点和父亲的前一个兄弟保存1的距离，至少
+                        // 添加的新结点top值的第二种求法：根据孩子取孩子结点的中心top
                         alltreedata[pNode.id].top = beforeDis[deep - 1] + 1 - (alltreedata[pNode.pid].children.length - 1) * 0.5;
 
                 } else {
+
+                    // 此刻flag!=0
+                    // 意味着结点有孩子，那么问题就解决了，直接取孩子的中间即可
+                    // 其实，flag==0的分支计算的就是孩子，是没有孩子的叶结点，那是关键
                     alltreedata[pNode.id].top = (alltreedata[pNode.children[0]].top + alltreedata[pNode.children[flag - 1]].top) * 0.5;
                 }
+
+                // 计算好一个结点后，需要更新此刻该层的上边缘
                 beforeDis[deep] = alltreedata[pNode.id].top;
+
+                // size在每次计算一个结点后更新，是为了最终绘图的时候知道树有多宽（此处应该叫高）
                 if (alltreedata[pNode.id].top + 0.5 > size) size = alltreedata[pNode.id].top + 0.5;
 
             })(alltreedata[rootid], 0);
 
             // 画图
+            // 传递的参数分别表示：记录了位置信息的树结点集合、根结点ID和树的宽
             scope.e.drawer(alltreedata, rootid, size);
 
         };
 
+    /**
+     * 根据配置的层次关系（配置的id,child,root）把原始数据变成内部结构，方便后期位置计算
+     * @param {any} initTree
+     *
+     * tempTree[id]={
+     *  "data":原始数据,
+     *  "pid":父亲ID,
+     *  "id":唯一标识ID,
+     *  "children":[cid1、cid2、...],
+     *  "show":boolean，表示该结点在计算位置的时候是否可见
+     * }
+     */
     var toInnerTree = function (initTree) {
 
         var tempTree = {};
