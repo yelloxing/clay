@@ -3,7 +3,6 @@
     'use strict';
 
     clay.prototype.extend({
-
         // 层次包含比例图，悬浮svg中心实时显示选择比例，选中地区会变色突出显示
         "treeCircle": function (config) {
             var cx = +this.attr('width').replace('px', '') / 2,
@@ -80,7 +79,6 @@
                 });
 
             }
-
             // 基本配置
             tree.bind('root', config.root)
                 .bind('child', config.child)
