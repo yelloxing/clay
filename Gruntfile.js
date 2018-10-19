@@ -27,7 +27,8 @@ var source = [
     './src/math/transform3D/scale.js',
 
     // 映射计算
-    './src/scale/map.js',
+    './src/scale/map/ploar.js',
+    './src/scale/map/index.js',
 
     // 布局
     './src/layout/tree.js',

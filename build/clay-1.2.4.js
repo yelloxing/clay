@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Oct 19 2018 15:17:21 GMT+0800 (CST)
+* Date:Fri Oct 19 2018 16:35:12 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1091,9 +1091,6 @@ clay.math.scale = function () {
 
 };
 
-// 目前不考虑太多，先提供这一种投影方式
-// 别的后期再说
-
 // 假定了地球是小圆球
 
 /**
@@ -1101,23 +1098,8 @@ clay.math.scale = function () {
  * 旋转地球，使得中心点作为最高点，
  * 然后垂直纸面的视线
  */
-
-clay.scale.map = function () {
-
-    var scope = {
-        c: [107, 36],
-        // 缩放比例，默认缩小一万倍
-        s: 10000
-    };
-
-    var rotate_z = clay.math.rotate().setL(0, 0, 0, 0, 0, 1);
-    var rotate_x = clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
-    var rotate_y = clay.math.rotate().setL(0, 1, 0, 0, 0, 0);
-
-    // 计算出来的位置是偏离中心点的距离
-    var map = function (longitude, latitude) {
-
-        /**
+var _ploar = function (longitude, latitude, rotate_z, rotate_x, rotate_y, scope) {
+    /**
          * 通过旋转的方法
          * 先旋转出点的位置
          * 然后根据把地心到旋转中心的这条射线变成OZ这条射线的变换应用到初始化点上
@@ -1136,16 +1118,51 @@ clay.scale.map = function () {
          * 【除了经度为0的位置，不然纬度的旋转会改变原来的经度值，反过来不会】
          *
          */
-        var p = rotate_y.setP(_Geography[0].R / scope.s, 0, 0)(latitude / 180 * Math.PI);
-        p = rotate_z.setP(p[0], p[1], p[2])(longitude / 180 * Math.PI);
-        p = rotate_z.setP(p[0], p[1], p[2])((90 - scope.c[0]) / 180 * Math.PI);
-        p = rotate_x.setP(p[0], p[1], p[2])((90 - scope.c[1]) / 180 * Math.PI);
+    var p = rotate_y.setP(_Geography[0].R / scope.s, 0, 0)(latitude / 180 * Math.PI);
+    p = rotate_z.setP(p[0], p[1], p[2])(longitude / 180 * Math.PI);
+    p = rotate_z.setP(p[0], p[1], p[2])((90 - scope.c[0]) / 180 * Math.PI);
+    p = rotate_x.setP(p[0], p[1], p[2])((90 - scope.c[1]) / 180 * Math.PI);
 
-        return [
-            -p[0],
-            p[1]
-        ];
+    return [
+        -p[0],//加-号是因为浏览器坐标和地图不一样
+        p[1],
+        p[2]
+    ];
+};
 
+clay.scale.map = function () {
+
+    var scope = {
+        c: [107, 36],
+        // 缩放比例，默认缩小一万倍
+        s: 10000,
+        t: "ploar"//默认采用极地投影
+    };
+
+    var rotate_z, rotate_x, rotate_y;
+
+    // 计算出来的位置是偏离中心点的距离
+    var map = function (longitude, latitude) {
+
+        // 极地投影
+        if (scope.t == 'ploar') {
+            rotate_z = rotate_z || clay.math.rotate().setL(0, 0, 0, 0, 0, 1);
+            rotate_x = rotate_x || clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
+            rotate_y = rotate_y || clay.math.rotate().setL(0, 1, 0, 0, 0, 0);
+            return _ploar(longitude, latitude, rotate_z, rotate_x, rotate_y, scope);
+        }
+        // 错误设置应该抛错
+        else {
+            throw new Error('Illegal projection mode!');
+        }
+
+    };
+
+    // 设置或获取映射方法
+    map.type = function (type) {
+        if (typeof type === 'string') scope.t = type;
+        else return scope.t;
+        return map;
     };
 
     // 设置或获取缩放比例
