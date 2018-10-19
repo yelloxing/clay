@@ -4,10 +4,10 @@
 
     clay.prototype.extend({
 
-        // 地图展示区域信息，悬浮canvas提供统计数据
+        // 层次包含比例图，悬浮svg中心实时显示选择比例，选中地区会变色突出显示
         "treeCircle": function (config) {
-            var cx = this.attr('width') / 2,
-                cy = this.attr('height') / 2;
+            var cx = +this.attr('width').replace('px', '') / 2,
+                cy = +this.attr('height').replace('px', '') / 2;
             // 建立工具类
             var rotate = clay.math.rotate().setL(cx, cy),
                 move = clay.math.move();
@@ -20,7 +20,7 @@
             var site = 0; //颜色位置
             function drawer(nodes, rootid) {
                 var flag;
-                for (flag = 0; flag < nodes[rootid].children.length; flag++, site++) {
+                for (flag = 0; flag < nodes[rootid].children.length; flag++ , site++) {
                     drawerArc(
                         nodes[nodes[rootid].children[flag]].beginX,
                         nodes[nodes[rootid].children[flag]].beginY,
@@ -43,11 +43,11 @@
                 var p1 = move.setP(beginX, beginY).setD(beginX - cx, beginY - cy)(arcWidth);
                 var p2 = move.setP(endX, endY).setD(endX - cx, endY - cy)(arcWidth);
                 var inner = {
-                        "beginX": beginX,
-                        "beginY": beginY,
-                        "endX": endX,
-                        "endY": endY
-                    },
+                    "beginX": beginX,
+                    "beginY": beginY,
+                    "endX": endX,
+                    "endY": endY
+                },
                     ourter = {
                         "beginX": p1[0],
                         "beginY": p1[1],
@@ -58,7 +58,7 @@
                     inner.beginX + ' ' +
                     inner.beginY + ' A ' + (r +
                         arcWidth * (deep - 1)) + ' ' + (r + arcWidth * (deep - 1)) + ' 0 ' + (percent > 0.5 ? 1 :
-                        0) + ' 1 ' +
+                            0) + ' 1 ' +
                     inner.endX + ' ' + inner.endY +
                     ' L ' + ourter.endX + ',' + ourter.endY + ' A ' + (r + arcWidth * deep) + ' ' + (
                         r + arcWidth * deep) + ' 0 ' + (percent > 0.5 ? 1 : 0) + ' 0 ' + ourter.beginX + ' ' +
@@ -79,26 +79,12 @@
                     }
                 });
 
-                //单圆弧，废弃不用
-                // var circle = $$('<path id="' + id + '" d="M ' + beginX + ' ' + beginY + ' A ' + (r + arcWidth *
-                //             deep) +
-                //         ' ' + (r + arcWidth * deep) + ' 0 ' + (percent > 0.5 ? 1 : 0) + ' 1 ' + endX + ' ' +
-                //         endY +
-                //         '" stroke="' + color + '" stroke-width="' + arcWidth + '" fill="none"  />')
-                //     .appendTo('.arc');
-
             }
 
             // 基本配置
-            tree.bind('root', function (initTree) {
-                    return initTree;
-                })
-                .bind('child', function (parentTree) {
-                    return parentTree.children;
-                })
-                .bind('id', function (treedata) {
-                    return treedata.name;
-                })
+            tree.bind('root', config.root)
+                .bind('child', config.child)
+                .bind('id', config.id)
                 .bind('drawer', function (nodes, rootid, size) {
 
                     $$('.circle')[0].innerHTML = '';
@@ -108,7 +94,7 @@
                         totalValue = 0;
                     //计算总比重totalValue
                     for (node in nodes) {
-                        totalValue += nodes[node].data.value || 0;
+                        totalValue += nodes[node].data[config.value] || 0;
                         nodeLength += 1;
                     }
                     colorList = clay.getColors(nodeLength);
@@ -116,11 +102,11 @@
                     (function setValue(childNodes) {
                         var total = 0;
                         for (var node in childNodes) {
-                            if (!childNodes[node].value) {
-                                childNodes[node].value = setValue(childNodes[node].children);
-                                total += childNodes[node].value;
+                            if (!childNodes[node][config.value]) {
+                                childNodes[node][config.value] = setValue(childNodes[node].children);
+                                total += childNodes[node][config.value];
                             } else {
-                                total += childNodes[node].value;
+                                total += childNodes[node][config.value];
                             }
                         }
                         return total;
@@ -132,7 +118,7 @@
                         }
                         childNodes.reduce(function (total, currentItem, currentIndex, arr) {
                             currentItem.bValue = total;
-                            total += currentItem.value;
+                            total += currentItem[config.value];
                             setBvalue(currentItem.children);
                             return total;
                         }, 0);
@@ -152,27 +138,27 @@
                         if (nodes[node].data) {
                             nodes[node].bpercent = (nodes[node].data.bValue || totalValue) / totalValue * 2 *
                                 Math.PI;
-                            nodes[node].percent = (nodes[node].data.value || totalValue) / totalValue;
+                            nodes[node].percent = (nodes[node].data[config.value] || totalValue) / totalValue;
                             nodes[node].deg = nodes[node].percent * 2 * Math.PI;
                             p1 = rotate.setP(cx, cy - R - arcWidth * (nodes[node].left - 1.5))
                                 (nodes[node].bpercent);
                             nodes[node].beginX = p1[0];
                             nodes[node].beginY = p1[1];
                             p2 = rotate.setP(cx, cy - R - arcWidth * (nodes[node].left - 1.5))(nodes[
-                                    node].bpercent +
+                                node].bpercent +
                                 nodes[node].deg);
                             nodes[node].endX = p2[0];
                             nodes[node].endY = p2[1];
                         } else {
                             nodes[node].bpercent = nodes[node].bValue / totalValue * 2 * Math.PI;
-                            nodes[node].percent = nodes[node].value / totalValue;
+                            nodes[node].percent = nodes[node][config.value] / totalValue;
                             nodes[node].deg = nodes[node].percent * 2 * Math.PI;
                             p1 = rotate.setP(cx, cy - R - arcWidth * (nodes[node].left - 0.5))
                                 (nodes[node].bpercent);
                             nodes[node].beginX = p1[0];
                             nodes[node].beginY = p1[1];
                             p2 = rotate.setP(cx, cy - R - arcWidth * (nodes[node].left - 0.5))(nodes[
-                                    node].bpercent +
+                                node].bpercent +
                                 nodes[node].deg);
                             nodes[node].endX = p2[0];
                             nodes[node].endY = p2[1];
@@ -180,10 +166,17 @@
                     }
 
                     $$("<text id='textName' x='" + cx + "' y='" + cy + "' dy='0em'></text>")
-                        .appendTo(".arc");
+                        .appendTo(".arc")
+                        .css({
+                            "text-anchor": "middle",  /* 文本水平居右 */
+                            "dominant-baseline": "middle" /* 文本垂直居中 */
+                        });
                     $$("<text id='textPercent' x='" + cx + "' y='" + cy + "' dy='1em'></text>")
-                        .appendTo(".arc");
-
+                        .appendTo(".arc")
+                        .css({
+                            "text-anchor": "middle",  /* 文本水平居右 */
+                            "dominant-baseline": "middle" /* 文本垂直居中 */
+                        });
                     drawer(nodes, rootid);
                     $$(".arc").bind("mouseout", function () {
                         $$(".arc").find("path").css("opacity", "1");
