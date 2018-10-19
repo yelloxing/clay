@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../images/clay.png" type="image/x-png">
+    <title>caly · treeCircle</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="../../../build/clay-1.2.4.js"></script>
+    <script src="./plug.js"></script>
+    <script src="../../../data/normal/data.tree.json.js"></script>
+    <script>
+        function goto(target) {
+            window.location.href = target;
+        }
+    </script>
+    <script>
+
+        $$(function () {
+
+            $$('<svg>' +
+                '   <g class="circle"></g>' +
+                '   <g class="arc"></g>' +
+                '</svg>').appendTo('.content')
+                .attr('width', '700')
+                .attr('height', '700')
+
+                // 调用插件绘图
+                .treeCircle({
+                    "treeData": treeData,
+                    // 价值字段名称
+                    "value": "value",
+                    //中心圆半径
+                    "R": 130,
+                    //圆环宽度
+                    "arcWidth": 55,
+                    //结构函数配置
+                    "root": initTree => initTree,
+                    "child": parentTree => parentTree.children,
+                    "id": treedata => treedata.name
+                });
+
+        });
+
+    </script>
+</head>
+
+<body>
+    <img src="../authors/coconear.jpg" alt="这人真帅呀" onclick='goto("https://github.com/1057891494")'>
+    <section class='content'></section>
+    <div class="btn-list">
+        <a href="../index.html">组件首页</a>
+        <a href="../../../build/clay-1.2.4.min.js" download="clay-1.2.4.min.js">库下载</a>
+        <a href="./plug.js" download="clay-treeCircle.js">组件下载</a>
+    </div>
+    <pre class='code'>
+$$(function () {
+
+    $$('&lt;svg&gt;' +
+        '   &lt;g class="circle"&gt;&lt;/g&gt;' +
+        '   &lt;g class="arc"&gt;&lt;/g&gt;' +
+        '&lt;/svg&gt;').appendTo('.content')
+        .attr('width', '700')
+        .attr('height', '700')
+
+        // 调用插件绘图
+        .treeCircle({
+            "treeData": treeData,
+            // 价值字段名称
+            "value":"value",
+            //中心圆半径
+            "R":130,
+            //圆环宽度
+            "arcWidth":55,
+            //结构函数配置
+            "root": initTree => initTree,
+            "child": parentTree => parentTree.children,
+            "id": treedata => treedata.name
+        });
+
+});
+    </pre>
+</body>
+
+</html>

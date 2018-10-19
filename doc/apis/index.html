@@ -56,12 +56,13 @@
             }).eq({
                 "basic": 0,
                 "node": 1,
-                "tool": 2,
-                "math": 3,
-                "scale": 4,
-                "layout": 5,
-                "svg": 6,
-                "canvas": 7
+                "region": 2,
+                "tool": 3,
+                "math": 4,
+                "scale": 5,
+                "layout": 6,
+                "svg": 7,
+                "canvas": 8
 
             }[target]).css({
                 color: "#0063f7"
@@ -109,6 +110,7 @@
         <div class="menu">
             <a href="javascript:void(0)" onclick="goto('basic')">基本说明</a>
             <a href="javascript:void(0)" onclick="goto('node')">结点操作</a>
+            <a href="javascript:void(0)" onclick="goto('region')">结点区域操作</a>
             <a href="javascript:void(0)" onclick="goto('tool')">工具类</a>
             <a href="javascript:void(0)" onclick="goto('math')">数学计算</a>
             <a href="javascript:void(0)" onclick="goto('scale')">映射计算</a>
