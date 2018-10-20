@@ -20,16 +20,20 @@ clay.scale.map = function () {
     // 计算出来的位置是偏离中心点的距离
     var map = function (longitude, latitude) {
 
-        // 极地投影
+        // 方位投影 - 等角斜方位投影
         if (scope.t == 'ploar') {
             rotate_z = rotate_z || clay.math.rotate().setL(0, 0, 0, 0, 0, 1);
             rotate_x = rotate_x || clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
             rotate_y = rotate_y || clay.math.rotate().setL(0, 1, 0, 0, 0, 0);
             return _ploar(longitude, latitude, rotate_z, rotate_x, rotate_y, scope);
         }
-        // 圆柱投影
+        // 正轴等角圆柱投影 - 墨卡托投影
         else if (scope.t == 'cylinder') {
             return _cylinder(longitude, latitude, vertical_dis, horizontal_dis, scope);
+        }
+        // 正轴等角圆锥投影 - 兰勃特投影
+        else if (scope.t == 'cone') {
+            return _cone(longitude, latitude, scope);
         }
         // 错误设置应该抛错
         else {
