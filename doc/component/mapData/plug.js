@@ -46,19 +46,21 @@
             }
 
             // 绘制区域名称
-            pen = layer.get('nameLayer');
-            pen.textAlign = 'left';
-            pen.textBaseline = 'middle';
-            pen.fillStyle = '#000';
-            pen.strokeStyle = '#f00';
-            pen.font = '12px Arial';
-            for (i = 0; i < config.geoJSON.features.length; i++) {
-                features = config.geoJSON.features[i];
-                pos = map(config.center(features)[0], config.center(features)[1]);
-                pen.fillText(config.name(features), pos[0] + config.cx + 10, pos[1] + config.cy);
-                pen.beginPath();
-                pen.arc(pos[0] + config.cx, pos[1] + config.cy, 2, 0, Math.PI * 2);
-                pen.stroke();
+            if (typeof config.center == 'function' && typeof config.name == 'function') {
+                pen = layer.get('nameLayer');
+                pen.textAlign = 'left';
+                pen.textBaseline = 'middle';
+                pen.fillStyle = '#000';
+                pen.strokeStyle = '#f00';
+                pen.font = '12px Arial';
+                for (i = 0; i < config.geoJSON.features.length; i++) {
+                    features = config.geoJSON.features[i];
+                    pos = map(config.center(features)[0], config.center(features)[1]);
+                    pen.fillText(config.name(features), pos[0] + config.cx + 10, pos[1] + config.cy);
+                    pen.beginPath();
+                    pen.arc(pos[0] + config.cx, pos[1] + config.cy, 2, 0, Math.PI * 2);
+                    pen.stroke();
+                }
             }
 
             layer.update();

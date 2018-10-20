@@ -28,6 +28,7 @@ var source = [
 
     // 映射计算
     './src/scale/map/ploar.js',
+    './src/scale/map/cylinder.js',
     './src/scale/map/index.js',
 
     // 布局

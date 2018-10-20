@@ -1,6 +1,12 @@
-// 假定了地球是小圆球
-
 /**
+ * 极地投影
+ * @param {number} longitude 经度
+ * @param {number} latitude 纬度
+ * @param {function} rotate_z z轴旋转函数
+ * @param {function} rotate_x x轴旋转函数
+ * @param {function} rotate_y y轴旋转函数
+ * @param {json} scope 参数对象
+ *
  * 确定中心点以后，
  * 旋转地球，使得中心点作为最高点，
  * 然后垂直纸面的视线

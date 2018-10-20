@@ -1,3 +1,4 @@
+// 假定了地球是小圆球
 clay.scale.map = function () {
 
     var scope = {
@@ -9,6 +10,13 @@ clay.scale.map = function () {
 
     var rotate_z, rotate_x, rotate_y;
 
+    // 分别计算出纬度和经度每一度的距离
+    var vertical_dis, horizontal_dis, calcDis = function () {
+        vertical_dis = _Geography[0].R / 90 / scope.s;
+        horizontal_dis = vertical_dis * Math.PI * 0.5;
+    };
+    calcDis();
+
     // 计算出来的位置是偏离中心点的距离
     var map = function (longitude, latitude) {
 
@@ -18,6 +26,10 @@ clay.scale.map = function () {
             rotate_x = rotate_x || clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
             rotate_y = rotate_y || clay.math.rotate().setL(0, 1, 0, 0, 0, 0);
             return _ploar(longitude, latitude, rotate_z, rotate_x, rotate_y, scope);
+        }
+        // 圆柱投影
+        else if (scope.t == 'cylinder') {
+            return _cylinder(longitude, latitude, vertical_dis, horizontal_dis, scope);
         }
         // 错误设置应该抛错
         else {
@@ -37,6 +49,7 @@ clay.scale.map = function () {
     map.scale = function (scale) {
         if (typeof scale === 'number') scope.s = scale;
         else return scope.s;
+        calcDis();
         return map;
     };
 
