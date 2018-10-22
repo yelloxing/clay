@@ -31,10 +31,6 @@ clay.scale.map = function () {
         else if (scope.t == 'cylinder') {
             return _cylinder(longitude, latitude, vertical_dis, horizontal_dis, scope);
         }
-        // 正轴等角圆锥投影 - 兰勃特投影
-        else if (scope.t == 'cone') {
-            return _cone(longitude, latitude, scope);
-        }
         // 错误设置应该抛错
         else {
             throw new Error('Illegal projection mode!');

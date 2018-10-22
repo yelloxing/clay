@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Oct 20 2018 16:41:59 GMT+0800 (CST)
+* Date:Mon Oct 22 2018 09:30:07 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1133,11 +1133,6 @@ var _cylinder = function (longitude, latitude, vertical_dis, horizontal_dis, sco
     ];
 };
 
-var _cone = function (longitude, latitude, scope) {
-
-
-};
-
 // 假定了地球是小圆球
 clay.scale.map = function () {
 
@@ -1170,10 +1165,6 @@ clay.scale.map = function () {
         // 正轴等角圆柱投影 - 墨卡托投影
         else if (scope.t == 'cylinder') {
             return _cylinder(longitude, latitude, vertical_dis, horizontal_dis, scope);
-        }
-        // 正轴等角圆锥投影 - 兰勃特投影
-        else if (scope.t == 'cone') {
-            return _cone(longitude, latitude, scope);
         }
         // 错误设置应该抛错
         else {
