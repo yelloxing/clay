@@ -26,6 +26,10 @@ var source = [
     './src/math/transform3D/move.js',
     './src/math/transform3D/scale.js',
 
+    // 物理计算
+    './src/physics/Coulomb\'s law.js',
+    './src/physics/Velocity-Verlet.js',
+
     // 映射计算
     './src/scale/map/ploar.js',
     './src/scale/map/cylinder.js',
@@ -33,6 +37,7 @@ var source = [
 
     // 布局
     './src/layout/tree.js',
+    './src/layout/force.js',
 
     // 图形对象
     './src/painter/canvas.js',

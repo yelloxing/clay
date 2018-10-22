@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Oct 22 2018 09:30:07 GMT+0800 (CST)
+* Date:Mon Oct 22 2018 11:06:33 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -110,8 +110,9 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、映射计算、绘图方案svg+canvas、布局
+// 数学计算、物理计算、映射计算、绘图方案svg+canvas、布局
 clay.math = {};
+clay.physics = {};
 clay.scale = {};
 clay.svg = {}; clay.canvas = {};
 clay.layout = {};
@@ -1091,6 +1092,26 @@ clay.math.scale = function () {
 
 };
 
+var _coulombLaw = function () {
+
+};
+
+/**
+ * 前一刻位置、速度和加速度，时间间隔
+ * 在极其小的时间间隔里，加速度的改变对位置的计算可以忽略不计
+ */
+var _Velocity_Verlet_P = function (p, v, a, dt) {
+    return x + v * dt + a * dt * dt * 0.5;
+};
+
+/**
+ * 前一刻速度、加速度，此刻加速度，时间间隔
+ * 假设加速度的改变在极其小的时间间隔里可以看成线性变化
+ */
+var _Velocity_Verlet_V = function (v, a, na, dt) {
+    return v + (a + na) * dt * 0.5;
+};
+
 var _ploar = function (longitude, latitude, rotate_z, rotate_x, rotate_y, scope) {
     /**
          * 通过旋转的方法
@@ -1392,6 +1413,10 @@ clay.layout.tree = function () {
     };
 
     return tree;
+
+};
+
+clay.layout.force = function () {
 
 };
 
