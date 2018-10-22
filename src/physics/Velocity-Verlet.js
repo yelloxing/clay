@@ -12,7 +12,7 @@
  * 在极其小的时间间隔里，加速度的改变对位置的计算可以忽略不计
  */
 var _Velocity_Verlet_P = function (p, v, a, dt) {
-    return x + v * dt + a * dt * dt * 0.5;
+    return p + v * dt + a * dt * dt * 0.5;
 };
 
 /**
