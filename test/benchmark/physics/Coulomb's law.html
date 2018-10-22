@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>clay - 性能基准测试 - 库仑力计算</title>
     <script src="../../libs/JSLitmus.js"></script>
+    <script src="../../../src/core.js"></script>
+    <script src="../../../src/config.js"></script>
     <script src="../../../src/physics/Coulomb's law.js"></script>
 </head>
 
@@ -13,7 +15,7 @@
     <script>
 
         JSLitmus.test('库仑力计算', function () {
-            _coulomb_law([
+            var result = _coulomb_law([
                 [2, 2],
                 [8, 2],
                 [15, 1],
@@ -24,6 +26,7 @@
                 [6, 4],
                 [10, 14]
             ]);
+            console.log(result);
         });
 
     </script>

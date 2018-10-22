@@ -3,7 +3,7 @@
  * -------------------------------
  *
  * 用一棵四叉树来记录结点位置
- * 采用Barnes-Hut加速计算
+ * 采用Barnes-Hut加速计算，加速精度0.9
  *
  * 求解步骤：
  * 1.生成四叉树；
@@ -26,7 +26,7 @@ var _coulomb_law = function (electrons) {
         theta2 = 0.81,
         // 四叉树
         Q_Tree = {},
-        i;
+        i, j;
 
     // 求解出坐标最值
     var minX = electrons[0][0], minY = electrons[0][1], maxX = electrons[0][0], maxY = electrons[0][1];
@@ -92,5 +92,53 @@ var _coulomb_law = function (electrons) {
     })(electrons, 'Q', null, minX, maxX, minY, maxY);
 
     // 求解库仑力
+    var treeNode, eleNode, law = [], d2, r2,
+        /**
+         * q1、x1、y1：目标作用电子（或电子团）的电荷、x坐标、y坐标
+         * q2、x2、y2：目标计算电子的电荷、x坐标、y坐标
+         */
+        doLaw = function (q1, x1, y1, q2, x2, y2) {
+            if (x1 == x2 && y1 == y2)
+                // 重叠的点忽略
+                return [0, 0];
+            var f = q1 * q2 * _Physics.k / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            var d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            return [
+                f * (x2 - x1) / d,
+                f * (y2 - y1) / d
+            ];
+        };
+    for (i = 0; i < electrons.length; i++) {
+        law = (function calc_Coulomb_Law(treeName) {
+            treeNode = Q_Tree[treeName];
+            eleNode = electrons[i];
+            // Barnes-Hut加速计算
+            // 区域面积
+            d2 = treeNode.cx * treeNode.cy;
+            // '质心'间距离平方
+            r2 = (eleNode[0] - treeNode.cx) * (eleNode[0] - treeNode.cx) + (eleNode[1] - treeNode.cy) * (eleNode[1] - treeNode.cy);
+            if (d2 / r2 <= theta2) {
+                // 默认每个电荷数量是1，且都同性
+                return doLaw(treeNode.num, treeNode.cx, treeNode.cy, 1, eleNode[0], eleNode[1]);
+            } else {
+                var result_law = [0, 0], temp_law;
+                for (j = 0; j < treeNode.e.length; j++) {
+                    temp_law = doLaw(1, treeNode.e[j][0], treeNode.e[j][1], 1, eleNode[0], eleNode[1]);
+                    result_law[0] += temp_law[0];
+                    result_law[1] += temp_law[1];
+                }
+                for (j = 0; j < treeNode.children.length; j++) {
+                    temp_law = calc_Coulomb_Law(treeNode.children[j]);
+                    result_law[0] += temp_law[0];
+                    result_law[1] += temp_law[1];
+                }
+                return result_law;
+            }
+        })('Q');
+        electrons[i][2] = law[0];
+        electrons[i][3] = law[1];
+    }
+
+    return electrons;
 
 };
