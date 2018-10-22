@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Oct 22 2018 17:59:53 GMT+0800 (CST)
+* Date:Mon Oct 22 2018 20:53:14 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1122,7 +1122,7 @@ var _coulomb_law = function (electrons) {
     }
 
     // 生成四叉树
-    (function calc_Q_Tree(nodes, id, pid, ix, ax, iy, ay) {
+    (function calc_Q_Tree(nodes, id, ix, ax, iy, ay) {
         var mx = (ix + ax) * 0.5,
             my = (iy + ay) * 0.5;
         Q_Tree[id] = {
@@ -1158,22 +1158,22 @@ var _coulomb_law = function (electrons) {
         // 启动子区域分割
         if (ltNodes.length > 0) {
             Q_Tree[id].children.push(id + "1");
-            calc_Q_Tree(ltNodes, id + "1", id, ix, mx, iy, my);
+            calc_Q_Tree(ltNodes, id + "1", ix, mx, iy, my);
         }
         if (rtNodes.length > 0) {
             Q_Tree[id].children.push(id + "2");
-            calc_Q_Tree(rtNodes, id + "2", id, mx, ax, iy, my);
+            calc_Q_Tree(rtNodes, id + "2", mx, ax, iy, my);
         }
         if (lbNodes.length > 0) {
             Q_Tree[id].children.push(id + "3");
-            calc_Q_Tree(lbNodes, id + "3", id, ix, mx, my, ay);
+            calc_Q_Tree(lbNodes, id + "3", ix, mx, my, ay);
         }
         if (rbNodes.length > 0) {
             Q_Tree[id].children.push(id + "4");
-            calc_Q_Tree(rbNodes, id + "4", id, mx, ax, my, ay);
+            calc_Q_Tree(rbNodes, id + "4", mx, ax, my, ay);
         }
 
-    })(electrons, 'Q', null, minX, maxX, minY, maxY);
+    })(electrons, 'Q', minX, maxX, minY, maxY);
 
     // 求解库仑力
     var treeNode, eleNode, law = [], d2, r2,
@@ -1181,11 +1181,11 @@ var _coulomb_law = function (electrons) {
          * q1、x1、y1：目标作用电子（或电子团）的电荷、x坐标、y坐标
          * q2、x2、y2：目标计算电子的电荷、x坐标、y坐标
          */
-        doLaw = function (q1, x1, y1, q2, x2, y2) {
+        doLaw = function (q1, x1, y1, x2, y2) {
             if (x1 == x2 && y1 == y2)
                 // 重叠的点忽略
                 return [0, 0];
-            var f = q1 * q2 * _Physics.k / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            var f = q1 * _Physics.k / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
             var d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
             return [
                 f * (x2 - x1) / d,
@@ -1203,11 +1203,11 @@ var _coulomb_law = function (electrons) {
             r2 = (eleNode[0] - treeNode.cx) * (eleNode[0] - treeNode.cx) + (eleNode[1] - treeNode.cy) * (eleNode[1] - treeNode.cy);
             if (d2 / r2 <= theta2) {
                 // 默认每个电荷数量是1，且都同性
-                return doLaw(treeNode.num, treeNode.cx, treeNode.cy, 1, eleNode[0], eleNode[1]);
+                return doLaw(treeNode.num, treeNode.cx, treeNode.cy, eleNode[0], eleNode[1]);
             } else {
                 var result_law = [0, 0], temp_law;
                 for (j = 0; j < treeNode.e.length; j++) {
-                    temp_law = doLaw(1, treeNode.e[j][0], treeNode.e[j][1], 1, eleNode[0], eleNode[1]);
+                    temp_law = doLaw(1, treeNode.e[j][0], treeNode.e[j][1], eleNode[0], eleNode[1]);
                     result_law[0] += temp_law[0];
                     result_law[1] += temp_law[1];
                 }
