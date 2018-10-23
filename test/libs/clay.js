@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Oct 23 2018 20:26:44 GMT+0800 (CST)
+* Date:Tue Oct 23 2018 23:10:30 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -1593,8 +1593,8 @@ clay.layout.force = function () {
             j = _coulomb_law(k);
             k = 0;
             for (i in allNode) {
-                allNode[i].fx += j[k][2] / 30;
-                allNode[i].fy += j[k][3] / 30;
+                allNode[i].fx += j[k][2] / 10;
+                allNode[i].fy += j[k][3] / 10;
                 k += 1;
             }
         },
@@ -1652,7 +1652,7 @@ clay.layout.force = function () {
             }
 
             // 调用钩子
-            if (num < 40) {
+            if (num < 30) {
                 num += 1;
             } else {
                 if (scope.e.live && typeof scope.e.live[0] === 'function') scope.e.live[0]();
@@ -1667,7 +1667,7 @@ clay.layout.force = function () {
 
             // 判断是否需要停止
             if (alpha >= alphaMin)
-                if (num < 40)
+                if (num < 30)
                     tick();
                 else
                     window.setTimeout(function () {
@@ -1725,32 +1725,6 @@ clay.layout.force = function () {
         if (typeof nodeback !== 'function') nodeback = function () { };
         if (typeof linkback !== 'function') linkback = function () { };
         scope.e[type] = [nodeback, linkback];
-        return force;
-    };
-
-    // 添加结点
-    force.add = function () {
-
-        update();
-        return force;
-    };
-
-    // 删除结点
-    force.delete = function () {
-
-        update();
-        return force;
-    };
-
-    // 控制结点的显示和隐藏
-    force.toggle = function () {
-
-        update();
-        return force;
-    };
-
-    force.update = function () {
-        update();
         return force;
     };
 
