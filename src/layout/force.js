@@ -6,15 +6,12 @@
 clay.layout.force = function () {
 
     var scope = {
-        "e": {},
-        "cx": 0,
-        "cy": 0,
-        "w": 0,
-        "h": 0
+        "e": {}
     }, allNode, allLink,
         i, j, k, source, target, dx, dy, d, fx, fy, ax, ay, dsq,
         // 标记轮播计算是否在运行中
         running = false,
+        num = 0,
 
         // 阻尼衰减
         alpha = 1,
@@ -61,8 +58,8 @@ clay.layout.force = function () {
         // 中心引力，用以聚笼结点
         updateCenter = function () {
             for (i in allNode) {
-                allNode[i].fx += (scope.cx - allNode[i].x) * 5;
-                allNode[i].fy += (scope.cy - allNode[i].y) * 5;
+                allNode[i].fx += (500 - allNode[i].x) * 5;
+                allNode[i].fy += (500 - allNode[i].y) * 5;
             }
         },
         //持续计算
@@ -85,8 +82,8 @@ clay.layout.force = function () {
             // 更新位置
             for (i in allNode) {
                 // 1.计算新的位置
-                dx = _Velocity_Verlet_P(allNode[i].x, allNode[i].vx, allNode[i].ax, 10) - allNode[i].x;
-                dy = _Velocity_Verlet_P(allNode[i].y, allNode[i].vy, allNode[i].ay, 10) - allNode[i].y;
+                dx = _Velocity_Verlet_P(allNode[i].x, allNode[i].vx, allNode[i].ax, 1) - allNode[i].x;
+                dy = _Velocity_Verlet_P(allNode[i].y, allNode[i].vy, allNode[i].ay, 1) - allNode[i].y;
                 dsq = dx * dx + dy * dy;
                 // 1.1超过一次改变最大程度
                 if (dsq > 100) {
@@ -99,33 +96,40 @@ clay.layout.force = function () {
                 // 1.2 如果结点越界
                 if (allNode[i].x < 0) allNode[i].x = 0;
                 if (allNode[i].y < 0) allNode[i].y = 0;
-                if (allNode[i].x > scope.w) allNode[i].x = scope.w;
-                if (allNode[i].y > scope.h) allNode[i].y = scope.h;
+                if (allNode[i].x > 1000) allNode[i].x = 1000;
+                if (allNode[i].y > 1000) allNode[i].y = 1000;
                 // 2.更新加速度
                 ax = allNode[i].ax * alpha;
                 ay = allNode[i].ay * alpha;
                 allNode[i].ax = allNode[i].fx / 1000 * alpha;
                 allNode[i].ay = allNode[i].fy / 1000 * alpha;
                 // 3.更新速度
-                allNode[i].vx = _Velocity_Verlet_V(allNode[i].vx, ax, allNode[i].ax, 10) * alpha;
-                allNode[i].vy = _Velocity_Verlet_V(allNode[i].vy, ay, allNode[i].ay, 10) * alpha;
+                allNode[i].vx = _Velocity_Verlet_V(allNode[i].vx, ax, allNode[i].ax, 1) * alpha;
+                allNode[i].vy = _Velocity_Verlet_V(allNode[i].vy, ay, allNode[i].ay, 1) * alpha;
             }
 
             // 调用钩子
-            if (scope.e.live && typeof scope.e.live[0] === 'function') scope.e.live[0]();
+            if (num < 40) {
+                num += 1;
+            } else {
+                if (scope.e.live && typeof scope.e.live[0] === 'function') scope.e.live[0]();
 
-            for (i in allNode) scope.e.update[0](allNode[i]);
-            for (i in allLink)
-                for (j in allLink[i])
-                    scope.e.update[1](allNode[i], allNode[j], allLink[i][j]);
+                for (i in allNode) scope.e.update[0](allNode[i]);
+                for (i in allLink)
+                    for (j in allLink[i])
+                        scope.e.update[1](allNode[i], allNode[j], allLink[i][j]);
 
-            if (scope.e.live && typeof scope.e.live[1] === 'function') scope.e.live[1]();
+                if (scope.e.live && typeof scope.e.live[1] === 'function') scope.e.live[1]();
+            }
 
             // 判断是否需要停止
             if (alpha >= alphaMin)
-                window.setTimeout(function () {
+                if (num < 40)
                     tick();
-                }, 40);
+                else
+                    window.setTimeout(function () {
+                        tick();
+                    }, 40);
             else
                 running = false;
         },
@@ -146,8 +150,8 @@ clay.layout.force = function () {
         for (i = 0; i < initnodes.length; i++)
             allNode[scope.e.analyse[0](initnodes[i])] = {
                 "orgData": initnodes[i],
-                "x": i % num * sw + sw * 0.5 + scope.cx,
-                "y": Math.ceil((i + 1) / num) * sw - sw * 0.5 + scope.cy,
+                "x": i % num * sw + sw * 0.5 + 500,
+                "y": Math.ceil((i + 1) / num) * sw - sw * 0.5 + 500,
                 "vx": 0, "vy": 0,
                 "ax": 0, "ay": 0,
                 "t": [], "s": []
@@ -204,18 +208,6 @@ clay.layout.force = function () {
 
     force.update = function () {
         update();
-        return force;
-    };
-
-    force.setCenter = function (cx, cy) {
-        scope.cx = cx;
-        scope.cy = cy;
-        return force;
-    };
-
-    force.setSize = function (width, height) {
-        scope.w = width;
-        scope.h = height;
         return force;
     };
 

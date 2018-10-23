@@ -14,8 +14,6 @@
 
             var force = clay.layout.force();
 
-            force.setCenter(350, 250).setSize(700, 500);
-
             $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
                 .appendTo('body')
                 .attr('width', 720)
@@ -35,17 +33,17 @@
                 .bind('analyse', function (initnode) {
                     return initnode.name;
                 }, function (initlink) {
-                    return [initlink.source, initlink.target, initlink.value];
+                    return [initlink.source, initlink.target, initlink.value + 300];
                 })
                 // 绘图方法
                 .bind('update', function (node) {
                     pnode.beginPath();
-                    pnode.arc(node.x + 10, node.y + 10, 10, 0, Math.PI * 2);
+                    pnode.arc(node.x * 0.7 + 10, node.y * 0.5 + 10, 10, 0, Math.PI * 2);
                     pnode.fill();
                 }, function (source, target, link) {
                     plink.beginPath();
-                    plink.moveTo(source.x + 10, source.y + 10);
-                    plink.lineTo(target.x + 10, target.y + 10);
+                    plink.moveTo(source.x * 0.7 + 10, source.y * 0.5 + 10);
+                    plink.lineTo(target.x * 0.7 + 10, target.y * 0.5 + 10);
                     plink.stroke();
                 })
                 .bind('live', function () {
