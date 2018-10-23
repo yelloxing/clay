@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
+    <script src="../libs/clay.js"></script>
+    <script src="../../data/geoJSON/world.json.js"></script>
+    <title>世界地图</title>
+    <script>
+        $$(function () {
+
+            var map = clay.scale.map().center(0, 0).type('cylinder').scale(30000);
+
+            var h = 110 * Math.PI, w = h * 2;
+            $$('<svg></svg>').appendTo('body')
+                .attr("width", w * 2)
+                .attr("height", h * 2);
+
+            var colors = $$.getColors(worldMapData.features.length),
+                i, p, d;
+
+            $$('svg').find('g').data(worldMapData.features).enter('<g></g>').appendTo('svg');
+
+            $$('g').attr('name', function (data, index, target) {
+                if (data.geometry.type == "Polygon")
+                    $$('<path fill=' + colors[index] + '></path>').appendTo(target).datum(data.geometry.coordinates[0]);
+                else if (data.geometry.type == 'MultiPolygon') {
+                    for (i = 0; i < data.geometry.coordinates.length; i++)
+                        $$('<path fill=' + colors[index] + '></path>').appendTo(target).datum(data.geometry.coordinates[i][0]);
+                }
+                return data.properties.SOVEREIGNT;
+            });
+
+            $$('path').attr('d', function (data) {
+                p = map(data[0][0], data[0][1]);
+                d = "M" + (p[0] + w) + "," + (p[1] + h);
+                for (i = 1; i < data.length; i++) {
+                    p = map(data[i][0], data[i][1]);
+                    d += "L" + (p[0] + w) + "," + (p[1] + h);
+                }
+                return d;
+            });
+
+            // 删除不想要的
+            $$('[name="Antarctica"]').remove();
+
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>

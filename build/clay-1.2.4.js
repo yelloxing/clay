@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Oct 19 2018 16:35:12 GMT+0800 (CST)
+* Date:Mon Oct 22 2018 20:53:14 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -110,8 +110,9 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、映射计算、绘图方案svg+canvas、布局
+// 数学计算、物理计算、映射计算、绘图方案svg+canvas、布局
 clay.math = {};
+clay.physics = {};
 clay.scale = {};
 clay.svg = {}; clay.canvas = {};
 clay.layout = {};
@@ -124,7 +125,10 @@ var _Geography = [
     {
         R: 6317000// 半径
     }
-];
+],
+    _Physics = {
+        "k": 900000000// 库伦常数
+    };
 
 // 负责查找结点
 function _sizzle(selector, context) {
@@ -1091,13 +1095,154 @@ clay.math.scale = function () {
 
 };
 
-// 假定了地球是小圆球
+/**
+ * @param {array} electrons 电子集合
+ * 每个电子的保存结构为:
+ * [x,y]
+ *
+ * @return {array} cElectrons 库仑力电子集合
+ * 每个电子的保存结构为：
+ * [x,y,lawx,lawy]，最后二个参数是计算的x和y方向的库仑力
+ */
+var _coulomb_law = function (electrons) {
+    var
+        // Barnes-Hut近似精度平方
+        theta2 = 0.81,
+        // 四叉树
+        Q_Tree = {},
+        i, j;
+
+    // 求解出坐标最值
+    var minX = electrons[0][0], minY = electrons[0][1], maxX = electrons[0][0], maxY = electrons[0][1];
+    for (i = 1; i < electrons.length; i++) {
+        if (electrons[i][0] < minX) minX = electrons[i][0];
+        else if (electrons[i][0] > maxX) maxX = electrons[i][0];
+        if (electrons[i][1] < minY) minY = electrons[i][1];
+        else if (electrons[i][1] > maxY) maxY = electrons[i][1];
+    }
+
+    // 生成四叉树
+    (function calc_Q_Tree(nodes, id, ix, ax, iy, ay) {
+        var mx = (ix + ax) * 0.5,
+            my = (iy + ay) * 0.5;
+        Q_Tree[id] = {
+            "num": nodes.length,
+            "cx": mx,
+            "cy": my,
+            "w": ax - ix,
+            "h": ay - iy,
+            // 无法或无需分割，包含的是结点
+            "e": [],
+            // 分割的子区域，包含的是区域id
+            "children": []
+        };
+        if (nodes.length == 1) {
+            Q_Tree[id].e = [nodes[0]];
+            return;
+        }
+        var ltNodes = [], rtNodes = [], lbNodes = [], rbNodes = [];
+        for (i = 0; i < nodes.length; i++) {
+            // 分割线上的
+            if (
+                nodes[i][0] == mx || nodes[i][1] == my ||
+                nodes[i][0] == ix || nodes[i][0] == ax ||
+                nodes[i][1] == iy || nodes[i][1] == ay
+            ) Q_Tree[id].e.push(nodes[i]);
+            // 更小的格子里
+            else if (nodes[i][0] < mx) {
+                if (nodes[i][1] < my) ltNodes.push(nodes[i]); else lbNodes.push(nodes[i]);
+            } else {
+                if (nodes[i][1] < my) rtNodes.push(nodes[i]); else rbNodes.push(nodes[i]);
+            }
+        }
+        // 启动子区域分割
+        if (ltNodes.length > 0) {
+            Q_Tree[id].children.push(id + "1");
+            calc_Q_Tree(ltNodes, id + "1", ix, mx, iy, my);
+        }
+        if (rtNodes.length > 0) {
+            Q_Tree[id].children.push(id + "2");
+            calc_Q_Tree(rtNodes, id + "2", mx, ax, iy, my);
+        }
+        if (lbNodes.length > 0) {
+            Q_Tree[id].children.push(id + "3");
+            calc_Q_Tree(lbNodes, id + "3", ix, mx, my, ay);
+        }
+        if (rbNodes.length > 0) {
+            Q_Tree[id].children.push(id + "4");
+            calc_Q_Tree(rbNodes, id + "4", mx, ax, my, ay);
+        }
+
+    })(electrons, 'Q', minX, maxX, minY, maxY);
+
+    // 求解库仑力
+    var treeNode, eleNode, law = [], d2, r2,
+        /**
+         * q1、x1、y1：目标作用电子（或电子团）的电荷、x坐标、y坐标
+         * q2、x2、y2：目标计算电子的电荷、x坐标、y坐标
+         */
+        doLaw = function (q1, x1, y1, x2, y2) {
+            if (x1 == x2 && y1 == y2)
+                // 重叠的点忽略
+                return [0, 0];
+            var f = q1 * _Physics.k / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            var d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+            return [
+                f * (x2 - x1) / d,
+                f * (y2 - y1) / d
+            ];
+        };
+    for (i = 0; i < electrons.length; i++) {
+        law = (function calc_Coulomb_Law(treeName) {
+            treeNode = Q_Tree[treeName];
+            eleNode = electrons[i];
+            // Barnes-Hut加速计算
+            // 区域面积
+            d2 = treeNode.cx * treeNode.cy;
+            // '质心'间距离平方
+            r2 = (eleNode[0] - treeNode.cx) * (eleNode[0] - treeNode.cx) + (eleNode[1] - treeNode.cy) * (eleNode[1] - treeNode.cy);
+            if (d2 / r2 <= theta2) {
+                // 默认每个电荷数量是1，且都同性
+                return doLaw(treeNode.num, treeNode.cx, treeNode.cy, eleNode[0], eleNode[1]);
+            } else {
+                var result_law = [0, 0], temp_law;
+                for (j = 0; j < treeNode.e.length; j++) {
+                    temp_law = doLaw(1, treeNode.e[j][0], treeNode.e[j][1], eleNode[0], eleNode[1]);
+                    result_law[0] += temp_law[0];
+                    result_law[1] += temp_law[1];
+                }
+                for (j = 0; j < treeNode.children.length; j++) {
+                    temp_law = calc_Coulomb_Law(treeNode.children[j]);
+                    result_law[0] += temp_law[0];
+                    result_law[1] += temp_law[1];
+                }
+                return result_law;
+            }
+        })('Q');
+        electrons[i][2] = law[0];
+        electrons[i][3] = law[1];
+    }
+
+    return electrons;
+
+};
 
 /**
- * 确定中心点以后，
- * 旋转地球，使得中心点作为最高点，
- * 然后垂直纸面的视线
+ * 前一刻位置、速度和加速度，时间间隔
+ * 在极其小的时间间隔里，加速度的改变对位置的计算可以忽略不计
  */
+var _Velocity_Verlet_P = function (p, v, a, dt) {
+    return p + v * dt + a * dt * dt * 0.5;
+};
+
+/**
+ * 前一刻速度、加速度，此刻加速度，时间间隔
+ * 假设加速度的改变在极其小的时间间隔里可以看成线性变化
+ */
+var _Velocity_Verlet_V = function (v, a, na, dt) {
+    return v + (a + na) * dt * 0.5;
+};
+
 var _ploar = function (longitude, latitude, rotate_z, rotate_x, rotate_y, scope) {
     /**
          * 通过旋转的方法
@@ -1130,6 +1275,17 @@ var _ploar = function (longitude, latitude, rotate_z, rotate_x, rotate_y, scope)
     ];
 };
 
+var _cylinder = function (longitude, latitude, vertical_dis, horizontal_dis, scope) {
+
+    return [
+        horizontal_dis * (longitude - scope.c[0]),
+        vertical_dis * (scope.c[1] - latitude),
+        // 这种投影统一认为无法模拟三纬
+        0
+    ];
+};
+
+// 假定了地球是小圆球
 clay.scale.map = function () {
 
     var scope = {
@@ -1141,15 +1297,26 @@ clay.scale.map = function () {
 
     var rotate_z, rotate_x, rotate_y;
 
+    // 分别计算出纬度和经度每一度的距离
+    var vertical_dis, horizontal_dis, calcDis = function () {
+        vertical_dis = _Geography[0].R / 90 / scope.s;
+        horizontal_dis = vertical_dis * Math.PI * 0.5;
+    };
+    calcDis();
+
     // 计算出来的位置是偏离中心点的距离
     var map = function (longitude, latitude) {
 
-        // 极地投影
+        // 方位投影 - 等角斜方位投影
         if (scope.t == 'ploar') {
             rotate_z = rotate_z || clay.math.rotate().setL(0, 0, 0, 0, 0, 1);
             rotate_x = rotate_x || clay.math.rotate().setL(0, 0, 0, 1, 0, 0);
             rotate_y = rotate_y || clay.math.rotate().setL(0, 1, 0, 0, 0, 0);
             return _ploar(longitude, latitude, rotate_z, rotate_x, rotate_y, scope);
+        }
+        // 正轴等角圆柱投影 - 墨卡托投影
+        else if (scope.t == 'cylinder') {
+            return _cylinder(longitude, latitude, vertical_dis, horizontal_dis, scope);
         }
         // 错误设置应该抛错
         else {
@@ -1169,6 +1336,7 @@ clay.scale.map = function () {
     map.scale = function (scale) {
         if (typeof scale === 'number') scope.s = scale;
         else return scope.s;
+        calcDis();
         return map;
     };
 
@@ -1376,6 +1544,10 @@ clay.layout.tree = function () {
     };
 
     return tree;
+
+};
+
+clay.layout.force = function () {
 
 };
 
