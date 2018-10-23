@@ -76,9 +76,7 @@
     };
 
     clay.prototype.init.prototype = clay.prototype;
-
     // @CODE build.js inserts compiled clay here
-
     __isLoad__ = false;
 
     clay.author = '心叶';
