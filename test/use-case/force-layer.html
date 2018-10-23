@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
+    <script src="../libs/clay.js"></script>
+    <script src="../../data/normal/energy.json.js"></script>
+    <title>力布局</title>
+    <script>
+        $$(function () {
+
+            var force = clay.layout.force();
+
+            $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+                .appendTo('body')
+                .attr('width', 720)
+                .attr('height', 520);
+
+            var layer = clay.canvas.layer('canvas', 720, 520),
+                plink = layer.get('link'),
+                pnode = layer.get('node');
+
+            pnode.fillStyle = 'red';
+            plink.strokeStyle = 'pink';
+            plink.lineWidth=1;
+
+            force
+                // 分析数据方法
+                .bind('analyse', function (initnode) {
+                    return initnode.name;
+                }, function (initlink) {
+                    return [initlink.source, initlink.target, initlink.value + 260];
+                })
+                // 绘图方法
+                .bind('update', function (node) {
+                    pnode.beginPath();
+                    pnode.arc(node.x * 0.7 + 10, node.y * 0.5 + 10, 7, 0, Math.PI * 2);
+                    pnode.fill();
+                }, function (source, target, link) {
+                    plink.beginPath();
+                    plink.moveTo(source.x * 0.7 + 10, source.y * 0.5 + 10);
+                    plink.lineTo(target.x * 0.7 + 10, target.y * 0.5 + 10);
+                    plink.stroke();
+                })
+                .bind('live', function () {
+                    layer.clean(pnode);
+                    layer.clean(plink);
+                }, function () {
+                    layer.update();
+                });
+
+            force(energyData.nodes, energyData.links);
+
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>
