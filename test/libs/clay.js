@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 24 2018 11:38:51 GMT+0800 (CST)
+* Date:Wed Oct 24 2018 15:00:46 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -575,7 +575,7 @@ clay.region = function (selector, width, height) {
                         p = 'r';
                         return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
                     }
-                }[p];
+                }[p]();
                 drawerRegion(canvas2D, regions[region_id], type, data);
                 return regionManger;
             },
@@ -586,19 +586,17 @@ clay.region = function (selector, width, height) {
                 return regionManger;
             },
 
-            // 在指定区域绑定事件
-            "bind": function (region_id, eventType, callback) {
-                var targetColor = regions[region_id], currentRGBA, pos;
-                _this.bind(eventType, function (event) {
-
-                    event = event || window.event;
-                    pos = _this.position(event);
+            // 获取此刻鼠标所在区域
+            "getRegion": function (event) {
+                var pos = _this.position(event), i,
                     currentRGBA = canvas2D.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
-                    if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == targetColor)
-                        callback(event, pos.x, pos.y);
 
-                });
-                return regionManger;
+                for (i in regions) {
+                    if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == regions[i]) {
+                        return i;
+                    }
+                }
+                return undefined;
             }
         };
 
@@ -1681,8 +1679,11 @@ clay.layout.force = function () {
             if (!running) {
                 running = true;
                 tick();
+                alpha = 1;
+            } else {
+                alpha = 0.3;
             }
-            alpha = 1;
+
         };
 
     var force = function (initnodes, initlinks) {
@@ -1698,6 +1699,7 @@ clay.layout.force = function () {
                 "vx": 0, "vy": 0,
                 "ax": 0, "ay": 0,
                 "t": [], "s": [],
+                "id": k[0],
                 "g": k[1]
             };
             j.p.push([i % num * sw + sw * 0.5, Math.ceil((i + 1) / num) * sw - sw * 0.5]);
@@ -1740,6 +1742,12 @@ clay.layout.force = function () {
         if (typeof linkback !== 'function') linkback = function () { };
         scope.e[type] = [nodeback, linkback];
         return force;
+    };
+
+    force.update = function (id, x, y) {
+        allNode[id].x = x;
+        allNode[id].y = y;
+        update();
     };
 
     return force;

@@ -138,8 +138,11 @@ clay.layout.force = function () {
             if (!running) {
                 running = true;
                 tick();
+                alpha = 1;
+            } else {
+                alpha = 0.3;
             }
-            alpha = 1;
+
         };
 
     var force = function (initnodes, initlinks) {
@@ -155,6 +158,7 @@ clay.layout.force = function () {
                 "vx": 0, "vy": 0,
                 "ax": 0, "ay": 0,
                 "t": [], "s": [],
+                "id": k[0],
                 "g": k[1]
             };
             j.p.push([i % num * sw + sw * 0.5, Math.ceil((i + 1) / num) * sw - sw * 0.5]);
@@ -197,6 +201,12 @@ clay.layout.force = function () {
         if (typeof linkback !== 'function') linkback = function () { };
         scope.e[type] = [nodeback, linkback];
         return force;
+    };
+
+    force.update = function (id, x, y) {
+        allNode[id].x = x;
+        allNode[id].y = y;
+        update();
     };
 
     return force;

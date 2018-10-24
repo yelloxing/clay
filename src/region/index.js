@@ -41,7 +41,7 @@ clay.region = function (selector, width, height) {
                         p = 'r';
                         return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
                     }
-                }[p];
+                }[p]();
                 drawerRegion(canvas2D, regions[region_id], type, data);
                 return regionManger;
             },
@@ -52,19 +52,17 @@ clay.region = function (selector, width, height) {
                 return regionManger;
             },
 
-            // 在指定区域绑定事件
-            "bind": function (region_id, eventType, callback) {
-                var targetColor = regions[region_id], currentRGBA, pos;
-                _this.bind(eventType, function (event) {
-
-                    event = event || window.event;
-                    pos = _this.position(event);
+            // 获取此刻鼠标所在区域
+            "getRegion": function (event) {
+                var pos = _this.position(event), i,
                     currentRGBA = canvas2D.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
-                    if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == targetColor)
-                        callback(event, pos.x, pos.y);
 
-                });
-                return regionManger;
+                for (i in regions) {
+                    if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == regions[i]) {
+                        return i;
+                    }
+                }
+                return undefined;
             }
         };
 
