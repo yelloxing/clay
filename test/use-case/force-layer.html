@@ -14,6 +14,13 @@
 
             var force = clay.layout.force();
 
+            // 配置
+            force.config({
+                center:26,//中心力强度
+                coulomb:400,//库仑力缩小倍数
+                spring:200,//软棒系数
+            });
+
             $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
                 .appendTo('body')
                 .attr('width', 720)
@@ -39,7 +46,7 @@
                 .bind('analyse', function (initnode) {
                     return [initnode.id, initnode.group];
                 }, function (initlink) {
-                    return [initlink.source, initlink.target, initlink.value + 300];
+                    return [initlink.source, initlink.target, initlink.value + 240];
                 })
                 // 绘图方法
                 .bind('update', function (node) {
