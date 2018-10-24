@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 24 2018 15:00:46 GMT+0800 (CST)
+* Date:Wed Oct 24 2018 21:42:35 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -1572,7 +1572,7 @@ clay.layout.force = function () {
                     if (dx != 0 && dy != 0) {
                         d = Math.sqrt(dx * dx + dy * dy);
                         // 弹簧系数先写死
-                        k = 100 * (d - (allLink[i][j].isG ? allLink[i][j].l * 0.3 : allLink[i][j].l));
+                        k = 200 * (d - (allLink[i][j].isG ? allLink[i][j].l * 0.3 : allLink[i][j].l));
                         fx = k * dx / d;
                         fy = k * dy / d;
                         allNode[i].fx -= fx;
@@ -1599,8 +1599,9 @@ clay.layout.force = function () {
         // 中心引力，用以聚笼结点
         updateCenter = function () {
             for (i in allNode) {
-                allNode[i].fx += (500 - allNode[i].x) * 0.05;
-                allNode[i].fy += (500 - allNode[i].y) * 0.05;
+                k = allNode[i].ng > 0 ? allNode[i].ng : -1;
+                allNode[i].fx += (500 - allNode[i].x) * 24 * k;
+                allNode[i].fy += (500 - allNode[i].y) * 24 * k;
             }
         },
         //持续计算
@@ -1700,7 +1701,8 @@ clay.layout.force = function () {
                 "ax": 0, "ay": 0,
                 "t": [], "s": [],
                 "id": k[0],
-                "g": k[1]
+                "g": k[1],
+                "ng": 0
             };
             j.p.push([i % num * sw + sw * 0.5, Math.ceil((i + 1) / num) * sw - sw * 0.5]);
             j.g[k[1]] = j.g[k[1]] || [];
@@ -1727,6 +1729,10 @@ clay.layout.force = function () {
             // 告诉结点，他连接的点
             allNode[k[0]].t.push(k[1]);
             allNode[k[1]].s.push(k[0]);
+            if (allNode[k[0]].g != allNode[k[1]].g) {
+                allNode[k[0]].ng += 1;
+                allNode[k[1]].ng += 1;
+            }
         }
         update();
 
