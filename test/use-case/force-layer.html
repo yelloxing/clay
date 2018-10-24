@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
     <script src="../libs/clay.js"></script>
-    <script src="../../data/normal/energy.json.js"></script>
+    <script src="../../data/normal/data.force.json.js"></script>
     <title>力布局</title>
     <script>
         $$(function () {
@@ -23,21 +23,27 @@
                 plink = layer.get('link'),
                 pnode = layer.get('node');
 
-            pnode.fillStyle = 'red';
-            plink.strokeStyle = 'pink';
-            plink.lineWidth=1;
+            var colors = ['#4CAF50', '#673AB7', '#CDDC39', '#F44336', '#0a4c80', '#9E9E9E',
+                '#FF9800', '#795548', '#03A9F4', '#1b290b', '#fbe209'];
+
+            plink.strokeStyle = '#ccc';
+            pnode.strokeStyle = '#eee';
+            plink.lineWidth = 1.5;
+            pnode.lineWidth = 2;
 
             force
                 // 分析数据方法
                 .bind('analyse', function (initnode) {
-                    return initnode.name;
+                    return [initnode.id, initnode.group];
                 }, function (initlink) {
-                    return [initlink.source, initlink.target, initlink.value + 260];
+                    return [initlink.source, initlink.target, initlink.value + 300];
                 })
                 // 绘图方法
                 .bind('update', function (node) {
                     pnode.beginPath();
-                    pnode.arc(node.x * 0.7 + 10, node.y * 0.5 + 10, 7, 0, Math.PI * 2);
+                    pnode.fillStyle = colors[node.orgData.group];
+                    pnode.arc(node.x * 0.7 + 10, node.y * 0.5 + 10, 5, 0, Math.PI * 2);
+                    pnode.stroke();
                     pnode.fill();
                 }, function (source, target, link) {
                     plink.beginPath();
@@ -52,7 +58,7 @@
                     layer.update();
                 });
 
-            force(energyData.nodes, energyData.links);
+            force(forceData.nodes, forceData.links);
 
         });
     </script>
