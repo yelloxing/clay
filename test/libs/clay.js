@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 24 2018 21:42:35 GMT+0800 (中国标准时间)
+* Date:Wed Oct 24 2018 22:16:51 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -1547,7 +1547,8 @@ clay.layout.tree = function () {
 clay.layout.force = function () {
 
     var scope = {
-        "e": {}
+        "e": {},
+        "c": {}
     }, allNode, allLink,
         i, j, k, flag, source, target, dx, dy, d, fx, fy, ax, ay, dsq,
         // 标记轮播计算是否在运行中
@@ -1572,7 +1573,7 @@ clay.layout.force = function () {
                     if (dx != 0 && dy != 0) {
                         d = Math.sqrt(dx * dx + dy * dy);
                         // 弹簧系数先写死
-                        k = 200 * (d - (allLink[i][j].isG ? allLink[i][j].l * 0.3 : allLink[i][j].l));
+                        k = scope.c.spring * (d - (allLink[i][j].isG ? allLink[i][j].l * 0.3 : allLink[i][j].l));
                         fx = k * dx / d;
                         fy = k * dy / d;
                         allNode[i].fx -= fx;
@@ -1591,8 +1592,8 @@ clay.layout.force = function () {
             j = _coulomb_law(k);
             k = 0;
             for (i in allNode) {
-                allNode[i].fx += j[k][2] / 400;
-                allNode[i].fy += j[k][3] / 400;
+                allNode[i].fx += j[k][2] / scope.c.coulomb;
+                allNode[i].fy += j[k][3] / scope.c.coulomb;
                 k += 1;
             }
         },
@@ -1600,8 +1601,8 @@ clay.layout.force = function () {
         updateCenter = function () {
             for (i in allNode) {
                 k = allNode[i].ng > 0 ? allNode[i].ng : -1;
-                allNode[i].fx += (500 - allNode[i].x) * 24 * k;
-                allNode[i].fy += (500 - allNode[i].y) * 24 * k;
+                allNode[i].fx += (500 - allNode[i].x) * scope.c.center * k;
+                allNode[i].fy += (500 - allNode[i].y) * scope.c.center * k;
             }
         },
         //持续计算
@@ -1754,6 +1755,13 @@ clay.layout.force = function () {
         allNode[id].x = x;
         allNode[id].y = y;
         update();
+        return force;
+    };
+
+    force.config = function (config) {
+        for (k in config)
+            scope.c[k] = config[k];
+        return force;
     };
 
     return force;
