@@ -59,3 +59,50 @@ tree(/*原始数据*/);
 <p>
     由于有时候需要分开进行多次修改操作，因此可以设置不更新，在最后结束后手动调用更新。
 </p>
+<h3 id='layout-tree'>
+    力布局
+</h3>
+<p>
+    力布局就是模拟一个物理环境，其中包含中心力（引力或斥力），结点间的排斥力和连接结点间的软木棒力。
+</p>
+<p>
+    当然，为了更好的效果，额外添加了比如阻尼衰减等特性，大致是下面的效果：
+</p>
+<img src="../examples/force-layer.png">
+<pre class="code">
+//获取力布局
+var force = clay.layout.force();
+
+// 配置
+force.config({
+    center:26,//中心力强度
+    coulomb:400,//库仑力缩小倍数
+    spring:200,//软棒系数
+});
+
+force
+// 分析数据方法
+.bind('analyse', function (initnode) {
+    return [结点ID, 结点组名称];
+}, function (initlink) {
+    return [源结点ID, 目标结点ID, 连线长度];
+})
+
+// 配置绘图方法
+.bind('update', function (node) {
+    //画结点
+}, function (source, target, link) {
+   //画连线
+})
+.bind('live', function () {
+   //每次绘制前预处理，可选
+}, function () {
+    //每次绘制后预处理，可选
+});
+
+启动布局
+force(nodes, links);
+</pre>
+<p>
+    具体的绘制方法你可以选择你喜欢的方式，只需要修改对应的绘图方法即可。
+</p>
