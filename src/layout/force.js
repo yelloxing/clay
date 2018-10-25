@@ -38,7 +38,7 @@ clay.layout.force = function () {
                         d = Math.sqrt(dx * dx + dy * dy);
                         // scope.c.spring表示弹簧系数
                         // 同一组之间和别的组之间为了显示的分开，绳子长度进行了统一的缩放
-                        k = scope.c.spring * (d - (allLink[i][j].isG ? allLink[i][j].l * 0.3 : allLink[i][j].l));
+                        k = scope.c.spring * (d - (allLink[i][j].isG ? allLink[i][j].l * scope.c.scale : allLink[i][j].l));
                         fx = k * dx / d;
                         fy = k * dy / d;
                         // 软木棒作用的双方都会受到力
@@ -209,7 +209,8 @@ clay.layout.force = function () {
                 "t": [], "s": [],
                 "id": k[0],//该结点的唯一标识
                 "g": k[1],//结点所在的组
-                "ng": 0//和结点相连却不是一个组的连线个数
+                "ng": 0,//和结点相连却不是一个组的连线个数
+                "ig": 0//和结点相连是一个组的连线个数
             };
 
             // j中的p记录了初始化结点可以存放的位置有哪些
@@ -249,6 +250,9 @@ clay.layout.force = function () {
             if (allNode[k[0]].g != allNode[k[1]].g) {
                 allNode[k[0]].ng += 1;
                 allNode[k[1]].ng += 1;
+            } else {
+                allNode[k[0]].ig += 1;
+                allNode[k[1]].ig += 1;
             }
         }
         update();
@@ -286,6 +290,7 @@ clay.layout.force = function () {
      *   center:26,//中心力强度
      *   coulomb:400,//库仑力缩小倍数
      *   spring:200,//软棒系数
+     *   scale:0.3//组内绳子缩短程度
      *
      * }
      */
