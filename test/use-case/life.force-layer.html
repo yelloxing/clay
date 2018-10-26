@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
+    <script src="../libs/clay.js"></script>
+    <script src="../../data/normal/data.all.life.json.js"></script>
+    <title>树结构力布局测试</title>
+    <script>
+        $$(function () {
+
+            var force = clay.layout.force();
+
+            // 配置
+            force.config({
+                center: 36,//中心力强度
+                coulomb: 10,//库仑力缩小倍数
+                spring: 300,//软棒系数
+                scale:0.25//组内绳子缩短程度
+            });
+
+            $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+                .appendTo('body')
+                .attr('width', 720)
+                .attr('height', 520);
+
+            var layer = clay.canvas.layer('canvas', 720, 520),
+                plink = layer.get('link'),
+                pnode = layer.get('node'),
+                ptext = layer.get('text');
+
+            var pos, width, height;
+
+            var showText = function (x, y, texts, num) {
+                layer.clean(ptext);
+                x += 10;
+                y += 10;
+                height = texts.length * 16 + 8;
+                width = num * 16;
+                ptext.beginPath();
+                ptext.rect(x, y, width, height);
+                ptext.fill();
+                for (i = 0; i < texts.length; i++)
+                    ptext.strokeText(texts[i], x + 8, y + i * 16 + 7 + 4);
+            }
+
+            ptext.textBaseline = 'middle';//上下居中
+            ptext.fillStyle = 'rgba(120,120,120,.7)';
+            ptext.strokeStyle = 'rgb(250,250,250)';
+
+            // 建立区域管理对象
+            var regionManager = clay.region("canvas", 720, 520);
+
+            plink.strokeStyle = '#ccc';
+            pnode.strokeStyle = '#fff';
+            plink.lineWidth = 1.5;
+            pnode.lineWidth = 5;
+
+            force
+                // 分析数据方法
+                .bind('analyse', function (initnode) {
+                    return [initnode.id, 1];
+                }, function (initlink) {
+                    return [initlink.link[0], initlink.link[1], initlink.length * 50];
+                })
+                // 绘图方法
+                .bind('update', function (node) {
+                    pnode.beginPath();
+                    pnode.fillStyle = node.orgData.color;
+                    pnode.arc(node.x * 0.7 + 10, node.y * 0.5 + 10, 5, 0, Math.PI * 2);
+                    pnode.stroke();
+                    pnode.fill();
+                    // 修改区域
+                    regionManager.drawer(node.id, function (painter) {
+                        painter.arc(node.x * 0.7 + 10, node.y * 0.5 + 10, 5, 0, Math.PI * 2);
+                    });
+                }, function (source, target, link) {
+                    plink.beginPath();
+                    plink.moveTo(source.x * 0.7 + 10, source.y * 0.5 + 10);
+                    plink.lineTo(target.x * 0.7 + 10, target.y * 0.5 + 10);
+                    plink.stroke();
+                })
+                .bind('live', function () {
+                    layer.clean(pnode);
+                    layer.clean(plink);
+                    // 擦除全部区域，恢复初始化
+                    regionManager.erase(function (painter) {
+                        painter.fillRect(0, 0, 720, 520);
+                    });
+                }, function () {
+                    layer.update();
+                });
+
+            force(lifeData[0], lifeData[1]);
+
+            var region = undefined, p;
+            $$('canvas')
+                .bind('mousedown', function (event) {
+                    event = event || window.event;
+                    region = regionManager.getRegion(event);
+                })
+                .bind('mouseup', function (event) {
+                    layer.clean(ptext);
+                    event = event || window.event;
+                    region = undefined;
+                })
+                .bind('mousemove', function (event) {
+                    event = event || window.event;
+                    if (region) {
+                        p = $$('canvas').position(event);
+                        force.update(region, (p.x - 10) / 7 * 10, (p.y - 10) * 2);
+                        $$('canvas').css('cursor', 'pointer');
+                        showText(p.x, p.y, [lifeData[0][region].info], lifeData[0][region].info.replace(/[\u0391-\uFFE5]/g, "aa").length / 2 + 0.5);
+                    } else {
+                        $$('canvas').css('cursor', 'default');
+                    }
+                });
+
+        });
+    </script>
+</head>
+
+<body></body>
+
+</html>
