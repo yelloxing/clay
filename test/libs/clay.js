@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 24 2018 22:16:51 GMT+0800 (中国标准时间)
+* Date:Sun Oct 28 2018 18:33:05 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -1189,33 +1189,35 @@ var _coulomb_law = function (electrons) {
                 f * (y2 - y1) / d
             ];
         };
-    for (i = 0; i < electrons.length; i++) {
-        law = (function calc_Coulomb_Law(treeName) {
-            treeNode = Q_Tree[treeName];
-            eleNode = electrons[i];
-            // Barnes-Hut加速计算
-            // 区域面积
-            d2 = treeNode.cx * treeNode.cy;
-            // '质心'间距离平方
-            r2 = (eleNode[0] - treeNode.cx) * (eleNode[0] - treeNode.cx) + (eleNode[1] - treeNode.cy) * (eleNode[1] - treeNode.cy);
-            if (d2 / r2 <= theta2) {
-                // 默认每个电荷数量是1，且都同性
-                return doLaw(treeNode.num, treeNode.cx, treeNode.cy, eleNode[0], eleNode[1]);
-            } else {
-                var result_law = [0, 0], temp_law;
-                for (j = 0; j < treeNode.e.length; j++) {
-                    temp_law = doLaw(1, treeNode.e[j][0], treeNode.e[j][1], eleNode[0], eleNode[1]);
-                    result_law[0] += temp_law[0];
-                    result_law[1] += temp_law[1];
-                }
-                for (j = 0; j < treeNode.children.length; j++) {
-                    temp_law = calc_Coulomb_Law(treeNode.children[j]);
-                    result_law[0] += temp_law[0];
-                    result_law[1] += temp_law[1];
-                }
-                return result_law;
+
+    var calc_Coulomb_Law = function (treeName, i) {
+        treeNode = Q_Tree[treeName];
+        eleNode = electrons[i];
+        // Barnes-Hut加速计算
+        // 区域面积
+        d2 = treeNode.cx * treeNode.cy;
+        // '质心'间距离平方
+        r2 = (eleNode[0] - treeNode.cx) * (eleNode[0] - treeNode.cx) + (eleNode[1] - treeNode.cy) * (eleNode[1] - treeNode.cy);
+        if (d2 / r2 <= theta2) {
+            // 默认每个电荷数量是1，且都同性
+            return doLaw(treeNode.num, treeNode.cx, treeNode.cy, eleNode[0], eleNode[1]);
+        } else {
+            var result_law = [0, 0], temp_law;
+            for (j = 0; j < treeNode.e.length; j++) {
+                temp_law = doLaw(1, treeNode.e[j][0], treeNode.e[j][1], eleNode[0], eleNode[1]);
+                result_law[0] += temp_law[0];
+                result_law[1] += temp_law[1];
             }
-        })('Q');
+            for (j = 0; j < treeNode.children.length; j++) {
+                temp_law = calc_Coulomb_Law(treeNode.children[j], i);
+                result_law[0] += temp_law[0];
+                result_law[1] += temp_law[1];
+            }
+            return result_law;
+        }
+    };
+    for (i = 0; i < electrons.length; i++) {
+        law = calc_Coulomb_Law('Q', i);
         electrons[i][2] = law[0];
         electrons[i][3] = law[1];
     }
@@ -1547,9 +1549,13 @@ clay.layout.tree = function () {
 clay.layout.force = function () {
 
     var scope = {
+        // 处理方法
         "e": {},
+        // 配置参数
         "c": {}
-    }, allNode, allLink,
+    },
+        // 分别用于保存结点和连线，内部存储
+        allNode, allLink,
         i, j, k, flag, source, target, dx, dy, d, fx, fy, ax, ay, dsq,
         // 标记轮播计算是否在运行中
         running = false,
@@ -1570,12 +1576,15 @@ clay.layout.force = function () {
                     target = allNode[j];
                     dx = source.x - target.x;
                     dy = source.y - target.y;
+                    // 如果绳子长度为0，忽略作用力
                     if (dx != 0 && dy != 0) {
                         d = Math.sqrt(dx * dx + dy * dy);
-                        // 弹簧系数先写死
-                        k = scope.c.spring * (d - (allLink[i][j].isG ? allLink[i][j].l * 0.3 : allLink[i][j].l));
+                        // scope.c.spring表示弹簧系数
+                        // 同一组之间和别的组之间为了显示的分开，绳子长度进行了统一的缩放
+                        k = scope.c.spring * (d - (allLink[i][j].isG ? allLink[i][j].l * scope.c.scale : allLink[i][j].l));
                         fx = k * dx / d;
                         fy = k * dy / d;
+                        // 软木棒作用的双方都会受到力
                         allNode[i].fx -= fx;
                         allNode[i].fy -= fy;
                         allNode[j].fx += fx;
@@ -1630,10 +1639,13 @@ clay.layout.force = function () {
                 dsq = dx * dx + dy * dy;
                 // 1.1超过一次改变最大程度
                 if (dsq > 100) {
+                    // 如果二次位置（之前和计算后的）绘制的面积大于100，认为这是一次剧烈的改变
+                    // 剧烈的改变是不友好的用户体验
                     k = Math.sqrt(100 / dsq);
                     dx *= k;
                     dy *= k;
                 }
+                // 更新结点位置
                 allNode[i].x += dx;
                 allNode[i].y += dy;
                 // 1.2 如果结点越界
@@ -1647,6 +1659,10 @@ clay.layout.force = function () {
                 allNode[i].ax = allNode[i].fx / 1000 * alpha;
                 allNode[i].ay = allNode[i].fy / 1000 * alpha;
                 // 3.更新速度
+                // 采用速度verlet算法计算
+                // 乘上alpha是为了让结点慢慢停下来
+                // 因为理论上来说，结点很大概率会永远停不下来
+                // 但这是不需要的，因此添加了阻尼衰减
                 allNode[i].vx = _Velocity_Verlet_V(allNode[i].vx, ax, allNode[i].ax, 1) * alpha;
                 allNode[i].vy = _Velocity_Verlet_V(allNode[i].vy, ay, allNode[i].ay, 1) * alpha;
             }
@@ -1655,56 +1671,95 @@ clay.layout.force = function () {
             if (num < 30) {
                 num += 1;
             } else {
+                // 重新渲染前调用
                 if (scope.e.live && typeof scope.e.live[0] === 'function') scope.e.live[0]();
 
+                // 绘制结点
                 for (i in allNode) scope.e.update[0](allNode[i]);
                 for (i in allLink)
                     for (j in allLink[i])
+                        // 绘制连线
                         scope.e.update[1](allNode[i], allNode[j], allLink[i][j]);
 
+                // 渲染结束后调用
                 if (scope.e.live && typeof scope.e.live[1] === 'function') scope.e.live[1]();
             }
 
             // 判断是否需要停止
             if (alpha >= alphaMin)
+                // 计算一定次数以后再开始绘制页面
+                // 这是为了加速渲染
+                // 我们不希望初始化计算时间过长
                 if (num < 30)
                     tick();
                 else
                     window.setTimeout(function () {
+                        // 每次重新渲染页面不需要太快
+                        // 一定间隔后渲染依旧不会影响体验
                         tick();
                     }, 40);
             else
+                // 标记迭代结束
                 running = false;
         },
         // 启动更新
         update = function () {
             if (!running) {
+                // running表示此刻是否在迭代计算
                 running = true;
                 tick();
                 alpha = 1;
             } else {
-                alpha = 0.3;
+                // 如果在迭代计算
+                // 启动更新等价与保证衰减率不低于0.3
+                alpha = alpha < 0.3 ? 0.3 : alpha;
             }
 
         };
 
+    /**
+     * 调用启动布局计算的方法
+     * @param {Array} initnodes 全部结点
+     * @param {Array} initlinks 全部连线
+     *
+     * -----------------------------------------
+     * 需要分析这些数据的方法需要在绘图前配置好
+     * 因此原则上来说，原始数据只要是二个数组
+     * 其它没有任何要求
+     *
+     */
     var force = function (initnodes, initlinks) {
         allNode = {}; allLink = {};
         // 分析结点
+        // 初始化结点被分配在一个10*10的区域
+        // 这里的num表示这个区域一行至少需要存放多少个结点
+        // sw表示一个结点占据的宽是多少
         var num = Math.ceil(10 / Math.sqrt(100 / initnodes.length)),
             sw = 10 / num;
         j = { "p": [], "g": {} };
         for (i = 0; i < initnodes.length; i++) {
+            // k返回一个数组
+            // [结点id，结点所在组的名称]
             k = scope.e.analyse[0](initnodes[i]);
+            // 内部存储一个点的结构
             allNode[k[0]] = {
-                "orgData": initnodes[i],
-                "vx": 0, "vy": 0,
-                "ax": 0, "ay": 0,
+                "orgData": initnodes[i],//结点原始数据
+                "vx": 0, "vy": 0,//结点坐标
+                "ax": 0, "ay": 0,//结点加速度
+                //记录结点和哪些结点连接在一起
+                // t保存的是结点作为source
+                // s保存的是结点作为target
                 "t": [], "s": [],
-                "id": k[0],
-                "g": k[1],
-                "ng": 0
+                "id": k[0],//该结点的唯一标识
+                "g": k[1],//结点所在的组
+                "ng": 0,//和结点相连却不是一个组的连线个数
+                "ig": 0//和结点相连是一个组的连线个数
             };
+
+            // j中的p记录了初始化结点可以存放的位置有哪些
+            // j中的g记录了根据组分别保存的结点
+            // 这二个记录的目的是在稍晚点的时候初始化点的坐标的时候
+            // 把同一组的结点尽力初始化在一起
             j.p.push([i % num * sw + sw * 0.5, Math.ceil((i + 1) / num) * sw - sw * 0.5]);
             j.g[k[1]] = j.g[k[1]] || [];
             j.g[k[1]].push(k[0]);
@@ -1712,6 +1767,7 @@ clay.layout.force = function () {
         flag = 0;
         for (i in j.g) {
             for (k in j.g[i]) {
+                // 如同前面描述的，这里把可以存放的点，根据组来一个个分配
                 allNode[j.g[i][k]].x = j.p[flag][0] + 495;
                 allNode[j.g[i][k]].y = j.p[flag][1] + 495;
                 flag += 1;
@@ -1720,11 +1776,15 @@ clay.layout.force = function () {
 
         // 分析连线
         for (i = 0; i < initlinks.length; i++) {
+            // k返回一个数组
+            // [sorce结点，target结点，连线长度]
             k = scope.e.analyse[1](initlinks[i]);
             allLink[k[0]] = allLink[k[0]] || {};
+            // 内部存储一条线的结构
             allLink[k[0]][k[1]] = {
-                "l": k[2],
-                "orgData": initlinks[i],
+                "l": k[2],//线条长度
+                "orgData": initlinks[i],//线条元素数据
+                // true表示连线的二个结点是一个组的，否则为false
                 "isG": (allNode[k[0]].g == allNode[k[1]].g ? true : false)
             };
             // 告诉结点，他连接的点
@@ -1733,6 +1793,9 @@ clay.layout.force = function () {
             if (allNode[k[0]].g != allNode[k[1]].g) {
                 allNode[k[0]].ng += 1;
                 allNode[k[1]].ng += 1;
+            } else {
+                allNode[k[0]].ig += 1;
+                allNode[k[1]].ig += 1;
             }
         }
         update();
@@ -1751,6 +1814,8 @@ clay.layout.force = function () {
         return force;
     };
 
+    // 更新一个特定结点位置
+    // 在页面交互的时候，请使用这个方法更新鼠标拖动的结点的实时位置
     force.update = function (id, x, y) {
         allNode[id].x = x;
         allNode[id].y = y;
@@ -1758,6 +1823,20 @@ clay.layout.force = function () {
         return force;
     };
 
+    /**
+     * 配置方法
+     * @param {json} config
+     *
+     * 下面是全部可配置项的例子
+     * config={
+     *
+     *   center:26,//中心力强度
+     *   coulomb:400,//库仑力缩小倍数
+     *   spring:200,//软棒系数
+     *   scale:0.3//组内绳子缩短程度
+     *
+     * }
+     */
     force.config = function (config) {
         for (k in config)
             scope.c[k] = config[k];

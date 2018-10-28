@@ -7,8 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="../../doc/images/clay.png" type="image/x-png">
     <script src="../libs/clay.js"></script>
-    <script src="../../data/normal/data.force.json.js"></script>
-    <title>力布局</title>
+    <script src="../../data/normal/data.all.life.json.js"></script>
+    <title>树结构力布局测试</title>
     <script>
         $$(function () {
 
@@ -16,10 +16,10 @@
 
             // 配置
             force.config({
-                center:26,//中心力强度
-                coulomb:400,//库仑力缩小倍数
-                spring:200,//软棒系数
-                scale:0.24//组内绳子缩短程度
+                center: 36,//中心力强度
+                coulomb: 10,//库仑力缩小倍数
+                spring: 300,//软棒系数
+                scale:0.25//组内绳子缩短程度
             });
 
             $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
@@ -29,10 +29,27 @@
 
             var layer = clay.canvas.layer('canvas', 720, 520),
                 plink = layer.get('link'),
-                pnode = layer.get('node');
+                pnode = layer.get('node'),
+                ptext = layer.get('text');
 
-            var colors = ['#4CAF50', '#673AB7', '#CDDC39', '#F44336', '#0a4c80', '#9E9E9E',
-                '#FF9800', '#795548', '#03A9F4', '#1b290b', '#fbe209'];
+            var pos, width, height;
+
+            var showText = function (x, y, texts, num) {
+                layer.clean(ptext);
+                x += 10;
+                y += 10;
+                height = texts.length * 16 + 8;
+                width = num * 16;
+                ptext.beginPath();
+                ptext.rect(x, y, width, height);
+                ptext.fill();
+                for (i = 0; i < texts.length; i++)
+                    ptext.strokeText(texts[i], x + 8, y + i * 16 + 7 + 4);
+            }
+
+            ptext.textBaseline = 'middle';//上下居中
+            ptext.fillStyle = 'rgba(120,120,120,.7)';
+            ptext.strokeStyle = 'rgb(250,250,250)';
 
             // 建立区域管理对象
             var regionManager = clay.region("canvas", 720, 520);
@@ -45,14 +62,14 @@
             force
                 // 分析数据方法
                 .bind('analyse', function (initnode) {
-                    return [initnode.id, initnode.group];
+                    return [initnode.id, 1];
                 }, function (initlink) {
-                    return [initlink.source, initlink.target, initlink.value + 240];
+                    return [initlink.link[0], initlink.link[1], initlink.length * 50];
                 })
                 // 绘图方法
                 .bind('update', function (node) {
                     pnode.beginPath();
-                    pnode.fillStyle = colors[node.orgData.group];
+                    pnode.fillStyle = node.orgData.color;
                     pnode.arc(node.x * 0.7 + 10, node.y * 0.5 + 10, 5, 0, Math.PI * 2);
                     pnode.stroke();
                     pnode.fill();
@@ -77,7 +94,7 @@
                     layer.update();
                 });
 
-            force(forceData.nodes, forceData.links);
+            force(lifeData[0], lifeData[1]);
 
             var region = undefined, p;
             $$('canvas')
@@ -86,6 +103,7 @@
                     region = regionManager.getRegion(event);
                 })
                 .bind('mouseup', function (event) {
+                    layer.clean(ptext);
                     event = event || window.event;
                     region = undefined;
                 })
@@ -95,6 +113,7 @@
                         p = $$('canvas').position(event);
                         force.update(region, (p.x - 10) / 7 * 10, (p.y - 10) * 2);
                         $$('canvas').css('cursor', 'pointer');
+                        showText(p.x, p.y, [lifeData[0][region].info], lifeData[0][region].info.replace(/[\u0391-\uFFE5]/g, "aa").length / 2 + 0.5);
                     } else {
                         $$('canvas').css('cursor', 'default');
                     }
