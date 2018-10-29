@@ -5,14 +5,14 @@
 * 
 * author 心叶
 *
-* version 1.2.4
+* version 1.3.1
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Oct 25 2018 20:06:02 GMT+0800 (CST)
+* Date:Mon Oct 29 2018 11:01:34 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -2268,7 +2268,7 @@ clay.canvas.lineRuler = function (selector, config) {
 
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.2.4';
+    clay.version = '1.3.1';
 
     global.clay = global.$$ = clay;
 

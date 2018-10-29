@@ -39,21 +39,20 @@ var source = [
     './src/layout/tree.js',
     './src/layout/force.js',
 
-    // 图形对象
-    './src/painter/canvas.js',
-    './src/painter/arc.js',
-    './src/painter/ruler.js',
+    // 2D图形对象
+    './src/2D-painter/canvas.js',
+    './src/2D-painter/arc.js',
+    './src/2D-painter/ruler.js',
 
-    // svg绘图
-    './src/painter/svg/arc.js',
-    './src/painter/svg/arcRuler.js',
-    './src/painter/svg/lineRuler.js',
+    // svg2D绘图
+    './src/2D-painter/svg/arc.js',
+    './src/2D-painter/svg/arcRuler.js',
+    './src/2D-painter/svg/lineRuler.js',
 
     // Canvas2D绘图
-    './src/painter/canvas/arc.js',
-    './src/painter/canvas/arcRuler.js',
-    './src/painter/canvas/lineRuler.js'
-
+    './src/2D-painter/canvas/arc.js',
+    './src/2D-painter/canvas/arcRuler.js',
+    './src/2D-painter/canvas/lineRuler.js'
 ];
 
 var banner = '/*!\n*\n' +

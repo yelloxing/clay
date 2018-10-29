@@ -81,7 +81,7 @@
 
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.2.4';
+    clay.version = '1.3.1';
 
     global.clay = global.$$ = clay;
 
