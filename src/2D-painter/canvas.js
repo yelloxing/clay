@@ -11,6 +11,12 @@ function _getCanvas2D(selector) {
 
 }
 
+clay.prototype.canvas = function () {
+    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
+        throw new Error('canvas is not function');
+    return _getCanvas2D(this);
+};
+
 // 基本的canvas对象
 // config采用canvas设置属性的api
 // 前二个参数不是必输项

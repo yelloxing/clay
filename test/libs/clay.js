@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Oct 29 2018 11:01:34 GMT+0800 (CST)
+* Date:Mon Oct 29 2018 16:41:50 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -109,11 +109,11 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、物理计算、映射计算、绘图方案svg+canvas、布局
+// 数学计算、物理计算、映射计算、绘图方案svg+canvas+webgl、布局
 clay.math = {};
 clay.physics = {};
 clay.scale = {};
-clay.svg = {}; clay.canvas = {};
+clay.svg = {}; clay.canvas = {}; clay.webgl = {};
 clay.layout = {};
 
 // 记录需要使用xlink命名空间常见的xml属性
@@ -1859,6 +1859,12 @@ function _getCanvas2D(selector) {
 
 }
 
+clay.prototype.canvas = function () {
+    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
+        throw new Error('canvas is not function');
+    return _getCanvas2D(this);
+};
+
 // 基本的canvas对象
 // config采用canvas设置属性的api
 // 前二个参数不是必输项
@@ -2262,6 +2268,69 @@ clay.canvas.lineRuler = function (selector, config) {
 
     return obj;
 
+};
+
+// 初始化着色器
+clay.webgl.useShaders = function (gl, vshaderSource, fshaderSource) {
+    // 分别加载顶点着色器对象和片段着色器对象
+    var vertexShader = clay.webgl.loadShader(gl, gl.VERTEX_SHADER, vshaderSource),
+        fragmentShader = clay.webgl.loadShader(gl, gl.FRAGMENT_SHADER, fshaderSource);
+    // 创建一个着色器程序
+    var glProgram = gl.createProgram();
+    // 把前面创建的二个着色器对象添加到着色器程序中
+    gl.attachShader(glProgram, vertexShader);
+    gl.attachShader(glProgram, fragmentShader);
+    // 把着色器程序链接成一个完整的程序
+    gl.linkProgram(glProgram);
+    // 检测着色器程序链接是否成功
+    if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS))
+        throw new Error('Failed to link program: ' + gl.getProgramInfoLog(glProgram));
+    // 使用这个完整的程序
+    gl.useProgram(glProgram);
+    return glProgram;
+};
+
+// 把着色器字符串加载成着色器对象
+clay.webgl.loadShader = function (gl, type, source) {
+    // 创建着色器对象
+    var shader = gl.createShader(type);
+    if (shader == null) throw new Error('Unable to create shader!');
+    // 绑定资源
+    gl.shaderSource(shader, source);
+    // 编译着色器
+    gl.compileShader(shader);
+    // 检测着色器编译是否成功
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+        throw new Error('Failed to compile shader:' + gl.getShaderInfoLog(shader));
+    return shader;
+};
+
+// 获取webgl上下文
+function _getCanvasWebgl(selector, opts) {
+    if (selector && selector.constructor === WebGLRenderingContext)
+        return selector;
+    var canvas = clay(selector),
+        names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
+        context = null, i;
+    if (canvas.length > 0) {
+        for (i = 0; i < names.length; i++) {
+            try {
+                context = canvas[0].getContext(names[i], opts);
+            } catch (e) {
+                // todo
+            }
+            if (context) {
+                break;
+            }
+        }
+    }
+    return context;
+}
+
+clay.prototype.webgl = function (opts) {
+    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
+        throw new Error('Webgl is not a function!');
+    return _getCanvasWebgl(this, opts);
 };
 
     __isLoad__ = false;

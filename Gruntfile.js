@@ -52,7 +52,14 @@ var source = [
     // Canvas2D绘图
     './src/2D-painter/canvas/arc.js',
     './src/2D-painter/canvas/arcRuler.js',
-    './src/2D-painter/canvas/lineRuler.js'
+    './src/2D-painter/canvas/lineRuler.js',
+
+    // 着色器 => WebGL
+    './src/3D-painter/shader/index.js',
+
+    // WebGL3D绘图
+    './src/3D-painter/webgl.js'
+
 ];
 
 var banner = '/*!\n*\n' +
@@ -114,6 +121,7 @@ module.exports = function (grunt) {
                     "Math": true,
                     "HTMLCollection": true,
                     "CanvasRenderingContext2D": true,
+                    "WebGLRenderingContext": true,
                     "NodeList": true,
                     "clay": true
                 },
