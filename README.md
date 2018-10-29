@@ -1,6 +1,6 @@
 #  clay - Provide more flexible data visualization solutions
 
-[![hompage](https://github.com/yelloxing/clay/blob/master/data/SVG/github.svg)](https://github.com/yelloxing)
+[![hompage](https://github.com/yelloxing/clay/blob/master/data/SVG/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
 [![clay Code](https://github.com/yelloxing/clay/blob/master/data/SVG/clay.svg)](https://github.com/yelloxing/clay)
 [![clay license](https://github.com/yelloxing/clay/blob/master/data/SVG/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
 
