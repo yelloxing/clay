@@ -4,10 +4,7 @@
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
-    "test": "node_modules/.bin/grunt test",
-    "server": "node_modules/.bin/grunt server",
-    "edit": "sass --watch ./doc/scss/root.scss:./doc/style.css --style compressed",
-    "start": "npm run release"
+    "test": "node_modules/.bin/grunt test"
   },
   "repository": {
     "type": "git",
@@ -16,12 +13,12 @@
   "author": "心叶",
   "license": "MIT",
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-clean": "^1.1.0",
+    "grunt": "^1.0.3",
+    "grunt-contrib-clean": "^2.0.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-connect": "^1.0.2",
-    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-connect": "^2.0.0",
+    "grunt-contrib-jshint": "^2.0.0",
     "grunt-contrib-qunit": "^3.0.1",
-    "grunt-contrib-uglify": "^3.3.0"
+    "grunt-contrib-uglify": "^4.0.0"
   }
 }

@@ -1,21 +1,16 @@
 #  clay - Provide more flexible data visualization solutions
 
-[![hompage](https://github.com/yelloxing/clay/blob/master/data/SVG/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
-[![clay Code](https://github.com/yelloxing/clay/blob/master/data/SVG/clay.svg)](https://github.com/yelloxing/clay)
-[![clay license](https://github.com/yelloxing/clay/blob/master/data/SVG/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
+[![hompage](https://github.com/yelloxing/clay/blob/master/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
+[![clay license](https://github.com/yelloxing/clay/blob/master/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
 
 我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
 
-<img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/doc/images/clay.png">
+<img align="right" height="100" src="https://github.com/yelloxing/clay/blob/master/clay.png">
 
 ****
 ### 作者:心叶
 ### 邮箱:yelloxing@gmail.com
 ****
-
-### 相关链接
-------
-*	【接口文档和用例】https://yelloxing.github.io/clay/doc/index.html
 
 ### 免责声明
 ------

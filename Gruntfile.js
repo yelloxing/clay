@@ -2,63 +2,20 @@
 
 var source = [
 
-    // 配置
+    /**
+     * 核心代码
+     */
     './src/config.js',
+    './src/sizzle.js',
+    './src/modify.js',
+    './src/data.js',
+    './src/event.js',
 
-    // 结点
-    './src/node/sizzle.js',
-    './src/node/modify.js',
-    './src/node/data.js',
-    './src/node/event.js',
-
-    // 区域
-    './src/region/modify.js',
-    './src/region/index.js',
-
-    // 工具
-    './src/tool/animation.js',
-    './src/tool/calc.js',
-
-    // 数学计算
-    './src/math/interpolate/Hermite.js',
-    './src/math/interpolate/Cardinal.js',
-    './src/math/transform3D/rotate.js',
-    './src/math/transform3D/move.js',
-    './src/math/transform3D/scale.js',
-
-    // 物理计算
-    './src/physics/Coulomb\'s law.js',
-    './src/physics/Velocity-Verlet.js',
-
-    // 映射计算
-    './src/scale/map/ploar.js',
-    './src/scale/map/cylinder.js',
-    './src/scale/map/index.js',
-
-    // 布局
-    './src/layout/tree.js',
-    './src/layout/force.js',
-
-    // 2D图形对象
-    './src/2D-painter/canvas.js',
-    './src/2D-painter/arc.js',
-    './src/2D-painter/ruler.js',
-
-    // svg2D绘图
-    './src/2D-painter/svg/arc.js',
-    './src/2D-painter/svg/arcRuler.js',
-    './src/2D-painter/svg/lineRuler.js',
-
-    // Canvas2D绘图
-    './src/2D-painter/canvas/arc.js',
-    './src/2D-painter/canvas/arcRuler.js',
-    './src/2D-painter/canvas/lineRuler.js',
-
-    // 着色器 => WebGL
-    './src/3D-painter/shader/index.js',
-
-    // WebGL3D绘图
-    './src/3D-painter/webgl.js'
+    /**
+     * 基础计算
+     */
+    './src/calculate/interpolate/Hermite.js',
+    './src/calculate/interpolate/Cardinal.js'
 
 ];
 
@@ -96,7 +53,7 @@ module.exports = function (grunt) {
             target: {
                 banner: banner,
                 src: 'build/clay.js',
-                dest: ['build/clay-<%= pkg.version %>.js', 'test/libs/clay.js']
+                dest: ['build/clay-<%= pkg.version %>.js']
             }
         },
         clean: {// 删除临时文件
@@ -146,12 +103,12 @@ module.exports = function (grunt) {
         qunit: {//单元测试
             target: {
                 options: {
-                    httpBase: "http://localhost:30001",
+                    httpBase: "http://localhost:30000",
                     force: true,//一个任务失败了依旧不停止
                     urls: [
-                        'test/data/node.html',
-                        'test/data/data.html',
-                        'test/data/math.html'
+                        'test/unit/node.html',
+                        'test/unit/data.html',
+                        'test/unit/calculate.html'
                     ]
                 }
             }
@@ -159,15 +116,8 @@ module.exports = function (grunt) {
         connect: {
             target: {//给单元测试用的服务器
                 options: {
-                    port: 30001,
-                    base: '.'
-                }
-            },
-            local: {//服务器
-                options: {
                     port: 30000,
-                    base: '.',
-                    keepalive: true
+                    base: '.'
                 }
             }
         }
@@ -187,5 +137,4 @@ module.exports = function (grunt) {
     /*注册任务*/
     grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
     grunt.registerTask('test', ['connect:target', 'qunit:target']);
-    grunt.registerTask('server', ['connect:local']);
 };
