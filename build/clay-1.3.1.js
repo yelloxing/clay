@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Oct 30 2018 16:39:45 GMT+0800 (CST)
+* Date:Tue Oct 30 2018 20:46:38 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -565,6 +565,111 @@ clay.cardinal = function () {
     };
 
     return cardinal;
+};
+
+// 在x、y和z方向位移分别为dx、dy和dz
+var move = function (dx, dy, dz) {
+    return [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        dx, dy, dz, 1
+    ];
+};
+
+// 围绕0Z轴旋转
+// 其它的旋转可以借助transform实现
+// 旋转角度单位采用弧度制
+var rotate = function (deg) {
+    var sin = Math.sin(deg),
+        cos = Math.cos(deg);
+    return [
+        cos, sin, 0, 0,
+        -sin, cos, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    ];
+};
+
+// 围绕圆心x、y和z分别缩放xTimes, yTimes和zTimes倍
+var scale = function (xTimes, yTimes, zTimes) {
+    return [
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        xTimes, yTimes, zTimes, 1
+    ];
+};
+
+// 针对任意射线(a1,b1,c1)->(a2,b2,c2)
+// 计算出二个变换矩阵
+// 分别为：任意射线变成OZ轴变换矩阵 + OZ轴变回原来的射线的变换矩阵
+var transform = function (a1, b1, c1, a2, b2, c2) {
+
+    var sqrt1 = Math.sqrt((a2 - a1) * (a2 - a1) + (b2 - b1) * (b2 - b1)),
+        cos1 = sqrt1 != 0 ? (b2 - b1) / sqrt1 : 1,
+        sin1 = sqrt1 != 0 ? (a2 - a1) / sqrt1 : 0,
+
+        b = (a2 - a1) * sin1 + (b2 - b1) * cos1,
+        c = c2 - c1,
+
+        sqrt2 = Math.sqrt(b * b + c * c),
+        cos2 = sqrt2 != 0 ? c / sqrt2 : 1,
+        sin2 = sqrt2 != 0 ? b / sqrt2 : 0;
+
+    return [
+
+        // 任意射线变成OZ轴变换矩阵
+        [
+            cos1, cos2 * sin1, sin1 * sin2, 0,
+            -sin1, cos1 * cos2, cos1 * sin2, 0,
+            0, -sin2, cos2, 0,
+            b1 * sin1 - a1 * cos1, c1 * sin2 - a1 * sin1 * cos2 - b1 * cos1 * cos2, -a1 * sin1 * sin2 - b1 * cos1 * sin2 - c1 * cos2, 1
+        ],
+
+        // OZ轴变回原来的射线的变换矩阵
+        [
+            cos1, -sin1, 0, 0,
+            cos2 * sin1, cos2 * cos1, -sin2, 0,
+            sin1 * sin2, cos1 * sin2, cos2, 0,
+            a1, b1, c1, 1
+        ]
+
+    ];
+};
+
+clay.Matrix4 = function () {
+
+    var matrix4,
+        // 可选类型：
+        // 0 -> 空值
+        // 1 -> 列优先存储的单一矩阵
+        // 2 -> 列优先存储的多矩阵
+        type = 0;
+
+    return {
+        "move": function (dx, dy, dz) {
+            matrix4 = move(dx, dy, dz);
+            type = 1;
+            return matrix4;
+        },
+        "rotate": function (deg) {
+            matrix4 = rotate(deg);
+            type = 1;
+            return matrix4;
+        },
+        "scale": function (xTimes, yTimes, zTimes) {
+            matrix4 = scale(xTimes, yTimes, zTimes);
+            type = 1;
+            return matrix4;
+        },
+        "transform": function (a1, b1, c1, a2, b2, c2) {
+            matrix4 = transform(a1, b1, c1, a2, b2, c2);
+            type = 2;
+            return matrix4;
+        }
+    };
+
 };
 
 
