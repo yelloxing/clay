@@ -43,7 +43,13 @@ var source = [
     /**
      * 着色器 GLSL
      */
-    './src/GLSL ES/shader.js'
+    './src/GLSL ES/shader.js',
+
+    /**
+     * 布局
+     */
+    './src/layout/tree.js'
+
 ];
 
 var banner = '/*!\n*\n' +
