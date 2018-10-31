@@ -38,8 +38,12 @@ var source = [
      */
     './src/calculate/interpolate/Hermite.js',
     './src/calculate/interpolate/Cardinal.js',
-    './src/calculate/map.js'
+    './src/calculate/map.js',
 
+    /**
+     * 着色器 GLSL
+     */
+    './src/GLSL ES/shader.js'
 ];
 
 var banner = '/*!\n*\n' +
