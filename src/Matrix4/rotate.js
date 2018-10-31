@@ -1,7 +1,7 @@
 // 围绕0Z轴旋转
 // 其它的旋转可以借助transform实现
 // 旋转角度单位采用弧度制
-var rotate = function (deg) {
+var _rotate = function (deg) {
     var sin = Math.sin(deg),
         cos = Math.cos(deg);
     return [

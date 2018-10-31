@@ -12,12 +12,6 @@ var source = [
     './src/event.js',
 
     /**
-     * 基础计算
-     */
-    './src/calculate/interpolate/Hermite.js',
-    './src/calculate/interpolate/Cardinal.js',
-
-    /**
      * 变换矩阵4x4
      */
     './src/Matrix4/move.js',
@@ -25,6 +19,12 @@ var source = [
     './src/Matrix4/scale.js',
     './src/Matrix4/transform.js',
     './src/Matrix4/index.js',
+
+    /**
+     * 基础计算
+     */
+    './src/calculate/interpolate/Hermite.js',
+    './src/calculate/interpolate/Cardinal.js',
 
 ];
 
