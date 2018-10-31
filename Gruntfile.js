@@ -12,6 +12,12 @@ var source = [
     './src/event.js',
 
     /**
+     * 工具类
+     */
+    './src/animation.js',
+    './src/tool.js',
+
+    /**
      * 变换矩阵4x4
      */
     './src/Matrix4/move.js',
