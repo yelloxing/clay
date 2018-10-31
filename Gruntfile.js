@@ -14,8 +14,9 @@ var source = [
     /**
      * 工具类
      */
-    './src/animation.js',
-    './src/tool.js',
+    './src/Tools/animation.js',
+    './src/Tools/tool.js',
+    './src/Tools/region.js',
 
     /**
      * 变换矩阵4x4
