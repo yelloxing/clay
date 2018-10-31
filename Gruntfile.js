@@ -16,7 +16,13 @@ var source = [
      */
     './src/Tools/animation.js',
     './src/Tools/tool.js',
+
+    /**
+     * 高效独立对象
+     */
     './src/Tools/region.js',
+    './src/Tools/canvas.js',
+    './src/Tools/webgl.js',
 
     /**
      * 变换矩阵4x4

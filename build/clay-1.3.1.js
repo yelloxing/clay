@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 31 2018 22:41:44 GMT+0800 (CST)
+* Date:Thu Nov 01 2018 00:04:10 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -542,7 +542,6 @@ var _drawerRegion = function (pen, color, drawback) {
     pen.fill();
 };
 
-
 // 区域对象，用于存储区域信息
 // 初衷是解决类似canvas交互问题
 // 可以用于任何标签的区域控制
@@ -612,6 +611,95 @@ clay.region = function (selector, width, height) {
 
     return regionManger;
 
+};
+
+// 获取canvas2D对象
+function _getCanvas2D(selector) {
+    if (selector && selector.constructor === CanvasRenderingContext2D)
+        return selector;
+    else {
+        var canvas = clay(selector);
+        if (canvas.length > 0)
+            return canvas[0].getContext("2d");
+    }
+}
+
+// 直接使用canvas2D绘图
+clay.prototype.canvas = function () {
+    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
+        throw new Error('canvas is not function');
+    return _getCanvas2D(this);
+};
+
+// 使用图层绘图
+clay.prototype.layer = function () {
+    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
+        throw new Error('layer is not function');
+    // 画笔
+    var painter = _getCanvas2D(this),
+        canvas = [],
+        // 图层集合
+        layer = {};
+    var width = this[0].clientWidth,//内容+内边距
+        height = this[0].clientHeight;
+    var layerManager = {
+        "get": function (index) {
+            if (!layer[index] || layer[index].constructor !== CanvasRenderingContext2D) {
+
+                canvas.push(document.createElement('canvas'));
+                // 设置大小才会避免莫名其妙的错误
+                canvas[canvas.length - 1].setAttribute('width', width);
+                canvas[canvas.length - 1].setAttribute('height', height);
+
+                layer[index] = canvas[canvas.length - 1].getContext('2d');
+            }
+            return layer[index];
+        },
+        "clean": function (ctx2D) {
+            ctx2D.clearRect(0, 0, width, height);
+            return layerManager;
+        },
+        "update": function () {
+            if (painter && painter.constructor === CanvasRenderingContext2D) {
+                var flag;
+                painter.clearRect(0, 0, width, height);
+                painter.save();
+                // 混合模式等先不考虑
+                for (flag = 0; flag < canvas.length; flag++) {
+                    painter.drawImage(canvas[flag], 0, 0, width, height, 0, 0, width, height);
+                }
+                painter.restore();
+            }
+            return layerManager;
+        }
+    };
+
+    return layerManager;
+
+};
+
+// 获取webgl上下文
+function _getCanvasWebgl(selector, opts) {
+    if (selector && selector.constructor === WebGLRenderingContext) return selector;
+    var canvas = clay(selector),
+        names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
+        context = null, i;
+    if (canvas.length > 0) {
+        for (i = 0; i < names.length; i++) {
+            try {
+                context = canvas[0].getContext(names[i], opts);
+            } catch (e) { }
+            if (context) break;
+        }
+    }
+    return context;
+}
+
+// 获取3D画笔
+clay.prototype.webgl = function (opts) {
+    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
+        throw new Error('Webgl is not a function!');
+    return _getCanvasWebgl(this, opts);
 };
 
 // 在(a,b,c)方向位移d
