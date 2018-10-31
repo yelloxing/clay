@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Oct 31 2018 11:22:06 GMT+0800 (CST)
+* Date:Wed Oct 31 2018 14:30:08 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -434,13 +434,15 @@ clay.prototype.position = function (event) {
 
 };
 
-// 在x、y和z方向位移分别为dx、dy和dz
-var _move = function (dx, dy, dz) {
+// 在(a,b,c)方向位移d
+var _move = function (d, a, b, c) {
+    c = c || 0;
+    var sqrt = Math.sqrt(a * a + b * b + c * c);
     return [
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
-        dx, dy, dz, 1
+        a * d / sqrt, b * d / sqrt, c * d / sqrt, 1
     ];
 };
 
@@ -460,6 +462,7 @@ var _rotate = function (deg) {
 
 // 围绕圆心x、y和z分别缩放xTimes, yTimes和zTimes倍
 var _scale = function (xTimes, yTimes, zTimes, cx, cy, cz) {
+    cx = cx || 0; cy = cy || 0; cz = cz || 0;
     return [
         xTimes, 0, 0, 0,
         0, yTimes, 0, 0,
@@ -552,8 +555,8 @@ clay.Matrix4 = function (initMatrix4) {
     ];
 
     var matrix4Obj = {
-        "move": function (dx, dy, dz) {
-            matrix4 = _multiply(_move(dx, dy, dz), matrix4);
+        "move": function (dis, a, b, c) {
+            matrix4 = _multiply(_move(dis, a, b, c), matrix4);
             return matrix4Obj;
         },
         "rotate": function (deg, a1, b1, c1, a2, b2, c2) {
@@ -562,7 +565,6 @@ clay.Matrix4 = function (initMatrix4) {
             return matrix4Obj;
         },
         "scale": function (xTimes, yTimes, zTimes, cx, cy, cz) {
-            cx = cx || 0; cy = cy || 0; cz = cz || 0;
             matrix4 = _multiply(_scale(xTimes, yTimes, zTimes, cx, cy, cz), matrix4);
             return matrix4Obj;
         },

@@ -15,7 +15,6 @@ var _multiply = function (matrix4, param) {
 /**
  * 4x4矩阵
  * 列主序存储
- * 因为着色器语言采用此存储方式
  */
 clay.Matrix4 = function (initMatrix4) {
 
@@ -27,8 +26,8 @@ clay.Matrix4 = function (initMatrix4) {
     ];
 
     var matrix4Obj = {
-        "move": function (dx, dy, dz) {
-            matrix4 = _multiply(_move(dx, dy, dz), matrix4);
+        "move": function (dis, a, b, c) {
+            matrix4 = _multiply(_move(dis, a, b, c), matrix4);
             return matrix4Obj;
         },
         "rotate": function (deg, a1, b1, c1, a2, b2, c2) {
@@ -37,7 +36,6 @@ clay.Matrix4 = function (initMatrix4) {
             return matrix4Obj;
         },
         "scale": function (xTimes, yTimes, zTimes, cx, cy, cz) {
-            cx = cx || 0; cy = cy || 0; cz = cz || 0;
             matrix4 = _multiply(_scale(xTimes, yTimes, zTimes, cx, cy, cz), matrix4);
             return matrix4Obj;
         },

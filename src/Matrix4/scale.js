@@ -1,5 +1,6 @@
 // 围绕圆心x、y和z分别缩放xTimes, yTimes和zTimes倍
 var _scale = function (xTimes, yTimes, zTimes, cx, cy, cz) {
+    cx = cx || 0; cy = cy || 0; cz = cz || 0;
     return [
         xTimes, 0, 0, 0,
         0, yTimes, 0, 0,
