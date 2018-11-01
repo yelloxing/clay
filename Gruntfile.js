@@ -46,6 +46,11 @@ var source = [
     './src/GLSL ES/shader.js',
 
     /**
+     * 图形
+     */
+    './src/graphics/arc.2d.js',
+
+    /**
      * 布局
      */
     './src/layout/tree.js'

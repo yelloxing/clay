@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 01 2018 00:40:33 GMT+0800 (CST)
+* Date:Thu Nov 01 2018 09:23:50 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -625,7 +625,7 @@ function _getCanvas2D(selector) {
 }
 
 // 直接使用canvas2D绘图
-clay.prototype.canvas = function () {
+clay.prototype.painter = function () {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
         throw new Error('canvas is not function');
     return _getCanvas2D(this);
@@ -1108,6 +1108,7 @@ clay.loadShader = function (gl, type, source) {
         throw new Error('Failed to compile shader:' + gl.getShaderInfoLog(shader));
     return shader;
 };
+
 
 clay.treeLayout = function () {
 

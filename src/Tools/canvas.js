@@ -10,7 +10,7 @@ function _getCanvas2D(selector) {
 }
 
 // 直接使用canvas2D绘图
-clay.prototype.canvas = function () {
+clay.prototype.painter = function () {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
         throw new Error('canvas is not function');
     return _getCanvas2D(this);
