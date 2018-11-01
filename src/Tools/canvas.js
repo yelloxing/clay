@@ -28,7 +28,7 @@ clay.prototype.layer = function () {
     var width = this[0].clientWidth,//内容+内边距
         height = this[0].clientHeight;
     var layerManager = {
-        "get": function (index) {
+        "painter": function (index) {
             if (!layer[index] || layer[index].constructor !== CanvasRenderingContext2D) {
 
                 canvas.push(document.createElement('canvas'));

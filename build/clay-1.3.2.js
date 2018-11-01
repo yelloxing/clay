@@ -5,14 +5,14 @@
 * 
 * author 心叶
 *
-* version 1.3.1
+* version 1.3.2
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 01 2018 09:23:50 GMT+0800 (CST)
+* Date:Thu Nov 01 2018 13:44:21 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -643,7 +643,7 @@ clay.prototype.layer = function () {
     var width = this[0].clientWidth,//内容+内边距
         height = this[0].clientHeight;
     var layerManager = {
-        "get": function (index) {
+        "painter": function (index) {
             if (!layer[index] || layer[index].constructor !== CanvasRenderingContext2D) {
 
                 canvas.push(document.createElement('canvas'));
@@ -1309,7 +1309,7 @@ clay.treeLayout = function () {
 
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.3.1';
+    clay.version = '1.3.2';
 
     global.clay = global.$$ = clay;
 
