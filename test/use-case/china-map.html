@@ -15,15 +15,18 @@
 
 <script>
 
+    // 获取一只画笔（2D）
     var pencil = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
         .appendTo('body')
         .attr('width', '1000')
         .attr('height', '600')
         .painter(),
-        // 经纬度映射计算方法
+
+        // 创建经纬度映射计算方法
         map = $$.map().scale(7),
         i, j, k, p;
 
+    // 设置笔的属性
     pencil.strokeStyle = '#fff';
     pencil.fillStyle = '#607D8B';
 

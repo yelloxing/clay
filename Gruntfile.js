@@ -48,6 +48,7 @@ var source = [
     /**
      * 图形
      */
+    './src/graphics/index.js',
     './src/graphics/arc.2d.js',
 
     /**

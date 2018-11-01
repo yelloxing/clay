@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 01 2018 13:44:21 GMT+0800 (CST)
+* Date:Thu Nov 01 2018 20:34:25 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -545,17 +545,17 @@ var _drawerRegion = function (pen, color, drawback) {
 // 区域对象，用于存储区域信息
 // 初衷是解决类似canvas交互问题
 // 可以用于任何标签的区域控制
-clay.region = function (selector, width, height) {
+clay.prototype.region = function () {
 
     var regions = {},//区域映射表
         canvas = document.createElement('canvas'),
         rgb = [0, 0, 0],//区域标识色彩,rgb(0,0,0)表示空白区域
         p = 'r';//色彩增值位置
 
-    canvas.setAttribute('width', width);
-    canvas.setAttribute('height', height);
+    canvas.setAttribute('width', this[0].offsetWidth);//内容+内边距+边框
+    canvas.setAttribute('height', this[0].offsetHeight);
 
-    var _this = clay(selector);
+    var _this = this;
 
     // 用于计算包含关系的画板
     var canvas2D = canvas.getContext("2d"),
@@ -598,11 +598,13 @@ clay.region = function (selector, width, height) {
 
             // 获取此刻鼠标所在区域
             "getRegion": function (event) {
-                var pos = _this.position(event), i,
-                    currentRGBA = canvas2D.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
+                var pos = _this.position(event), i;
+                pos.x -= _this.css('border-left-width').replace('px', '');
+                pos.y -= _this.css('border-top-width').replace('px', '');
+                var currentRGBA = canvas2D.getImageData(pos.x - 0.5, pos.y - 0.5, 1, 1).data;
                 for (i in regions) {
                     if ("rgb(" + currentRGBA[0] + "," + currentRGBA[1] + "," + currentRGBA[2] + ")" == regions[i]) {
-                        return i;
+                        return [i, pos.x, pos.y];
                     }
                 }
                 return undefined;
@@ -1109,6 +1111,157 @@ clay.loadShader = function (gl, type, source) {
     return shader;
 };
 
+// 绘图方法挂载钩子
+clay.svg = {};
+clay.canvas = {};
+
+// 基本的canvas对象
+// config采用canvas设置属性的api
+// 前二个参数不是必输项
+// 绘制前再提供下面提供的方法设置也是可以的
+// 第三个参数代表图形绘制控制方法
+// 最后一个是配置给控制方法的参数
+var _canvas = function (_selector, config, painterback, param) {
+
+    var key, temp = painterback(param);
+    temp._config = config || {};
+    temp._painter = _getCanvas2D(_selector);
+
+    // 获取画笔
+    temp.painter = function (selector) {
+        temp._painter = _getCanvas2D(selector);
+        return temp;
+    };
+
+    // 配置画笔
+    temp.config = function (_config) {
+        for (key in _config)
+            temp._painter[key] = _config[key];
+        return temp;
+    };
+
+    return temp;
+
+};
+
+// 2D弧
+var _arc = function (painter) {
+
+    var scope = {
+        c: [0, 0],
+        r: [100, 140]
+    };
+
+    // r1和r2，内半径和外半径
+    // beginA起点弧度，rotateA旋转弧度式
+    var arc = function (beginA, rotateA, r1, r2) {
+
+        if (typeof r1 !== 'number') r1 = scope.r[0];
+        if (typeof r2 !== 'number') r2 = scope.r[1];
+
+        var temp = [], p;
+
+        // 内部
+        p = _rotateZ(beginA, r1, 0, 0);
+        temp[0] = p[0];
+        temp[1] = p[1];
+        p = _rotateZ(rotateA, p[0], p[1], 0);
+        temp[2] = p[0];
+        temp[3] = p[1];
+
+        // 外部
+        p = _rotateZ(beginA, r2, 0, 0);
+        temp[4] = p[0];
+        temp[5] = p[1];
+        p = _rotateZ(rotateA, p[0], p[1], 0);
+        temp[6] = p[0];
+        temp[7] = p[1];
+
+        return painter(
+            scope.c[0], scope.c[1],
+            r1, r2,
+            beginA, beginA + rotateA,
+            temp[0] + scope.c[0], temp[1] + scope.c[1],
+            temp[4] + scope.c[0], temp[5] + scope.c[1],
+            temp[2] + scope.c[0], temp[3] + scope.c[1],
+            temp[6] + scope.c[0], temp[7] + scope.c[1]
+        );
+    };
+
+    // 设置内外半径
+    arc.setRadius = function (r1, r2) {
+        scope.r = [r1, r2];
+        return arc;
+    };
+
+    // 设置弧中心
+    arc.setCenter = function (x, y) {
+        scope.c = [x, y];
+        return arc;
+    };
+
+    return arc;
+
+};
+
+// 采用SVG绘制圆弧
+clay.svg.arc = function () {
+    return _arc(
+        function (
+            cx, cy,
+            rmin, rmax,
+            beginA, endA,
+            begInnerX, begInnerY,
+            begOuterX, begOuterY,
+            endInnerX, endInnerY,
+            endOuterX, endOuterY
+        ) {
+            var f = (endA - beginA) > Math.PI ? 1 : 0,
+                d = "M" + begInnerX + " " + begInnerY;
+            d +=
+                // 横半径 竖半径 x轴偏移角度 0小弧/1大弧 0逆时针/1顺时针 终点x 终点y
+                "A" + rmin + " " + rmin + " 0 " + f + " 1 " + endInnerX + " " + endInnerY;
+            d += "L" + endOuterX + " " + endOuterY;
+            d += "A" + rmax + " " + rmax + " 0 " + f + " 0 " + begOuterX + " " + begOuterY;
+            d += "L" + begInnerX + " " + begInnerY;
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制圆弧
+clay.canvas.arc = function (selector, config) {
+
+    var key,
+        obj =
+            // 返回画扇形图的流程控制函数
+            // 并且返回的函数挂载了canvas特有的方法和属性
+            // 因此称之为基本的canvas对象
+            _canvas(selector, config, _arc, function (
+                cx, cy,
+                rmin, rmax,
+                beginA, endA,
+                begInnerX, begInnerY,
+                begOuterX, begOuterY,
+                endInnerX, endInnerY,
+                endOuterX, endOuterY
+            ) {
+                obj._painter.beginPath();
+                obj._painter.moveTo(begInnerX, begInnerY);
+                obj._painter.arc(
+                    // (圆心x，圆心y，半径，开始角度，结束角度，true逆时针/false顺时针)
+                    cx, cy, rmin, beginA, endA, false);
+                obj._painter.lineTo(endOuterX, endOuterY);
+                obj._painter.arc(cx, cy, rmax, endA, beginA, true);
+                obj._painter.lineTo(begInnerX, begInnerY);
+                obj._painter.fill();
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
 
 clay.treeLayout = function () {
 
