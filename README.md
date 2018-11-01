@@ -1,4 +1,5 @@
-#  clay - Provide more flexible data visualization solutions
+[clay](https://gitq.com/yelloxing/clay) - Provide more flexible data visualization solutions
+==================================================
 
 [![travis](https://github.com/yelloxing/clay/blob/master/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
 [![license](https://github.com/yelloxing/clay/blob/master/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
@@ -13,16 +14,13 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
-如何贡献代码？
+贡献代码和参与讨论？
 --------------------------------------
-始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的，为了帮助你在贡献代码前更好的开始，请确保阅读了下面的列出的文档：
+始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。
 
-1.[基本说明](https://github.com/yelloxing/clay/blob/master/.github/CONTRIBUTING.md)
+-[相关基本说明](https://github.com/yelloxing/clay/blob/master/.github/CONTRIBUTING.md)
 
-参与讨论
---------------------------------------
-
--[论坛](https://gitq.com/yelloxing/clay)
+-[论坛/Bug系统](https://gitq.com/yelloxing/clay)
 
 如何在本地搭建开发环境？
 --------------------------------------
@@ -83,6 +81,21 @@ npm run test
 3D绘图采用的是WebGL：
 
 - **GLSL ES/shader**：提供常用的着色器方法。
+
+### 单元测试
+
+采用QUnit，下面是可以选择的测试方法：
+
+```js
+ok( value, [message] );
+equal( actual, expected, [message] );
+notEqual( actual, expected, [message] );
+deepEqual( actual, expected, [message] );
+notDeepEqual( actual, expected, [message] );
+strictEqual( actual, expected, [message] );
+notStrictEqual( actual, expected, [message] );
+throws( block, [expected], [message] );
+```
 
 ### 免责声明
 
