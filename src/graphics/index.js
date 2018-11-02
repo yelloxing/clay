@@ -11,7 +11,6 @@ clay.canvas = {};
 var _canvas = function (_selector, config, painterback, param) {
 
     var key, temp = painterback(param);
-    temp._config = config || {};
     temp._painter = _getCanvas2D(_selector);
 
     // 获取画笔

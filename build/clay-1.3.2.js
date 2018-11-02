@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 01 2018 20:34:25 GMT+0800 (CST)
+* Date:Fri Nov 02 2018 09:18:29 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1124,7 +1124,6 @@ clay.canvas = {};
 var _canvas = function (_selector, config, painterback, param) {
 
     var key, temp = painterback(param);
-    temp._config = config || {};
     temp._painter = _getCanvas2D(_selector);
 
     // 获取画笔
