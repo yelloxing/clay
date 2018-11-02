@@ -6,7 +6,7 @@
  *  3.每个结点都是一块1*1的正方形，top和left分别表示正方形中心的位置
  *
  */
-clay.layout.tree = function () {
+clay.treeLayout = function () {
 
     var scope = {
         "e": {}

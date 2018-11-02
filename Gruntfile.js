@@ -2,57 +2,59 @@
 
 var source = [
 
-    // 配置
+    /**
+     * 核心代码
+     */
     './src/config.js',
+    './src/sizzle.js',
+    './src/modify.js',
+    './src/data.js',
+    './src/event.js',
 
-    // 结点
-    './src/node/sizzle.js',
-    './src/node/modify.js',
-    './src/node/data.js',
-    './src/node/event.js',
+    /**
+     * 工具类
+     */
+    './src/Tools/animation.js',
+    './src/Tools/tool.js',
 
-    // 区域
-    './src/region/modify.js',
-    './src/region/index.js',
+    /**
+     * 高效独立对象
+     */
+    './src/Tools/region.js',
+    './src/Tools/canvas.js',
+    './src/Tools/webgl.js',
 
-    // 工具
-    './src/tool/animation.js',
-    './src/tool/calc.js',
+    /**
+     * 变换矩阵4x4
+     */
+    './src/Matrix4/move.js',
+    './src/Matrix4/rotate.js',
+    './src/Matrix4/scale.js',
+    './src/Matrix4/transform.js',
+    './src/Matrix4/index.js',
 
-    // 数学计算
-    './src/math/interpolate/Hermite.js',
-    './src/math/interpolate/Cardinal.js',
-    './src/math/transform3D/rotate.js',
-    './src/math/transform3D/move.js',
-    './src/math/transform3D/scale.js',
+    /**
+     * 基础计算
+     */
+    './src/calculate/interpolate/Hermite.js',
+    './src/calculate/interpolate/Cardinal.js',
+    './src/calculate/map.js',
 
-    // 物理计算
-    './src/physics/Coulomb\'s law.js',
-    './src/physics/Velocity-Verlet.js',
+    /**
+     * 着色器 GLSL
+     */
+    './src/GLSL ES/shader.js',
 
-    // 映射计算
-    './src/scale/map/ploar.js',
-    './src/scale/map/cylinder.js',
-    './src/scale/map/index.js',
+    /**
+     * 图形
+     */
+    './src/graphics/index.js',
+    './src/graphics/arc.2d.js',
 
-    // 布局
-    './src/layout/tree.js',
-    './src/layout/force.js',
-
-    // 图形对象
-    './src/painter/canvas.js',
-    './src/painter/arc.js',
-    './src/painter/ruler.js',
-
-    // svg绘图
-    './src/painter/svg/arc.js',
-    './src/painter/svg/arcRuler.js',
-    './src/painter/svg/lineRuler.js',
-
-    // Canvas2D绘图
-    './src/painter/canvas/arc.js',
-    './src/painter/canvas/arcRuler.js',
-    './src/painter/canvas/lineRuler.js'
+    /**
+     * 布局
+     */
+    './src/layout/tree.js'
 
 ];
 
@@ -90,7 +92,7 @@ module.exports = function (grunt) {
             target: {
                 banner: banner,
                 src: 'build/clay.js',
-                dest: ['build/clay-<%= pkg.version %>.js', 'test/libs/clay.js']
+                dest: ['build/clay-<%= pkg.version %>.js']
             }
         },
         clean: {// 删除临时文件
@@ -115,6 +117,7 @@ module.exports = function (grunt) {
                     "Math": true,
                     "HTMLCollection": true,
                     "CanvasRenderingContext2D": true,
+                    "WebGLRenderingContext": true,
                     "NodeList": true,
                     "clay": true
                 },
@@ -139,12 +142,12 @@ module.exports = function (grunt) {
         qunit: {//单元测试
             target: {
                 options: {
-                    httpBase: "http://localhost:30001",
+                    httpBase: "http://localhost:30000",
                     force: true,//一个任务失败了依旧不停止
                     urls: [
-                        'test/data/node.html',
-                        'test/data/data.html',
-                        'test/data/math.html'
+                        'test/unit/node.html',
+                        'test/unit/data.html',
+                        'test/unit/calculate.html'
                     ]
                 }
             }
@@ -152,15 +155,8 @@ module.exports = function (grunt) {
         connect: {
             target: {//给单元测试用的服务器
                 options: {
-                    port: 30001,
-                    base: '.'
-                }
-            },
-            local: {//服务器
-                options: {
                     port: 30000,
-                    base: '.',
-                    keepalive: true
+                    base: '.'
                 }
             }
         }
@@ -180,5 +176,4 @@ module.exports = function (grunt) {
     /*注册任务*/
     grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
     grunt.registerTask('test', ['connect:target', 'qunit:target']);
-    grunt.registerTask('server', ['connect:local']);
 };
