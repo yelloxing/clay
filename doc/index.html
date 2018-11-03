@@ -14,16 +14,21 @@
             document.getElementsByTagName('iframe')[0].src = "./apis/" + url + ".html";
             window.location.href = "#/" + url;
         }
+        function toEdit() {
+            var url = window.location.href.replace(/[^#]*(#\/){0,1}/, '');
+            window.location.href = 'https://github.com/yelloxing/clay/blob/master/doc/apis/' + url + '.html';
+        }
     </script>
 </head>
 
 <body>
+    <button onclick='toEdit()'>编辑文档</button>
     <div class="menu-frame">
         <header>
             <a href='https://github.com/yelloxing/clay' target="_blank">clay</a> / doc
         </header>
         <input type="text" placeholder="Type to filter" onkeyup='doSearch(this.value)'>
-        <span>说明&指南</span>
+        <span>说明&amp;指南</span>
         <label>快速开始</label>
         <ul>
             <li onclick='loadpage("quickstart/environment")'>初始化环境</li>
@@ -41,9 +46,9 @@
         <ul>
             <li>零碎方法</li>
             <li>图层和区域管理者</li>
-            <li>动画&轮询执行</li>
+            <li>动画&amp;轮询执行</li>
         </ul>
-        <label>计算&求值</label>
+        <label>计算&amp;求值</label>
         <ul>
             <li>曲线插值</li>
             <li>Matrix4矩阵变换</li>

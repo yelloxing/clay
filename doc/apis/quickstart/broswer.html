@@ -6,16 +6,64 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
-    <link rel="stylesheet" href="../../libs/prettify.css">
     <link rel="stylesheet" href="../../doc.css">
-    <script src="../../libs/prettify.js"></script>
+    <script>
+        function isSupportSVG() {
+            var SVG_NS = 'http://www.w3.org/2000/svg';
+            return !!document.createElementNS && !!document.createElementNS(SVG_NS, 'svg').createSVGRect;
+        }
+    </script>
 </head>
 
-<body onload="prettyPrint()">
+<body>
     <header>
         浏览器支持
     </header>
-
+    <h2>
+        写在前面
+    </h2>
+    <p>
+        基于clay设计的特点，比如你想使用SVG绘图，除非浏览器不支持SVG，否则这是被普遍支持的。核心，或者说与具体绘图无关的部分，都是采用最朴素的写法，基本不存在兼容性问题。
+    </p>
+    <h2>
+        兼容性测试
+    </h2>
+    <h4>
+        在线查询
+    </h4>
+    <a target="_blank" href="https://caniuse.com/" class="list">
+        Can I use... Support tables for HTML5, CSS3, etc
+    </a>
+    <h4>
+        用例测试
+    </h4>
+    <a target="_blank" href="../../../test/use-case/barPolar.html" class="list">
+        图层和区域管理者，canvas2D基本使用
+    </a>
+    <h2>
+        特殊接口中使用到的ES或者Web API
+    </h2>
+    <table>
+        <thead>
+            <tr>
+                <th>接口</th>
+                <th>依赖</th>
+                <th>具体调用</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>图层管理者</td>
+                <td>Canvas2D</td>
+                <td>drawImage、clearRect、save、restore</td>
+            </tr>
+            <tr>
+                <td>区域管理者</td>
+                <td>Canvas2D</td>
+                <td>getImageData</td>
+            </tr>
+        </tbody>
+    </table>
 </body>
 
 </html>

@@ -75,3 +75,21 @@ ul>li {
     line-height: 1.4em;
     cursor: pointer;
 }
+
+/* 修改按钮 */
+
+button {
+    position: fixed;
+    top: .2rem;
+    right: .2rem;
+    padding: .08rem;
+    color: #fff;
+    background-color: #555;
+    opacity: 0.5;
+    cursor: pointer;
+    outline: none;
+}
+
+button:hover {
+    opacity: 1;
+}
