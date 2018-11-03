@@ -47,3 +47,11 @@ a {
     text-decoration: underline;
     background-color: #d9dfe1;
 }
+
+a.list {
+    list-style-type: unset;
+    display: list-item;
+    margin-left: 2em;
+    background-color: white;
+    margin-top: .1rem;
+}
