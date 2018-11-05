@@ -22,6 +22,7 @@ iframe {
     padding: 0 .2rem .2rem .2rem;
     background: #fafafa;
     overflow-y: auto;
+    user-select: none;
 }
 
 iframe {
