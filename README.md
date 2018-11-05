@@ -22,6 +22,10 @@
 
 -[论坛/Bug系统](https://gitq.com/yelloxing/clay)
 
+-[Clay Foundation](https://github.com/ClayFoundation)
+
+-[接口文档API](https://yelloxing.github.io/clay/doc)
+
 如何在本地搭建开发环境？
 --------------------------------------
 
