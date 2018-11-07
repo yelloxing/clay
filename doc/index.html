@@ -5,108 +5,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="./images/clay.png" type="image/x-png">
-    <title>clay - 数据可视化</title>
-    <link rel="stylesheet" href="./easycss-1.2.1.min.css">
-    <link rel="stylesheet" href="./style.css">
-    <link rel="stylesheet" href="./home.css">
+    <link rel="shortcut icon" href="../clay.png" type="image/x-png">
+    <link rel="stylesheet" href="./libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="frame.css">
+    <title>clay / doc</title>
+    <script>
+        function loadpage(url) {
+            document.getElementsByTagName('iframe')[0].src = "./apis/" + url + ".html";
+            window.location.href = "#/" + url;
+        }
+        function toEdit() {
+            var url = window.location.href.replace(/[^#]*(#\/){0,1}/, '');
+            window.location.href = 'https://github.com/yelloxing/clay/blob/master/doc/apis/' + url + '.html';
+        }
+    </script>
 </head>
 
 <body>
-    <header id='top'>
-        clay v1.2.4
+    <button onclick='toEdit()'>编辑文档</button>
+    <div class="menu-frame">
+        <header>
+            <a href='https://github.com/yelloxing/clay' target="_blank">clay</a> / doc
+        </header>
+        <input type="text" placeholder="Type to filter" onkeyup='doSearch(this.value)'>
+        <span>说明&amp;指南</span>
+        <label>快速开始</label>
         <ul>
-            <li>
-                <a href="./index.html" class='click'>首页</a>
-            </li>
-            <li>
-                <a href="./examples/index.html">实例</a>
-            </li>
-            <li>
-                <a href="./component/index.html">组件库</a>
-            </li>
-            <li>
-                <a href="./apis/index.html">文档</a>
-            </li>
-            <li>
-                <a href="./course/index.html">教程</a>
-            </li>
-            <li>
-                <a href="./aboutUs.html">加入我们</a>
-            </li>
+            <li onclick='loadpage("quickstart/environment")'>初始化环境</li>
+            <li onclick='loadpage("quickstart/example")'>简单例子</li>
+            <li onclick='loadpage("quickstart/broswer")'>浏览器支持</li>
+            <li onclick='loadpage("quickstart/url")'>有用的链接</li>
         </ul>
-        <a href="https://github.com/yelloxing/clay" class="github">
-            Fork me on GitHub
-        </a>
-    </header>
-    <section style='padding-top:0;'>
-        <div class="head">
-            <span class='name'>
-                clay - 数据可视化
-            </span>
-            <span class='info'>
-                更友好，更轻巧，更自由，完全开源的数据可视化前端解决方案，期待你的加入！
-            </span>
-            <input type="button" value="Join US" onclick='window.location.href="./aboutUs.html"'>
-        </div>
-        <div class="download">
-            <h2>
-                下载clay.js
-            </h2>
-            <span class='github'>
-                <span onclick='window.location.href="./v1.2.2-apis/clay-1.2.2.js"'>
-                    v1.2.2 稳定发布版本
-                    <em>推荐正式开发使用</em>
-                </span>
-                <button onclick='window.location.href="https://github.com/yelloxing/clay/releases"'>历史版本</button>
-                <button onclick='window.location.href="./v1.2.2-apis/index.html"'>API文档</button>
-                <button onclick='window.location.href="./v1.2.2-apis/clay-1.2.2.min.js"'>获取下载</button>
-            </span>
-            <span class='current'>
-                <span onclick='window.location.href="../build/clay-1.2.4.js"'>
-                    v1.2.4 最新未发布版本
-                    <em>实验性的未来版本</em>
-                </span>
-                <button onclick='window.location.href="https://github.com/yelloxing/clay"'>代码地址</button>
-                <button onclick='window.location.href="./apis/index.html"'>API文档</button>
-                <button onclick='window.location.href="../build/clay-1.2.4.min.js"'>获取下载</button>
-            </span>
-        </div>
-        <div class="question">
-            <div class="item" style="width:50%;">
-                <span class="head">
-                    为什么需要数据可视化？
-                </span>
-                <span class="p">
-                    一句话：更直观的去感受数据。相比单纯的一堆数据，利用各种图表或图形，配上合适的动态交互效果，可以更优雅的展示数据之间的关系，方便观察也更加高效。
-                </span>
-            </div>
-            <div class="item" style="width:50%;">
-                <span class="head">
-                    为什么选择使用clay？
-                </span>
-                <span class="p">
-                    clay提供的接口非常灵活，支持不同层次的开发，比如可以借助提供的插值计算来绘制曲线图，也可以直接使用曲线绘制方法，足够灵活也足够简单，并且学习成本低。
-                </span>
-            </div>
-            <div class="item" style="width:100%;">
-                <span class="head">
-                    如何快速使用clay实现数据可视化？
-                </span>
-                <span class="p">
-                    使用clay的第一步应该是理解其设计理念，可以借组
-                    <a href="./apis/index.html">文档</a>
-                    来品位几个
-                    <a href="./examples/index.html">实例</a>
-                    ，开始应该选择简单的例子。在此基础上，再对着文档进行学习，因为clay设计的灵活性，接口之间耦合度不高，可以尝试着去设计自己的图形。
-                </span>
-            </div>
-        </div>
-    </section>
-    <footer>
-        心叶 &copy;2007-2018 走一步，再走一步
-        <a href="#top">回到顶部</a>
-    </footer>
+        <label>教程</label>
+        <ul>
+            <li onclick='loadpage("course/node_and_data")'>结点和数据操作</li>
+            <li onclick='loadpage("course/layout")'>布局的使用</li>
+            <li onclick='loadpage("course/layer_and_region")'>图层、区域管理者</li>
+        </ul>
+        <span>接口API</span>
+        <label>结点对象</label>
+        <ul>
+            <li onclick='loadpage("clayobject/node")'>基本的结点操作</li>
+            <li onclick='loadpage("clayobject/node_and_data")'>数据绑定</li>
+        </ul>
+        <label>工具类</label>
+        <ul>
+            <li onclick='loadpage("tool/method")'>零碎方法</li>
+            <li onclick='loadpage("tool/layer_and_region")'>图层和区域管理者</li>
+            <li onclick='loadpage("tool/animation")'>动画&amp;轮询执行</li>
+        </ul>
+        <label>计算&amp;求值</label>
+        <ul>
+            <li onclick='loadpage("calculate/interpolate")'>曲线插值</li>
+            <li onclick='loadpage("calculate/matrix4")'>Matrix4矩阵变换</li>
+            <li onclick='loadpage("calculate/map")'>地球坐标映射</li>
+        </ul>
+        <label>图形接口</label>
+        <ul>
+            <li onclick='loadpage("graphics/arc2d")'>arc弧形</li>
+        </ul>
+        <label>布局</label>
+        <ul>
+            <li onclick='loadpage("layout/tree")'>tree树布局</li>
+        </ul>
+    </div>
+    <iframe frameborder="0"></iframe>
 </body>
+
+<script>
+
+    window.setTimeout(function () {
+        loadpage(window.location.href.replace(/[^#]*(#\/){0,1}/, '') || "quickstart/environment");
+    }, 200);
+
+    var lis = document.getElementsByTagName('li'), i;
+    function doSearch(key) {
+        for (i = 0; i < lis.length; i++) {
+            if (new RegExp(key).test(lis[i].innerText)) {
+                lis[i].style.display = 'block';
+            } else {
+                lis[i].style.display = 'none';
+            }
+        }
+    }
+
+</script>
 
 </html>
