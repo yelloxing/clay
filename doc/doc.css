@@ -34,12 +34,12 @@ img {
 }
 
 pre.prettyprint {
-    display: inline-block;
+    display: block;
     font-family: inconsolata;
     border: none;
     outline: none;
-    margin-left: 2em;
-    margin-right: 2em;
+    padding-left: 2em;
+    padding-right: 2em;
     line-height: 1.6em;
 }
 
@@ -65,4 +65,24 @@ th,
 td {
     padding: .1rem;
     text-align: center;
+}
+
+li {
+    line-height: 1.6em;
+    padding-left: 2em;
+}
+
+.bingo,
+.error {
+    background-size: .2rem auto;
+    background-position: left top;
+    background-repeat: no-repeat;
+}
+
+.error {
+    background-image: url('./images/error.png');
+}
+
+.bingo {
+    background-image: url('./images/bingo.png');
 }
