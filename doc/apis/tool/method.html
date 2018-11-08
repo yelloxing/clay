@@ -6,11 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="../../libs/prettify.css">
     <link rel="stylesheet" href="../../doc.css">
+    <script src="../../libs/prettify.js"></script>
 </head>
 
-<body>
-
+<body onload="prettyPrint()">
+    <header>
+        零碎方法
+    </header>
+    <h2>
+        计算类
+    </h2>
+    <pre class='prettyprint lang-js'>var rgbaArray = clay.color(param);</pre>
+    <p>
+        传递一个合法的CSS颜色字符串，统一转换为rgba(x, x, x, x)格式的数据，返回数组[r, g, b, a]。
+    </p>
+    <h2>
+        辅助类
+    </h2>
+    <pre class='prettyprint lang-js'>clay.loop(datas, function(value, key, index){
+    // 在这里添加处理方法
+});</pre>
+    <p>
+        datas是一个可迭代的数组或json等即可，第二个参数的一个函数，其中value、key和index分别是当前面对的数据值，数据名和索引。
+    </p>
 </body>
 
 </html>
