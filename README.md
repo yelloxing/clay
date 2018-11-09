@@ -22,7 +22,7 @@
 
 贡献代码和参与讨论？
 --------------------------------------
-始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay/doc)了解基本情况。如果仍有疑惑，可以发送[作者邮箱](yelloxing@gmail.com)询问细节。
+始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay/doc)了解基本情况。如果仍有疑惑，可以发送作者邮箱询问细节。
 
 如何在本地搭建开发环境？
 --------------------------------------
