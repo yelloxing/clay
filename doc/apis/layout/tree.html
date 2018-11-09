@@ -6,11 +6,86 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="../../libs/prettify.css">
     <link rel="stylesheet" href="../../doc.css">
+    <script src="../../libs/prettify.js"></script>
 </head>
 
-<body>
+<body onload="prettyPrint()">
+    <header>
+        tree树布局
+    </header>
+    <p>
+        因为在教程的布局的使用一节使用的例子就是这里的tree布局，这里先对那里已经说明的部分简单说明一下，然后补充一些内容那里没有涉及的部分。
+    </p>
+    <pre class='prettyprint lang-js'>var tree=$$.treeLayout()
 
+    // 获取根结点的方法
+    .bind('root', function(initTree){
+        //需要返回树的根结点
+    })
+
+    // 获取子结点的方法
+    .bind('child', function(parentTree, initTree){
+        //需要返回parentTree的子结点集合
+    })
+
+    // 获取结点ID方法
+    .bind('id', function(treedata){
+        //需要返回当前结点treedata的id
+    });</pre>
+    <p>
+        首先，我们需要获取树布局对象，然后配置三个基本方法，正是因为这三个基本方法的存在，原始数据结构理论上讲，只要是一个数组即可。
+    </p>
+    <p>
+        接着，我们需要配置布局的绘图方法，因为布局是用来计算的，不是绘图的，具体的绘图方式是自由的，你需要配置你选择的绘图方法：
+    </p>
+    <pre class='prettyprint lang-js'>tree.bind('drawer', function (nodes, rootid, size) {
+    // 在这里绘图
+});</pre>
+    <p>
+        其中nodes表示所有的树结点，记录着结点位置，使用教程中的例子：
+    </p>
+    <pre class='prettyprint lang-js'>[
+    "油画":{
+        children: [];
+        data: (2) ["油画", "手绘"];
+        id: "油画";
+        left: 1.5;
+        pid: "手绘";
+        show: true;
+        top: 1.5
+    },
+    ...
+]</pre>
+    <p>
+        rootid表示根结点，size表示树在Y轴方向占高尺寸，和top对应。
+    </p>
+    <p>
+        以上就是使用tree布局绘制所需要的最基本的配置，然后你就可以启动绘图了：
+    </p>
+    <pre class='prettyprint lang-js'>tree(nodes);</pre>
+    <h4>
+        交互接口
+    </h4>
+    <p>
+        绘制好的树，你可能希望和其交互，为此，我们主要提供了下面的方法供你使用：
+    </p>
+    <pre class='prettyprint lang-js'>// 添加新结点，pid表示挂载的父id，newnodes是新结点集合
+tree.add(pid, newnodes, notUpdate);
+
+// 删除结点，id表示需要删除的结点的唯一标识
+tree.delete(id, notUpdate);
+
+// 切换结点显示隐藏（flag可选，传递"show"：显示，"hidden"：隐藏）
+tree.toggle(id, notUpdate, flag);</pre>
+    <p>
+        因为对结点进行了修改，页面是否需要立刻刷新可以通过上面方法的notUpdate来控制，默认false自动刷新，设置为true不刷新。
+    </p>
+    <p>
+        如果不刷新，希望自己在指定时刻主动刷新重绘页面，可以调用下面的方法启动刷新：
+    </p>
+    <pre class='prettyprint lang-js'>tree.update();</pre>
 </body>
 
 </html>
