@@ -20,6 +20,8 @@
 
 和别的库不同的是，clay关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
 
+<img src="https://github.com/yelloxing/clay/blob/master/doc/images/clay-readme.jpg">
+
 贡献代码和参与讨论？
 --------------------------------------
 始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay/doc)了解基本情况。如果仍有疑惑，可以发送作者邮箱询问细节。
