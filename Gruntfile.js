@@ -49,7 +49,12 @@ var source = [
     /**
      * 布局
      */
-    './src/layout/tree.js'
+    './src/layout/tree.js',
+
+    /**
+     * 3D核心接口
+     */
+    './src/webgl/shader.js'
 
 ];
 

@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 08 2018 16:40:34 GMT+0800 (CST)
+* Date:Sat Nov 10 2018 11:22:22 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -337,14 +337,14 @@ clay.prototype.data = function (datas, calcback) {
         var newClay = clay();
         newClay.selector = this.selector;
         for (flag = 0; flag < datas.length && flag < this.length; flag++) {
-            this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag];
+            this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag];
             newClay[flag] = this[flag];
             newClay.length += 1;
         }
         // 分别记录需要去平衡的数据和结点
         newClay._enter = [];
         for (; flag < datas.length; flag++) {
-            newClay._enter.push(typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag]);
+            newClay._enter.push(typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag]);
         }
         newClay._exit = [];
         for (; flag < this.length; flag++) {
@@ -1091,7 +1091,11 @@ var _canvas = function (_selector, config, painterback, param) {
     var key, temp = painterback(param);
     temp._painter = _getCanvas2D(_selector);
 
-    // 获取画笔
+    if (config)
+        for (key in config)
+            temp._painter[key] = config[key];
+
+    // 设置画笔
     temp.painter = function (selector) {
         temp._painter = _getCanvas2D(selector);
         return temp;
@@ -1421,6 +1425,41 @@ clay.treeLayout = function () {
 
     return tree;
 
+};
+
+// 把着色器字符串加载成着色器对象
+var _loadShader = function (gl, type, source) {
+    // 创建着色器对象
+    var shader = gl.createShader(type);
+    if (shader == null) throw new Error('Unable to create shader!');
+    // 绑定资源
+    gl.shaderSource(shader, source);
+    // 编译着色器
+    gl.compileShader(shader);
+    // 检测着色器编译是否成功
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+        throw new Error('Failed to compile shader:' + gl.getShaderInfoLog(shader));
+    return shader;
+};
+
+// 初始化着色器
+clay.useShaders = function (gl, vshaderSource, fshaderSource) {
+    // 分别加载顶点着色器对象和片段着色器对象
+    var vertexShader = _loadShader(gl, gl.VERTEX_SHADER, vshaderSource),
+        fragmentShader = _loadShader(gl, gl.FRAGMENT_SHADER, fshaderSource);
+    // 创建一个着色器程序
+    var glProgram = gl.createProgram();
+    // 把前面创建的二个着色器对象添加到着色器程序中
+    gl.attachShader(glProgram, vertexShader);
+    gl.attachShader(glProgram, fragmentShader);
+    // 把着色器程序链接成一个完整的程序
+    gl.linkProgram(glProgram);
+    // 检测着色器程序链接是否成功
+    if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS))
+        throw new Error('Failed to link program: ' + gl.getProgramInfoLog(glProgram));
+    // 使用这个完整的程序
+    gl.useProgram(glProgram);
+    return glProgram;
 };
 
 
