@@ -25,7 +25,7 @@ var _loadShader = function (gl, type, source) {
 };
 
 // 初始化着色器
-clay.useShaders = function (gl, vshaderSource, fshaderSource) {
+var _useShader = function (gl, vshaderSource, fshaderSource) {
     // 分别加载顶点着色器对象和片段着色器对象
     var vertexShader = _loadShader(gl, gl.VERTEX_SHADER, vshaderSource),
         fragmentShader = _loadShader(gl, gl.FRAGMENT_SHADER, fshaderSource);

@@ -15,9 +15,23 @@ function _getCanvasWebgl(selector, opts) {
     return context;
 }
 
-// 获取3D画笔
+// 启动webgl绘图
 clay.prototype.webgl = function (opts) {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
         throw new Error('Webgl is not a function!');
-    return _getCanvasWebgl(this, opts);
+    var gl = _getCanvasWebgl(this, opts),
+        glObj = {
+            "painter": function () {
+                return gl;
+            },
+
+            // 启用着色器
+            "shader": function (vshaderSource, fshaderSource) {
+                gl.program = _useShader(gl, vshaderSource, fshaderSource);
+                return glObj;
+            }
+
+        };
+
+    return glObj;
 };

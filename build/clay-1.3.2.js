@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Nov 10 2018 11:22:22 GMT+0800 (CST)
+* Date:Sat Nov 10 2018 14:56:12 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -629,7 +629,7 @@ function _getCanvas2D(selector) {
 // 直接使用canvas2D绘图
 clay.prototype.painter = function () {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
-        throw new Error('canvas is not function');
+        throw new Error('painter is not function');
     return _getCanvas2D(this);
 };
 
@@ -678,30 +678,6 @@ clay.prototype.layer = function () {
 
     return layerManager;
 
-};
-
-// 获取webgl上下文
-function _getCanvasWebgl(selector, opts) {
-    if (selector && selector.constructor === WebGLRenderingContext) return selector;
-    var canvas = clay(selector),
-        names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
-        context = null, i;
-    if (canvas.length > 0) {
-        for (i = 0; i < names.length; i++) {
-            try {
-                context = canvas[0].getContext(names[i], opts);
-            } catch (e) { }
-            if (context) break;
-        }
-    }
-    return context;
-}
-
-// 获取3D画笔
-clay.prototype.webgl = function (opts) {
-    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
-        throw new Error('Webgl is not a function!');
-    return _getCanvasWebgl(this, opts);
 };
 
 // 在(a,b,c)方向位移d
@@ -1112,7 +1088,7 @@ var _canvas = function (_selector, config, painterback, param) {
 
 };
 
-// 2D弧
+// 弧
 var _arc = function (painter) {
 
     var scope = {
@@ -1443,7 +1419,7 @@ var _loadShader = function (gl, type, source) {
 };
 
 // 初始化着色器
-clay.useShaders = function (gl, vshaderSource, fshaderSource) {
+var _useShader = function (gl, vshaderSource, fshaderSource) {
     // 分别加载顶点着色器对象和片段着色器对象
     var vertexShader = _loadShader(gl, gl.VERTEX_SHADER, vshaderSource),
         fragmentShader = _loadShader(gl, gl.FRAGMENT_SHADER, fshaderSource);
@@ -1460,6 +1436,44 @@ clay.useShaders = function (gl, vshaderSource, fshaderSource) {
     // 使用这个完整的程序
     gl.useProgram(glProgram);
     return glProgram;
+};
+
+// 获取webgl上下文
+function _getCanvasWebgl(selector, opts) {
+    if (selector && selector.constructor === WebGLRenderingContext) return selector;
+    var canvas = clay(selector),
+        names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
+        context = null, i;
+    if (canvas.length > 0) {
+        for (i = 0; i < names.length; i++) {
+            try {
+                context = canvas[0].getContext(names[i], opts);
+            } catch (e) { }
+            if (context) break;
+        }
+    }
+    return context;
+}
+
+// 启动webgl绘图
+clay.prototype.webgl = function (opts) {
+    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
+        throw new Error('Webgl is not a function!');
+    var gl = _getCanvasWebgl(this, opts),
+        glObj = {
+            "painter": function () {
+                return gl;
+            },
+
+            // 启用着色器
+            "shader": function (vshaderSource, fshaderSource) {
+                gl.program = _useShader(gl, vshaderSource, fshaderSource);
+                return glObj;
+            }
+
+        };
+
+    return glObj;
 };
 
 

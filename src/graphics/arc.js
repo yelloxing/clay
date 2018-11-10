@@ -1,4 +1,4 @@
-// 2D弧
+// 弧
 var _arc = function (painter) {
 
     var scope = {

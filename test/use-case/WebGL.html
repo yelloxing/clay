@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="../../clay.png" type="image/x-png">
-    <title>clay - 用例 - webgl接口</title>
+    <title>clay - 用例 - webgl</title>
     <script src="../../build/clay-1.3.2.js"></script>
 
     <!-- 顶点着色器 -->
@@ -30,15 +30,21 @@
 
 <script>
 
-    // 建立画布，并获取3D画笔
     var gl = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+
+        // 建立画布
         .appendTo('body')
         .attr('width', '400')
         .attr('height', '400')
-        .webgl();
 
-    // 启用着色器
-    var program = $$.useShaders(gl, $$('#vs')[0].innerHTML, $$('#fs')[0].innerHTML);
+        // 标记使用webgl 3D画布
+        .webgl()
+
+        // 启用着色器
+        .shader($$('#vs')[0].innerHTML, $$('#fs')[0].innerHTML)
+
+        // 获取画笔
+        .painter();
 
     // 绘图
     gl.drawArrays(gl.POINTS, 0, 1);
