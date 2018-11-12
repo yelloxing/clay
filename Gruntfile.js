@@ -41,11 +41,6 @@ var source = [
     './src/calculate/map.js',
 
     /**
-     * 着色器 GLSL
-     */
-    './src/GLSL ES/shader.js',
-
-    /**
      * 图形
      */
     './src/graphics/index.js',

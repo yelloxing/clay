@@ -5,9 +5,9 @@ clay.prototype.datum = function (data, calcback) {
     if (data === null || data === undefined) {
         return this.length > 0 ? this[0]._data : undefined;
     } else {
-        data = typeof calcback === 'function' ? calcback(data) : data;
         var flag;
         for (flag = 0; flag < this.length; flag++) {
+            data = typeof calcback === 'function' ? calcback(data, flag) : data;
             this[flag]._data = data;
         }
         return this;
@@ -24,14 +24,14 @@ clay.prototype.data = function (datas, calcback) {
         var newClay = clay();
         newClay.selector = this.selector;
         for (flag = 0; flag < datas.length && flag < this.length; flag++) {
-            this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag];
+            this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag];
             newClay[flag] = this[flag];
             newClay.length += 1;
         }
         // 分别记录需要去平衡的数据和结点
         newClay._enter = [];
         for (; flag < datas.length; flag++) {
-            newClay._enter.push(typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag]);
+            newClay._enter.push(typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag]);
         }
         newClay._exit = [];
         for (; flag < this.length; flag++) {

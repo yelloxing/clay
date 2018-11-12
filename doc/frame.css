@@ -6,6 +6,7 @@ body {
     font-family: inconsolata;
     line-height: .18rem;
     font-weight: normal;
+    white-space: nowrap;
 }
 
 .menu-frame,
@@ -15,6 +16,7 @@ iframe {
     height: 100vh;
     vertical-align: top;
     overflow: hidden;
+    white-space: normal;
 }
 
 .menu-frame {

@@ -13,7 +13,11 @@ var _canvas = function (_selector, config, painterback, param) {
     var key, temp = painterback(param);
     temp._painter = _getCanvas2D(_selector);
 
-    // 获取画笔
+    if (config)
+        for (key in config)
+            temp._painter[key] = config[key];
+
+    // 设置画笔
     temp.painter = function (selector) {
         temp._painter = _getCanvas2D(selector);
         return temp;

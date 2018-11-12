@@ -42,7 +42,7 @@
             <li onclick='loadpage("course/layout")'>布局的使用</li>
             <li onclick='loadpage("course/layer_and_region")'>图层、区域管理者</li>
         </ul>
-        <span>接口API</span>
+        <span>基本接口</span>
         <label>结点对象</label>
         <ul>
             <li onclick='loadpage("clayobject/node")'>基本的结点操作</li>
@@ -52,17 +52,16 @@
         <ul>
             <li onclick='loadpage("tool/method")'>零碎方法</li>
             <li onclick='loadpage("tool/layer_and_region")'>图层和区域管理者</li>
-            <li onclick='loadpage("tool/animation")'>动画&amp;轮询执行</li>
         </ul>
         <label>计算&amp;求值</label>
         <ul>
             <li onclick='loadpage("calculate/interpolate")'>曲线插值</li>
-            <li onclick='loadpage("calculate/matrix4")'>Matrix4矩阵变换</li>
+            <li onclick='loadpage("calculate/matrix4")'>Matrix4矩阵</li>
             <li onclick='loadpage("calculate/map")'>地球坐标映射</li>
         </ul>
-        <label>图形接口</label>
+        <label>图形</label>
         <ul>
-            <li onclick='loadpage("graphics/arc2d")'>arc弧形</li>
+            <li onclick='loadpage("graphics/simple")'>单一图形</li>
         </ul>
         <label>布局</label>
         <ul>
@@ -88,6 +87,15 @@
             }
         }
     }
+
+    window.console && window.console.log && (console.log([
+        '%c ',
+        '我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。',
+        ' ',
+        '始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。',
+        ' '
+    ].join('\n'), "color:#d66eac"),
+        console.log("%cclay项目github地址：https://github.com/yelloxing/clay （期待你的加入）", "color:#5292b2"));
 
 </script>
 
