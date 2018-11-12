@@ -13,16 +13,21 @@
     <script type='x-shader/x-vertex' id='vs'>
         attribute vec4 a_position;
         attribute float a_size;
+        varying vec4 v_color;
+        attribute vec4 a_color;
         void main(){
             gl_Position=a_position;
             gl_PointSize=a_size;
+            v_color=a_color;
         }
     </script>
 
     <!-- 片段着色器 -->
     <script type='x-shader/x-fragment' id='fs'>
+        precision mediump float;
+        varying vec4 v_color;
         void main(){
-            gl_FragColor=vec4(0.0,1.0,0.0,1.0);
+            gl_FragColor=v_color;
         }
     </script>
 
@@ -40,32 +45,30 @@
         .attr('height', '400')
 
         // 获取webgl 3D绘画系统
-        .webgl()
+        .webgl();
 
-        // 启用着色器
-        .shader($$('#vs')[0].innerHTML, $$('#fs')[0].innerHTML);
+    // 启用着色器
+    render3D.shader($$('#vs')[0].innerHTML, $$('#fs')[0].innerHTML);
 
     // 获取画笔
     var gl = render3D.painter();
 
     // 数据
     var data = new Float32Array([
-        -0.5, 0.5, 5.0,
-        0.5, 0.5, 20.0,
-        0.5, -0.5, 10.0
+        // 位置2、大小1、色彩3
+        -0.5, 0.5, 5.0, 1.0, 0.0, 0.0,
+        0.5, 0.5, 20.0, 0.0, 1.0, 0.0,
+        0.5, -0.5, 10.0, 0.0, 0.0, 1.0
     ]);
-
-    // 获取属性存储位置
-    var a_position = gl.getAttribLocation(gl.program, 'a_position');
-    var a_size = gl.getAttribLocation(gl.program, 'a_size');
 
     // 初始化缓冲区
     var buffer = render3D.buffer()
         // 数据写入缓冲区
         .write(data)
         // 写入缓冲区的数据分配
-        .use(a_position, 2, 3, 0)
-        .use(a_size, 1, 3, 2);
+        .use('a_position', 2, 6, 0)
+        .use('a_size', 1, 6, 2)
+        .use('a_color', 3, 6, 3);
 
     // 绘图
     gl.drawArrays(gl.POINTS, 0, 3);

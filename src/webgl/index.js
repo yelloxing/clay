@@ -47,6 +47,7 @@ clay.prototype.webgl = function (opts) {
                         // 分配使用
                         "use": function (location, size, stride, offset, type, normalized) {
                             var fsize = bufferData.BYTES_PER_ELEMENT;
+                            if (typeof location == 'string') location = gl.getAttribLocation(gl.program, location);
                             type = type || gl.FLOAT;
                             stride = stride || 0;
                             offset = offset || 0;
