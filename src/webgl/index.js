@@ -29,6 +29,38 @@ clay.prototype.webgl = function (opts) {
             "shader": function (vshaderSource, fshaderSource) {
                 gl.program = _useShader(gl, vshaderSource, fshaderSource);
                 return glObj;
+            },
+
+            // 缓冲区
+            "buffer": function (isElement) {
+                // 创建缓冲区
+                var buffer = _newBuffer(gl, isElement),
+                    bufferData,
+                    bufferObj = {
+                        // 写入数据
+                        "write": function (data, usage) {
+                            usage = usage || gl.STATIC_DRAW;
+                            _writeBuffer(gl, data, usage, isElement);
+                            bufferData = data;
+                            return bufferObj;
+                        },
+                        // 分配使用
+                        "use": function (location, size, stride, offset, type, normalized) {
+                            var fsize = bufferData.BYTES_PER_ELEMENT;
+                            type = type || gl.FLOAT;
+                            stride = stride || 0;
+                            offset = offset || 0;
+                            type = type || gl.FLOAT;
+                            _useBuffer(gl, location, size, type, stride * fsize, offset * fsize, normalized);
+                            return bufferObj;
+                        },
+                        // 关闭退出
+                        "close": function () {
+                            _deleteBuffer(gl, buffer);
+                            return glObj;
+                        }
+                    };
+                return bufferObj;
             }
 
         };

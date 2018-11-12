@@ -55,6 +55,7 @@ var source = [
      * 3D核心接口
      */
     './src/webgl/shader.js',
+    './src/webgl/buffer.js',
     './src/webgl/index.js'
 
 ];

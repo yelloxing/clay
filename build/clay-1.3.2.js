@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Nov 10 2018 14:56:12 GMT+0800 (CST)
+* Date:Mon Nov 12 2018 17:56:34 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1438,6 +1438,49 @@ var _useShader = function (gl, vshaderSource, fshaderSource) {
     return glProgram;
 };
 
+// 获取一个新的缓冲区
+// isElement默认false，创建第一种缓冲区，为true创建第二种
+var _newBuffer = function (gl, isElement) {
+    var buffer = gl.createBuffer(),
+        TYPE = isElement ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
+    // 把缓冲区对象绑定到目标
+    gl.bindBuffer(TYPE, buffer);
+    return buffer;
+};
+
+// 数据写入缓冲区
+// data是一个类型化数组，表示写入的数据
+// usage表示程序如何使用存储在缓冲区的数据
+var _writeBuffer = function (gl, data, usage, isElement) {
+    var TYPE = isElement ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
+    gl.bufferData(TYPE, data, usage);
+};
+
+// 使用缓冲区数据
+// location指定待分配的attribute变量的存储位置
+// size每个分量个数
+// type数据类型，应该是以下的某个：
+//      gl.UNSIGNED_BYTE    Uint8Array
+//      gl.SHORT            Int16Array
+//      gl.UNSIGNED_SHORT   Uint16Array
+//      gl.INT              Int32Array
+//      gl.UNSIGNED_INT     Uint32Array
+//      gl.FLOAT            Float32Array
+// stride相邻二个数据项的字节数
+// offset数据的起点字节位置
+// normalized是否把非浮点型的数据归一化到[0,1]或[-1,1]区间
+var _useBuffer = function (gl, location, size, type, stride, offset, normalized) {
+    // 把缓冲区对象分配给目标变量
+    gl.vertexAttribPointer(location, size, type, normalized || false, stride || 0, offset || 0);
+    // 连接目标对象和缓冲区对象
+    gl.enableVertexAttribArray(location);
+};
+
+// 删除缓冲区
+var _deleteBuffer = function (gl, buffer) {
+    gl.deleteBuffer(buffer);
+};
+
 // 获取webgl上下文
 function _getCanvasWebgl(selector, opts) {
     if (selector && selector.constructor === WebGLRenderingContext) return selector;
@@ -1469,6 +1512,38 @@ clay.prototype.webgl = function (opts) {
             "shader": function (vshaderSource, fshaderSource) {
                 gl.program = _useShader(gl, vshaderSource, fshaderSource);
                 return glObj;
+            },
+
+            // 缓冲区
+            "buffer": function (isElement) {
+                // 创建缓冲区
+                var buffer = _newBuffer(gl, isElement),
+                    bufferData,
+                    bufferObj = {
+                        // 写入数据
+                        "write": function (data, usage) {
+                            usage = usage || gl.STATIC_DRAW;
+                            _writeBuffer(gl, data, usage, isElement);
+                            bufferData = data;
+                            return bufferObj;
+                        },
+                        // 分配使用
+                        "use": function (location, size, stride, offset, type, normalized) {
+                            var fsize = bufferData.BYTES_PER_ELEMENT;
+                            type = type || gl.FLOAT;
+                            stride = stride || 0;
+                            offset = offset || 0;
+                            type = type || gl.FLOAT;
+                            _useBuffer(gl, location, size, type, stride * fsize, offset * fsize, normalized);
+                            return bufferObj;
+                        },
+                        // 关闭退出
+                        "close": function () {
+                            _deleteBuffer(gl, buffer);
+                            return glObj;
+                        }
+                    };
+                return bufferObj;
             }
 
         };
