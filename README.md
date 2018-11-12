@@ -1,9 +1,9 @@
 [clay](https://gitq.com/yelloxing/clay) - Provide more flexible data visualization solutions
 ==================================================
 
-[![travis](https://github.com/yelloxing/clay/blob/master/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
-[![license](https://github.com/yelloxing/clay/blob/master/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
-[![chat](https://github.com/yelloxing/clay/blob/master/chat.svg)](https://gitq.com/yelloxing/clay)
+[![travis](https://github.com/yelloxing/clay/blob/master/data/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
+[![license](https://github.com/yelloxing/clay/blob/master/data/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
+[![chat](https://github.com/yelloxing/clay/blob/master/data/chat.svg)](https://gitq.com/yelloxing/clay)
 
 我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
 

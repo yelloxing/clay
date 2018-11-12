@@ -22,7 +22,6 @@ var source = [
      */
     './src/Tools/region.js',
     './src/Tools/canvas.js',
-    './src/Tools/webgl.js',
 
     /**
      * 变换矩阵4x4
@@ -56,6 +55,7 @@ var source = [
      */
     './src/webgl/shader.js',
     './src/webgl/buffer.js',
+    './src/webgl/texture.js',
     './src/webgl/index.js'
 
 ];
@@ -160,6 +160,13 @@ module.exports = function (grunt) {
                     port: 30000,
                     base: '.'
                 }
+            },
+            server: {//本地服务器
+                options: {
+                    keepalive: true,
+                    port: 20000,
+                    base: '.'
+                }
             }
         }
     });
@@ -178,4 +185,5 @@ module.exports = function (grunt) {
     /*注册任务*/
     grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
     grunt.registerTask('test', ['connect:target', 'qunit:target']);
+    grunt.registerTask('server', ['connect:server']);
 };

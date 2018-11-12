@@ -4,7 +4,8 @@
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
-    "test": "node_modules/.bin/grunt test"
+    "test": "node_modules/.bin/grunt test",
+    "server": "node_modules/.bin/grunt server"
   },
   "repository": {
     "type": "git",
