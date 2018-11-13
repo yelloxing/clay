@@ -1,9 +1,9 @@
-[clay](https://gitq.com/yelloxing/clay) - Provide more flexible data visualization solutions
+[clay](https://yelloxing.github.io/clay/doc/) - Provide more flexible data visualization solutions
 ==================================================
 
 [![travis](https://github.com/yelloxing/clay/blob/master/data/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
 [![license](https://github.com/yelloxing/clay/blob/master/data/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
-[![chat](https://github.com/yelloxing/clay/blob/master/data/chat.svg)](https://gitq.com/yelloxing/clay)
+[![chat](https://github.com/yelloxing/clay/blob/master/data/chat.svg)](https://github.com/yelloxing/clay/issues)
 
 我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
 
@@ -14,7 +14,7 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
-[关注的问题](https://yelloxing.github.io/clay/doc/)
+关注的问题
 --------------------------------------
 首先，本项目是为了Web端数据可视化而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形来反映统计的数据，并且绘制的图形是可交互的。
 
