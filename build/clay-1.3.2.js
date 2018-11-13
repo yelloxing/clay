@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Nov 12 2018 19:56:35 GMT+0800 (CST)
+* Date:Tue Nov 13 2018 14:51:36 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1480,7 +1480,6 @@ var _useBuffer = function (gl, location, size, type, stride, offset, normalized)
 var _deleteBuffer = function (gl, buffer) {
     gl.deleteBuffer(buffer);
 };
-
 
 // 获取webgl上下文
 function _getCanvasWebgl(selector, opts) {

@@ -55,7 +55,6 @@ var source = [
      */
     './src/webgl/shader.js',
     './src/webgl/buffer.js',
-    './src/webgl/texture.js',
     './src/webgl/index.js'
 
 ];
