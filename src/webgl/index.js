@@ -62,6 +62,31 @@ clay.prototype.webgl = function (opts) {
                         }
                     };
                 return bufferObj;
+            },
+
+            // 纹理
+            "texture": function (unit, type) {
+                type = type || gl.TEXTURE_2D;
+                // 创建纹理
+                var texture = _initTexture(gl, unit, type);
+                var textureObj = {
+                    // 配置纹理对象
+                    "config": function (config) {
+                        _configTexture(gl, type, config);
+                        return textureObj;
+                    },
+                    // 链接图片资源
+                    "use": function (level, format, textureType, image) {
+                        _linkImage(gl, type, level, format, textureType, image);
+                        return textureObj;
+                    },
+                    // 关闭纹理
+                    "close": function () {
+                        _deleteTexture(gl, texture);
+                        return glObj;
+                    }
+                };
+                return textureObj;
             }
 
         };

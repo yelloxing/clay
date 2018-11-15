@@ -5,7 +5,9 @@
   "scripts": {
     "release": "node_modules/.bin/grunt release",
     "test": "node_modules/.bin/grunt test",
-    "server": "node_modules/.bin/grunt server"
+    "server": "node_modules/.bin/grunt server",
+    "init": "npm install && npm run release && npm run test",
+    "start": "npm run release && npm run test"
   },
   "repository": {
     "type": "git",
