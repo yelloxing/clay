@@ -5,14 +5,14 @@
 * 
 * author 心叶
 *
-* version 1.3.2
+* version 1.4.0
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 15 2018 17:21:50 GMT+0800 (CST)
+* Date:Thu Nov 15 2018 20:43:09 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1631,7 +1631,7 @@ clay.prototype.webgl = function (opts) {
 
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.3.2';
+    clay.version = '1.4.0';
 
     global.clay = global.$$ = clay;
 
