@@ -40,6 +40,7 @@ var source = [
     './src/calculate/map.js',
     './src/calculate/Velocity-Verlet.js',
     './src/calculate/Coulomb\'s law.js',
+    './src/calculate/rotate.js',
 
     /**
      * 2D图形

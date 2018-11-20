@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Nov 20 2018 19:55:34 GMT+0800 (CST)
+* Date:Tue Nov 20 2018 20:21:41 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1222,6 +1222,14 @@ var _coulomb_law = function (electrons) {
 
     return electrons;
 
+};
+
+clay.rotate = function (cx, cy, deg, x, y) {
+    var cos = Math.cos(deg), sin = Math.sin(deg);
+    return [
+        ((x - cx) * cos - (y - cy) * sin + cx) * 100000000000000 / 100000000000000,
+        ((x - cx) * sin + (y - cy) * cos + cy) * 100000000000000 / 100000000000000
+    ];
 };
 
 // 绘图方法挂载钩子
