@@ -50,6 +50,7 @@ var source = [
      * 布局
      */
     './src/layout/tree.js',
+    './src/layout/force.js',
 
     /**
      * 3D核心接口

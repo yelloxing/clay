@@ -3,3 +3,4 @@
 .project
 node_modules
 jshint.debug.txt
+yarn-error.log
