@@ -38,6 +38,7 @@ var source = [
     './src/calculate/interpolate/Hermite.js',
     './src/calculate/interpolate/Cardinal.js',
     './src/calculate/map.js',
+    './src/calculate/Velocity-Verlet.js',
     './src/calculate/Coulomb\'s law.js',
 
     /**
