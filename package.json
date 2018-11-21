@@ -9,6 +9,7 @@
     "init": "npm install && npm run release && npm run test",
     "start": "npm run release && npm run test"
   },
+  "main": "./build/clay-1.4.0.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yelloxing/clay.git"
