@@ -1,5 +1,5 @@
 {
-  "name": "clay",
+  "name": "clay-core",
   "version": "1.4.0",
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
