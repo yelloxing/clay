@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="../clay.png" type="image/x-png">
     <link rel="stylesheet" href="./libs/easycss-1.3.1.min.css">
     <link rel="stylesheet" href="frame.css">
-    <title>clay / doc</title>
+    <title>文档 - clay</title>
     <script>
         function loadpage(url) {
             document.getElementsByTagName('iframe')[0].src = "./apis/" + url + ".html";
@@ -46,6 +46,7 @@
         <label>结点对象</label>
         <ul>
             <li onclick='loadpage("clayobject/node")'>基本的结点操作</li>
+            <li onclick='loadpage("clayobject/tool")'>有益的方法</li>
             <li onclick='loadpage("clayobject/node_and_data")'>数据绑定</li>
         </ul>
         <label>工具类</label>
@@ -55,6 +56,7 @@
         </ul>
         <label>计算&amp;求值</label>
         <ul>
+            <li onclick='loadpage("calculate/transform")'>坐标变换</li>
             <li onclick='loadpage("calculate/interpolate")'>曲线插值</li>
             <li onclick='loadpage("calculate/matrix4")'>Matrix4矩阵</li>
             <li onclick='loadpage("calculate/map")'>地球坐标映射</li>
@@ -104,3 +106,5 @@
 </script>
 
 </html>
+
+<!-- 走一步，再走一步。 -->
