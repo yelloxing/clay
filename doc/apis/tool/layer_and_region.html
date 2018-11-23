@@ -48,7 +48,7 @@
     // 用pencil这种画笔画出区域
 });</pre>
     <p>
-        region_id用来标记编辑的区域是哪个，pencil不可以修改fillStyle的值，不需要调用fill方法，勾勒出轮廓即可。返回区域管理者。
+        region_id用来标记编辑的区域是哪个，pencil不可以修改fillStyle和strokeStyle的值。返回区域管理者。
     </p>
     <pre class='prettyprint lang-js'>regionManage.erase(function(erase){
     // 用erase擦除不需要标记的区域

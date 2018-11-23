@@ -2,8 +2,8 @@
 var _drawerRegion = function (pen, color, drawback) {
     pen.beginPath();
     pen.fillStyle = color;
+    pen.strokeStyle = color;
     drawback(pen);
-    pen.fill();
 };
 
 // 区域对象，用于存储区域信息

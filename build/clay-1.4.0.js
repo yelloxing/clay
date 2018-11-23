@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Nov 23 2018 11:27:11 GMT+0800 (CST)
+* Date:Fri Nov 23 2018 11:53:48 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -560,8 +560,8 @@ clay.loop = function (datas, callback) {
 var _drawerRegion = function (pen, color, drawback) {
     pen.beginPath();
     pen.fillStyle = color;
+    pen.strokeStyle = color;
     drawback(pen);
-    pen.fill();
 };
 
 // 区域对象，用于存储区域信息

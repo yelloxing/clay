@@ -79,6 +79,14 @@ ul>li {
     cursor: pointer;
 }
 
+footer {
+    background-color: #aaceea;
+    color: white;
+    text-align: center;
+    line-height: 0.3rem;
+    margin-top: .3rem;
+}
+
 /* 修改按钮 */
 
 button {
