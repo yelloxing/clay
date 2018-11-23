@@ -38,8 +38,6 @@ var source = [
     './src/calculate/interpolate/Hermite.js',
     './src/calculate/interpolate/Cardinal.js',
     './src/calculate/map.js',
-    './src/calculate/Velocity-Verlet.js',
-    './src/calculate/Coulomb\'s law.js',
     './src/calculate/rotate.js',
 
     /**
@@ -51,16 +49,7 @@ var source = [
     /**
      * 布局
      */
-    './src/layout/tree.js',
-    './src/layout/force.js',
-
-    /**
-     * 3D核心接口
-     */
-    './src/webgl/shader.js',
-    './src/webgl/buffer.js',
-    './src/webgl/texture.js',
-    './src/webgl/index.js'
+    './src/layout/tree.js'
 
 ];
 
