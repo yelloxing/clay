@@ -1,9 +1,11 @@
 // 用特定色彩绘制区域
-var _drawerRegion = function (pen, color, drawback) {
+var _drawerRegion = function (pen, color, drawback, regionManger) {
     pen.beginPath();
     pen.fillStyle = color;
     pen.strokeStyle = color;
+    if (typeof drawback != "function") return pen;
     drawback(pen);
+    return regionManger;
 };
 
 // 区域对象，用于存储区域信息
@@ -50,14 +52,12 @@ clay.prototype.region = function () {
                         return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
                     }
                 }[p]();
-                _drawerRegion(canvas2D, regions[region_id], drawback);
-                return regionManger;
+                return _drawerRegion(canvas2D, regions[region_id], drawback, regionManger);
             },
 
             // 擦除区域范围
             "erase": function (drawback) {
-                _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback);
-                return regionManger;
+                return _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback, regionManger);
             },
 
             // 获取此刻鼠标所在区域

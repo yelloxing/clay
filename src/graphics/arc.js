@@ -108,7 +108,6 @@ clay.canvas.arc = function (selector, config) {
                 obj._painter.lineTo(endOuterX, endOuterY);
                 obj._painter.arc(cx, cy, rmax, endA, beginA, true);
                 obj._painter.lineTo(begInnerX, begInnerY);
-                obj._painter.fill();
                 return obj._painter;
 
             });

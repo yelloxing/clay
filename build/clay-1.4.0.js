@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Nov 23 2018 11:53:48 GMT+0800 (CST)
+* Date:Fri Nov 23 2018 14:27:20 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -557,11 +557,13 @@ clay.loop = function (datas, callback) {
 };
 
 // 用特定色彩绘制区域
-var _drawerRegion = function (pen, color, drawback) {
+var _drawerRegion = function (pen, color, drawback, regionManger) {
     pen.beginPath();
     pen.fillStyle = color;
     pen.strokeStyle = color;
+    if (typeof drawback != "function") return pen;
     drawback(pen);
+    return regionManger;
 };
 
 // 区域对象，用于存储区域信息
@@ -608,14 +610,12 @@ clay.prototype.region = function () {
                         return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
                     }
                 }[p]();
-                _drawerRegion(canvas2D, regions[region_id], drawback);
-                return regionManger;
+                return _drawerRegion(canvas2D, regions[region_id], drawback, regionManger);
             },
 
             // 擦除区域范围
             "erase": function (drawback) {
-                _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback);
-                return regionManger;
+                return _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback, regionManger);
             },
 
             // 获取此刻鼠标所在区域
@@ -680,7 +680,11 @@ clay.prototype.layer = function () {
             return layer[index];
         },
         "clean": function (ctx2D) {
-            ctx2D.clearRect(0, 0, width, height);
+            if (ctx2D) {
+                if (ctx2D.constructor !== CanvasRenderingContext2D)
+                    ctx2D = layerManager.painter(ctx2D);
+                ctx2D.clearRect(0, 0, width, height);
+            }
             return layerManager;
         },
         "update": function () {
@@ -1249,7 +1253,6 @@ clay.canvas.arc = function (selector, config) {
                 obj._painter.lineTo(endOuterX, endOuterY);
                 obj._painter.arc(cx, cy, rmax, endA, beginA, true);
                 obj._painter.lineTo(begInnerX, begInnerY);
-                obj._painter.fill();
                 return obj._painter;
 
             });

@@ -41,7 +41,11 @@ clay.prototype.layer = function () {
             return layer[index];
         },
         "clean": function (ctx2D) {
-            ctx2D.clearRect(0, 0, width, height);
+            if (ctx2D) {
+                if (ctx2D.constructor !== CanvasRenderingContext2D)
+                    ctx2D = layerManager.painter(ctx2D);
+                ctx2D.clearRect(0, 0, width, height);
+            }
             return layerManager;
         },
         "update": function () {

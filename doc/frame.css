@@ -80,11 +80,12 @@ ul>li {
 }
 
 footer {
-    background-color: #aaceea;
+    background-color: #529bcf;
     color: white;
     text-align: center;
     line-height: 0.3rem;
     margin-top: .3rem;
+    cursor: pointer;
 }
 
 /* 修改按钮 */
