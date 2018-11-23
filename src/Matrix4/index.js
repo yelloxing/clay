@@ -51,9 +51,9 @@ clay.Matrix4 = function (initMatrix4) {
             // w为0表示点位于无穷远处，忽略
             z = z || 0; w = w || 1;
             var temp = _multiply(matrix4, [x, y, z, w]);
-            temp[0] = Math.round(temp[0] * 100000000000000) / 100000000000000;
-            temp[1] = Math.round(temp[1] * 100000000000000) / 100000000000000;
-            temp[2] = Math.round(temp[2] * 100000000000000) / 100000000000000;
+            temp[0] = temp[0].toFixed(7);
+            temp[1] = temp[1].toFixed(7);
+            temp[2] = temp[2].toFixed(7);
             return temp;
         },
         "value": function () {

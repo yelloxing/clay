@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Nov 23 2018 10:26:47 GMT+0800 (CST)
+* Date:Fri Nov 23 2018 11:27:11 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -847,9 +847,9 @@ clay.Matrix4 = function (initMatrix4) {
             // w为0表示点位于无穷远处，忽略
             z = z || 0; w = w || 1;
             var temp = _multiply(matrix4, [x, y, z, w]);
-            temp[0] = Math.round(temp[0] * 100000000000000) / 100000000000000;
-            temp[1] = Math.round(temp[1] * 100000000000000) / 100000000000000;
-            temp[2] = Math.round(temp[2] * 100000000000000) / 100000000000000;
+            temp[0] = temp[0].toFixed(7);
+            temp[1] = temp[1].toFixed(7);
+            temp[2] = temp[2].toFixed(7);
             return temp;
         },
         "value": function () {
@@ -1077,8 +1077,29 @@ clay.map = function () {
 clay.rotate = function (cx, cy, deg, x, y) {
     var cos = Math.cos(deg), sin = Math.sin(deg);
     return [
-        ((x - cx) * cos - (y - cy) * sin + cx) * 100000000000000 / 100000000000000,
-        ((x - cx) * sin + (y - cy) * cos + cy) * 100000000000000 / 100000000000000
+        ((x - cx) * cos - (y - cy) * sin + cx).toFixed(7),
+        ((x - cx) * sin + (y - cy) * cos + cy).toFixed(7)
+    ];
+};
+
+/**
+ * 点（x,y）沿着向量（ax,ay）方向移动距离d
+ */
+clay.move = function (ax, ay, d, x, y) {
+    var sqrt = Math.sqrt(ax * ax + ay * ay);
+    return [
+        (ax * d / sqrt + x).toFixed(7),
+        (ay * d / sqrt + y).toFixed(7)
+    ];
+};
+
+/**
+ * 点（x,y）围绕中心（cx,cy）缩放times倍
+ */
+clay.scale = function (cx, cy, times, x, y) {
+    return [
+        (times * (x - cx) + cx).toFixed(7),
+        (times * (y - cy) + cy).toFixed(7)
     ];
 };
 

@@ -38,7 +38,7 @@ var source = [
     './src/calculate/interpolate/Hermite.js',
     './src/calculate/interpolate/Cardinal.js',
     './src/calculate/map.js',
-    './src/calculate/rotate.js',
+    './src/calculate/transform.js',
 
     /**
      * 2D图形
