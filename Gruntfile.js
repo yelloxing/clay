@@ -45,6 +45,10 @@ var source = [
      */
     './src/graphics/index.js',
     './src/graphics/arc.js',
+    './src/graphics/rect.js',
+    './src/graphics/line.js',
+    './src/graphics/text.js',
+    './src/graphics/bezier.js',
 
     /**
      * 布局
