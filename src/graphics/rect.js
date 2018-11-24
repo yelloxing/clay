@@ -6,6 +6,13 @@ var _rect = function (painter) {
         t: ["LR"]
     };
 
+    /**
+     * 绘制矩形
+     * @param {number} x 矩形起点的x坐标
+     * @param {number} y 矩形起点的y坐标
+     * @param {number} length 矩形长度
+     * @param {number} deg 只有在使用旋转定位的时候才需要传递，表示旋转角度
+     */
     var rect = function (x, y, length, deg) {
         // 记录矩形的四个角坐标
         var position, s2 = scope.s * 0.5;
@@ -39,10 +46,10 @@ var _rect = function (painter) {
                 break;
             default:
                 position = [
-                    clay.rotate(scope.t[1], scope.t[2], deg, x, y - s2),
-                    clay.rotate(scope.t[1], scope.t[2], deg, x + length, y - s2),
-                    clay.rotate(scope.t[1], scope.t[2], deg, x + length, y + s2),
-                    clay.rotate(scope.t[1], scope.t[2], deg, x, y + s2)
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y + s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y + s2)
                 ];
         }
         return painter(position);

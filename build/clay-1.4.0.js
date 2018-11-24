@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Nov 24 2018 14:28:44 GMT+0800 (CST)
+* Date:Sat Nov 24 2018 15:53:53 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1269,6 +1269,13 @@ var _rect = function (painter) {
         t: ["LR"]
     };
 
+    /**
+     * 绘制矩形
+     * @param {number} x 矩形起点的x坐标
+     * @param {number} y 矩形起点的y坐标
+     * @param {number} length 矩形长度
+     * @param {number} deg 只有在使用旋转定位的时候才需要传递，表示旋转角度
+     */
     var rect = function (x, y, length, deg) {
         // 记录矩形的四个角坐标
         var position, s2 = scope.s * 0.5;
@@ -1302,10 +1309,10 @@ var _rect = function (painter) {
                 break;
             default:
                 position = [
-                    clay.rotate(scope.t[1], scope.t[2], deg, x, y - s2),
-                    clay.rotate(scope.t[1], scope.t[2], deg, x + length, y - s2),
-                    clay.rotate(scope.t[1], scope.t[2], deg, x + length, y + s2),
-                    clay.rotate(scope.t[1], scope.t[2], deg, x, y + s2)
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y + s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y + s2)
                 ];
         }
         return painter(position);
@@ -1458,13 +1465,48 @@ clay.canvas.text = function (selector, config) {
 // 贝塞尔曲线
 var _bezier = function (painter) {
 
-    var scope = {
+    var scope = {},
 
+        /**
+         * 绘制贝塞尔曲线（主要是连接关系点的时候用）
+         * @param {number} bx 起点坐标(bx,by)
+         * @param {number} by
+         * @param {number} ex 终点坐标(ex,ey)
+         * @param {number} ey
+         */
+        bezier = function (bx, by, ex, ey) {
+            var bdirection, edirection;
+            if (scope.t[2] == 'normal') {
+                bdirection = [scope.t[0], scope.t[1]];
+                edirection = [-scope.t[0], -scope.t[1]];
+            } else if (scope.t[2] == 'circle') {
+                bdirection = [bx - scope.t[0], by - scope.t[1]];
+                edirection = [scope.t[0] - ex, scope.t[1] - ey];
+            } else {
+                throw new Error('Illegal type!');
+            }
+            return painter(
+                [bx, by], //起点
+                [ex, ey], //终点
+                clay.move(bdirection[0], bdirection[1], scope.l, bx, by), //起点控制点
+                clay.move(edirection[0], edirection[1], scope.l, ex, ey) //终点控制点
+            );
+        };
+
+    // 设置曲线类型，可选类型有二种：
+    // 1.type="normal",(dx,dy)是参考方向
+    // 2.type="circle",(dx,dy)是参考中心
+    // 缺省类型是"normal"
+    bezier.setType = function (dx, dy, type) {
+        if (!type) type = 'normal';
+        scope.t = [dx, dy, type];
+        return bezier;
     };
 
-
-    var bezier = function () {
-
+    // 设置控制把柄的长度
+    bezier.setL = function (length) {
+        scope.l = length;
+        return bezier;
     };
 
     return bezier;
@@ -1475,10 +1517,12 @@ var _bezier = function (painter) {
 clay.svg.bezier = function () {
     return _bezier(
         function (
-
+            beginP, endP, beginCtrlP, endCtrlP
         ) {
-            var d;
-            return d;
+            return "M" + beginP[0] + "," + beginP[1] + " " +
+                "C" + beginCtrlP[0] + "," + beginCtrlP[1] + " " +
+                endCtrlP[0] + "," + endCtrlP[1] + " " +
+                endP[0] + "," + endP[1];
         }
     );
 };
@@ -1489,10 +1533,16 @@ clay.canvas.bezier = function (selector, config) {
     var key,
         obj =
             _canvas(selector, config, _bezier, function (
-
+                beginP, endP, beginCtrlP, endCtrlP
             ) {
                 obj._painter.beginPath();
-
+                obj._painter.moveTo(beginP[0], beginP[1]);
+                obj._painter.bezierCurveTo(
+                    beginCtrlP[0],// 第一个贝塞尔控制点的 x 坐标
+                    beginCtrlP[1],// 第一个贝塞尔控制点的 y 坐标
+                    endCtrlP[0],// 第二个贝塞尔控制点的 x 坐标
+                    endCtrlP[1],// 第二个贝塞尔控制点的 y 坐标
+                    endP[0], endP[1]);
                 return obj._painter;
 
             });
