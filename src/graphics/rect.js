@@ -1,4 +1,4 @@
-// 弧
+// 矩形
 var _rect = function (painter) {
 
     var scope = {
@@ -9,12 +9,6 @@ var _rect = function (painter) {
     var rect = function () {
 
     };
-
-    //
-    rect.setXXX = function () {
-
-    };
-
 
     return rect;
 

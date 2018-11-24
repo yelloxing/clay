@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Nov 23 2018 15:40:16 GMT+0800 (CST)
+* Date:Sat Nov 24 2018 10:02:15 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1253,6 +1253,190 @@ clay.canvas.arc = function (selector, config) {
                 obj._painter.lineTo(endOuterX, endOuterY);
                 obj._painter.arc(cx, cy, rmax, endA, beginA, true);
                 obj._painter.lineTo(begInnerX, begInnerY);
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
+
+// 矩形
+var _rect = function (painter) {
+
+    var scope = {
+
+    };
+
+
+    var rect = function () {
+
+    };
+
+    return rect;
+
+};
+
+// 采用SVG绘制矩形
+clay.svg.rect = function () {
+    return _rect(
+        function (
+
+        ) {
+            var d;
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制矩形
+clay.canvas.rect = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _rect, function (
+
+            ) {
+                obj._painter.beginPath();
+
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
+
+// 任意曲线
+var _line = function (painter) {
+
+    var scope = {
+
+    };
+
+
+    var line = function () {
+
+    };
+
+    return line;
+
+};
+
+// 采用SVG绘制任意曲线
+clay.svg.line = function () {
+    return _line(
+        function (
+
+        ) {
+            var d;
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制任意曲线
+clay.canvas.line = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _line, function (
+
+            ) {
+                obj._painter.beginPath();
+
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
+
+// 文字
+var _text = function (painter) {
+
+    var scope = {
+
+    };
+
+
+    var text = function () {
+
+    };
+
+    return text;
+
+};
+
+// 采用SVG绘制文字
+clay.svg.text = function () {
+    return _text(
+        function (
+
+        ) {
+            var d;
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制文字
+clay.canvas.text = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _text, function (
+
+            ) {
+                obj._painter.beginPath();
+
+                return obj._painter;
+
+            });
+
+    return obj;
+
+};
+
+// 贝塞尔曲线
+var _bezier = function (painter) {
+
+    var scope = {
+
+    };
+
+
+    var bezier = function () {
+
+    };
+
+    return bezier;
+
+};
+
+// 采用SVG绘制贝塞尔曲线
+clay.svg.bezier = function () {
+    return _bezier(
+        function (
+
+        ) {
+            var d;
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制贝塞尔曲线
+clay.canvas.bezier = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _bezier, function (
+
+            ) {
+                obj._painter.beginPath();
+
                 return obj._painter;
 
             });
