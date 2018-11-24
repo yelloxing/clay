@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Nov 24 2018 10:02:15 GMT+0800 (CST)
+* Date:Sat Nov 24 2018 14:28:44 GMT+0800 (CST)
 */
 (function (global, factory) {
 
@@ -1265,12 +1265,65 @@ clay.canvas.arc = function (selector, config) {
 var _rect = function (painter) {
 
     var scope = {
-
+        s: 10,
+        t: ["LR"]
     };
 
+    var rect = function (x, y, length, deg) {
+        // 记录矩形的四个角坐标
+        var position, s2 = scope.s * 0.5;
 
-    var rect = function () {
+        // 分类前准备
+        if (scope.t[0] == "RL" || scope.t[0] == "BT") {
+            length = -length;
+            scope.t[0] = {
+                "RL": "LR",
+                "BT": "TB"
+            }[scope.t[0]];
+        }
 
+        // 分类计算
+        switch (scope.t[0]) {
+            case "LR":
+                position = [
+                    [x, y - s2],
+                    [x + length, y - s2],
+                    [x + length, y + s2],
+                    [x, y + s2]
+                ];
+                break;
+            case "TB":
+                position = [
+                    [x + s2, y],
+                    [x + s2, y + length],
+                    [x - s2, y + length],
+                    [x - s2, y]
+                ];
+                break;
+            default:
+                position = [
+                    clay.rotate(scope.t[1], scope.t[2], deg, x, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg, x + length, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg, x + length, y + s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg, x, y + s2)
+                ];
+        }
+        return painter(position);
+    };
+
+    // 设置矩形木棒的粗细
+    rect.setSize = function (size) {
+        scope.s = size;
+        return rect;
+    };
+
+    // 设置矩形方向类型
+    // 可以设置参数：
+    // 1.垂直或水平 "LR"、"RL"、"TB"、"BT"
+    // 2.任意角度 (deg,cx,cy)，deg表示初始角度，(cx,cy)表示旋转圆心
+    rect.setType = function (type, cx, cy) {
+        scope.t = [type, cx, cy];
+        return rect;
     };
 
     return rect;
@@ -1280,11 +1333,12 @@ var _rect = function (painter) {
 // 采用SVG绘制矩形
 clay.svg.rect = function () {
     return _rect(
-        function (
-
-        ) {
-            var d;
-            return d;
+        function (p) {
+            return "M" + p[0][0] + "," + p[0][1] + " " +
+                "L" + p[1][0] + "," + p[1][1] + " " +
+                "L" + p[2][0] + "," + p[2][1] + " " +
+                "L" + p[3][0] + "," + p[3][1] + " " +
+                "L" + p[0][0] + "," + p[0][1] + " ";
         }
     );
 };
@@ -1294,11 +1348,13 @@ clay.canvas.rect = function (selector, config) {
 
     var key,
         obj =
-            _canvas(selector, config, _rect, function (
-
-            ) {
+            _canvas(selector, config, _rect, function (p) {
                 obj._painter.beginPath();
-
+                obj._painter.moveTo(p[0][0], p[0][1]);
+                obj._painter.lineTo(p[1][0], p[1][1]);
+                obj._painter.lineTo(p[2][0], p[2][1]);
+                obj._painter.lineTo(p[3][0], p[3][1]);
+                obj._painter.lineTo(p[0][0], p[0][1]);
                 return obj._painter;
 
             });
