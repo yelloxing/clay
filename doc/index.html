@@ -21,9 +21,9 @@
     </script>
 </head>
 
-<body>
-    <button onclick='toEdit()'>编辑文档</button>
-    <div class="menu-frame">
+<body onresize="changeSize()">
+    <button onclick='toEdit()' id='edit-btn'>编辑文档</button>
+    <div class="menu-frame" id='menu-frame'>
         <header>
             <a href='https://github.com/yelloxing/clay' target="_blank">clay</a> / doc
         </header>
@@ -106,6 +106,32 @@
         ' '
     ].join('\n'), "color:#d66eac"),
         console.log("%cclay项目github地址：https://github.com/yelloxing/clay （期待你的加入）", "color:#5292b2"));
+
+</script>
+
+<script>
+
+    // 适配不同大小屏幕
+    function changeSize() {
+        var body = document.getElementsByTagName('body')[0],
+            menu = document.getElementById('menu-frame'),
+            iframe = document.getElementsByTagName('iframe')[0],
+            edit = document.getElementById('edit-btn'),
+            scale,
+            width = body.offsetWidth;
+        if (width >= 1200) return;
+        scale = width / 1200;
+
+        // 缩放
+        body.style.transform = "scale(" + scale + ")";
+
+        // 恢复
+        menu.style.height = (100 / scale) + "vh";
+        iframe.style.height = (100 / scale) + "vh";
+        iframe.style.width = "calc(" + (100 / scale) + "vw - 2.6rem)";
+        edit.style.left = "calc(" + (100 / scale) + "vw - 1rem)";
+    }
+    changeSize();
 
 </script>
 

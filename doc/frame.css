@@ -1,5 +1,9 @@
 /* 整体 */
 
+html {
+    height: 100vh !important;
+}
+
 body {
     font-size: 0;
     color: #555;
@@ -7,6 +11,7 @@ body {
     line-height: .18rem;
     font-weight: normal;
     white-space: nowrap;
+    transform-origin: 0 0;
 }
 
 .menu-frame,
@@ -93,7 +98,7 @@ footer {
 button {
     position: fixed;
     top: .2rem;
-    right: .2rem;
+    left: calc(100vw - 1rem);
     padding: .08rem;
     color: #fff;
     background-color: #555;
