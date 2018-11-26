@@ -4,10 +4,9 @@
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
-    "test": "node_modules/.bin/grunt test",
     "server": "node_modules/.bin/grunt server",
-    "init": "npm install && npm run release && npm run test",
-    "start": "npm run release && npm run test"
+    "test": "node_modules/.bin/grunt test",
+    "start": "npm install && npm run release"
   },
   "main": "./build/clay-1.4.0.min.js",
   "repository": {
@@ -22,7 +21,6 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-jshint": "^2.0.0",
-    "grunt-contrib-qunit": "^3.0.1",
     "grunt-contrib-uglify": "^4.0.0"
   }
 }
