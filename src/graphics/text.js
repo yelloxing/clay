@@ -23,11 +23,13 @@ var _text = function (painter) {
     // 设置字体大小
     text.setSize = function (size) {
         scope.s = size;
+        return text;
     };
 
     // 设置字颜色
     text.setColor = function (color) {
         scope.c = color;
+        return text;
     };
 
     return text;
