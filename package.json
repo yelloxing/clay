@@ -5,7 +5,7 @@
   "scripts": {
     "release": "node_modules/.bin/grunt release",
     "server": "node_modules/.bin/grunt server",
-    "test": "node_modules/.bin/grunt test",
+    "test": "npm install grunt-contrib-qunit && node_modules/.bin/grunt test",
     "start": "npm install && npm run release"
   },
   "main": "./build/clay-1.4.0.min.js",
