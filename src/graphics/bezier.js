@@ -71,15 +71,15 @@ clay.canvas.bezier = function (selector, config) {
             _canvas(selector, config, _bezier, function (
                 beginP, endP, beginCtrlP, endCtrlP
             ) {
-                obj._painter.beginPath();
-                obj._painter.moveTo(beginP[0], beginP[1]);
-                obj._painter.bezierCurveTo(
+                obj._p.beginPath();
+                obj._p.moveTo(beginP[0], beginP[1]);
+                obj._p.bezierCurveTo(
                     beginCtrlP[0],// 第一个贝塞尔控制点的 x 坐标
                     beginCtrlP[1],// 第一个贝塞尔控制点的 y 坐标
                     endCtrlP[0],// 第二个贝塞尔控制点的 x 坐标
                     endCtrlP[1],// 第二个贝塞尔控制点的 y 坐标
                     endP[0], endP[1]);
-                return obj._painter;
+                return obj._p;
 
             });
 

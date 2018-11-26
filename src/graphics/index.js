@@ -11,22 +11,22 @@ clay.canvas = {};
 var _canvas = function (_selector, config, painterback, param) {
 
     var key, temp = painterback(param);
-    temp._painter = _getCanvas2D(_selector);
+    temp._p = _getCanvas2D(_selector);
 
     if (config)
         for (key in config)
-            temp._painter[key] = config[key];
+            temp._p[key] = config[key];
 
     // 设置画笔
     temp.painter = function (selector) {
-        temp._painter = _getCanvas2D(selector);
+        temp._p = _getCanvas2D(selector);
         return temp;
     };
 
     // 配置画笔
     temp.config = function (_config) {
         for (key in _config)
-            temp._painter[key] = _config[key];
+            temp._p[key] = _config[key];
         return temp;
     };
 

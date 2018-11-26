@@ -34,9 +34,9 @@ clay.canvas.line = function (selector, config) {
             _canvas(selector, config, _line, function (
 
             ) {
-                obj._painter.beginPath();
+                obj._p.beginPath();
 
-                return obj._painter;
+                return obj._p;
 
             });
 

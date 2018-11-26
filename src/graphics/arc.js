@@ -100,15 +100,15 @@ clay.canvas.arc = function (selector, config) {
                 endInnerX, endInnerY,
                 endOuterX, endOuterY
             ) {
-                obj._painter.beginPath();
-                obj._painter.moveTo(begInnerX, begInnerY);
-                obj._painter.arc(
+                obj._p.beginPath();
+                obj._p.moveTo(begInnerX, begInnerY);
+                obj._p.arc(
                     // (圆心x，圆心y，半径，开始角度，结束角度，true逆时针/false顺时针)
                     cx, cy, rmin, beginA, endA, false);
-                obj._painter.lineTo(endOuterX, endOuterY);
-                obj._painter.arc(cx, cy, rmax, endA, beginA, true);
-                obj._painter.lineTo(begInnerX, begInnerY);
-                return obj._painter;
+                obj._p.lineTo(endOuterX, endOuterY);
+                obj._p.arc(cx, cy, rmax, endA, beginA, true);
+                obj._p.lineTo(begInnerX, begInnerY);
+                return obj._p;
 
             });
 

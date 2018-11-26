@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Nov 26 2018 11:41:33 GMT+0800 (GMT+08:00)
+* Date:Mon Nov 26 2018 17:21:44 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1120,22 +1120,22 @@ clay.canvas = {};
 var _canvas = function (_selector, config, painterback, param) {
 
     var key, temp = painterback(param);
-    temp._painter = _getCanvas2D(_selector);
+    temp._p = _getCanvas2D(_selector);
 
     if (config)
         for (key in config)
-            temp._painter[key] = config[key];
+            temp._p[key] = config[key];
 
     // 设置画笔
     temp.painter = function (selector) {
-        temp._painter = _getCanvas2D(selector);
+        temp._p = _getCanvas2D(selector);
         return temp;
     };
 
     // 配置画笔
     temp.config = function (_config) {
         for (key in _config)
-            temp._painter[key] = _config[key];
+            temp._p[key] = _config[key];
         return temp;
     };
 
@@ -1245,15 +1245,15 @@ clay.canvas.arc = function (selector, config) {
                 endInnerX, endInnerY,
                 endOuterX, endOuterY
             ) {
-                obj._painter.beginPath();
-                obj._painter.moveTo(begInnerX, begInnerY);
-                obj._painter.arc(
+                obj._p.beginPath();
+                obj._p.moveTo(begInnerX, begInnerY);
+                obj._p.arc(
                     // (圆心x，圆心y，半径，开始角度，结束角度，true逆时针/false顺时针)
                     cx, cy, rmin, beginA, endA, false);
-                obj._painter.lineTo(endOuterX, endOuterY);
-                obj._painter.arc(cx, cy, rmax, endA, beginA, true);
-                obj._painter.lineTo(begInnerX, begInnerY);
-                return obj._painter;
+                obj._p.lineTo(endOuterX, endOuterY);
+                obj._p.arc(cx, cy, rmax, endA, beginA, true);
+                obj._p.lineTo(begInnerX, begInnerY);
+                return obj._p;
 
             });
 
@@ -1356,13 +1356,13 @@ clay.canvas.rect = function (selector, config) {
     var key,
         obj =
             _canvas(selector, config, _rect, function (p) {
-                obj._painter.beginPath();
-                obj._painter.moveTo(p[0][0], p[0][1]);
-                obj._painter.lineTo(p[1][0], p[1][1]);
-                obj._painter.lineTo(p[2][0], p[2][1]);
-                obj._painter.lineTo(p[3][0], p[3][1]);
-                obj._painter.lineTo(p[0][0], p[0][1]);
-                return obj._painter;
+                obj._p.beginPath();
+                obj._p.moveTo(p[0][0], p[0][1]);
+                obj._p.lineTo(p[1][0], p[1][1]);
+                obj._p.lineTo(p[2][0], p[2][1]);
+                obj._p.lineTo(p[3][0], p[3][1]);
+                obj._p.lineTo(p[0][0], p[0][1]);
+                return obj._p;
 
             });
 
@@ -1406,9 +1406,9 @@ clay.canvas.line = function (selector, config) {
             _canvas(selector, config, _line, function (
 
             ) {
-                obj._painter.beginPath();
+                obj._p.beginPath();
 
-                return obj._painter;
+                return obj._p;
 
             });
 
@@ -1419,13 +1419,33 @@ clay.canvas.line = function (selector, config) {
 // 文字
 var _text = function (painter) {
 
-    var scope = {
+    var scope = {};
 
+    /**
+     * 绘制文字
+     * @param {number} x 文字坐标
+     * @param {number} y
+     * @param {string|number} text 绘制的文字
+     */
+    var text = function (x, y, text, deg) {
+        deg = deg ? 0 : (deg * 180 / Math.PI);
+        return painter(x, y, text, deg, scope.p[0], scope.p[1], scope.c || "#000", scope.s || 16);
     };
 
+    // 设置对齐方式
+    text.setAlign = function (horizontal, vertical) {
+        scope.p = [horizontal, vertical];
+        return text;
+    };
 
-    var text = function () {
+    // 设置字体大小
+    text.setSize = function (size) {
+        scope.s = size;
+    };
 
+    // 设置字颜色
+    text.setColor = function (color) {
+        scope.c = color;
     };
 
     return text;
@@ -1436,10 +1456,22 @@ var _text = function (painter) {
 clay.svg.text = function () {
     return _text(
         function (
-
+            x, y, text, deg, horizontal, vertical, color, fontSize
         ) {
-            var d;
-            return d;
+            var rotate = deg == 0 ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
+            return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
+                // 文本水平
+                "text-anchor": {
+                    "left": "start",
+                    "right": "end"
+                }[horizontal] || "middle",
+                // 本垂直
+                "dominant-baseline": {
+                    "top": "text-after-edge",
+                    "bottom": "text-before-edge"
+                }[vertical] || "middle",
+                "font-size": fontSize
+            });
         }
     );
 };
@@ -1450,12 +1482,25 @@ clay.canvas.text = function (selector, config) {
     var key,
         obj =
             _canvas(selector, config, _text, function (
-
+                x, y, text, deg, horizontal, vertical, color, fontSize
             ) {
-                obj._painter.beginPath();
-
-                return obj._painter;
-
+                obj._p.save();
+                obj._p.beginPath();
+                obj._p.textAlign = {
+                    "left": "start",
+                    "right": "end"
+                }[horizontal] || "center";
+                obj._p.textBaseline = {
+                    "top": "top",
+                    "bottom": "bottom"
+                }[vertical] || "middle";
+                obj._p.font = fontSize + 'px sans-serif';//字体大小
+                obj._p.translate(x, y);
+                obj._p.rotate(deg);
+                obj._p.fillStyle = color;
+                obj._p.fillText(text, x, y);
+                obj._p.restore();
+                return obj._p;
             });
 
     return obj;
@@ -1535,15 +1580,15 @@ clay.canvas.bezier = function (selector, config) {
             _canvas(selector, config, _bezier, function (
                 beginP, endP, beginCtrlP, endCtrlP
             ) {
-                obj._painter.beginPath();
-                obj._painter.moveTo(beginP[0], beginP[1]);
-                obj._painter.bezierCurveTo(
+                obj._p.beginPath();
+                obj._p.moveTo(beginP[0], beginP[1]);
+                obj._p.bezierCurveTo(
                     beginCtrlP[0],// 第一个贝塞尔控制点的 x 坐标
                     beginCtrlP[1],// 第一个贝塞尔控制点的 y 坐标
                     endCtrlP[0],// 第二个贝塞尔控制点的 x 坐标
                     endCtrlP[1],// 第二个贝塞尔控制点的 y 坐标
                     endP[0], endP[1]);
-                return obj._painter;
+                return obj._p;
 
             });
 

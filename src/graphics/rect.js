@@ -93,13 +93,13 @@ clay.canvas.rect = function (selector, config) {
     var key,
         obj =
             _canvas(selector, config, _rect, function (p) {
-                obj._painter.beginPath();
-                obj._painter.moveTo(p[0][0], p[0][1]);
-                obj._painter.lineTo(p[1][0], p[1][1]);
-                obj._painter.lineTo(p[2][0], p[2][1]);
-                obj._painter.lineTo(p[3][0], p[3][1]);
-                obj._painter.lineTo(p[0][0], p[0][1]);
-                return obj._painter;
+                obj._p.beginPath();
+                obj._p.moveTo(p[0][0], p[0][1]);
+                obj._p.lineTo(p[1][0], p[1][1]);
+                obj._p.lineTo(p[2][0], p[2][1]);
+                obj._p.lineTo(p[3][0], p[3][1]);
+                obj._p.lineTo(p[0][0], p[0][1]);
+                return obj._p;
 
             });
 

@@ -73,7 +73,7 @@ npm run release
 
 - **graphics**：包括SVG、Canvas2D和WebGL绘图接口。
 
-3D事件：
+3D世界：
 
 - **WebGL**：针对绘制3D图形，建立的一个新的世界模型。
 
