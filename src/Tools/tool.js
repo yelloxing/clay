@@ -5,6 +5,18 @@ clay.color = function (color) {
     return [+temp[0], +temp[1], +temp[2], temp[3] == undefined ? 1 : +temp[3]];
 };
 
+// 获取一组色彩
+clay.getColors = function (num) {
+    if (typeof num == 'number' && num > 3) {
+        var temp = [], flag = 0;
+        for (flag = 1; flag <= num; flag++)
+            temp.push('rgb(' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ')');
+        return temp;
+    } else {
+        return ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+    }
+};
+
 // 给一组数据，轮询执行一遍
 clay.loop = function (datas, callback) {
     var flag = 0, data;

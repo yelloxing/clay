@@ -1,9 +1,8 @@
-[clay](https://gitq.com/yelloxing/clay) - Provide more flexible data visualization solutions
+[clay](https://yelloxing.github.io/clay/doc/) - Provide more flexible data visualization solutions
 ==================================================
 
-[![travis](https://github.com/yelloxing/clay/blob/master/travis.svg)](https://www.travis-ci.org/yelloxing/clay)
-[![license](https://github.com/yelloxing/clay/blob/master/license.svg)](https://github.com/yelloxing/clay/blob/master/LICENSE)
-[![chat](https://github.com/yelloxing/clay/blob/master/chat.svg)](https://gitq.com/yelloxing/clay)
+[![travis](https://api.travis-ci.org/yelloxing/clay.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay)
+[![chat](https://github.com/yelloxing/clay/blob/master/data/chat.svg)](https://github.com/yelloxing/clay/issues)
 
 我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
 
@@ -14,7 +13,7 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
-[关注的问题](https://yelloxing.github.io/clay/doc/)
+关注的问题
 --------------------------------------
 首先，本项目是为了Web端数据可视化而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形来反映统计的数据，并且绘制的图形是可交互的。
 
@@ -51,36 +50,32 @@ npm run release
 
 单元测试位于test/unit,基准测试位于test/benchmark，用例位于test/use-case。
 
-对于单元测试，如果是新添加的html页面，应该在Gruntfile.js里最后部分添加引用，然后启动下面测试命令：
-
-```bash
-npm run test
-```
+对于单元测试，如果是新添加的html页面，应该在Gruntfile.js里最后部分添加引用（每次发布代码到Github的时候会自动报告是否存在问题），本地直接在目标浏览器中打开对应html页面即可查看测试结果。
 
 ### 项目结构
 
 设计的初衷是方便绘制2D和3D的图形，让数据以交互的图片形式展示。
 
-部分零碎的模块被展示在下面：
+核心模块：
 
-- **clay对象**：包括结点的查找、修改等操作，提供了针对不同namespaceURI的标签和属性提供兼容性操作。
-- **clay对象/数据绑定**：结点和数据绑定操作，主要是data、datum、enter和exit方法等。
-- **轮播**：轮播方法animation。
-- **图形对象**：canvas2D和webgl，包括区域对象等，方便绘图操作的自定义对象。
-- **工具类**：一些实用的小工具
-
-绘图中，除了特定语法外，最麻烦的计算一大堆复杂的计算，你可以调用计算模块里面的方法帮助你：
-
-- **插值计算**：给点一些数据，补足中间数据，比如Cardinal插值法等。
-- **映射计算**：现实的数据变成绘图的格式需要建立一种映射关系，比如绘制地图。
+- **矩阵变换**：2D和3D图形变换，包括3D相机和投影等。
+- **插值运算**：坐标查找。
+- **坐标映射**：比如地图经纬度映射。
+- **轮播动画**：主要是动画核心计算方法。
+- **小工具**：一些实用的小工具，比如色彩格式化等。
+- **结点操作**：兼容HTML和SVG等不同上下文标签和属性操作。
 
 布局模块：
 
-- **Tree**：无论是旋转的树还是正常的树等，包括结点的增删改查。
+- **layout**：对于特殊展示方式，定义对应的布局来方便位置和图形计算。
 
-动画或交互时图形变换采用矩阵计算，包括对3D绘图的支持：
+图形模块：
 
-- **Matrix4**：支持旋转、移动和缩放的单一或组合矩阵求解，也支持坐标求解。
+- **graphics**：包括SVG、Canvas2D和WebGL绘图接口。
+
+3D世界：
+
+- **WebGL**：针对绘制3D图形，建立的一个新的世界模型。
 
 ### 单元测试
 

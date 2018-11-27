@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="../../clay.png" type="image/x-png">
     <title>clay - 用例 - barPolar</title>
-    <script src="../../build/clay-1.3.2.js"></script>
+    <script src="../../build/clay-1.4.0.js"></script>
 </head>
 
 <body></body>
@@ -94,7 +94,7 @@
     clay.animation(function (deep) {
         layerManger.clean(arc_pencil);
         for (i = 0; i < data.length; i++) {
-            arc(-0.5 * Math.PI + k * i + 0.5 * k - k * 0.4, k * 0.8, deep * 250 * data[i][1] / 10000, deep * 250 * data[i][2] / 10000);
+            arc(-0.5 * Math.PI + k * i + 0.5 * k - k * 0.4, k * 0.8, deep * 250 * data[i][1] / 10000, deep * 250 * data[i][2] / 10000).fill();
         }
         layerManger.update();
     }, 700, function () {
@@ -104,14 +104,13 @@
         // 绘制平均值
         for (i = 0; i < data.length; i++) {
             j = 250 * data[i][3] / 10000;
-            arc(-0.5 * Math.PI + k * i + 0.5 * k - k * 0.4, k * 0.8, j - 2, j + 2);
-
+            arc(-0.5 * Math.PI + k * i + 0.5 * k - k * 0.4, k * 0.8, j - 2, j + 2).fill();
         }
         layerManger.update();
         // 绘制区域
         for (i = 0; i < data.length; i++) {
             regionManger.drawer(i, function (pencil) {
-                arc.painter(pencil)(-0.5 * Math.PI + k * i + 0.5 * k - k * 0.4, k * 0.8, 250 * data[i][1] / 10000, 250 * data[i][2] / 10000);
+                arc.painter(pencil)(-0.5 * Math.PI + k * i + 0.5 * k - k * 0.4, k * 0.8, 250 * data[i][1] / 10000, 250 * data[i][2] / 10000).fill();
             });
         }
         prompt_pencil.textBaseline = 'middle';

@@ -33,10 +33,6 @@
 
     // @CODE build.js inserts compiled clay here
 
-    clay.author = '心叶';
-    clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.3.2';
-
     global.clay = global.$$ = clay;
 
     return clay;

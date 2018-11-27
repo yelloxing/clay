@@ -73,6 +73,7 @@ li {
 }
 
 .bingo,
+.warn,
 .error {
     background-size: .2rem auto;
     background-position: left top;
@@ -81,6 +82,10 @@ li {
 
 .error {
     background-image: url('./images/error.png');
+}
+
+.warn {
+    background-image: url('./images/warn.png');
 }
 
 .bingo {

@@ -1,18 +1,19 @@
 /*!
+* 文件状态：本文件为开发中的未来版本
 *
-* clay - Provide more flexible data visualization solutions!
+* clay.js - Provide more flexible data visualization solutions!
 * git+https://github.com/yelloxing/clay.git
 * 
 * author 心叶
 *
-* version 1.3.2
+* version 1.4.0
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 08 2018 16:40:34 GMT+0800 (CST)
+* Date:Tue Nov 27 2018 18:52:32 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -311,6 +312,28 @@ clay.prototype.css = function (name, style) {
 
 };
 
+clay.prototype.size = function (type) {
+    type = type || "border";
+    var elemHeight, elemWidth;
+    if (type == 'content') { //内容
+        elemWidth = this[0].clientWidth - ((this.css('padding-left') + "").replace('px', '')) - ((this.css('padding-right') + "").replace('px', ''));
+        elemHeight = this[0].clientHeight - ((this.css('padding-top') + "").replace('px', '')) - ((this.css('padding-bottom') + "").replace('px', ''));
+    } else if (type == 'padding') { //内容+内边距
+        elemWidth = this[0].clientWidth;
+        elemHeight = this[0].clientHeight;
+    } else if (type == 'border') { //内容+内边距+边框
+        elemWidth = this[0].offsetWidth;
+        elemHeight = this[0].offsetHeight;
+    } else if (type == 'scroll') { //滚动的宽（不包括border）
+        elemWidth = this[0].scrollWidth;
+        elemHeight = this[0].scrollHeight;
+    }
+    return {
+        width: elemWidth,
+        height: elemHeight
+    };
+};
+
 // 用于把数据绑定到一组结点或返回第一个结点数据
 // 可以传递函数对数据处理
 clay.prototype.datum = function (data, calcback) {
@@ -337,14 +360,14 @@ clay.prototype.data = function (datas, calcback) {
         var newClay = clay();
         newClay.selector = this.selector;
         for (flag = 0; flag < datas.length && flag < this.length; flag++) {
-            this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag];
+            this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag];
             newClay[flag] = this[flag];
             newClay.length += 1;
         }
         // 分别记录需要去平衡的数据和结点
         newClay._enter = [];
         for (; flag < datas.length; flag++) {
-            newClay._enter.push(typeof calcback === 'function' ? calcback(datas[flag]) : datas[flag]);
+            newClay._enter.push(typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag]);
         }
         newClay._exit = [];
         for (; flag < this.length; flag++) {
@@ -526,6 +549,18 @@ clay.color = function (color) {
     return [+temp[0], +temp[1], +temp[2], temp[3] == undefined ? 1 : +temp[3]];
 };
 
+// 获取一组色彩
+clay.getColors = function (num) {
+    if (typeof num == 'number' && num > 3) {
+        var temp = [], flag = 0;
+        for (flag = 1; flag <= num; flag++)
+            temp.push('rgb(' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ')');
+        return temp;
+    } else {
+        return ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+    }
+};
+
 // 给一组数据，轮询执行一遍
 clay.loop = function (datas, callback) {
     var flag = 0, data;
@@ -534,12 +569,100 @@ clay.loop = function (datas, callback) {
     return clay;
 };
 
+var _ajax = function (config) {
+    var i;
+
+    // 获取xhr对象
+    var xhr = window.XMLHttpRequest ?
+        // IE7+, Firefox, Chrome, Opera, Safari
+        new XMLHttpRequest() :
+        // IE6, IE5
+        new ActiveXObject("Microsoft.XMLHTTP");
+
+    // 打开请求地址
+    xhr.open(config.type, config.url, true);
+
+    // 设置超时时间
+    xhr.timeout = config.timeout;
+
+    // 文件传递进度回调
+    if (typeof config.fileload == 'function') {
+        var updateProgress = function (e) {
+            if (e.lengthComputable)
+                config.fileload(e.loaded / e.total);
+        };
+        xhr.onprogress = updateProgress;
+        xhr.upload.onprogress = updateProgress;
+    }
+
+    // 请求成功回调
+    if (typeof config.success == 'function') {
+        xhr.onload = function () {
+            config.success({
+                "response": xhr.response,
+                "status": xhr.status,
+                "header": xhr.getAllResponseHeaders()
+            });
+        };
+    }
+
+    // 错误回调
+    if (typeof config.error == 'function') {
+        // 请求中出错回调
+        xhr.onerror = function () {
+            config.error({ "type": "error" });
+        };
+        // 请求超时回调
+        xhr.ontimeout = function () {
+            config.error({ "type": "timeout" });
+        };
+    }
+
+    // 配置请求头
+    for (i in config.header)
+        xhr.setRequestHeader(i, config.header[i]);
+
+    // 发送请求
+    xhr.send(config.data);
+};
+
+// post请求
+clay.post = function (header, timeout) {
+    return function (url, param, callback, errorback) {
+        _ajax({
+            "type": "POST",
+            "url": url,
+            "success": callback,
+            "error": errorback,
+            "timeout": timeout || 300,
+            "header": header || {},
+            "data": param ? JSON.stringify(param) : ""
+        });
+    };
+};
+
+// get请求
+clay.get = function (header, timeout) {
+    return function (url, callback, errorback) {
+        _ajax({
+            "type": "GET",
+            "url": url,
+            "success": callback,
+            "error": errorback,
+            "timeout": timeout || 300,
+            "header": header || {}
+        });
+    };
+};
+
 // 用特定色彩绘制区域
-var _drawerRegion = function (pen, color, drawback) {
+var _drawerRegion = function (pen, color, drawback, regionManger) {
     pen.beginPath();
     pen.fillStyle = color;
+    pen.strokeStyle = color;
+    if (typeof drawback != "function") return pen;
     drawback(pen);
-    pen.fill();
+    return regionManger;
 };
 
 // 区域对象，用于存储区域信息
@@ -586,14 +709,12 @@ clay.prototype.region = function () {
                         return 'rgb(' + rgb[0] + ',' + rgb[1] + ',' + rgb[2] + ')';
                     }
                 }[p]();
-                _drawerRegion(canvas2D, regions[region_id], drawback);
-                return regionManger;
+                return _drawerRegion(canvas2D, regions[region_id], drawback, regionManger);
             },
 
             // 擦除区域范围
             "erase": function (drawback) {
-                _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback);
-                return regionManger;
+                return _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback, regionManger);
             },
 
             // 获取此刻鼠标所在区域
@@ -629,7 +750,7 @@ function _getCanvas2D(selector) {
 // 直接使用canvas2D绘图
 clay.prototype.painter = function () {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
-        throw new Error('canvas is not function');
+        throw new Error('painter is not function');
     return _getCanvas2D(this);
 };
 
@@ -658,7 +779,11 @@ clay.prototype.layer = function () {
             return layer[index];
         },
         "clean": function (ctx2D) {
-            ctx2D.clearRect(0, 0, width, height);
+            if (ctx2D) {
+                if (ctx2D.constructor !== CanvasRenderingContext2D)
+                    ctx2D = layerManager.painter(ctx2D);
+                ctx2D.clearRect(0, 0, width, height);
+            }
             return layerManager;
         },
         "update": function () {
@@ -678,30 +803,6 @@ clay.prototype.layer = function () {
 
     return layerManager;
 
-};
-
-// 获取webgl上下文
-function _getCanvasWebgl(selector, opts) {
-    if (selector && selector.constructor === WebGLRenderingContext) return selector;
-    var canvas = clay(selector),
-        names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
-        context = null, i;
-    if (canvas.length > 0) {
-        for (i = 0; i < names.length; i++) {
-            try {
-                context = canvas[0].getContext(names[i], opts);
-            } catch (e) { }
-            if (context) break;
-        }
-    }
-    return context;
-}
-
-// 获取3D画笔
-clay.prototype.webgl = function (opts) {
-    if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
-        throw new Error('Webgl is not a function!');
-    return _getCanvasWebgl(this, opts);
 };
 
 // 在(a,b,c)方向位移d
@@ -849,9 +950,9 @@ clay.Matrix4 = function (initMatrix4) {
             // w为0表示点位于无穷远处，忽略
             z = z || 0; w = w || 1;
             var temp = _multiply(matrix4, [x, y, z, w]);
-            temp[0] = Math.round(temp[0] * 100000000000000) / 100000000000000;
-            temp[1] = Math.round(temp[1] * 100000000000000) / 100000000000000;
-            temp[2] = Math.round(temp[2] * 100000000000000) / 100000000000000;
+            temp[0] = temp[0].toFixed(7);
+            temp[1] = temp[1].toFixed(7);
+            temp[2] = temp[2].toFixed(7);
             return temp;
         },
         "value": function () {
@@ -1076,6 +1177,35 @@ clay.map = function () {
 
 };
 
+clay.rotate = function (cx, cy, deg, x, y) {
+    var cos = Math.cos(deg), sin = Math.sin(deg);
+    return [
+        ((x - cx) * cos - (y - cy) * sin + cx).toFixed(7),
+        ((x - cx) * sin + (y - cy) * cos + cy).toFixed(7)
+    ];
+};
+
+/**
+ * 点（x,y）沿着向量（ax,ay）方向移动距离d
+ */
+clay.move = function (ax, ay, d, x, y) {
+    var sqrt = Math.sqrt(ax * ax + ay * ay);
+    return [
+        (ax * d / sqrt + x).toFixed(7),
+        (ay * d / sqrt + y).toFixed(7)
+    ];
+};
+
+/**
+ * 点（x,y）围绕中心（cx,cy）缩放times倍
+ */
+clay.scale = function (cx, cy, times, x, y) {
+    return [
+        (times * (x - cx) + cx).toFixed(7),
+        (times * (y - cy) + cy).toFixed(7)
+    ];
+};
+
 // 绘图方法挂载钩子
 clay.svg = {};
 clay.canvas = {};
@@ -1089,18 +1219,22 @@ clay.canvas = {};
 var _canvas = function (_selector, config, painterback, param) {
 
     var key, temp = painterback(param);
-    temp._painter = _getCanvas2D(_selector);
+    temp._p = _getCanvas2D(_selector);
 
-    // 获取画笔
+    if (config)
+        for (key in config)
+            temp._p[key] = config[key];
+
+    // 设置画笔
     temp.painter = function (selector) {
-        temp._painter = _getCanvas2D(selector);
+        temp._p = _getCanvas2D(selector);
         return temp;
     };
 
     // 配置画笔
     temp.config = function (_config) {
         for (key in _config)
-            temp._painter[key] = _config[key];
+            temp._p[key] = _config[key];
         return temp;
     };
 
@@ -1108,7 +1242,7 @@ var _canvas = function (_selector, config, painterback, param) {
 
 };
 
-// 2D弧
+// 弧
 var _arc = function (painter) {
 
     var scope = {
@@ -1210,16 +1344,383 @@ clay.canvas.arc = function (selector, config) {
                 endInnerX, endInnerY,
                 endOuterX, endOuterY
             ) {
-                obj._painter.beginPath();
-                obj._painter.moveTo(begInnerX, begInnerY);
-                obj._painter.arc(
+                obj._p.beginPath();
+                obj._p.moveTo(begInnerX, begInnerY);
+                obj._p.arc(
                     // (圆心x，圆心y，半径，开始角度，结束角度，true逆时针/false顺时针)
                     cx, cy, rmin, beginA, endA, false);
-                obj._painter.lineTo(endOuterX, endOuterY);
-                obj._painter.arc(cx, cy, rmax, endA, beginA, true);
-                obj._painter.lineTo(begInnerX, begInnerY);
-                obj._painter.fill();
-                return obj._painter;
+                obj._p.lineTo(endOuterX, endOuterY);
+                obj._p.arc(cx, cy, rmax, endA, beginA, true);
+                obj._p.lineTo(begInnerX, begInnerY);
+                return obj._p;
+
+            });
+
+    return obj;
+
+};
+
+// 矩形
+var _rect = function (painter) {
+
+    var scope = {
+        s: 10,
+        t: ["LR"]
+    };
+
+    /**
+     * 绘制矩形
+     * @param {number} x 矩形起点的x坐标
+     * @param {number} y 矩形起点的y坐标
+     * @param {number} length 矩形长度
+     * @param {number} deg 只有在使用旋转定位的时候才需要传递，表示旋转角度
+     */
+    var rect = function (x, y, length, deg) {
+        // 记录矩形的四个角坐标
+        var position, s2 = scope.s * 0.5;
+
+        // 分类前准备
+        if (scope.t[0] == "RL" || scope.t[0] == "BT") {
+            length = -length;
+            scope.t[0] = {
+                "RL": "LR",
+                "BT": "TB"
+            }[scope.t[0]];
+        }
+
+        // 分类计算
+        switch (scope.t[0]) {
+            case "LR":
+                position = [
+                    [x, y - s2],
+                    [x + length, y - s2],
+                    [x + length, y + s2],
+                    [x, y + s2]
+                ];
+                break;
+            case "TB":
+                position = [
+                    [x + s2, y],
+                    [x + s2, y + length],
+                    [x - s2, y + length],
+                    [x - s2, y]
+                ];
+                break;
+            default:
+                position = [
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y - s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y + s2),
+                    clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y + s2)
+                ];
+        }
+        return painter(position);
+    };
+
+    // 设置矩形木棒的粗细
+    rect.setSize = function (size) {
+        scope.s = size;
+        return rect;
+    };
+
+    // 设置矩形方向类型
+    // 可以设置参数：
+    // 1.垂直或水平 "LR"、"RL"、"TB"、"BT"
+    // 2.任意角度 (deg,cx,cy)，deg表示初始角度，(cx,cy)表示旋转圆心
+    rect.setType = function (type, cx, cy) {
+        scope.t = [type, cx, cy];
+        return rect;
+    };
+
+    return rect;
+
+};
+
+// 采用SVG绘制矩形
+clay.svg.rect = function () {
+    return _rect(
+        function (p) {
+            return "M" + p[0][0] + "," + p[0][1] + " " +
+                "L" + p[1][0] + "," + p[1][1] + " " +
+                "L" + p[2][0] + "," + p[2][1] + " " +
+                "L" + p[3][0] + "," + p[3][1] + " " +
+                "L" + p[0][0] + "," + p[0][1] + " ";
+        }
+    );
+};
+
+// 采用Canvas绘制矩形
+clay.canvas.rect = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _rect, function (p) {
+                obj._p.beginPath();
+                obj._p.moveTo(p[0][0], p[0][1]);
+                obj._p.lineTo(p[1][0], p[1][1]);
+                obj._p.lineTo(p[2][0], p[2][1]);
+                obj._p.lineTo(p[3][0], p[3][1]);
+                obj._p.lineTo(p[0][0], p[0][1]);
+                return obj._p;
+
+            });
+
+    return obj;
+
+};
+
+// 曲线
+var _line = function (painter) {
+
+    var scope = {
+        d: 5
+    },
+        hermite = clay.hermite().setU(-1);
+
+    /**
+     * 绘制曲线
+     */
+    var line = function (points) {
+        var i = 0, temp = "M" + points[0][0] + "," + points[0][1];
+        var l, r;
+        for (; i < points.length - 1; i++) {
+            l = i == 0 ? 0 : i - 1;
+            r = i == points.length - 2 ? points.length - 1 : i + 2;
+            hermite.setP(
+                points[i][0], points[i][1],
+                points[i + 1][0], points[i + 1][1],
+                (points[i + 1][1] - points[l][1]) / (points[i + 1][0] - points[l][0]),
+                (points[r][1] - points[i][1]) / (points[r][0] - points[i][0])
+            );
+            temp = painter(hermite, points[i][0], points[i + 1][0], temp, scope.d);
+        }
+        return temp;
+    };
+
+    // 设置精度
+    line.setPrecision = function (dis) {
+        scope.d = dis;
+        return line;
+    };
+
+    // 设置张弛系数
+    line.setU = function (u) {
+        hermite.setU(u);
+        return line;
+    };
+
+    return line;
+
+};
+
+// 采用SVG绘制曲线
+clay.svg.line = function () {
+    return _line(
+        function (
+            hermite, bx, ex, d, dis
+        ) {
+            for (; bx < ex; bx += dis)
+                d = d + " L" + bx + "," + hermite(bx);
+            d = d + " L" + ex + "," + hermite(ex);
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制曲线
+clay.canvas.line = function (selector, config) {
+    var key,
+        obj =
+            _canvas(selector, config, _line, function (
+                hermite, bx, ex, flag, dis
+            ) {
+                if (typeof flag == 'string') {
+                    obj._p.beginPath();
+                    obj._p.moveTo(bx, hermite(bx));
+                }
+                for (; bx < ex; bx += dis)
+                    obj._p.lineTo(bx, hermite(bx));
+                obj._p.lineTo(ex, hermite(ex));
+                return obj._p;
+            });
+    return obj;
+};
+
+// 文字
+var _text = function (painter) {
+
+    var scope = {};
+
+    /**
+     * 绘制文字
+     * @param {number} x 文字坐标
+     * @param {number} y
+     * @param {string|number} text 绘制的文字
+     */
+    var text = function (x, y, text, deg) {
+        deg = deg ? 0 : (deg * 180 / Math.PI);
+        return painter(x, y, text, deg, scope.p[0], scope.p[1], scope.c || "#000", scope.s || 16);
+    };
+
+    // 设置对齐方式
+    text.setAlign = function (horizontal, vertical) {
+        scope.p = [horizontal, vertical];
+        return text;
+    };
+
+    // 设置字体大小
+    text.setSize = function (size) {
+        scope.s = size;
+        return text;
+    };
+
+    // 设置字颜色
+    text.setColor = function (color) {
+        scope.c = color;
+        return text;
+    };
+
+    return text;
+
+};
+
+// 采用SVG绘制文字
+clay.svg.text = function () {
+    return _text(
+        function (
+            x, y, text, deg, horizontal, vertical, color, fontSize
+        ) {
+            var rotate = deg == 0 ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
+            return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
+                // 文本水平
+                "text-anchor": {
+                    "left": "start",
+                    "right": "end"
+                }[horizontal] || "middle",
+                // 本垂直
+                "dominant-baseline": {
+                    "top": "text-after-edge",
+                    "bottom": "text-before-edge"
+                }[vertical] || "middle",
+                "font-size": fontSize
+            });
+        }
+    );
+};
+
+// 采用Canvas绘制文字
+clay.canvas.text = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _text, function (
+                x, y, text, deg, horizontal, vertical, color, fontSize
+            ) {
+                obj._p.save();
+                obj._p.beginPath();
+                obj._p.textAlign = {
+                    "left": "start",
+                    "right": "end"
+                }[horizontal] || "center";
+                obj._p.textBaseline = {
+                    "top": "top",
+                    "bottom": "bottom"
+                }[vertical] || "middle";
+                obj._p.font = fontSize + 'px sans-serif';//字体大小
+                obj._p.translate(x, y);
+                obj._p.rotate(deg);
+                obj._p.fillStyle = color;
+                obj._p.fillText(text, x, y);
+                obj._p.restore();
+                return obj._p;
+            });
+
+    return obj;
+
+};
+
+// 贝塞尔曲线
+var _bezier = function (painter) {
+
+    var scope = {},
+
+        /**
+         * 绘制贝塞尔曲线（主要是连接关系点的时候用）
+         * @param {number} bx 起点坐标(bx,by)
+         * @param {number} by
+         * @param {number} ex 终点坐标(ex,ey)
+         * @param {number} ey
+         */
+        bezier = function (bx, by, ex, ey) {
+            var bdirection, edirection;
+            if (scope.t[2] == 'normal') {
+                bdirection = [scope.t[0], scope.t[1]];
+                edirection = [-scope.t[0], -scope.t[1]];
+            } else if (scope.t[2] == 'circle') {
+                bdirection = [bx - scope.t[0], by - scope.t[1]];
+                edirection = [scope.t[0] - ex, scope.t[1] - ey];
+            } else {
+                throw new Error('Illegal type!');
+            }
+            return painter(
+                [bx, by], //起点
+                [ex, ey], //终点
+                clay.move(bdirection[0], bdirection[1], scope.l, bx, by), //起点控制点
+                clay.move(edirection[0], edirection[1], scope.l, ex, ey) //终点控制点
+            );
+        };
+
+    // 设置曲线类型，可选类型有二种：
+    // 1.type="normal",(dx,dy)是参考方向
+    // 2.type="circle",(dx,dy)是参考中心
+    // 缺省类型是"normal"
+    bezier.setType = function (dx, dy, type) {
+        if (!type) type = 'normal';
+        scope.t = [dx, dy, type];
+        return bezier;
+    };
+
+    // 设置控制把柄的长度
+    bezier.setL = function (length) {
+        scope.l = length;
+        return bezier;
+    };
+
+    return bezier;
+
+};
+
+// 采用SVG绘制贝塞尔曲线
+clay.svg.bezier = function () {
+    return _bezier(
+        function (
+            beginP, endP, beginCtrlP, endCtrlP
+        ) {
+            return "M" + beginP[0] + "," + beginP[1] + " " +
+                "C" + beginCtrlP[0] + "," + beginCtrlP[1] + " " +
+                endCtrlP[0] + "," + endCtrlP[1] + " " +
+                endP[0] + "," + endP[1];
+        }
+    );
+};
+
+// 采用Canvas绘制贝塞尔曲线
+clay.canvas.bezier = function (selector, config) {
+
+    var key,
+        obj =
+            _canvas(selector, config, _bezier, function (
+                beginP, endP, beginCtrlP, endCtrlP
+            ) {
+                obj._p.beginPath();
+                obj._p.moveTo(beginP[0], beginP[1]);
+                obj._p.bezierCurveTo(
+                    beginCtrlP[0],// 第一个贝塞尔控制点的 x 坐标
+                    beginCtrlP[1],// 第一个贝塞尔控制点的 y 坐标
+                    endCtrlP[0],// 第二个贝塞尔控制点的 x 坐标
+                    endCtrlP[1],// 第二个贝塞尔控制点的 y 坐标
+                    endP[0], endP[1]);
+                return obj._p;
 
             });
 
@@ -1423,10 +1924,9 @@ clay.treeLayout = function () {
 
 };
 
-
+    clay.version = '1.4.0';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
-    clay.version = '1.3.2';
 
     global.clay = global.$$ = clay;
 
