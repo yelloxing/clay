@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Nov 27 2018 11:30:43 GMT+0800 (GMT+08:00)
+* Date:Tue Nov 27 2018 16:04:30 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -554,6 +554,92 @@ clay.loop = function (datas, callback) {
     for (data in datas)
         callback(datas[data], data, flag++);
     return clay;
+};
+
+var _ajax = function (config) {
+    var i;
+
+    // 获取xhr对象
+    var xhr = window.XMLHttpRequest ?
+        // IE7+, Firefox, Chrome, Opera, Safari
+        new XMLHttpRequest() :
+        // IE6, IE5
+        new ActiveXObject("Microsoft.XMLHTTP");
+
+    // 打开请求地址
+    xhr.open(config.type, config.url, true);
+
+    // 设置超时时间
+    xhr.timeout = config.timeout;
+
+    // 文件传递进度回调
+    if (typeof config.fileload == 'function') {
+        var updateProgress = function (e) {
+            if (e.lengthComputable)
+                config.fileload(e.loaded / e.total);
+        };
+        xhr.onprogress = updateProgress;
+        xhr.upload.onprogress = updateProgress;
+    }
+
+    // 请求成功回调
+    if (typeof config.success == 'function') {
+        xhr.onload = function () {
+            config.success({
+                "response": xhr.response,
+                "status": xhr.status,
+                "header": xhr.getAllResponseHeaders()
+            });
+        };
+    }
+
+    // 错误回调
+    if (typeof config.error == 'function') {
+        // 请求中出错回调
+        xhr.onerror = function () {
+            config.error({ "type": "error" });
+        };
+        // 请求超时回调
+        xhr.ontimeout = function () {
+            config.error({ "type": "timeout" });
+        };
+    }
+
+    // 配置请求头
+    for (i in config.header)
+        xhr.setRequestHeader(i, config.header[i]);
+
+    // 发送请求
+    xhr.send(config.data);
+};
+
+// post请求
+clay.post = function (header, timeout) {
+    return function (url, param, callback, errorback) {
+        _ajax({
+            "type": "POST",
+            "url": url,
+            "success": callback,
+            "error": errorback,
+            "timeout": timeout || 300,
+            "header": header || {},
+            "data": param ? JSON.stringify(param) : ""
+        });
+    };
+};
+
+// get请求
+clay.get = function (header, timeout) {
+    return function (url, callback, errorback) {
+        _ajax({
+            "type": "GET",
+            "url": url,
+            "success": callback,
+            "error": errorback,
+            "timeout": timeout || 300,
+            "header": header || {}
+        });
+    };
 };
 
 // 用特定色彩绘制区域
