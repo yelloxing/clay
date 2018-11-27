@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Nov 27 2018 18:49:58 GMT+0800 (GMT+08:00)
+* Date:Tue Nov 27 2018 18:52:32 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1924,9 +1924,9 @@ clay.treeLayout = function () {
 
 };
 
-    clay.version = '<%= pkg.version';
+    clay.version = '1.4.0';
     clay.author = '心叶';
-    clay.email = 'clay.js';
+    clay.email = 'yelloxing@gmail.com';
 
     global.clay = global.$$ = clay;
 

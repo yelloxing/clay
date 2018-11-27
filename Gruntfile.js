@@ -93,7 +93,7 @@ module.exports = function (grunt) {
             target: {
                 banner: banner,
                 src: 'build/clay.js',
-                info: ['<%= pkg.version', '<%= pkg.author %>', '<%= pkg.name %>'],
+                info: ['<%= pkg.version %>', '<%= pkg.author %>', '<%= pkg.email %>'],
                 dest: ['build/clay-<%= pkg.version %>.js']
             }
         },
