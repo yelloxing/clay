@@ -12,7 +12,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Nov 27 2018 16:04:30 GMT+0800 (GMT+08:00)
+* Date:Tue Nov 27 2018 16:30:47 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -546,6 +546,18 @@ _clock.stop = function () {
 clay.color = function (color) {
     var temp = clay('head').css('color', color).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(new RegExp('\\,' + _regexp.whitespace));
     return [+temp[0], +temp[1], +temp[2], temp[3] == undefined ? 1 : +temp[3]];
+};
+
+// 获取一组色彩
+clay.getColors = function (num) {
+    if (typeof num == 'number' && num > 3) {
+        var temp = [], flag = 0;
+        for (flag = 1; flag <= num; flag++)
+            temp.push('rgb(' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ')');
+        return temp;
+    } else {
+        return ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+    }
 };
 
 // 给一组数据，轮询执行一遍
