@@ -13,33 +13,20 @@
 
 <body onload="prettyPrint()">
     <header>
-        零碎方法
+        轮询
     </header>
     <h2>
-        计算类
-    </h2>
-    <h4>
-        color
-    </h4>
-    <pre class='prettyprint lang-js'>var rgbaArray = $$.color(param);</pre>
-    <p>
-        传递一个合法的CSS颜色字符串，统一转换为rgba(x, x, x, x)格式的数据，返回数组[r, g, b, a]。
-    </p>
-    <h2>
-        辅助类
-    </h2>
-    <h4>
         loop
-    </h4>
+    </h2>
     <pre class='prettyprint lang-js'>$$.loop(datas, function(value, key, index){
     // 在这里添加处理方法
 });</pre>
     <p>
         datas是一个可迭代的数组或json等即可，第二个参数的一个函数，其中value、key和index分别是当前面对的数据值，数据名和索引。
     </p>
-    <h4>
+    <h2>
         animation
-    </h4>
+    </h2>
     <pre class='prettyprint lang-js'>$$.animaion(function(deep){
     // 这里编写轮询方法，deep[0-1]，表示动画进度
 },duration,function(){
