@@ -16,8 +16,41 @@
         曲线 line
     </header>
     <p>
-        由于资源有限，有空整理，你也可以帮助我们整理！
+        可以绘制的曲线都有一个前置条件：是一个合法的一元函数，也就是说，一个x对应唯一的y值，且x值是递增的。
     </p>
+    <h2>
+        Canvas2D
+    </h2>
+    <pre class='prettyprint lang-js'>var line = $$.canvas.line('canvas')
+    // 设置精度
+    .setPrecision(dis)
+    // 设置张弛系数
+    .setU(u);</pre>
+    <p>
+        上面二个方法都不是必须的，你可以选择使用默认值。
+    </p>
+    <pre class='prettyprint lang-js'>line(points).stroke();</pre>
+    <p>
+        points是一个数组，长度不小于2，里面的成员应该是一个数组，下面看看几个例子：
+    </p>
+    <pre class="prettyprint lang-js error">line([1, 2])、line([[1, 2]])</pre>
+    <pre class="prettyprint lang-js bingo">iline([[1, 2], [3, 4]])、line([[1, 2], [3, 4], [5, 6]])</pre>
+    <h2>
+        SVG
+    </h2>
+    <pre class='prettyprint lang-js'>var line = $$.svg.line()
+    // 设置精度
+    .setPrecision(dis)
+    // 设置张弛系数
+    .setU(u);</pre>
+    <p>
+        参数说明依旧和上面是一样的，包括下面的points。
+    </p>
+    <pre class='prettyprint lang-js'>$$('path').attr('d', line(points))
+    .css({
+        'key':'value',
+        ...
+});</pre>
 </body>
 
 </html>

@@ -16,8 +16,43 @@
         贝塞尔曲线 bezier
     </header>
     <p>
-        由于资源有限，有空整理，你也可以帮助我们整理！
+        这里把贝塞尔曲线限制在只有二个控制点，主要是用于绘制树图时候的连线，因此分为二种类型（比如直方树和圆树）。
     </p>
+    <h2>
+        Canvas2D
+    </h2>
+    <pre class='prettyprint lang-js'>var bezier=$$.canvas.bezier('canvas')
+    // 设置曲线类型
+    .setType(ax, ay, type)
+    // 设置控制把柄的长度
+    .setL(length);</pre>
+    <p>
+        其中，设置曲线类型方法，可选类型有二种（缺省类型是"normal"）：
+    </p>
+    <ul>
+        <li>1.type="normal",(dx,dy)是参考方向</li>
+        <li>2.type="circle",(dx,dy)是参考中心</li>
+    </ul>
+    <pre class='prettyprint lang-js'>bezier(bx, by, ex, ey).stroke();</pre>
+    <p class="warn">
+        这里再强调一下，最后一定别忘了调用stroke方法，后面不再强调了。
+    </p>
+    <h2>
+        SVG
+    </h2>
+    <pre class='prettyprint lang-js'>var bezier=$$.svg.bezier()
+    // 设置曲线类型
+    .setType(ax, ay, type)
+    // 设置控制把柄的长度
+    .setL(length);</pre>
+    <p>
+        参数设置和上面的一样，最后绘制图形：
+    </p>
+    <pre class='prettyprint lang-js'>$$('path').attr('d', bezier(bx, by, ex, ey))
+    .css({
+        'key':'value',
+        ...
+});</pre>
 </body>
 
 </html>

@@ -78,6 +78,8 @@
             $$('g')[1].innerHTML = '';
             $$('g')[2].innerHTML = '';
 
+            var bezier = $$.svg.bezier().setType(1, 0).setL(50);
+
             var i, node;
             for (i in nodes) {
 
@@ -99,12 +101,12 @@
                 if (node.pid)
                     $$('<path source=' + node.data[1] + ' target=' + node.data[0] + ' stroke-width="1" stroke="gray" fill="none"></path>')
                         .appendTo('.line')
-                        .attr('d',
-                        'M' + nodes[node.pid].left * 100 + " " + nodes[node.pid].top * 100 + "C" +
-                        (nodes[node.pid].left * 100 + 50) + "," + nodes[node.pid].top * 100 + " " +
-                        (node.left * 100 - 50) + "," + node.top * 100 + " " +
-                        node.left * 100 + "," + node.top * 100 + " "
-                        );
+                        .attr('d', bezier(
+                            // 起点
+                            nodes[node.pid].left * 100, nodes[node.pid].top * 100,
+                            // 终点
+                            node.left * 100, node.top * 100
+                        ));
 
             }
 

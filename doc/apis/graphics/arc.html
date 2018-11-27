@@ -30,9 +30,12 @@
     <p>
         上面多了二个配置语句，因为画弧形，你需要确定弧形的圆心和弧形有多宽，宽由内外半径差确定。另外，这二个方法都不是必须的，都有缺省值。返回绘图对象。
     </p>
-    <pre class='prettyprint lang-js'>arc(beginA, rotateA[, r1, r2]);</pre>
+    <pre class='prettyprint lang-js'>arc(beginA, rotateA[, r1, r2]).fill();</pre>
     <p>
         最后绘制图形，传入弧形的起始弧度和终止弧度，另外内外半径是可选的，不传递就使用之前设置的或默认的，传递就使用传递的，不过不会被内部记录。返回画笔。
+    </p>
+    <p class="warn">
+        由于绘制的时候不知道需要的是轮廓线还是图形，因此最后需要自行调用fill或stroke方法，别的也一样。
     </p>
     <h2>
         SVG
