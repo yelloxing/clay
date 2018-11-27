@@ -1,6 +1,7 @@
 {
-  "name": "clay-core",
+  "name": "clay.js",
   "version": "1.4.0",
+  "status": "本文件为开发中的未来版本",
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
@@ -8,12 +9,12 @@
     "test": "npm install grunt-contrib-qunit && node_modules/.bin/grunt test",
     "start": "npm install && npm run release"
   },
-  "main": "./build/clay-1.4.0.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yelloxing/clay.git"
   },
   "author": "心叶",
+  "email": "yelloxing@gmail.com",
   "license": "MIT",
   "devDependencies": {
     "grunt": "^1.0.3",

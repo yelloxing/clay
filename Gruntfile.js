@@ -58,7 +58,8 @@ var source = [
 
 ];
 
-var banner = '/*!\n*\n' +
+var banner = '/*!\n' +
+    '* 文件状态：<%= pkg.status %>\n*\n' +
     '* <%= pkg.name %> - <%= pkg.description %>\n' +
     '* <%= pkg.repository.url %>\n' +
     '* \n' +
@@ -92,6 +93,7 @@ module.exports = function (grunt) {
             target: {
                 banner: banner,
                 src: 'build/clay.js',
+                info: ['<%= pkg.version', '<%= pkg.author %>', '<%= pkg.name %>'],
                 dest: ['build/clay-<%= pkg.version %>.js']
             }
         },
