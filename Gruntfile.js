@@ -16,6 +16,7 @@ var source = [
      */
     './src/Tools/animation.js',
     './src/Tools/tool.js',
+    './src/Tools/ajax.js',
 
     /**
      * 高效独立对象
@@ -118,6 +119,8 @@ module.exports = function (grunt) {
                     "CanvasRenderingContext2D": true,
                     "WebGLRenderingContext": true,
                     "NodeList": true,
+                    "XMLHttpRequest": true,
+                    "ActiveXObject": true,
                     "clay": true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
