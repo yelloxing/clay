@@ -73,7 +73,7 @@ var _ajax = function (config) {
 
 // post请求
 clay.post = function (header, timeout) {
-    return function (url, param, callback, errorback) {
+    var post = function (url, param, callback, errorback) {
         _ajax({
             "type": "POST",
             "url": url,
@@ -83,12 +83,14 @@ clay.post = function (header, timeout) {
             "header": header || {},
             "data": param ? JSON.stringify(param) : ""
         });
+        return post;
     };
+    return post;
 };
 
 // get请求
 clay.get = function (header, timeout) {
-    return function (url, callback, errorback) {
+    var get = function (url, callback, errorback) {
         _ajax({
             "type": "GET",
             "url": url,
@@ -97,5 +99,7 @@ clay.get = function (header, timeout) {
             "timeout": timeout || 300,
             "header": header || {}
         });
+        return get;
     };
+    return get;
 };
