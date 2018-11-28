@@ -16,13 +16,13 @@ var source = [
      */
     './src/Tools/animation.js',
     './src/Tools/tool.js',
+    './src/Tools/ajax.js',
 
     /**
      * 高效独立对象
      */
     './src/Tools/region.js',
     './src/Tools/canvas.js',
-    './src/Tools/webgl.js',
 
     /**
      * 变换矩阵4x4
@@ -39,11 +39,17 @@ var source = [
     './src/calculate/interpolate/Hermite.js',
     './src/calculate/interpolate/Cardinal.js',
     './src/calculate/map.js',
+    './src/calculate/transform.js',
 
     /**
-     * 着色器 GLSL
+     * 2D图形
      */
-    './src/GLSL ES/shader.js',
+    './src/graphics/index.js',
+    './src/graphics/arc.js',
+    './src/graphics/rect.js',
+    './src/graphics/line.js',
+    './src/graphics/text.js',
+    './src/graphics/bezier.js',
 
     /**
      * 布局
@@ -52,7 +58,8 @@ var source = [
 
 ];
 
-var banner = '/*!\n*\n' +
+var banner = '/*!\n' +
+    '* 文件状态：<%= pkg.status %>\n*\n' +
     '* <%= pkg.name %> - <%= pkg.description %>\n' +
     '* <%= pkg.repository.url %>\n' +
     '* \n' +
@@ -86,6 +93,7 @@ module.exports = function (grunt) {
             target: {
                 banner: banner,
                 src: 'build/clay.js',
+                info: ['<%= pkg.version %>', '<%= pkg.author %>', '<%= pkg.email %>'],
                 dest: ['build/clay-<%= pkg.version %>.js']
             }
         },
@@ -113,6 +121,8 @@ module.exports = function (grunt) {
                     "CanvasRenderingContext2D": true,
                     "WebGLRenderingContext": true,
                     "NodeList": true,
+                    "XMLHttpRequest": true,
+                    "ActiveXObject": true,
                     "clay": true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
@@ -152,6 +162,13 @@ module.exports = function (grunt) {
                     port: 30000,
                     base: '.'
                 }
+            },
+            server: {//本地服务器
+                options: {
+                    keepalive: true,
+                    port: 20000,
+                    base: '.'
+                }
             }
         }
     });
@@ -170,4 +187,5 @@ module.exports = function (grunt) {
     /*注册任务*/
     grunt.registerTask('release', ['concat:target', 'build:target', 'clean:target', 'jshint:target', 'uglify:target']);
     grunt.registerTask('test', ['connect:target', 'qunit:target']);
+    grunt.registerTask('server', ['connect:server']);
 };

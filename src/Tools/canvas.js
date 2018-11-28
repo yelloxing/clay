@@ -10,9 +10,9 @@ function _getCanvas2D(selector) {
 }
 
 // 直接使用canvas2D绘图
-clay.prototype.canvas = function () {
+clay.prototype.painter = function () {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
-        throw new Error('canvas is not function');
+        throw new Error('painter is not function');
     return _getCanvas2D(this);
 };
 
@@ -28,7 +28,7 @@ clay.prototype.layer = function () {
     var width = this[0].clientWidth,//内容+内边距
         height = this[0].clientHeight;
     var layerManager = {
-        "get": function (index) {
+        "painter": function (index) {
             if (!layer[index] || layer[index].constructor !== CanvasRenderingContext2D) {
 
                 canvas.push(document.createElement('canvas'));
@@ -41,7 +41,11 @@ clay.prototype.layer = function () {
             return layer[index];
         },
         "clean": function (ctx2D) {
-            ctx2D.clearRect(0, 0, width, height);
+            if (ctx2D) {
+                if (ctx2D.constructor !== CanvasRenderingContext2D)
+                    ctx2D = layerManager.painter(ctx2D);
+                ctx2D.clearRect(0, 0, width, height);
+            }
             return layerManager;
         },
         "update": function () {

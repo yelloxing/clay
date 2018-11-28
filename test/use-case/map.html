@@ -6,29 +6,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="../../clay.png" type="image/x-png">
-    <title>clay - 用例 - 中国地图</title>
+    <title>clay - 用例测试 - 中国地图</title>
     <script src="../../data/china.geoJSON.js"></script>
-    <script src="../../build/clay-1.3.1.js"></script>
+    <script src="../../build/clay-1.4.0.js"></script>
 </head>
 
 <body></body>
 
 <script>
 
-    var canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+    // 获取一只画笔（2D）
+    var pencil = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
         .appendTo('body')
         .attr('width', '1000')
-        .attr('height', '600'),
-        // 经纬度映射计算方法
+        .attr('height', '600')
+        .painter(),
+
+        // 创建经纬度映射计算方法
         map = $$.map().scale(7),
-        pen = canvas[0].getContext('2d'),
         i, j, k, p;
 
-    pen.strokeStyle = '#fff';
-    pen.fillStyle = '#607D8B';
+    // 设置笔的属性
+    pencil.strokeStyle = '#fff';
 
     // 绘制地图
+    var colors = $$.getColors(chinaMapData.features.length);
     for (i = 0; i < chinaMapData.features.length; i++) {
+        pencil.fillStyle = colors[i];
         if (chinaMapData.features[i].geometry.type == 'Polygon') {
             drawer(chinaMapData.features[i].geometry.coordinates[0]);
         } else {
@@ -40,15 +44,15 @@
 
     // 绘制区域图形方法
     function drawer(points) {
-        pen.beginPath();
+        pencil.beginPath();
         p = map(points[0][0], points[0][1]);
-        pen.moveTo(p[0] + 500, p[1] + 300);
+        pencil.moveTo(p[0] + 500, p[1] + 300);
         for (k = 1; k < points.length; k++) {
             p = map(points[k][0], points[k][1]);
-            pen.lineTo(p[0] + 500, p[1] + 300);
+            pencil.lineTo(p[0] + 500, p[1] + 300);
         }
-        pen.fill();
-        pen.stroke();
+        pencil.fill();
+        pencil.stroke();
     }
 
 </script>
