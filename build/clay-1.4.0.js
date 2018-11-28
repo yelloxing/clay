@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Nov 28 2018 14:57:14 GMT+0800 (GMT+08:00)
+* Date:Wed Nov 28 2018 17:40:29 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1411,6 +1411,7 @@ var _rect = function (painter) {
                 ];
                 break;
             default:
+                deg = deg || 0;
                 position = [
                     clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y - s2),
                     clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y - s2),

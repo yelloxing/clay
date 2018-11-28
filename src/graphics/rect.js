@@ -45,6 +45,7 @@ var _rect = function (painter) {
                 ];
                 break;
             default:
+                deg = deg || 0;
                 position = [
                     clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x, y - s2),
                     clay.rotate(scope.t[1], scope.t[2], deg + scope.t[0], x + length, y - s2),
