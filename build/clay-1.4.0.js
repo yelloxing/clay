@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Nov 27 2018 18:52:32 GMT+0800 (GMT+08:00)
+* Date:Wed Nov 28 2018 11:19:47 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1549,7 +1549,9 @@ clay.canvas.line = function (selector, config) {
 // 文字
 var _text = function (painter) {
 
-    var scope = {};
+    var scope = {
+        p: []
+    };
 
     /**
      * 绘制文字
@@ -1558,7 +1560,7 @@ var _text = function (painter) {
      * @param {string|number} text 绘制的文字
      */
     var text = function (x, y, text, deg) {
-        deg = deg ? 0 : (deg * 180 / Math.PI);
+        deg = !deg ? 0 : (deg * 180 / Math.PI);
         return painter(x, y, text, deg, scope.p[0], scope.p[1], scope.c || "#000", scope.s || 16);
     };
 
@@ -1590,7 +1592,7 @@ clay.svg.text = function () {
         function (
             x, y, text, deg, horizontal, vertical, color, fontSize
         ) {
-            var rotate = deg == 0 ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
+            var rotate = deg ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
             return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
                 // 文本水平
                 "text-anchor": {

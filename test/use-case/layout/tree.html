@@ -6,14 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
-    <title>clay - 用例 - tree布局</title>
+    <title>clay - 用例测试 - tree布局</title>
     <script src="../../../build/clay-1.4.0.js"></script>
-    <style>
-        text {
-            text-anchor: middle;
-            dominant-baseline: middle;
-        }
-    </style>
 </head>
 
 <body></body>
@@ -78,7 +72,8 @@
             $$('g')[1].innerHTML = '';
             $$('g')[2].innerHTML = '';
 
-            var bezier = $$.svg.bezier().setType(1, 0).setL(50);
+            var bezier = $$.svg.bezier().setType(1, 0).setL(50),
+                text = $$.svg.text().setSize(10);
 
             var i, node;
             for (i in nodes) {
@@ -92,10 +87,7 @@
                     .attr('cy', node.top * 100);
 
                 // 绘制文字
-                $$('<text style="font-size:10px;">' + node.data[0] + '</text>')
-                    .appendTo('.text')
-                    .attr('x', node.left * 100)
-                    .attr('y', (node.top * 100 - 14));
+                text(node.left * 100, node.top * 100 - 14, node.data[0]).appendTo('.text');
 
                 // 绘制连线
                 if (node.pid)
