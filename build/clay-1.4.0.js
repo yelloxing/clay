@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 29 2018 14:00:22 GMT+0800 (GMT+08:00)
+* Date:Thu Nov 29 2018 15:59:26 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1666,6 +1666,13 @@ var _bezier = function (painter) {
                 edirection = [-scope.t[0], -scope.t[1]];
             } else if (scope.t[2] == 'circle') {
                 bdirection = [bx - scope.t[0], by - scope.t[1]];
+                if (
+                    (scope.t[0] - bx) * (scope.t[0] - bx) + (scope.t[1] - by) * (scope.t[1] - by) ==
+                    (scope.t[0] - ex) * (scope.t[0] - ex) + (scope.t[1] - ey) * (scope.t[1] - ey)
+                )
+                    bdirection = [scope.t[0] - bx, scope.t[1] - by];
+                else
+                    bdirection = [bx - scope.t[0], by - scope.t[1]];
                 edirection = [scope.t[0] - ex, scope.t[1] - ey];
             } else {
                 throw new Error('Illegal type!');
