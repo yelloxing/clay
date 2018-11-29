@@ -44,7 +44,7 @@ clay.svg.text = function () {
         function (
             x, y, text, deg, horizontal, vertical, color, fontSize
         ) {
-            var rotate = deg ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
+            var rotate = !deg ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
             return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
                 // 文本水平
                 "text-anchor": {
@@ -53,10 +53,11 @@ clay.svg.text = function () {
                 }[horizontal] || "middle",
                 // 本垂直
                 "dominant-baseline": {
-                    "top": "text-after-edge",
-                    "bottom": "text-before-edge"
+                    "top": "text-before-edge",
+                    "bottom": "text-after-edge"
                 }[vertical] || "middle",
-                "font-size": fontSize
+                "font-size": fontSize + "px",
+                "font-family": "sans-serif"
             });
         }
     );
@@ -84,7 +85,7 @@ clay.canvas.text = function (selector, config) {
                 obj._p.translate(x, y);
                 obj._p.rotate(deg);
                 obj._p.fillStyle = color;
-                obj._p.fillText(text, x, y);
+                obj._p.fillText(text, 0, 0);
                 obj._p.restore();
                 return obj._p;
             });
