@@ -1,5 +1,5 @@
 /*!
-* 文件状态：本文件为开发中的未来版本
+* 文件状态：本版本为开发中的未来版本
 *
 * clay.js - Provide more flexible data visualization solutions!
 * git+https://github.com/yelloxing/clay.git
@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Nov 29 2018 10:52:50 GMT+0800 (GMT+08:00)
+* Date:Thu Nov 29 2018 14:00:22 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
