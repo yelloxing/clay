@@ -1,6 +1,0 @@
-@mixin bg_init($url) {
-    background-repeat: no-repeat;
-    background-position: center center;
-    background-image: url(#{$url});
-    background-size: auto 100%;
-}

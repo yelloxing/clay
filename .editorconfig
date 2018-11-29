@@ -1,4 +1,4 @@
-# 针对不同开发工具统一代码风格
+# 统一编辑器代码风格
 
 root = true
 
@@ -12,4 +12,3 @@ insert_final_newline = true
 
 [package.json]
 indent_size = 2
-

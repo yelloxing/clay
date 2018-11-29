@@ -15,18 +15,5 @@ var _regexp = {
     identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
 };
 
-// 数学计算、映射计算、绘图方案svg+canvas、布局
-clay.math = {};
-clay.scale = {};
-clay.svg = {}; clay.canvas = {};
-clay.layout = {};
-
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
-
-var _Geography = [
-    // 地球
-    {
-        R: 6317000// 半径
-    }
-];
