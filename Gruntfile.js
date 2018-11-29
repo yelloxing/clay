@@ -40,6 +40,7 @@ var source = [
     './src/calculate/interpolate/Cardinal.js',
     './src/calculate/map.js',
     './src/calculate/transform.js',
+    './src/calculate/Coulomb\'s law.js',
 
     /**
      * 2D图形
@@ -54,7 +55,8 @@ var source = [
     /**
      * 布局
      */
-    './src/layout/tree.js'
+    './src/layout/tree.js',
+    './src/layout/force.js'
 
 ];
 
