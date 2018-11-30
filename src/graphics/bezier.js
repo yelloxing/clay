@@ -17,6 +17,13 @@ var _bezier = function (painter) {
                 edirection = [-scope.t[0], -scope.t[1]];
             } else if (scope.t[2] == 'circle') {
                 bdirection = [bx - scope.t[0], by - scope.t[1]];
+                if (
+                    (scope.t[0] - bx) * (scope.t[0] - bx) + (scope.t[1] - by) * (scope.t[1] - by) ==
+                    (scope.t[0] - ex) * (scope.t[0] - ex) + (scope.t[1] - ey) * (scope.t[1] - ey)
+                )
+                    bdirection = [scope.t[0] - bx, scope.t[1] - by];
+                else
+                    bdirection = [bx - scope.t[0], by - scope.t[1]];
                 edirection = [scope.t[0] - ex, scope.t[1] - ey];
             } else {
                 throw new Error('Illegal type!');
