@@ -74,7 +74,8 @@
         </ul>
         <label>布局</label>
         <ul>
-            <li onclick='loadpage("layout/tree")'>tree树布局</li>
+            <li onclick='loadpage("layout/tree")'>tree 树布局</li>
+            <li onclick='loadpage("layout/pie")'>pie 饼布局</li>
         </ul>
         <footer onclick='window.location.href="https://github.com/yelloxing/clay"'>
             版本：1.4.0
@@ -84,6 +85,8 @@
 </body>
 
 <script>
+
+    alert('温馨提示：目前clay依旧处于开发阶段，你不应该用于正式项目，从2.x.x开始的版本才是发布版本（预计2019年3月底发布），请知悉！');
 
     window.setTimeout(function () {
         loadpage(window.location.href.replace(/[^#]*(#\/){0,1}/, '') || "quickstart/environment");
