@@ -56,7 +56,9 @@ var source = [
      * 布局
      */
     './src/layout/tree.js',
-    './src/layout/force.js'
+    './src/layout/force.js',
+    './src/layout/pack.js',
+    './src/layout/pie.js'
 
 ];
 

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
+    <title>clay - 用例测试 - pie布局</title>
+    <script src="../../../build/clay-1.4.0.js"></script>
+</head>
+
+<body></body>
+
+<script>
+
+    // 数据
+    var data = [{
+        "name": "JavaScript", "run": 1, "begin": 0, "info": "浏览器端脚步语言"
+    }, {
+        "name": "Perl", "run": 2, "begin": 0, "info": "正则表达式语言"
+    }, {
+        "name": "Lisp", "run": 3, "begin": 0, "info": "古老的人工智能语言"
+    }, {
+        "name": "Python", "run": 4, "begin": 0, "info": "脚步语言和新一代大数据语言"
+    }, {
+        "name": "C", "run": 5, "begin": 0, "info": "面向函数语言"
+    }, {
+        "name": "Ruby", "run": 6, "begin": 0, "info": "服务端脚步语言"
+    }, {
+        "name": "CSS", "run": 1, "begin": 6, "info": "浏览器样式规则"
+    }];
+
+    // 画布
+    var pencil = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+        .appendTo('body')
+        .attr('width', '1200')
+        .attr('height', '300').painter();
+
+    // 画弧对象
+    var arc = $$.canvas.arc(pencil);
+
+    // 布局
+    var colors = $$.getColors(data.length);
+    var pie = clay.pieLayout()
+        .setValue(function (val) {
+            return val.run + val.begin;
+        });
+
+    function doDrawer(deep) {
+        pencil.clearRect(0, 0, 1200, 300);
+        pie
+
+            // 左上角
+            .setDeg(Math.PI * 2 * deep)
+            .setBegin(0)
+            .setD(false)
+            .drawer(function (info, index) {
+                arc.setCenter(150, 150).config({
+                    "fillStyle": colors[index]
+                })(info.begin, info.deg, 0, 70).fill();
+            })(data)
+
+            // 右上角
+            .setDeg(Math.PI / 2 * deep)
+            .setBegin(Math.PI / 2)
+            .setD(true)
+            .drawer(function (info, index) {
+                arc.setCenter(450, 150).config({
+                    "fillStyle": colors[index]
+                })(info.begin, info.deg, 0, 80).fill();
+            })(data)
+
+            // 左下角
+            .setDeg(Math.PI * 3 / 2 * deep)
+            .setBegin(Math.PI)
+            .setD(false)
+            .drawer(function (info, index) {
+                arc.setCenter(750, 150).config({
+                    "fillStyle": colors[index]
+                })(info.begin, info.deg, index / data.length * 150 + 10, 90).fill();
+            })(data)
+
+            // 右下角
+            .setDeg(Math.PI * deep)
+            .setBegin(Math.PI / 2 * 3)
+            .setD(true)
+            .drawer(function (info, index) {
+                arc.setCenter(1050, 150).config({
+                    "fillStyle": colors[index]
+                })(info.begin, info.deg, 0, index / data.length * 150).fill();
+            })(data);
+
+    }
+
+    // 启动动画
+    $$.animation(function (deep) {
+        doDrawer(deep);
+    }, 2000, function () {
+        doDrawer(1);
+    });
+
+</script>
+
+</html>

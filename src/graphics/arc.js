@@ -10,6 +10,12 @@ var _arc = function (painter) {
     // beginA起点弧度，rotateA旋转弧度式
     var arc = function (beginA, rotateA, r1, r2) {
 
+        // 保证逆时针也是可以的
+        if (rotateA < 0) {
+            beginA += rotateA;
+            rotateA *= -1;
+        }
+
         if (typeof r1 !== 'number') r1 = scope.r[0];
         if (typeof r2 !== 'number') r2 = scope.r[1];
 
