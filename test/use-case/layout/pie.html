@@ -16,7 +16,7 @@
 
     // 数据
     var data = [{
-        "name": "JavaScript", "run": 1, "begin": 0, "info": "浏览器端脚步语言"
+        "name": "JavaScript", "run": 1, "begin": 6, "info": "浏览器端脚步语言"
     }, {
         "name": "Perl", "run": 2, "begin": 0, "info": "正则表达式语言"
     }, {
@@ -34,11 +34,16 @@
     // 画布
     var pencil = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
         .appendTo('body')
-        .attr('width', '1200')
-        .attr('height', '300').painter();
+        .attr('width', '900')
+        .attr('height', '500').painter();
 
     // 画弧对象
     var arc = $$.canvas.arc(pencil);
+
+    // 绘制文字对象
+    var text = $$.canvas.text(pencil)
+        .setSize(10)
+        .setColor('red');
 
     // 布局
     var colors = $$.getColors(data.length);
@@ -48,45 +53,66 @@
         });
 
     function doDrawer(deep) {
-        pencil.clearRect(0, 0, 1200, 300);
+        pencil.clearRect(0, 0, 900, 500);
         pie
 
-            // 左上角
+            // 1
             .setDeg(Math.PI * 2 * deep)
-            .setBegin(0)
+            .setBegin(Math.PI / 3)
             .setD(false)
             .drawer(function (info, index) {
                 arc.setCenter(150, 150).config({
                     "fillStyle": colors[index]
-                })(info.begin, info.deg, 0, 70).fill();
+                })(info.begin, info.deg, 50, 70).fill();
+
             })(data)
 
-            // 右上角
+            // 2
             .setDeg(Math.PI / 2 * deep)
-            .setBegin(Math.PI / 2)
+            .setBegin(Math.PI / 3 * 2)
             .setD(true)
             .drawer(function (info, index) {
-                arc.setCenter(450, 150).config({
+                arc.setCenter(200, 200).config({
                     "fillStyle": colors[index]
-                })(info.begin, info.deg, 0, 80).fill();
+                })(info.begin, info.deg, 30, 80).fill();
             })(data)
 
-            // 左下角
+            // 3
             .setDeg(Math.PI * 3 / 2 * deep)
             .setBegin(Math.PI)
             .setD(false)
+
+            // 提示文字配置
+            .setCenter(500, 250)
+            .setRadius(function (val, key, index) {
+                return index / data.length * 150 + 20;
+            })
+            .setDis(20, 10)
+
             .drawer(function (info, index) {
-                arc.setCenter(750, 150).config({
+
+                arc.setCenter(500, 250).config({
                     "fillStyle": colors[index]
-                })(info.begin, info.deg, index / data.length * 150 + 10, 90).fill();
+                })(info.begin, info.deg, index / data.length * 150 + 20, index / data.length * 100 + 20).fill();
+
+                // 提示文字和线条
+
+                pencil.beginPath();
+                pencil.moveTo(info.line[0][0], info.line[0][1]);
+                pencil.lineTo(info.line[1][0], info.line[1][1]);
+                pencil.lineTo(info.line[2][0], info.line[2][1]);
+                pencil.stroke();
+
+                text.setAlign(info.line[3])(info.line[2][0], info.line[2][1], data[index].info).fill();
+
             })(data)
 
-            // 右下角
+            // 4
             .setDeg(Math.PI * deep)
             .setBegin(Math.PI / 2 * 3)
             .setD(true)
             .drawer(function (info, index) {
-                arc.setCenter(1050, 150).config({
+                arc.setCenter(900, 150).config({
                     "fillStyle": colors[index]
                 })(info.begin, info.deg, 0, index / data.length * 150).fill();
             })(data);
@@ -96,7 +122,7 @@
     // 启动动画
     $$.animation(function (deep) {
         doDrawer(deep);
-    }, 2000, function () {
+    }, 1000, function () {
         doDrawer(1);
     });
 

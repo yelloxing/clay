@@ -4,7 +4,15 @@
  */
 clay.packLayout = function () {
 
-    var pack = function () {
+    var scope={
+
+    };
+
+    /**
+     *
+     * @param {any} initPack 可以被配置方法解析的数据
+     */
+    var pack = function (initPack) {
 
     };
 
