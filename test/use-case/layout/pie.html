@@ -85,7 +85,7 @@
             // 提示文字配置
             .setCenter(500, 250)
             .setRadius(function (val, key, index) {
-                return index / data.length * 150 + 20;
+                return index / data.length * 150 + 40;
             })
             .setDis(20, 10)
 
@@ -93,7 +93,7 @@
 
                 arc.setCenter(500, 250).config({
                     "fillStyle": colors[index]
-                })(info.begin, info.deg, index / data.length * 150 + 20, index / data.length * 100 + 20).fill();
+                })(info.begin, info.deg, index / data.length * 150 + 40, index / data.length * 100 + 20).fill();
 
                 // 提示文字和线条
 
@@ -114,7 +114,7 @@
             .drawer(function (info, index) {
                 arc.setCenter(900, 150).config({
                     "fillStyle": colors[index]
-                })(info.begin, info.deg, 0, index / data.length * 150).fill();
+                })(info.begin, info.deg, 0, index / data.length * 150 + 10).fill();
             })(data);
 
     }
