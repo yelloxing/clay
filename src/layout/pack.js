@@ -8,7 +8,8 @@ clay.packLayout = function () {
         // 包含图中心
         c: [100, 100],
         // 包含图尺寸
-        r: 100
+        r: 100,
+        e: {}
     },
         // 记录边界圆，用于计算新加圆的位置
         borderCircle = [],
@@ -33,21 +34,27 @@ clay.packLayout = function () {
         return pack;
     };
 
-    pack.setRoot = function () {
-
+    // 获取根结点的方法:root(initTree)
+    pack.root = function (rootback) {
+        scope.e.root = rootback;
+        return pack;
     };
 
-    pack.setChild = function () {
-
+    // 获取子结点的方法:child(parentTree,initTree)
+    pack.child = function (childback) {
+        scope.e.child = childback;
+        return pack;
     };
 
-    pack.setId = function () {
-
+    // 获取结点ID方法:id(treedata)
+    pack.id = function (idback) {
+        scope.e.id = idback;
+        return pack;
     };
 
     // 设置具体的绘图方法
     pack.drawer = function (drawerback) {
-        scope.p = drawerback;
+        scope.e.drawer = drawerback;
         return pack;
     };
 
