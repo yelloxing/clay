@@ -54,16 +54,16 @@
     <pre class='prettyprint lang-js'>// 创建布局对象
 var tree = clay.treeLayout();</pre>
     <p>
-        理论上来说，原始数据可以是任意格式，只要保证整体是一个数组即可。这主要是考虑到实际开发复杂的环境，因此，提供了数据格式配置接口，对于上面的数据，进行如下配置：
+        理论上来说，原始数据可以是任意格式，只要保证提供的解析方法是有效的即可。这主要是考虑到实际开发复杂的环境，因此，提供了数据格式配置接口，对于上面的数据，进行如下配置：
     </p>
     <pre class='prettyprint lang-js'>tree
 // 获取根结点
-.bind('root', function (initTree) {
+.root(function (initTree) {
     return initTree[0];
 })
 
 // 获取孩子结点
-.bind('child', function (parentTree, initTree) {
+.child(function (parentTree, initTree) {
     var children = [], i;
     for (i = 0; i < nodes.length; i++) {
         if (initTree[i][1] == parentTree[0])
@@ -73,7 +73,7 @@ var tree = clay.treeLayout();</pre>
 })
 
 // 获取结点标志id
-.bind('id', function (treedata) {
+.id(function (treedata) {
     return treedata[0];
 })</pre>
     <p>
@@ -82,7 +82,7 @@ var tree = clay.treeLayout();</pre>
     <p>
         开头就说明的很清楚了，布局应该是和具体绘图方式无关的存在，因此，这里我们选择了svg绘图，就需要再配置一下具体的绘图方法。
     </p>
-    <pre class='prettyprint lang-js'>tree.bind('drawer', function (nodes, rootid, size) {
+    <pre class='prettyprint lang-js'>tree.drawer(function (nodes, rootid, size) {
     var i, node;
     for (i in nodes) {
         node = nodes[i];
@@ -122,7 +122,7 @@ var tree = clay.treeLayout();</pre>
     </h2>
     <img width=300 src="../../images/layout-tree_design.png" alt="layout tree 计算模型">
     <p>
-        因为布局不会知道最终绘制的图形具体是什么样子，比如这里的树布局，也许你想绘制的是旋转的树或倒树，也可能你就是想要和这里一样的简单树。为了防止问题复杂化，布局在计算位置的时候，都会统一选择一种最朴素的场景作为计算模型，从该模型出发，任何别的模型借助clay提供的一些计算方法实现起来就很容易了。
+        因为布局不会知道最终绘制的图形具体是什么样子，比如这里的树布局，也许你想绘制的是旋转的树或倒树，也可能你就是想要和这里一样的简单树。为了防止问题复杂化，布局在计算位置的时候，都会统一选择一种最朴素的场景作为计算模型，从该模型出发，任何别的模型借助clay.js提供的一些计算方法实现起来就很容易了。
     </p>
     <p>
         右图是tree布局的计算模型。右边的每个红色矩形都是一个1x1的正方形，坐标原心位于左上角绿色顶点。
@@ -155,7 +155,7 @@ $$('circle').bind('click', function () {
     </p>
     <p>
         请
-        <a target="_blank" href="../../../test/use-case/layout-tree.html">点击这里</a>
+        <a target="_blank" href="../../../test/use-case/layout/tree.html">点击这里</a>
         查看运行效果。
     </p>
 </body>

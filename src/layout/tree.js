@@ -134,13 +134,27 @@ clay.treeLayout = function () {
 
     };
 
-    // 挂载处理事件
     // 获取根结点的方法:root(initTree)
+    tree.root = function (rootback) {
+        scope.e.root = rootback;
+        return tree;
+    };
+
     // 获取子结点的方法:child(parentTree,initTree)
+    tree.child = function (childback) {
+        scope.e.child = childback;
+        return tree;
+    };
+
     // 获取结点ID方法:id(treedata)
+    tree.id = function (idback) {
+        scope.e.id = idback;
+        return tree;
+    };
+
     // 结点更新处理方法 drawer(alltreedata, rootid, size)
-    tree.bind = function (backname, callback, moreback) {
-        scope.e[backname] = callback;
+    tree.drawer = function (drawerback) {
+        scope.e.drawer = drawerback;
         return tree;
     };
 

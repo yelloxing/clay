@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="../../libs/prettify.css">
+    <link rel="stylesheet" href="../../doc.css">
+    <script src="../../libs/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+    <header>
+        pie 饼布局
+    </header>
+    <pre class='prettyprint lang-js'>var pie = clay.pieLayout()
+    //配置具体的绘图方法，可以是canvas、svg或别的
+    .drawer(function(info,index){
+        //info是计算后方便绘制pie的数据格式，index表示在原始数据的顺序
+    });</pre>
+    <p>
+        配置具体的绘图方法需要知道info的格式，下面来看一个例子：
+    </p>
+    <pre class='prettyprint lang-js'>{
+    begin: 2.771993517873347
+    deg: -0.5543987035746694
+    line: (4) [Array(2), Array(2), Array(2), "right"]
+    org: {name: "Ruby", run: 6, begin: 0, info: "服务端脚本语言"}
+    p: 0.17647058823529413
+    val: 6
+}</pre>
+    <p>
+        org表示原始数据，val是该结点的值（占比，和接下来要说明的setValue有关），begin起始弧度，deg占用弧度，p表示比例（单位1）。
+    </p>
+    <p>
+        需要额外说明的是line，只有绘图提示文字的时候需要，数组前三个数据是连线的三个坐标，最后一个标记文字对齐方式。
+    </p>
+    <p>
+        上面，你获取了布局对象，并配置绘图方式。
+    </p>
+    <pre class='prettyprint lang-js'>pie(data);</pre>
+    <p>
+        接着，你就可以传递初始化数据，开始启动绘图了。
+    </p>
+    <p>
+        但是，在大部分情况下，你可以还需要额外设置一些参数，虽然你可以选择使用默认值。让我们看看有那些可选配置：
+    </p>
+    <pre class='prettyprint lang-js'>pie.setValue(valback);</pre>
+    <p>
+        传递一个函数，设置如何获取值，也就是用于计算该弧的占比，有三个参数：原始值、值的key、序号。
+    </p>
+    <pre class='prettyprint lang-js'>pie.setD(boolean);</pre>
+    <p>
+        传递一个布尔值，设置旋转方向，true 逆时针，false 顺时针。
+    </p>
+    <pre class='prettyprint lang-js'>pie.setBegin(deg);</pre>
+    <p>
+        传递一个弧度值，设置起始角度。
+    </p>
+    <pre class='prettyprint lang-js'>pie.setRadius(r);</pre>
+    <p>
+        传递一个半径或一个会返回半径的函数（函数有三个参数：原始值、值的key、序号），设置弧半径（主要用于绘制提示文字，和弧本身关系不大）。
+    </p>
+    <pre class='prettyprint lang-js'>pie.setDis(l1[,l2]);</pre>
+    <p>
+        设置提示文字的连线长度，如果传递一个数字，l2会直接使用l1。
+    </p>
+    <pre class='prettyprint lang-js'>pie.setCenter(x,y);</pre>
+    <p>
+        传递一个坐标，设置弧中心。
+    </p>
+    <pre class='prettyprint lang-js'>pie.setDeg(deg);</pre>
+    <p>
+        传递一个弧度值，设置整体的弧度。
+    </p>
+</body>

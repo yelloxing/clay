@@ -1,7 +1,7 @@
 {
   "name": "clay.js",
   "version": "1.4.0",
-  "status": "本文件为开发中的未来版本",
+  "status": "本版本为开发中的未来版本",
   "description": "Provide more flexible data visualization solutions!",
   "scripts": {
     "release": "node_modules/.bin/grunt release",

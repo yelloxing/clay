@@ -1,4 +1,4 @@
-[clay](https://yelloxing.github.io/clay/doc/) - Provide more flexible data visualization solutions
+[clay.js](https://yelloxing.github.io/clay/doc/) - Provide more flexible data visualization solutions
 ==================================================
 
 [![travis](https://api.travis-ci.org/yelloxing/clay.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay)
@@ -17,7 +17,7 @@
 --------------------------------------
 首先，本项目是为了Web端数据可视化而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形来反映统计的数据，并且绘制的图形是可交互的。
 
-和别的库不同的是，clay关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
+和别的库不同的是，clay.js关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
 
 [![](https://github.com/yelloxing/clay/blob/master/doc/images/clay-readme.jpg)](https://yelloxing.github.io/clay/doc/)
 

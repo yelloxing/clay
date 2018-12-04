@@ -13,7 +13,7 @@
 
 <body onload="prettyPrint()">
     <header>
-        tree树布局
+        tree 树布局
     </header>
     <p>
         因为在教程的布局的使用一节使用的例子就是这里的tree布局，这里先对那里已经说明的部分简单说明一下，然后补充一些内容那里没有涉及的部分。
@@ -21,17 +21,17 @@
     <pre class='prettyprint lang-js'>var tree=$$.treeLayout()
 
     // 获取根结点的方法
-    .bind('root', function(initTree){
+    .root(function(initTree){
         //需要返回树的根结点
     })
 
     // 获取子结点的方法
-    .bind('child', function(parentTree, initTree){
+    .child(function(parentTree, initTree){
         //需要返回parentTree的子结点集合
     })
 
     // 获取结点ID方法
-    .bind('id', function(treedata){
+    .id(function(treedata){
         //需要返回当前结点treedata的id
     });</pre>
     <p>
@@ -40,7 +40,7 @@
     <p>
         接着，我们需要配置布局的绘图方法，因为布局是用来计算的，不是绘图的，具体的绘图方式是自由的，你需要配置你选择的绘图方法：
     </p>
-    <pre class='prettyprint lang-js'>tree.bind('drawer', function (nodes, rootid, size) {
+    <pre class='prettyprint lang-js'>tree.drawer(function (nodes, rootid, size) {
     // 在这里绘图
 });</pre>
     <p>

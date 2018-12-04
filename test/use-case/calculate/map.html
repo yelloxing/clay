@@ -5,10 +5,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="shortcut icon" href="../../clay.png" type="image/x-png">
-    <title>clay - 用例 - 中国地图</title>
-    <script src="../../data/china.geoJSON.js"></script>
-    <script src="../../build/clay-1.4.0.js"></script>
+    <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
+    <title>clay - 用例测试 - 中国地图</title>
+    <script src="../../../data/china.geoJSON.js"></script>
+    <script src="../../../build/clay-1.4.0.js"></script>
 </head>
 
 <body></body>
@@ -28,10 +28,11 @@
 
     // 设置笔的属性
     pencil.strokeStyle = '#fff';
-    pencil.fillStyle = '#607D8B';
 
     // 绘制地图
+    var colors = $$.getColors(chinaMapData.features.length);
     for (i = 0; i < chinaMapData.features.length; i++) {
+        pencil.fillStyle = colors[i];
         if (chinaMapData.features[i].geometry.type == 'Polygon') {
             drawer(chinaMapData.features[i].geometry.coordinates[0]);
         } else {
