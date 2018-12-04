@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Nov 30 2018 15:43:06 GMT+0800 (GMT+08:00)
+* Date:Tue Dec 04 2018 11:19:52 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -204,7 +204,7 @@ function _toNode(str) {
     // 如果不是svg元素，重新用html命名空间创建
     // 目前结点只考虑了svg元素和html元素
     // 如果考虑别的元素类型需要修改此处判断方法
-    if (child.tagName == 'canvas' || /[A-Z]/.test(child.tagName)) {
+    if (!child || child.tagName == 'canvas' || /[A-Z]/.test(child.tagName)) {
         frame = document.createElement("div");
         frame.innerHTML = str;
         childNodes = frame.childNodes;
