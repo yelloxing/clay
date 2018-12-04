@@ -44,12 +44,12 @@
          */
 
         // 获取根结点
-        .bind('root', function (initTree) {
+        .root(function (initTree) {
             return initTree[0];
         })
 
         // 获取孩子结点
-        .bind('child', function (parentTree, initTree) {
+        .child(function (parentTree, initTree) {
             var children = [], i;
             for (i = 0; i < nodes.length; i++) {
                 if (initTree[i][1] == parentTree[0])
@@ -59,14 +59,14 @@
         })
 
         // 获取结点标志id
-        .bind('id', function (treedata) {
+        .id(function (treedata) {
             return treedata[0];
         })
 
         /**
          * 绘图配置
          */
-        .bind('drawer', function (nodes, rootid, size) {
+        .drawer(function (nodes, rootid, size) {
 
             $$('g')[0].innerHTML = '';
             $$('g')[1].innerHTML = '';
