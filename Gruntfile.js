@@ -12,6 +12,12 @@ var source = [
     './src/event.js',
 
     /**
+     * 兼容性
+     */
+    './src/_polyfill/_browser.js',
+    './src/_polyfill/innerHTML.js',
+
+    /**
      * 工具类
      */
     './src/Tools/animation.js',
@@ -121,6 +127,7 @@ module.exports = function (grunt) {
                     "setInterval": true,
                     "clearInterval": true,
                     "Math": true,
+                    "SVGElement": true,
                     "HTMLCollection": true,
                     "CanvasRenderingContext2D": true,
                     "WebGLRenderingContext": true,
