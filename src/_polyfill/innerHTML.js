@@ -30,12 +30,12 @@ if (_IE() >= 9) {
                 }
                 while (node) {
                     var svgNode = toSvgNode(node);
-                    svgPnode.append(svgNode);
+                    svgPnode.appendChild(svgNode);
                     if (node.firstChild) toSVG(node, svgNode);
                     node = node.nextSibling;
                 }
             })(frame.firstChild, rslNode);
-            this.append(rslNode);
+            this.appendChild(rslNode);
         }
     };
     Object.defineProperty(SVGElement.prototype, 'innerHTML', _innerHTML);
