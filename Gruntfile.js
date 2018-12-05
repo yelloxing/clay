@@ -130,6 +130,7 @@ module.exports = function (grunt) {
                     "WebGLRenderingContext": true,
                     "NodeList": true,
                     "XMLHttpRequest": true,
+                    "SVGSVGElement": true,
                     "ActiveXObject": true,
                     "clay": true
                 },
