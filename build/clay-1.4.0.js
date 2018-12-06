@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Dec 06 2018 11:15:52 GMT+0800 (GMT+08:00)
+* Date:Thu Dec 06 2018 17:24:31 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -503,7 +503,7 @@ var _IE = (function () {
 })();
 
 // 针对不支持的浏览器给出提示
-if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low, minimum version IE9!');
+if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low, minimum support IE9!');
 
 // 针对IE浏览器进行加强
 if (_IE >= 9) {
@@ -2208,6 +2208,10 @@ clay.pieLayout = function () {
     };
 
     return pie;
+};
+
+clay.component = function (key, valArr) {
+
 };
 
     clay.version = '1.4.0';

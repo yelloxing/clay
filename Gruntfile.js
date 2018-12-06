@@ -61,7 +61,12 @@ var source = [
      * 布局
      */
     './src/layout/tree.js',
-    './src/layout/pie.js'
+    './src/layout/pie.js',
+
+    /**
+     * 扩展
+     */
+    './src/_extend/component.js'
 
 ];
 

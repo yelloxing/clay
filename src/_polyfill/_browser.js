@@ -44,4 +44,4 @@ var _IE = (function () {
 })();
 
 // 针对不支持的浏览器给出提示
-if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low, minimum version IE9!');
+if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low, minimum support IE9!');
