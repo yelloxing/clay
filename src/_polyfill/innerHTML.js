@@ -5,10 +5,10 @@ if (_IE() >= 9) {
             var frame = document.createElement("div"),
                 childNode = this.firstChild;
             while (childNode) {
-                frame.append(childNode);
+                frame.appendChild(childNode);
                 childNode = childNode.nextSibling;
             }
-            return frame.html();
+            return frame.innerHTML;
         },
         set: function (svgstring) {
             var frame = document.createElement("div"), i;

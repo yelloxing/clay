@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Dec 05 2018 20:53:12 GMT+0800 (GMT+08:00)
+* Date:Thu Dec 06 2018 09:35:38 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -506,16 +506,16 @@ var _IE = function () {
 if (_IE() < 9 && _browser() == 'IE') throw new Error('IE browser version is too low, minimum version IE9!');
 
 // 针对IE浏览器进行加强
-// if (_IE() >= 9) {
+if (_IE() >= 9) {
     var _innerHTML = {
         get: function () {
             var frame = document.createElement("div"),
                 childNode = this.firstChild;
             while (childNode) {
-                frame.append(childNode);
+                frame.appendChild(childNode);
                 childNode = childNode.nextSibling;
             }
-            return frame.html();
+            return frame.innerHTML;
         },
         set: function (svgstring) {
             var frame = document.createElement("div"), i;
@@ -547,7 +547,7 @@ if (_IE() < 9 && _browser() == 'IE') throw new Error('IE browser version is too 
     };
     Object.defineProperty(SVGElement.prototype, 'innerHTML', _innerHTML);
     Object.defineProperty(SVGSVGElement.prototype, 'innerHTML', _innerHTML);
-// }
+}
 
 var _clock = {
     //当前正在运动的动画的tick函数堆栈
