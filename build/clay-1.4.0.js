@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Dec 06 2018 10:18:04 GMT+0800 (GMT+08:00)
+* Date:Thu Dec 06 2018 10:53:37 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -464,6 +464,13 @@ var _browser = function () {
     if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
         return "Opera";
     }
+    if ((userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) ||
+        (userAgent.indexOf("Trident") > -1 && userAgent.indexOf("rv:11.0") > -1)) {
+        return "IE";
+    }
+    if (userAgent.indexOf("Edge") > -1) {
+        return "Edge";
+    }
     if (userAgent.indexOf("Firefox") > -1) {
         return "Firefox";
     }
@@ -472,13 +479,6 @@ var _browser = function () {
     }
     if (userAgent.indexOf("Safari") > -1) {
         return "Safari";
-    }
-    if ((userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) ||
-        (userAgent.indexOf("Trident") > -1 && userAgent.indexOf("rv:11.0") > -1)) {
-        return "IE";
-    }
-    if (userAgent.indexOf("Edge") > -1) {
-        return "Edge";
     }
     return -1;
 
@@ -1696,6 +1696,17 @@ clay.svg.text = function () {
             x, y, text, deg, horizontal, vertical, color, fontSize
         ) {
             var browser = _browser();
+
+            // 针对IE和edge特殊计算
+            if (browser == 'IE' || browser == 'Edge') {
+                if (vertical == "top") {
+                    y += fontSize;
+                }
+                if (vertical == "middle") {
+                    y += fontSize * 0.5;
+                }
+            }
+
             var rotate = !deg ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
             return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
                 // 文本水平

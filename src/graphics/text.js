@@ -45,6 +45,17 @@ clay.svg.text = function () {
             x, y, text, deg, horizontal, vertical, color, fontSize
         ) {
             var browser = _browser();
+
+            // 针对IE和edge特殊计算
+            if (browser == 'IE' || browser == 'Edge') {
+                if (vertical == "top") {
+                    y += fontSize;
+                }
+                if (vertical == "middle") {
+                    y += fontSize * 0.5;
+                }
+            }
+
             var rotate = !deg ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
             return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
                 // 文本水平
