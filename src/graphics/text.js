@@ -44,10 +44,9 @@ clay.svg.text = function () {
         function (
             x, y, text, deg, horizontal, vertical, color, fontSize
         ) {
-            var browser = _browser();
 
             // 针对IE和edge特殊计算
-            if (browser == 'IE' || browser == 'Edge') {
+            if (_browser == 'IE' || _browser == 'Edge') {
                 if (vertical == "top") {
                     y += fontSize;
                 }
@@ -68,12 +67,12 @@ clay.svg.text = function () {
                     "top": "text-before-edge",
                     "bottom": {
                         "Safari": "auto"
-                    }[browser] ||
+                    }[_browser] ||
                         "ideographic"
                 }[vertical] ||
                     {
                         "Firefox": "middle"
-                    }[browser] ||
+                    }[_browser] ||
                     "central",
                 "font-size": fontSize + "px",
                 "font-family": "sans-serif"
@@ -90,7 +89,7 @@ clay.canvas.text = function (selector, config) {
             _canvas(selector, config, _text, function (
                 x, y, text, deg, horizontal, vertical, color, fontSize
             ) {
-                var browser = _browser();
+
                 obj._p.save();
                 obj._p.beginPath();
                 obj._p.textAlign = {

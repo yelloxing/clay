@@ -1,5 +1,5 @@
 // 判断浏览器类型
-var _browser = function () {
+var _browser = (function () {
 
     var userAgent = window.navigator.userAgent;
     if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
@@ -23,13 +23,13 @@ var _browser = function () {
     }
     return -1;
 
-};
+})();
 
 // 判断IE浏览器版本
-var _IE = function () {
+var _IE = (function () {
 
     // 如果不是IE浏览器直接返回
-    if (_browser() != 'IE') return -1;
+    if (_browser != 'IE') return -1;
 
     var userAgent = window.navigator.userAgent;
     if (userAgent.indexOf("Trident") > -1 && userAgent.indexOf("rv:11.0") > -1) return 11;
@@ -41,7 +41,7 @@ var _IE = function () {
 
     // IE版本小于7
     return 6;
-};
+})();
 
 // 针对不支持的浏览器给出提示
-if (_IE() < 9 && _browser() == 'IE') throw new Error('IE browser version is too low, minimum version IE9!');
+if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low, minimum version IE9!');

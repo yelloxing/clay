@@ -1,5 +1,5 @@
 // 针对IE浏览器进行加强
-if (_IE() >= 9) {
+if (_IE >= 9) {
     var _innerHTML = {
         get: function () {
             var frame = document.createElement("div"),
