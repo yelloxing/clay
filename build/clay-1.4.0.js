@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Dec 06 2018 17:24:31 GMT+0800 (GMT+08:00)
+* Date:Thu Dec 06 2018 20:14:14 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -509,11 +509,10 @@ if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low,
 if (_IE >= 9) {
     var _innerHTML = {
         get: function () {
-            var frame = document.createElement("div"),
-                childNode = this.firstChild;
-            while (childNode) {
-                frame.appendChild(childNode);
-                childNode = childNode.nextSibling;
+            var frame = document.createElement("div"), i;
+            for (i = 0; i < this.childNodes.length; i++) {
+                // 深度克隆，克隆节点以及节点下面的子内容
+                frame.appendChild(this.childNodes[i].cloneNode(true));
             }
             return frame.innerHTML;
         },
