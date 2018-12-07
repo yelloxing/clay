@@ -33,7 +33,7 @@
             drawLine(0, $scope.value);
 
             // 监听数据改变
-            $scope.$watch("value", function (newdata, olddata, ) {
+            $scope.$watch("value", function (newdata, olddata) {
                 drawLine(olddata, newdata);
             });
 
