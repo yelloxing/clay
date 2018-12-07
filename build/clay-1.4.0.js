@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 07 2018 11:13:10 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 07 2018 14:27:13 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2265,13 +2265,44 @@ clay.pieLayout = function () {
     return pie;
 };
 
-
-clay.prototype.use = function () {
-
+clay.prototype.use = function (name, config) {
+    // 添加监听方法
+    config.$watch = function (key, doback) {
+        var val = config[key];
+        Object.defineProperty(config, key, {
+            get: function () {
+                return val;
+            },
+            set: function (newVal) {
+                doback(newVal, val);
+                val = newVal;
+            }
+        });
+    };
+    _component[name](this, config);
 };
 
-clay.component = function () {
+var _component = {
+    // 挂载组件
+};
 
+/**
+ * 记录挂载的组件
+ * 包括预处理
+ */
+clay.component = function (name, content) {
+    var param = [], i;
+    if (content.constructor != Array) content = [content];
+    for (i = 0; i < content.length - 1; i++) {
+        param[i] = {
+            "$browser": {
+                "type": _browser,
+                "IE": _IE
+            }
+        }[content[i]] || undefined;
+    }
+    _component[name] = content[content.length - 1].apply(this, param);
+    return clay;
 };
 
     clay.version = '1.4.0';

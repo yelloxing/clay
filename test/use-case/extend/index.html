@@ -18,12 +18,17 @@
 <script>
 
     var config = {
-        "key1": "原始数据"
+        "title": "自定义组件测试",
+        "value": 7
     };
 
+    // 调用组件绘制
     $$('canvas').use('example', config);
 
-    config.key1 = '新的数据';
+    // 随机改变数据
+    setInterval(function () {
+        config.value = Math.random(9) + 1;
+    }, 1000);
 
 </script>
 
