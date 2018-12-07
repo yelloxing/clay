@@ -67,8 +67,8 @@ var source = [
     /**
      * 扩展
      */
-    './src/_extend/scope.js',
-    './src/_extend/compiler.js',
+    './src/_extend/_scope.js',
+    './src/_extend/_compiler.js',
     './src/_extend/component.js'
 
 ];

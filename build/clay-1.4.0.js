@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 07 2018 10:58:40 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 07 2018 11:13:10 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1851,6 +1851,62 @@ clay.canvas.bezier = function (selector, config) {
                     endCtrlP[0],// 第二个贝塞尔控制点的 x 坐标
                     endCtrlP[1],// 第二个贝塞尔控制点的 y 坐标
                     endP[0], endP[1]);
+                return obj._p;
+
+            });
+
+    return obj;
+
+};
+
+// 多边形
+var _polygon = function (painter) {
+
+    var scope = {
+
+    };
+
+
+    var polygon = function () {
+
+
+
+        return painter(
+
+        );
+    };
+
+    polygon.setX = function () {
+        //todo
+    };
+
+    return polygon;
+
+};
+
+// 采用SVG绘制多边形
+clay.svg.polygon = function () {
+    return _polygon(
+        function (
+
+        ) {
+            var d = "";
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制多边形
+clay.canvas.polygon = function (selector, config) {
+
+    var key,
+        obj =
+
+            _canvas(selector, config, _polygon, function (
+
+            ) {
+                obj._p.beginPath();
+
                 return obj._p;
 
             });
