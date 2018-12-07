@@ -8,11 +8,23 @@
     <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
     <title>clay - 用例测试 - 组件</title>
     <script src="../../../build/clay-1.4.0.js"></script>
-    <script src="./ui-component.js"></script>
+    <script src="./example.js"></script>
 </head>
 
 <body>
-    <ui-example></ui-example>
+    <canvas>非常抱歉，您的浏览器不支持canvas!</canvas>
 </body>
+
+<script>
+
+    var config = {
+        "key1": "原始数据"
+    };
+
+    $$('canvas').use('example', config);
+
+    config.key1 = '新的数据';
+
+</script>
 
 </html>

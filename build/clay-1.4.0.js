@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Dec 06 2018 20:14:14 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 07 2018 10:58:40 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2209,7 +2209,12 @@ clay.pieLayout = function () {
     return pie;
 };
 
-clay.component = function (key, valArr) {
+
+clay.prototype.use = function () {
+
+};
+
+clay.component = function () {
 
 };
 
