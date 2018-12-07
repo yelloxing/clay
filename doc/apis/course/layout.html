@@ -58,12 +58,12 @@ var tree = clay.treeLayout();</pre>
     </p>
     <pre class='prettyprint lang-js'>tree
 // 获取根结点
-.bind('root', function (initTree) {
+.root(function (initTree) {
     return initTree[0];
 })
 
 // 获取孩子结点
-.bind('child', function (parentTree, initTree) {
+.child(function (parentTree, initTree) {
     var children = [], i;
     for (i = 0; i < nodes.length; i++) {
         if (initTree[i][1] == parentTree[0])
@@ -73,7 +73,7 @@ var tree = clay.treeLayout();</pre>
 })
 
 // 获取结点标志id
-.bind('id', function (treedata) {
+.id(function (treedata) {
     return treedata[0];
 })</pre>
     <p>
@@ -82,7 +82,7 @@ var tree = clay.treeLayout();</pre>
     <p>
         开头就说明的很清楚了，布局应该是和具体绘图方式无关的存在，因此，这里我们选择了svg绘图，就需要再配置一下具体的绘图方法。
     </p>
-    <pre class='prettyprint lang-js'>tree.bind('drawer', function (nodes, rootid, size) {
+    <pre class='prettyprint lang-js'>tree.drawer(function (nodes, rootid, size) {
     var i, node;
     for (i in nodes) {
         node = nodes[i];

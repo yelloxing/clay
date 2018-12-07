@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Nov 30 2018 15:43:06 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 07 2018 14:27:13 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -204,7 +204,7 @@ function _toNode(str) {
     // 如果不是svg元素，重新用html命名空间创建
     // 目前结点只考虑了svg元素和html元素
     // 如果考虑别的元素类型需要修改此处判断方法
-    if (child.tagName == 'canvas' || /[A-Z]/.test(child.tagName)) {
+    if (!child || child.tagName == 'canvas' || /[A-Z]/.test(child.tagName)) {
         frame = document.createElement("div");
         frame.innerHTML = str;
         childNodes = frame.childNodes;
@@ -456,6 +456,97 @@ clay.prototype.position = function (event) {
     };
 
 };
+
+// 判断浏览器类型
+var _browser = (function () {
+
+    var userAgent = window.navigator.userAgent;
+    if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
+        return "Opera";
+    }
+    if ((userAgent.indexOf("compatible") > -1 && userAgent.indexOf("MSIE") > -1) ||
+        (userAgent.indexOf("Trident") > -1 && userAgent.indexOf("rv:11.0") > -1)) {
+        return "IE";
+    }
+    if (userAgent.indexOf("Edge") > -1) {
+        return "Edge";
+    }
+    if (userAgent.indexOf("Firefox") > -1) {
+        return "Firefox";
+    }
+    if (userAgent.indexOf("Chrome") > -1) {
+        return "Chrome";
+    }
+    if (userAgent.indexOf("Safari") > -1) {
+        return "Safari";
+    }
+    return -1;
+
+})();
+
+// 判断IE浏览器版本
+var _IE = (function () {
+
+    // 如果不是IE浏览器直接返回
+    if (_browser != 'IE') return -1;
+
+    var userAgent = window.navigator.userAgent;
+    if (userAgent.indexOf("Trident") > -1 && userAgent.indexOf("rv:11.0") > -1) return 11;
+
+    if (/MSIE 10/.test(userAgent)) return 10;
+    if (/MSIE 9/.test(userAgent)) return 9;
+    if (/MSIE 8/.test(userAgent)) return 8;
+    if (/MSIE 7/.test(userAgent)) return 7;
+
+    // IE版本小于7
+    return 6;
+})();
+
+// 针对不支持的浏览器给出提示
+if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low, minimum support IE9!');
+
+// 针对IE浏览器进行加强
+if (_IE >= 9) {
+    var _innerHTML = {
+        get: function () {
+            var frame = document.createElement("div"), i;
+            for (i = 0; i < this.childNodes.length; i++) {
+                // 深度克隆，克隆节点以及节点下面的子内容
+                frame.appendChild(this.childNodes[i].cloneNode(true));
+            }
+            return frame.innerHTML;
+        },
+        set: function (svgstring) {
+            var frame = document.createElement("div"), i;
+            frame.innerHTML = svgstring;
+            var toSvgNode = function (htmlNode) {
+                var svgNode = document.createElementNS(_namespace.svg, (htmlNode.tagName + "").toLowerCase());
+                var attrs = htmlNode.attributes, i, svgNodeClay = clay(svgNode);
+                for (i = 0; attrs && i < attrs.length; i++) {
+                    svgNodeClay.attr(attrs[i].nodeName, htmlNode.getAttribute(attrs[i].nodeName));
+                }
+                return svgNode;
+            };
+            var rslNode = toSvgNode(frame.firstChild);
+            (function toSVG(pnode, svgPnode) {
+                var node = pnode.firstChild;
+                if (node && node.nodeType == 3) {
+                    svgPnode.textContent = pnode.innerText;
+                    return;
+                }
+                while (node) {
+                    var svgNode = toSvgNode(node);
+                    svgPnode.appendChild(svgNode);
+                    if (node.firstChild) toSVG(node, svgNode);
+                    node = node.nextSibling;
+                }
+            })(frame.firstChild, rslNode);
+            this.appendChild(rslNode);
+        }
+    };
+    Object.defineProperty(SVGElement.prototype, 'innerHTML', _innerHTML);
+    Object.defineProperty(SVGSVGElement.prototype, 'innerHTML', _innerHTML);
+}
 
 var _clock = {
     //当前正在运动的动画的tick函数堆栈
@@ -1210,140 +1301,6 @@ clay.scale = function (cx, cy, times, x, y) {
     ];
 };
 
-/**
- * @param {array} electrons 电子集合
- * 每个电子的保存结构为:
- * [x,y]
- *
- * @return {array} cElectrons 库仑力电子集合
- * 每个电子的保存结构为：
- * [x,y,lawx,lawy]，最后二个参数是计算的x和y方向的库仑力
- */
-var _coulomb_law = function (electrons) {
-    var
-        // Barnes-Hut近似精度平方
-        theta2 = 0.81,
-        // 四叉树
-        Q_Tree = {},
-        i, j;
-
-    // 求解出坐标最值
-    var minX = electrons[0][0], minY = electrons[0][1], maxX = electrons[0][0], maxY = electrons[0][1];
-    for (i = 1; i < electrons.length; i++) {
-        if (electrons[i][0] < minX) minX = electrons[i][0];
-        else if (electrons[i][0] > maxX) maxX = electrons[i][0];
-        if (electrons[i][1] < minY) minY = electrons[i][1];
-        else if (electrons[i][1] > maxY) maxY = electrons[i][1];
-    }
-
-    // 生成四叉树
-    (function calc_Q_Tree(nodes, id, ix, ax, iy, ay) {
-        var mx = (ix + ax) * 0.5,
-            my = (iy + ay) * 0.5;
-        Q_Tree[id] = {
-            "num": nodes.length,
-            "cx": mx,
-            "cy": my,
-            "w": ax - ix,
-            "h": ay - iy,
-            // 无法或无需分割，包含的是结点
-            "e": [],
-            // 分割的子区域，包含的是区域id
-            "children": []
-        };
-        if (nodes.length == 1) {
-            Q_Tree[id].e = [nodes[0]];
-            return;
-        }
-        var ltNodes = [], rtNodes = [], lbNodes = [], rbNodes = [];
-        for (i = 0; i < nodes.length; i++) {
-            // 分割线上的
-            if (
-                nodes[i][0] == mx || nodes[i][1] == my ||
-                nodes[i][0] == ix || nodes[i][0] == ax ||
-                nodes[i][1] == iy || nodes[i][1] == ay
-            ) Q_Tree[id].e.push(nodes[i]);
-            // 更小的格子里
-            else if (nodes[i][0] < mx) {
-                if (nodes[i][1] < my) ltNodes.push(nodes[i]); else lbNodes.push(nodes[i]);
-            } else {
-                if (nodes[i][1] < my) rtNodes.push(nodes[i]); else rbNodes.push(nodes[i]);
-            }
-        }
-        // 启动子区域分割
-        if (ltNodes.length > 0) {
-            Q_Tree[id].children.push(id + "1");
-            calc_Q_Tree(ltNodes, id + "1", ix, mx, iy, my);
-        }
-        if (rtNodes.length > 0) {
-            Q_Tree[id].children.push(id + "2");
-            calc_Q_Tree(rtNodes, id + "2", mx, ax, iy, my);
-        }
-        if (lbNodes.length > 0) {
-            Q_Tree[id].children.push(id + "3");
-            calc_Q_Tree(lbNodes, id + "3", ix, mx, my, ay);
-        }
-        if (rbNodes.length > 0) {
-            Q_Tree[id].children.push(id + "4");
-            calc_Q_Tree(rbNodes, id + "4", mx, ax, my, ay);
-        }
-
-    })(electrons, 'Q', minX, maxX, minY, maxY);
-
-    // 求解库仑力
-    var treeNode, eleNode, law = [], d2, r2,
-        /**
-         * q1、x1、y1：目标作用电子（或电子团）的电荷、x坐标、y坐标
-         * q2、x2、y2：目标计算电子的电荷、x坐标、y坐标
-         */
-        doLaw = function (q1, x1, y1, x2, y2) {
-            if (x1 == x2 && y1 == y2)
-                // 重叠的点忽略
-                return [0, 0];
-            var f = q1 / ((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-            var d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
-            return [
-                f * (x2 - x1) / d,
-                f * (y2 - y1) / d
-            ];
-        };
-
-    var calc_Coulomb_Law = function (treeName, i) {
-        treeNode = Q_Tree[treeName];
-        eleNode = electrons[i];
-        // Barnes-Hut加速计算
-        // 区域面积
-        d2 = treeNode.cx * treeNode.cy;
-        // '质心'间距离平方
-        r2 = (eleNode[0] - treeNode.cx) * (eleNode[0] - treeNode.cx) + (eleNode[1] - treeNode.cy) * (eleNode[1] - treeNode.cy);
-        if (d2 / r2 <= theta2) {
-            // 默认每个电荷数量是1，且都同性
-            return doLaw(treeNode.num, treeNode.cx, treeNode.cy, eleNode[0], eleNode[1]);
-        } else {
-            var result_law = [0, 0], temp_law;
-            for (j = 0; j < treeNode.e.length; j++) {
-                temp_law = doLaw(1, treeNode.e[j][0], treeNode.e[j][1], eleNode[0], eleNode[1]);
-                result_law[0] += temp_law[0];
-                result_law[1] += temp_law[1];
-            }
-            for (j = 0; j < treeNode.children.length; j++) {
-                temp_law = calc_Coulomb_Law(treeNode.children[j], i);
-                result_law[0] += temp_law[0];
-                result_law[1] += temp_law[1];
-            }
-            return result_law;
-        }
-    };
-    for (i = 0; i < electrons.length; i++) {
-        law = calc_Coulomb_Law('Q', i);
-        electrons[i][2] = law[0];
-        electrons[i][3] = law[1];
-    }
-
-    return electrons;
-
-};
-
 // 绘图方法挂载钩子
 clay.svg = {};
 clay.canvas = {};
@@ -1737,6 +1694,17 @@ clay.svg.text = function () {
         function (
             x, y, text, deg, horizontal, vertical, color, fontSize
         ) {
+
+            // 针对IE和edge特殊计算
+            if (_browser == 'IE' || _browser == 'Edge') {
+                if (vertical == "top") {
+                    y += fontSize;
+                }
+                if (vertical == "middle") {
+                    y += fontSize * 0.5;
+                }
+            }
+
             var rotate = !deg ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
             return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
                 // 文本水平
@@ -1747,8 +1715,15 @@ clay.svg.text = function () {
                 // 本垂直
                 "dominant-baseline": {
                     "top": "text-before-edge",
-                    "bottom": "text-after-edge"
-                }[vertical] || "middle",
+                    "bottom": {
+                        "Safari": "auto"
+                    }[_browser] ||
+                        "ideographic"
+                }[vertical] ||
+                    {
+                        "Firefox": "middle"
+                    }[_browser] ||
+                    "central",
                 "font-size": fontSize + "px",
                 "font-family": "sans-serif"
             });
@@ -1764,6 +1739,7 @@ clay.canvas.text = function (selector, config) {
             _canvas(selector, config, _text, function (
                 x, y, text, deg, horizontal, vertical, color, fontSize
             ) {
+
                 obj._p.save();
                 obj._p.beginPath();
                 obj._p.textAlign = {
@@ -1875,6 +1851,62 @@ clay.canvas.bezier = function (selector, config) {
                     endCtrlP[0],// 第二个贝塞尔控制点的 x 坐标
                     endCtrlP[1],// 第二个贝塞尔控制点的 y 坐标
                     endP[0], endP[1]);
+                return obj._p;
+
+            });
+
+    return obj;
+
+};
+
+// 多边形
+var _polygon = function (painter) {
+
+    var scope = {
+
+    };
+
+
+    var polygon = function () {
+
+
+
+        return painter(
+
+        );
+    };
+
+    polygon.setX = function () {
+        //todo
+    };
+
+    return polygon;
+
+};
+
+// 采用SVG绘制多边形
+clay.svg.polygon = function () {
+    return _polygon(
+        function (
+
+        ) {
+            var d = "";
+            return d;
+        }
+    );
+};
+
+// 采用Canvas绘制多边形
+clay.canvas.polygon = function (selector, config) {
+
+    var key,
+        obj =
+
+            _canvas(selector, config, _polygon, function (
+
+            ) {
+                obj._p.beginPath();
+
                 return obj._p;
 
             });
@@ -2011,13 +2043,27 @@ clay.treeLayout = function () {
 
     };
 
-    // 挂载处理事件
     // 获取根结点的方法:root(initTree)
+    tree.root = function (rootback) {
+        scope.e.root = rootback;
+        return tree;
+    };
+
     // 获取子结点的方法:child(parentTree,initTree)
+    tree.child = function (childback) {
+        scope.e.child = childback;
+        return tree;
+    };
+
     // 获取结点ID方法:id(treedata)
+    tree.id = function (idback) {
+        scope.e.id = idback;
+        return tree;
+    };
+
     // 结点更新处理方法 drawer(alltreedata, rootid, size)
-    tree.bind = function (backname, callback, moreback) {
-        scope.e[backname] = callback;
+    tree.drawer = function (drawerback) {
+        scope.e.drawer = drawerback;
         return tree;
     };
 
@@ -2077,32 +2123,6 @@ clay.treeLayout = function () {
 
     return tree;
 
-};
-
-clay.forceLayout = function () {
-
-    var force = function () {
-
-    };
-
-    return force;
-};
-
-clay.packLayout = function () {
-
-    var scope={
-
-    };
-
-    /**
-     *
-     * @param {any} initPack 可以被配置方法解析的数据
-     */
-    var pack = function (initPack) {
-
-    };
-
-    return pack;
 };
 
 clay.pieLayout = function () {
@@ -2243,6 +2263,46 @@ clay.pieLayout = function () {
     };
 
     return pie;
+};
+
+clay.prototype.use = function (name, config) {
+    // 添加监听方法
+    config.$watch = function (key, doback) {
+        var val = config[key];
+        Object.defineProperty(config, key, {
+            get: function () {
+                return val;
+            },
+            set: function (newVal) {
+                doback(newVal, val);
+                val = newVal;
+            }
+        });
+    };
+    _component[name](this, config);
+};
+
+var _component = {
+    // 挂载组件
+};
+
+/**
+ * 记录挂载的组件
+ * 包括预处理
+ */
+clay.component = function (name, content) {
+    var param = [], i;
+    if (content.constructor != Array) content = [content];
+    for (i = 0; i < content.length - 1; i++) {
+        param[i] = {
+            "$browser": {
+                "type": _browser,
+                "IE": _IE
+            }
+        }[content[i]] || undefined;
+    }
+    _component[name] = content[content.length - 1].apply(this, param);
+    return clay;
 };
 
     clay.version = '1.4.0';
