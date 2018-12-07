@@ -56,6 +56,7 @@ var source = [
     './src/graphics/line.js',
     './src/graphics/text.js',
     './src/graphics/bezier.js',
+    './src/graphics/polygon.js',
 
     /**
      * 布局
