@@ -7,36 +7,45 @@
     'use strict';
 
     $$.component("example", ["$browser", function ($browser) {
-        return function (element, $scope) {
+        return {
+            "beforeCreate": function (element) {
+                console.log("beforeCreate...", element, this);
+            },
+            "beforeDestory": function (element) {
+                console.log("beforeDestory...", element, this);
+            },
+            "link": function (element, $scope) {
 
-            // 设置画布大小
-            element.attr('width', '900').attr('height', '100');
+                console.log(this);
 
-            // 配置画笔
-            var layerManger = $$('canvas').layer();
-            $$.canvas.text(layerManger.painter("title")).setColor('red')(450, 20, $scope.title);
+                // 设置画布大小
+                element.attr('width', '900').attr('height', '100');
 
-            var rect = $$.canvas.rect(layerManger.painter("rect"), {
-                "fillStyle": "blue"
-            })
-                .setSize(40)
-                .setType("LR");
+                // 配置画笔
+                var layerManger = $$('canvas').layer();
+                $$.canvas.text(layerManger.painter("title")).setColor('red')(450, 20, $scope.title);
 
-            var drawLine = function (od, nd) {
-                $$.animation(function (deep) {
-                    layerManger.clean("rect");
-                    rect(50, 65, ((nd - od) * deep + od) * 80).fill();
-                    layerManger.update();
-                }, 900);
-            };
+                var rect = $$.canvas.rect(layerManger.painter("rect"), {
+                    "fillStyle": "blue"
+                })
+                    .setSize(40)
+                    .setType("LR");
 
-            drawLine(0, $scope.value);
+                var drawLine = function (od, nd) {
+                    $$.animation(function (deep) {
+                        layerManger.clean("rect");
+                        rect(50, 65, ((nd - od) * deep + od) * 80).fill();
+                        layerManger.update();
+                    }, 900);
+                };
 
-            // 监听数据改变
-            $scope.$watch("value", function (newdata, olddata) {
-                drawLine(olddata, newdata);
-            });
+                drawLine(0, $scope.value);
 
+                // 监听数据改变
+                $scope.$watch("value", function (newdata, olddata) {
+                    drawLine(olddata, newdata);
+                });
+            }
         };
     }]);
 

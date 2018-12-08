@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 07 2018 14:27:13 GMT+0800 (GMT+08:00)
+* Date:Sat Dec 08 2018 11:39:58 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2265,7 +2265,23 @@ clay.pieLayout = function () {
     return pie;
 };
 
+// 自定义组件常用方法
+var _this = {
+
+};
+
+/**
+ * 确定应用目标以后
+ * 启动编译并应用
+ */
 clay.prototype.use = function (name, config) {
+
+    // 销毁之前的
+    if (this[0]._component) _component[this[0]._component].beforeDestory.apply(_this, [this]);
+
+    // 使用组件前，在结点中记录一下
+    this[0]._component = name;
+
     // 添加监听方法
     config.$watch = function (key, doback) {
         var val = config[key];
@@ -2279,7 +2295,19 @@ clay.prototype.use = function (name, config) {
             }
         });
     };
-    _component[name](this, config);
+
+    // 组件创建前
+    if (typeof _component[name].beforeCreate == 'function') _component[name].beforeCreate.apply(_this, [this]);
+
+    // 启动组件
+    _component[name].link.apply(_this, [this, config]);
+    return this;
+};
+
+// 主动销毁
+clay.prototype.destory = function () {
+    if (this[0]._component) _component[this[0]._component].beforeDestory.apply(_this, [this]);
+    return this;
 };
 
 var _component = {
@@ -2303,6 +2331,10 @@ clay.component = function (name, content) {
     }
     _component[name] = content[content.length - 1].apply(this, param);
     return clay;
+};
+
+clay.config = function () {
+
 };
 
     clay.version = '1.4.0';
