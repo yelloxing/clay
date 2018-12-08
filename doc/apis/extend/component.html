@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="../../libs/prettify.css">
+    <link rel="stylesheet" href="../../doc.css">
+    <script src="../../libs/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+    <header>
+        自定义组件
+    </header>
+    <h2>
+        定义
+    </h2>
+    <pre class='prettyprint lang-js'>$$.component("example", ["$browser", function ($browser) {
+    return {
+        "beforeCreate": function (element) {
+            console.log("beforeCreate...", element, this);
+        },
+        "beforeDestory": function (element) {
+            console.log("beforeDestory...", element, this);
+        },
+        "link":function (element, $scope) {
+            // todo 1
+
+            // 监听数据改变
+            $scope.$watch("value", function (newdata, olddata, ) {
+                // todo 2
+            });
+
+        };
+    }
+}]);</pre>
+    <p>
+        上面是定义一个组件的大体结构，需要说明几点：
+    </p>
+    <ul>
+        <li>1."example"表示组件名称，可以是任意一个合法的标志符；</li>
+        <li>2.$browser是注入的服务，由clay内部提供。</li>
+        <li>3.element和$scope是形参，分别表示组件应用的结点和配置参数；</li>
+        <li>4.$scope.$watch方法可以监听配置数据的改变，从而主体调整图形；</li>
+        <li>5.你可以在todo 1和todo 2出分别绘图图形和调整图形。</li>
+    </ul>
+    <h2>
+        使用
+    </h2>
+    <pre class='prettyprint lang-js'>var example=$$('canvas').use('example', config);</pre>
+    <p>
+        其中config就是配置数据，应该是一个json格式的数据，对应定义组件的$scope。
+    </p>
+    <p>
+        $scope.$watch方法触发的条件是这里的config数据发生了改变（准确的说，应该是监听的属性），比如这样：
+    </p>
+    <pre class='prettyprint lang-js'>config.value=5;</pre>
+    <p>
+        因为上面监听的是value属性，因此这里改变value就会触发设置的监听方法。
+    </p>
+    <h2>
+        销毁
+    </h2>
+    <p>
+        如果希望应用的组件启动停止可以再次调用use，这样会使用新的组件而停止旧组件，当然，你也可以主动销毁：
+    </p>
+    <pre class='prettyprint lang-js'>example.destory();</pre>
+</body>
+
+</html>

@@ -14,7 +14,6 @@
 * Released under the MIT license
 * 
 * Date:Sat Dec 08 2018 19:11:02 GMT+0800 (中国标准时间)
-*/
 (function (global, factory) {
 
     'use strict';
@@ -2316,12 +2315,75 @@ clay.pieLayout = function () {
     return pie;
 };
 
-
-clay.prototype.use = function () {
+// 自定义组件常用方法
+var _this = {
 
 };
 
-clay.component = function () {
+/**
+ * 确定应用目标以后
+ * 启动编译并应用
+ */
+clay.prototype.use = function (name, config) {
+
+    // 销毁之前的
+    if (this[0]._component) _component[this[0]._component].beforeDestory.apply(_this, [this]);
+
+    // 使用组件前，在结点中记录一下
+    this[0]._component = name;
+
+    // 添加监听方法
+    config.$watch = function (key, doback) {
+        var val = config[key];
+        Object.defineProperty(config, key, {
+            get: function () {
+                return val;
+            },
+            set: function (newVal) {
+                doback(newVal, val);
+                val = newVal;
+            }
+        });
+    };
+
+    // 组件创建前
+    if (typeof _component[name].beforeCreate == 'function') _component[name].beforeCreate.apply(_this, [this]);
+
+    // 启动组件
+    _component[name].link.apply(_this, [this, config]);
+    return this;
+};
+
+// 主动销毁
+clay.prototype.destory = function () {
+    if (this[0]._component) _component[this[0]._component].beforeDestory.apply(_this, [this]);
+    return this;
+};
+
+var _component = {
+    // 挂载组件
+};
+
+/**
+ * 记录挂载的组件
+ * 包括预处理
+ */
+clay.component = function (name, content) {
+    var param = [], i;
+    if (content.constructor != Array) content = [content];
+    for (i = 0; i < content.length - 1; i++) {
+        param[i] = {
+            "$browser": {
+                "type": _browser,
+                "IE": _IE
+            }
+        }[content[i]] || undefined;
+    }
+    _component[name] = content[content.length - 1].apply(this, param);
+    return clay;
+};
+
+clay.config = function () {
 
 };
 
