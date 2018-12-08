@@ -8,7 +8,6 @@
     <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
     <title>clay - 用例测试 - 曲线 polygon</title>
     <script src="../../../build/clay-1.4.0.js"></script>
-    <!-- <script src="../../../src/graphics/polygon.js"></script> -->
 </head>
 
 <body></body>
@@ -32,12 +31,12 @@
     */
     $$.canvas.polygon(pencil).config({
         "strokeStyle": "red"
-    })([[0, 400], [100, 100], [200, 200], [300, 60], [400, 300]]).stroke();
+    })([[150, 400], [100, 100], [200, 200], [300, 60], [300, 300], [0, 400]]).stroke();
 
     /**
      * SVG绘制
     */
-    $$("<path></path>").attr('d', $$.svg.polygon()([[0, 400], [100, 100], [200, 200], [150, 60], [50, 300]])).appendTo(svg)
+    $$("<path></path>").attr('d', $$.svg.polygon()([[150, 400], [100, 100], [200, 200], [300, 60], [300, 300], [0, 400]])).appendTo(svg)
         .css({
             "stroke": 'red',
             "fill": "none"

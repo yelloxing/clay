@@ -13,7 +13,8 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Dec 08 2018 19:11:02 GMT+0800 (中国标准时间)
+* Date:Sat Dec 08 2018 20:36:28 GMT+0800 (GMT+08:00)
+*/
 (function (global, factory) {
 
     'use strict';
@@ -1873,7 +1874,7 @@ var _polygon = function (painter) {
          *  catmull-rom插值
          *  给定四个点p0,p1,p2,p3，可以计算出p1,p2之间的插值，其中的p0,p3为控制点
          *  x为偏移量  x的取值范围为[0,1]，x取0将得出p1的y值，x取1将得出p2的y值
-         * 
+         *
          *  points : [[x0,y0],[x1,y1],[x2,y2],[x3,y3]]  包含四个点的数组，每个点用数组描述
          *  x : 偏移量
          */
@@ -1886,7 +1887,7 @@ var _polygon = function (painter) {
         Yp = Yp[0] * x3 + Yp[1] * x2 + Yp[2] * x + Yp[3] * 1;
         Yp *= 0.5;
         return [Xp, Yp];
-    }
+    };
 
     var polygon = function (pointsList) {
         if (pointsList.length === 1) {
@@ -1897,7 +1898,7 @@ var _polygon = function (painter) {
         //添加首尾控制点，用于绘制完整曲线
         var dx = pointsList[1][0] - pointsList[0][0];
         var dy = pointsList[1][1] - pointsList[0][1];
-        var expandArray = JSON.parse(JSON.stringify(pointsList));
+        var expandArray = pointsList;
         expandArray.unshift([pointsList[0][0] - dx, pointsList[0][1] - dy]);
         var length = pointsList.length;
         dx = pointsList[length - 1][0] - pointsList[length - 2][0];
@@ -1906,11 +1907,11 @@ var _polygon = function (painter) {
 
         var i = 1,
             temp = "M" + expandArray[1][0] + " " + expandArray[1][1] + " ";
+        var doIt = function (tx, index) {
+            return catmullRom(expandArray.slice(index - 1, index + 3), tx);
+        };
         for (; i < expandArray.length - 2; i++) {
-            temp = painter(
-                function (dx) {
-                    return catmullRom(expandArray.slice(i - 1, i + 3), dx);
-                }, 0, 1 / scope.d, temp);
+            temp = painter(doIt, i, 0, 1 / scope.d, temp);
         }
         return temp;
     };
@@ -1929,10 +1930,10 @@ var _polygon = function (painter) {
 clay.svg.polygon = function () {
     return _polygon(
         function (
-            calcFn, start, dx, temp
+            calcFn, i, start, dx, temp
         ) {
             for (; start <= 1; start += dx) {
-                var point = calcFn(start);
+                var point = calcFn(start, i);
                 temp = temp + " L" + point[0] + "," + point[1];
             }
             return temp;
@@ -1945,21 +1946,21 @@ clay.canvas.polygon = function (selector, config) {
 
     var key,
         obj =
-        _canvas(selector, config, _polygon, function (
-            calcFn, start, dx, temp
-        ) {
-            
-            var point = calcFn(start);
-            if (typeof temp == 'string') {
-                obj._p.beginPath();
-                obj._p.moveTo(point[0], point[1]);
-            }
-            for (; start <= 1; start += dx) {
-                point = calcFn(start);
-                obj._p.lineTo(point[0], point[1]);
-            }
-            return obj._p;
-        });
+            _canvas(selector, config, _polygon, function (
+                calcFn, i, start, dx, temp
+            ) {
+
+                var point = calcFn(start, i);
+                if (typeof temp == 'string') {
+                    obj._p.beginPath();
+                    obj._p.moveTo(point[0], point[1]);
+                }
+                for (; start <= 1; start += dx) {
+                    point = calcFn(start, i);
+                    obj._p.lineTo(point[0], point[1]);
+                }
+                return obj._p;
+            });
 
     return obj;
 
