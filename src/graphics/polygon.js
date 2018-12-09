@@ -16,14 +16,8 @@ var _polygon = function (painter) {
 
         var l = p.length;
         //添加首尾控制点，用于绘制完整曲线
-        p.unshift([
-            2 * p[0][0] - p[1][0],
-            2 * p[0][1] - p[1][1]
-        ]);
-        p.push([
-            2 * p[l][0] - p[l - 1][0],
-            2 * p[l][1] - p[l - 1][1]
-        ]);
+        p.unshift(p[l - 2]);
+        p.push(p[2]);
 
         var i = 1,
             temp = "M" + p[1][0] + " " + p[1][1] + " ";
@@ -32,12 +26,14 @@ var _polygon = function (painter) {
             catmullRom.setP(points[0], points[1], points[2], points[3]);
             temp = painter(catmullRom, 0, 1 / scope.d, temp);
         }
+        // 闭合
+        if (typeof temp == 'string') temp += " Z"; else temp.closePath();
         return temp;
     };
 
-    polygon.setD = function (dis) {
+    polygon.setNum = function (num) {
         //设置进度（即将p1,p2两点间的曲线段分成的段数）
-        scope.d = dis;
+        scope.d = num;
         return polygon;
     };
 
@@ -71,7 +67,6 @@ clay.canvas.polygon = function (selector, config) {
 
                 var point = calcFn(start);
                 if (typeof temp == 'string') {
-                    obj._p.beginPath();
                     obj._p.moveTo(point[0], point[1]);
                 }
                 for (; start <= 1; start += dx) {

@@ -18,28 +18,27 @@
     var pencil = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
         .appendTo('body')
         .attr('width', 400)
-        .attr('height', 400)
+        .attr('height', 600)
         .painter();
 
     var svg = $$('<svg></svg>')
         .attr('width', 400)
-        .attr('height', 400)
+        .attr('height', 600)
         .appendTo('body');
 
     /**
      * Canvas绘制
     */
     $$.canvas.polygon(pencil).config({
-        "strokeStyle": "red"
-    })([[150, 400], [100, 100], [200, 200], [300, 60], [300, 300]]).stroke();
+        "fillStyle": "red"
+    })([[150, 100], [100, 250], [100, 500], [150, 500], [180, 400], [240, 400], [250, 500], [300, 500], [300, 250], [250, 100]]).fill();
 
     /**
      * SVG绘制
     */
-    $$("<path></path>").attr('d', $$.svg.polygon()([[150, 400], [100, 100], [200, 200], [300, 60], [300, 300]])).appendTo(svg)
+    $$("<path></path>").attr('d', $$.svg.polygon()([[150, 100], [100, 250], [100, 500], [150, 500], [180, 400], [240, 400], [250, 500], [300, 500], [300, 250], [250, 100]])).appendTo(svg)
         .css({
-            "stroke": 'red',
-            "fill": "none"
+            "fill": "blue"
         });
 
 </script>

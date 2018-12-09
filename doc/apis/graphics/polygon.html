@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="../../libs/prettify.css">
+    <link rel="stylesheet" href="../../doc.css">
+    <script src="../../libs/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+    <header>
+        多边形 polygon
+    </header>
+    <h2>
+        Canvas2D
+    </h2>
+    <pre class='prettyprint lang-js'>var polygon = $$.canvas.polygon('canvas')
+    // 设置进度（即两点间的曲线段分成的段数，可选）
+    .setNum(num);</pre>
+    <p>
+        获取多边形对象以后，直接传递点集合既可绘制多边形：
+    </p>
+    <pre class='prettyprint lang-js'>polygon([[150, 100], [100, 250], [100, 500], [150, 500], [180, 400], [240, 400]]).fill();</pre>
+    <h2>
+        SVG
+    </h2>
+    <pre class='prettyprint lang-js'>var polygon = $$.svg.polygon()
+    // 设置进度（即两点间的曲线段分成的段数，可选）
+    .setNum(num);</pre>
+    <p>
+        获取多边形对象以后，直接传递点集合既可绘制多边形：
+    </p>
+    <pre class='prettyprint lang-js'>$$('path').attr('d',polygon([[150, 100], [100, 250], [100, 500], [150, 500], [180, 400], [240, 400]]).fill());</pre>
+</body>
+
+</html>
