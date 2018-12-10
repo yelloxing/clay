@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 10 2018 20:21:10 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 10 2018 20:25:02 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1461,6 +1461,7 @@ var _arc = function (painter) {
     // beginA起点弧度，rotateA旋转弧度式
     var arc = function (beginA, rotateA, r1, r2) {
         if (rotateA > Math.PI * 2) rotateA = Math.PI * 2;
+        if (rotateA < -Math.PI * 2) rotateA = -Math.PI * 2;
 
         // 保证逆时针也是可以的
         if (rotateA < 0) {

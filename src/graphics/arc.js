@@ -11,6 +11,7 @@ var _arc = function (painter) {
     // beginA起点弧度，rotateA旋转弧度式
     var arc = function (beginA, rotateA, r1, r2) {
         if (rotateA > Math.PI * 2) rotateA = Math.PI * 2;
+        if (rotateA < -Math.PI * 2) rotateA = -Math.PI * 2;
 
         // 保证逆时针也是可以的
         if (rotateA < 0) {

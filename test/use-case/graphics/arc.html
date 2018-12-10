@@ -43,8 +43,8 @@
         "strokeStyle": "blue"
     })(Math.PI * 7 / 4, Math.PI / 4, 140, 160).stroke();
 
-    arc(0, Math.PI * 2, 10, 30).fill();
-    arc.isCircle(true, true)(1, Math.PI * 2 - 1, 50, 70).fill();
+    arc(0, -Math.PI * 3, 10, 30).fill();
+    arc.isCircle(true, true)(1, -Math.PI * 2 + 1, 50, 70).fill();
 
     /**
      * SVG绘制
@@ -64,10 +64,10 @@
             "fill": "none"
         });
 
-    $$("<path></path>").attr('d', arc(0, Math.PI * 2, 10, 30)).appendTo(svg)
+    $$("<path></path>").attr('d', arc(0, -Math.PI * 3, 10, 30)).appendTo(svg)
         .css("fill", 'green');
 
-    $$("<path></path>").attr('d', arc.isCircle(true, true)(1, Math.PI * 2 - 1, 50, 70)).appendTo(svg)
+    $$("<path></path>").attr('d', arc.isCircle(true, true)(1, -Math.PI * 2 + 1, 50, 70)).appendTo(svg)
         .css("fill", 'green');
 
 </script>
