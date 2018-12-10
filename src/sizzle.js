@@ -1,8 +1,14 @@
+var _out_sizzle;
+_provider.$sizzleProvider = function (config) {
+    _out_sizzle = config;
+};
+
 // 负责查找结点
 function _sizzle(selector, context) {
 
     var temp = [], flag;
     if (typeof selector === 'string') {
+        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
         // 去掉回车，空格和换行
         selector = (selector + "").trim().replace(/[\n\f\r]/g, '');
 

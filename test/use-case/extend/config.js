@@ -25,4 +25,13 @@
         };
     }]);
 
+    // 配置sizzle选择器
+    // 因为内置选择器比较弱，如果想用高级的，可以引入第三方库，进行配置
+    $$.config("$sizzleProvider", function () {
+        return function (selector, context) {
+            // 配置新的查找方法
+            return document.getElementsByTagName('meta');
+        };
+    });
+
 })(window, window.clay);

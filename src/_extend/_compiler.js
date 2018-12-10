@@ -8,7 +8,7 @@ var _service = {
 
 // 常用方法
 var _this = {
-
+    "toNode": _toNode
 };
 
 /**

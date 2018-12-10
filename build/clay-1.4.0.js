@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 10 2018 14:53:10 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 10 2018 16:39:45 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -71,11 +71,17 @@ var _xlink = ["href", "title", "show", "type", "role", "actuate"];
 // 嵌入内部提供者
 var _provider = {};
 
+var _out_sizzle;
+_provider.$sizzleProvider = function (config) {
+    _out_sizzle = config;
+};
+
 // 负责查找结点
 function _sizzle(selector, context) {
 
     var temp = [], flag;
     if (typeof selector === 'string') {
+        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
         // 去掉回车，空格和换行
         selector = (selector + "").trim().replace(/[\n\f\r]/g, '');
 
@@ -2373,7 +2379,7 @@ var _service = {
 
 // 常用方法
 var _this = {
-
+    "toNode": _toNode
 };
 
 /**
