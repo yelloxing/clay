@@ -17,3 +17,6 @@ var _regexp = {
 
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
+
+// 嵌入内部提供者
+var _provider = {};

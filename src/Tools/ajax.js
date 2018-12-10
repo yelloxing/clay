@@ -1,3 +1,28 @@
+var _ajaxConfig = {
+    "headers": {},
+    "timeout": 3000,
+    "context": "",
+    "request": function (config) {
+        return config;
+    },
+    "success": function (data, doback) {
+        if (typeof doback == 'function') {
+            doback(data);
+        }
+    },
+    "error": function (error, doback) {
+        if (typeof doback == 'function') {
+            doback(error);
+        }
+    }
+};
+_provider.$httpProvider = function (config) {
+    var row;
+    for (row in config) {
+        _ajaxConfig[row] = config[row];
+    }
+};
+
 /**
  * XMLHttpRequest
  *
@@ -15,6 +40,7 @@
  * }
  */
 var _ajax = function (config) {
+    config = _ajaxConfig.request(config);
     var i;
 
     // 获取xhr对象
@@ -25,10 +51,11 @@ var _ajax = function (config) {
         new ActiveXObject("Microsoft.XMLHTTP");
 
     // 打开请求地址
+    if (!/^\//.test(config.url)) config.url = _ajaxConfig.context + "" + config.url;
     xhr.open(config.type, config.url, true);
 
     // 设置超时时间
-    xhr.timeout = config.timeout;
+    xhr.timeout = config.timeout || _ajaxConfig.timeout;
 
     // 文件传递进度回调
     if (typeof config.fileload == 'function') {
@@ -41,29 +68,31 @@ var _ajax = function (config) {
     }
 
     // 请求成功回调
-    if (typeof config.success == 'function') {
-        xhr.onload = function () {
-            config.success({
-                "response": xhr.response,
-                "status": xhr.status,
-                "header": xhr.getAllResponseHeaders()
-            });
-        };
-    }
+    xhr.onload = function () {
+        _ajaxConfig.success({
+            "response": xhr.response,
+            "status": xhr.status,
+            "header": xhr.getAllResponseHeaders()
+        }, config.success);
+    };
 
     // 错误回调
-    if (typeof config.error == 'function') {
-        // 请求中出错回调
-        xhr.onerror = function () {
-            config.error({ "type": "error" });
-        };
-        // 请求超时回调
-        xhr.ontimeout = function () {
-            config.error({ "type": "timeout" });
-        };
-    }
+    // 请求中出错回调
+    xhr.onerror = function () {
+        _ajaxConfig.error({
+            "type": "error"
+        }, config.error);
+    };
+    // 请求超时回调
+    xhr.ontimeout = function () {
+        _ajaxConfig.error({
+            "type": "timeout"
+        }, config.error);
+    };
 
     // 配置请求头
+    for (i in _ajaxConfig.headers)
+        xhr.setRequestHeader(i, _ajaxConfig.headers[i]);
     for (i in config.header)
         xhr.setRequestHeader(i, config.header[i]);
 
@@ -79,7 +108,7 @@ clay.post = function (header, timeout) {
             "url": url,
             "success": callback,
             "error": errorback,
-            "timeout": timeout || 300,
+            "timeout": timeout,
             "header": header || {},
             "data": param ? JSON.stringify(param) : ""
         });
@@ -96,7 +125,7 @@ clay.get = function (header, timeout) {
             "url": url,
             "success": callback,
             "error": errorback,
-            "timeout": timeout || 300,
+            "timeout": timeout,
             "header": header || {}
         });
         return get;

@@ -1,4 +1,12 @@
-// 自定义组件常用方法
+// 可注入内部服务
+var _service = {
+    "$browser": {
+        "type": _browser,
+        "IE": _IE
+    }
+};
+
+// 常用方法
 var _this = {
 
 };

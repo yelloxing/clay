@@ -17,7 +17,11 @@
 
 <script>
 
-
+    $$.get()('force.js', function (data) {
+        console.log(data);
+    }, function (error) {
+        console.error(error);
+    });
 
 </script>
 

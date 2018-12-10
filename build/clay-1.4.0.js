@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 10 2018 09:36:51 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 10 2018 14:24:15 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -67,6 +67,9 @@ var _regexp = {
 
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
+
+// 嵌入内部提供者
+var _provider = {};
 
 // 负责查找结点
 function _sizzle(selector, context) {
@@ -660,7 +663,49 @@ clay.loop = function (datas, callback) {
     return clay;
 };
 
+var _ajaxConfig = {
+    "headers": {},
+    "timeout": 3000,
+    "context": "",
+    "request": function (config) {
+        return config;
+    },
+    "success": function (data, doback) {
+        if (typeof doback == 'function') {
+            doback(data);
+        }
+    },
+    "error": function (error, doback) {
+        if (typeof doback == 'function') {
+            doback(error);
+        }
+    }
+};
+_provider.$httpProvider = function (config) {
+    var row;
+    for (row in config) {
+        _ajaxConfig[row] = config[row];
+    }
+};
+
+/**
+ * XMLHttpRequest
+ *
+ * config={
+ * "type":"POST"|"GET",
+ * "url":地址,
+ * "success":成功回调(非必须),
+ * "error":错误回调(非必须),
+ * "fileload":文件传输进度回调(非必须),
+ * "timeout":超时时间,
+ * "header":{
+ *          //请求头
+ *      },
+ * "data":post时带的数据（非必须）
+ * }
+ */
 var _ajax = function (config) {
+    config = _ajaxConfig.request(config);
     var i;
 
     // 获取xhr对象
@@ -671,10 +716,11 @@ var _ajax = function (config) {
         new ActiveXObject("Microsoft.XMLHTTP");
 
     // 打开请求地址
+    if (!/^\//.test(config.url)) config.url = _ajaxConfig.context + "" + config.url;
     xhr.open(config.type, config.url, true);
 
     // 设置超时时间
-    xhr.timeout = config.timeout;
+    xhr.timeout = config.timeout || _ajaxConfig.timeout;
 
     // 文件传递进度回调
     if (typeof config.fileload == 'function') {
@@ -687,29 +733,31 @@ var _ajax = function (config) {
     }
 
     // 请求成功回调
-    if (typeof config.success == 'function') {
-        xhr.onload = function () {
-            config.success({
-                "response": xhr.response,
-                "status": xhr.status,
-                "header": xhr.getAllResponseHeaders()
-            });
-        };
-    }
+    xhr.onload = function () {
+        _ajaxConfig.success({
+            "response": xhr.response,
+            "status": xhr.status,
+            "header": xhr.getAllResponseHeaders()
+        }, config.success);
+    };
 
     // 错误回调
-    if (typeof config.error == 'function') {
-        // 请求中出错回调
-        xhr.onerror = function () {
-            config.error({ "type": "error" });
-        };
-        // 请求超时回调
-        xhr.ontimeout = function () {
-            config.error({ "type": "timeout" });
-        };
-    }
+    // 请求中出错回调
+    xhr.onerror = function () {
+        _ajaxConfig.error({
+            "type": "error"
+        }, config.error);
+    };
+    // 请求超时回调
+    xhr.ontimeout = function () {
+        _ajaxConfig.error({
+            "type": "timeout"
+        }, config.error);
+    };
 
     // 配置请求头
+    for (i in _ajaxConfig.headers)
+        xhr.setRequestHeader(i, _ajaxConfig.headers[i]);
     for (i in config.header)
         xhr.setRequestHeader(i, config.header[i]);
 
@@ -725,7 +773,7 @@ clay.post = function (header, timeout) {
             "url": url,
             "success": callback,
             "error": errorback,
-            "timeout": timeout || 300,
+            "timeout": timeout,
             "header": header || {},
             "data": param ? JSON.stringify(param) : ""
         });
@@ -742,7 +790,7 @@ clay.get = function (header, timeout) {
             "url": url,
             "success": callback,
             "error": errorback,
-            "timeout": timeout || 300,
+            "timeout": timeout,
             "header": header || {}
         });
         return get;
@@ -2316,7 +2364,15 @@ clay.pieLayout = function () {
     return pie;
 };
 
-// 自定义组件常用方法
+// 可注入内部服务
+var _service = {
+    "$browser": {
+        "type": _browser,
+        "IE": _IE
+    }
+};
+
+// 常用方法
 var _this = {
 
 };
@@ -2373,19 +2429,21 @@ clay.component = function (name, content) {
     var param = [], i;
     if (content.constructor != Array) content = [content];
     for (i = 0; i < content.length - 1; i++) {
-        param[i] = {
-            "$browser": {
-                "type": _browser,
-                "IE": _IE
-            }
-        }[content[i]] || undefined;
+        param[i] = _service[content[i]] || undefined;
     }
     _component[name] = content[content.length - 1].apply(this, param);
     return clay;
 };
 
-clay.config = function () {
-
+clay.config = function ($provider, content) {
+    var param = [], i;
+    if (content.constructor != Array) content = [content];
+    for (i = 0; i < content.length - 1; i++) {
+        param[i] = _service[content[i]] || undefined;
+    }
+    var config = content[content.length - 1].apply(this, param);
+    _provider[$provider](config);
+    return clay;
 };
 
     clay.version = '1.4.0';

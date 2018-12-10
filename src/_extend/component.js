@@ -10,12 +10,7 @@ clay.component = function (name, content) {
     var param = [], i;
     if (content.constructor != Array) content = [content];
     for (i = 0; i < content.length - 1; i++) {
-        param[i] = {
-            "$browser": {
-                "type": _browser,
-                "IE": _IE
-            }
-        }[content[i]] || undefined;
+        param[i] = _service[content[i]] || undefined;
     }
     _component[name] = content[content.length - 1].apply(this, param);
     return clay;
