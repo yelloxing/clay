@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 10 2018 16:39:45 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 10 2018 17:49:40 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -437,16 +437,49 @@ clay.prototype.bind = function (eventType, callback) {
 
 };
 
-clay.prototype.unbind = function (eventType, callback) {
+clay.prototype.trigger = function (eventType) {
+    var flag, event;
 
-    var flag;
-    if (window.detachEvent)
-        for (flag = 0; flag < this.length; flag++)
-            this[flag].detachEvent("on" + eventType, callback);
-    else
-        for (flag = 0; flag < this.length; flag++)
-            this[flag].removeEventListener(eventType, callback, false);
+    //创建event的对象实例。
+    if (document.createEventObject) {
+        // IE浏览器支持fireEvent方法
+        event = document.createEventObject();
+        for (flag = 0; flag < this.length; flag++) {
+            this[flag].fireEvent('on' + eventType, event);
+        }
+    }
+
+    // 其他标准浏览器使用dispatchEvent方法
+    else {
+        event = document.createEvent('HTMLEvents');
+        // 3个参数：事件类型，是否冒泡，是否阻止浏览器的默认行为
+        event.initEvent(eventType, true, false);
+        for (flag = 0; flag < this.length; flag++) {
+            this[flag].dispatchEvent(event);
+        }
+    }
+
     return this;
+};
+
+/* 取消冒泡事件 */
+clay.cancelBubble = function (event) {
+    if (event && event.stopPropagation) { //这是其他非IE浏览器
+        event.stopPropagation();
+    } else {
+        event.cancelBubble = true;
+    }
+    return clay;
+};
+
+/* 阻止默认事件 */
+clay.preventDefault = function (event) {
+    if (event && event.stopPropagation) { //这是其他非IE浏览器
+        event.preventDefault();
+    } else {
+        event.returnValue = false;
+    }
+    return clay;
 };
 
 /*
