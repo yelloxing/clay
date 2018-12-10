@@ -13,7 +13,8 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Dec 08 2018 19:11:02 GMT+0800 (中国标准时间)
+* Date:Mon Dec 10 2018 09:36:51 GMT+0800 (GMT+08:00)
+*/
 (function (global, factory) {
 
     'use strict';
@@ -1190,6 +1191,30 @@ clay.cardinal = function () {
     return cardinal;
 };
 
+clay.catmullRom = function () {
+
+    var scope = {};
+
+    // deep为偏移量  deep的取值范围为[0,1]，deep取0将得出p1点，deep取1将得出p2点
+    var catmull = function (deep) {
+        var deep2 = deep * deep, deep3 = deep2 * deep;
+        return [
+            0.5 * (scope.x[0] * deep3 + scope.x[1] * deep2 + scope.x[2] * deep + scope.x[3]),
+            0.5 * (scope.y[0] * deep3 + scope.y[1] * deep2 + scope.y[2] * deep + scope.y[3])
+        ];
+    };
+
+    // 设置一组点
+    // 四个点 p1,p2,p3,p4
+    catmull.setP = function (p1, p2, p3, p4) {
+        scope.x = clay.Matrix4([-1, 2, -1, 0, 3, -5, 0, 2, -3, 4, 1, 0, 1, -1, 0, 0]).use(p1[0], p2[0], p3[0], p4[0]);
+        scope.y = clay.Matrix4([-1, 2, -1, 0, 3, -5, 0, 2, -3, 4, 1, 0, 1, -1, 0, 0]).use(p1[1], p2[1], p3[1], p4[1]);
+        return catmull;
+    };
+
+    return catmull;
+};
+
 var
     // 围绕X轴旋转
     _rotateX = function (deg, x, y, z) {
@@ -1867,57 +1892,34 @@ var _polygon = function (painter) {
          * 设置d可以设置精度，d越大，精度越高，但是相应的计算量也会增加（计算时间增加）
          */
         d: 100
-    };
-    var catmullRom = function (points, x) {
-        /*
-         *  catmull-rom插值
-         *  给定四个点p0,p1,p2,p3，可以计算出p1,p2之间的插值，其中的p0,p3为控制点
-         *  x为偏移量  x的取值范围为[0,1]，x取0将得出p1的y值，x取1将得出p2的y值
-         * 
-         *  points : [[x0,y0],[x1,y1],[x2,y2],[x3,y3]]  包含四个点的数组，每个点用数组描述
-         *  x : 偏移量
-         */
-        var x2 = x * x;
-        var x3 = x2 * x;
-        var Xp = clay.Matrix4([-1, 2, -1, 0, 3, -5, 0, 2, -3, 4, 1, 0, 1, -1, 0, 0]).use(points[0][0], points[1][0], points[2][0], points[3][0]);
-        Xp = Xp[0] * x3 + Xp[1] * x2 + Xp[2] * x + Xp[3] * 1;
-        Xp *= 0.5;
-        var Yp = clay.Matrix4([-1, 2, -1, 0, 3, -5, 0, 2, -3, 4, 1, 0, 1, -1, 0, 0]).use(points[0][1], points[1][1], points[2][1], points[3][1]);
-        Yp = Yp[0] * x3 + Yp[1] * x2 + Yp[2] * x + Yp[3] * 1;
-        Yp *= 0.5;
-        return [Xp, Yp];
-    }
+    },
+        // 多边形插值方法
+        catmullRom = clay.catmullRom();
 
-    var polygon = function (pointsList) {
-        if (pointsList.length === 1) {
-            return "M" + expandArray[0][0] + " " + expandArray[0][1] + " ";
-        } else if (pointsList.length === 0) {
-            return "M0 0 ";
-        }
+    var polygon = function (point) {
+        var p = point.slice();
+        p.push(p[0]);
+
+        var l = p.length;
         //添加首尾控制点，用于绘制完整曲线
-        var dx = pointsList[1][0] - pointsList[0][0];
-        var dy = pointsList[1][1] - pointsList[0][1];
-        var expandArray = JSON.parse(JSON.stringify(pointsList));
-        expandArray.unshift([pointsList[0][0] - dx, pointsList[0][1] - dy]);
-        var length = pointsList.length;
-        dx = pointsList[length - 1][0] - pointsList[length - 2][0];
-        dy = pointsList[length - 1][1] - pointsList[length - 2][1];
-        expandArray.push([pointsList[length - 1][0] + dx, pointsList[length - 1][1] + dy]);
+        p.unshift(p[l - 2]);
+        p.push(p[2]);
 
         var i = 1,
-            temp = "M" + expandArray[1][0] + " " + expandArray[1][1] + " ";
-        for (; i < expandArray.length - 2; i++) {
-            temp = painter(
-                function (dx) {
-                    return catmullRom(expandArray.slice(i - 1, i + 3), dx);
-                }, 0, 1 / scope.d, temp);
+            temp = "M" + p[1][0] + " " + p[1][1] + " ";
+        for (; i < l; i++) {
+            var points = p.slice(i - 1, i + 3);
+            catmullRom.setP(points[0], points[1], points[2], points[3]);
+            temp = painter(catmullRom, 0, 1 / scope.d, temp);
         }
+        // 闭合
+        if (typeof temp == 'string') temp += " Z"; else temp.closePath();
         return temp;
     };
 
-    polygon.setD = function (dis) {
+    polygon.setNum = function (num) {
         //设置进度（即将p1,p2两点间的曲线段分成的段数）
-        scope.d = dis;
+        scope.d = num;
         return polygon;
     };
 
@@ -1945,21 +1947,20 @@ clay.canvas.polygon = function (selector, config) {
 
     var key,
         obj =
-        _canvas(selector, config, _polygon, function (
-            calcFn, start, dx, temp
-        ) {
-            
-            var point = calcFn(start);
-            if (typeof temp == 'string') {
-                obj._p.beginPath();
-                obj._p.moveTo(point[0], point[1]);
-            }
-            for (; start <= 1; start += dx) {
-                point = calcFn(start);
-                obj._p.lineTo(point[0], point[1]);
-            }
-            return obj._p;
-        });
+            _canvas(selector, config, _polygon, function (
+                calcFn, start, dx, temp
+            ) {
+
+                var point = calcFn(start);
+                if (typeof temp == 'string') {
+                    obj._p.moveTo(point[0], point[1]);
+                }
+                for (; start <= 1; start += dx) {
+                    point = calcFn(start);
+                    obj._p.lineTo(point[0], point[1]);
+                }
+                return obj._p;
+            });
 
     return obj;
 

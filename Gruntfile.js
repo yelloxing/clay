@@ -44,6 +44,7 @@ var source = [
      */
     './src/calculate/interpolate/Hermite.js',
     './src/calculate/interpolate/Cardinal.js',
+    './src/calculate/interpolate/catmull-rom.js',
     './src/calculate/map.js',
     './src/calculate/transform.js',
 

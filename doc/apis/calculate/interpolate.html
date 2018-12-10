@@ -22,7 +22,9 @@
         Hermite
     </h2>
     <p>
-        hermite三次插值是在确定二个点和二个点的斜率前提下，用一个y=ax<sup>3</sup>+bx<sup>2</sup>+cx+d的三次多项式来求解出插值函数。
+        hermite三次插值是在确定二个点和二个点的斜率前提下，用一个y=ax
+        <sup>3</sup>+bx
+        <sup>2</sup>+cx+d的三次多项式来求解出插值函数。
     </p>
     <pre class='prettyprint lang-js'>var interFun=$$.hermite();</pre>
     <p>
@@ -64,6 +66,23 @@
         配置好以后，比如x=a，其中a在需要插值的点之间（边界也可以），你可以这样求解出y值：
     </p>
     <pre class='prettyprint lang-js'>y=interFun(a);</pre>
+    <h2>
+        catmull-rom
+    </h2>
+    <p>
+        上面两种情况，都是基于函数的情况下，有时候，我们需要支持非函数的情况。
+    </p>
+    <p>
+        给定四个点p0,p1,p2,p3，计算出p1,p2之间的插值，其中的p0,p3为控制点，对于这四个点，没有特殊要求。
+    </p>
+    <pre class='prettyprint lang-js'>var interFun=clay.catmullRom()
+    // 设置四个点
+    .setD(p1, p2, p3, p4);
+    </pre>
+    <p>
+        和前面两个查找方法不同的是，获取查找坐标不是通过x求出y，而是提供一个偏移量deep（范围是[0, 1]）来求解插入的坐标（x, y），因为不是函数，这样应该是容易理解的：
+    </p>
+    <pre class='prettyprint lang-js'>p=interFun(deep);</pre>
 </body>
 
 </html>

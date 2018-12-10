@@ -27,6 +27,13 @@
             }
         });
 
+        JSLitmus.test('catmull-rom插值法', function () {
+            var catmullRom = clay.catmullRom().setP([50, 400], [100, 100], [200, 200], [300, 60]), flag;
+            for (flag = 0; flag <= 1; flag += 0.0033) {
+                catmullRom(flag);
+            }
+        });
+
     </script>
 
 </body>
