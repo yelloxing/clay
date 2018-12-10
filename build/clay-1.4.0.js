@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 10 2018 14:24:15 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 10 2018 14:53:10 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1956,8 +1956,7 @@ var _polygon = function (painter) {
         var i = 1,
             temp = "M" + p[1][0] + " " + p[1][1] + " ";
         for (; i < l; i++) {
-            var points = p.slice(i - 1, i + 3);
-            catmullRom.setP(points[0], points[1], points[2], points[3]);
+            catmullRom.setP(p[i - 1], p[i], p[i + 1], p[i + 2]);
             temp = painter(catmullRom, 0, 1 / scope.d, temp);
         }
         // 闭合
@@ -1966,7 +1965,7 @@ var _polygon = function (painter) {
     };
 
     polygon.setNum = function (num) {
-        //设置进度（即将p1,p2两点间的曲线段分成的段数）
+        //设置精度（即将p1,p2两点间的曲线段分成的段数）
         scope.d = num;
         return polygon;
     };
