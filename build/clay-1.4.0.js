@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 10 2018 14:47:17 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 10 2018 14:48:16 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1917,7 +1917,7 @@ var _polygon = function (painter) {
     };
 
     polygon.setNum = function (num) {
-        //设置进度（即将p1,p2两点间的曲线段分成的段数）
+        //设置精度（即将p1,p2两点间的曲线段分成的段数）
         scope.d = num;
         return polygon;
     };
