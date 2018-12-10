@@ -23,8 +23,7 @@ var _polygon = function (painter) {
         var i = 1,
             temp = "M" + p[1][0] + " " + p[1][1] + " ";
         for (; i < l; i++) {
-            var points = p.slice(i - 1, i + 3);
-            catmullRom.setP(points[0], points[1], points[2], points[3]);
+            catmullRom.setP(p[i - 1], p[i], p[i + 1], p[i + 2]);
             temp = painter(catmullRom, 0, 1 / scope.d, temp);
         }
         // 闭合
