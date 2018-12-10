@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sun Dec 09 2018 21:50:15 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 10 2018 09:36:51 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1896,7 +1896,8 @@ var _polygon = function (painter) {
         // 多边形插值方法
         catmullRom = clay.catmullRom();
 
-    var polygon = function (p) {
+    var polygon = function (point) {
+        var p = point.slice();
         p.push(p[0]);
 
         var l = p.length;
