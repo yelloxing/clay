@@ -25,7 +25,9 @@
     // 设置弧圆心
     .setCenter(cx, cy)
     // 设置内外半径
-    .setRadius(r1, r2);
+    .setRadius(r1, r2)
+    // 分别设置开始和结尾是否需要使用圆弧闭合，默认直线闭合
+    .isCircle(boolean, boolean);
     </pre>
     <p>
         上面多了二个配置语句，因为画弧形，你需要确定弧形的圆心和弧形有多宽，宽由内外半径差确定。另外，这二个方法都不是必须的，都有缺省值。返回绘图对象。
@@ -44,7 +46,9 @@
     // 设置弧圆心
     .setCenter(cx, cy)
     // 设置内外半径
-    .setRadius(r1, r2);
+    .setRadius(r1, r2)
+    // 分别设置开始和结尾是否需要使用圆弧闭合，默认直线闭合
+    .isCircle(boolean, boolean);
 
 // 获取弧形路径
 var d=arc(beginA, rotateA[, r1, r2]);</pre>
