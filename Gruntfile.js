@@ -72,12 +72,8 @@ var source = [
      */
     './src/extend/compiler.js',
     './src/extend/component.js',
-    './src/extend/config.js',
+    './src/extend/config.js'
 
-    /**
-     * 导出
-     */
-    './src/exports.js'
 ];
 
 var banner = '/*!\n' +
