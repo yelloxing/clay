@@ -2,7 +2,14 @@
 
     'use strict';
 
-    factory(global);
+    if (typeof module === "object" && typeof module.exports === "object") {
+        module.exports = function use(target) {
+            factory(target || window);
+        };
+    } else {
+        factory(global);
+    }
+
 })(typeof window !== "undefined" ? window : this, function (global, undefined) {
 
     'use strict';
