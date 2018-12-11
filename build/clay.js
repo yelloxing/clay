@@ -1,7 +1,7 @@
 /*!
 * 文件状态：本版本为开发中的未来版本
 *
-* clay.js - Provide more flexible data visualization solutions!
+* clay-core - Provide more flexible data visualization solutions!
 * git+https://github.com/yelloxing/clay.git
 * 
 * author 心叶
@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Dec 11 2018 20:34:51 GMT+0800 (GMT+08:00)
+* Date:Wed Dec 12 2018 00:38:21 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
