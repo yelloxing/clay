@@ -6,14 +6,14 @@
 * 
 * author 心叶
 *
-* version 1.4.0
+* version 1.4.2
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Dec 11 2018 14:56:24 GMT+0800 (GMT+08:00)
+* Date:Tue Dec 11 2018 17:37:42 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -482,7 +482,7 @@ clay.prototype.position = function (event) {
 // 判断浏览器类型
 var _browser = (function () {
 
-    var userAgent = window.navigator.userAgent;
+    var userAgent = global.navigator.userAgent;
     if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
         return "Opera";
     }
@@ -512,7 +512,7 @@ var _IE = (function () {
     // 如果不是IE浏览器直接返回
     if (_browser != 'IE') return -1;
 
-    var userAgent = window.navigator.userAgent;
+    var userAgent = global.navigator.userAgent;
     if (userAgent.indexOf("Trident") > -1 && userAgent.indexOf("rv:11.0") > -1) return 11;
 
     if (/MSIE 10/.test(userAgent)) return 10;
@@ -2560,7 +2560,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '1.4.0';
+    clay.version = '1.4.2';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 

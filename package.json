@@ -1,14 +1,23 @@
 {
   "name": "clay.js",
-  "version": "1.4.0",
+  "version": "1.4.2",
   "status": "本版本为开发中的未来版本",
   "description": "Provide more flexible data visualization solutions!",
+  "main": "build/clay.js",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
     "server": "node_modules/.bin/grunt server",
     "test": "npm install grunt-contrib-qunit && node_modules/.bin/grunt test",
     "start": "npm install && npm run release"
   },
+  "keywords": [
+    "clay",
+    "clay.js",
+    "algorithm",
+    "svg",
+    "canvas",
+    "webgl"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/yelloxing/clay.git"
@@ -16,6 +25,10 @@
   "author": "心叶",
   "email": "yelloxing@gmail.com",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yelloxing/clay/issues"
+  },
+  "homepage": "https://yelloxing.github.io/clay/doc/",
   "devDependencies": {
     "grunt": "^1.0.3",
     "grunt-contrib-clean": "^2.0.0",

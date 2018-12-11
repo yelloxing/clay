@@ -72,8 +72,12 @@ var source = [
      */
     './src/extend/compiler.js',
     './src/extend/component.js',
-    './src/extend/config.js'
+    './src/extend/config.js',
 
+    /**
+     * 导出
+     */
+    './src/exports.js'
 ];
 
 var banner = '/*!\n' +
@@ -104,20 +108,20 @@ module.exports = function (grunt) {
             },
             target: {
                 src: source,
-                dest: 'build/clay.js'
+                dest: 'build/.temp'
             }
         },
         build: {//自定义插入合并
             target: {
                 banner: banner,
-                src: 'build/clay.js',
+                src: 'build/.temp',
                 info: ['<%= pkg.version %>', '<%= pkg.author %>', '<%= pkg.email %>'],
-                dest: ['build/clay-<%= pkg.version %>.js']
+                dest: ['build/clay.js']
             }
         },
         clean: {// 删除临时文件
             target: {
-                src: ['build/clay.js']
+                src: ['build/.temp']
             }
         },
         jshint: { //语法检查
@@ -144,12 +148,14 @@ module.exports = function (grunt) {
                     "SVGSVGElement": true,
                     "ActiveXObject": true,
                     "clay": true,
-                    "Event": true
+                    "Event": true,
+                    "define": true,
+                    "exports": true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
             },
-            target: 'build/clay-<%= pkg.version %>.js'
+            target: 'build/clay.js'
         },
         uglify: { //压缩代码
             options: {
@@ -160,7 +166,7 @@ module.exports = function (grunt) {
                     mangle: true
                 },
                 files: [{
-                    'build/clay-<%= pkg.version %>.min.js': ['build/clay-<%= pkg.version %>.js']
+                    'build/clay.min.js': ['build/clay.js']
                 }]
             }
         },

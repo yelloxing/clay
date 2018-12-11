@@ -1,7 +1,7 @@
 // 判断浏览器类型
 var _browser = (function () {
 
-    var userAgent = window.navigator.userAgent;
+    var userAgent = global.navigator.userAgent;
     if (userAgent.indexOf("Opera") > -1 || userAgent.indexOf("OPR") > -1) {
         return "Opera";
     }
@@ -31,7 +31,7 @@ var _IE = (function () {
     // 如果不是IE浏览器直接返回
     if (_browser != 'IE') return -1;
 
-    var userAgent = window.navigator.userAgent;
+    var userAgent = global.navigator.userAgent;
     if (userAgent.indexOf("Trident") > -1 && userAgent.indexOf("rv:11.0") > -1) return 11;
 
     if (/MSIE 10/.test(userAgent)) return 10;
