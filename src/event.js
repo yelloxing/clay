@@ -38,26 +38,6 @@ clay.prototype.trigger = function (eventType) {
     return this;
 };
 
-/* 取消冒泡事件 */
-clay.cancelBubble = function (event) {
-    if (event && event.stopPropagation) { //这是其他非IE浏览器
-        event.stopPropagation();
-    } else {
-        event.cancelBubble = true;
-    }
-    return clay;
-};
-
-/* 阻止默认事件 */
-clay.preventDefault = function (event) {
-    if (event && event.stopPropagation) { //这是其他非IE浏览器
-        event.preventDefault();
-    } else {
-        event.returnValue = false;
-    }
-    return clay;
-};
-
 /*
  ************************************
  * 事件相关计算方法

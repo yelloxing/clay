@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Dec 11 2018 10:47:18 GMT+0800 (GMT+08:00)
+* Date:Tue Dec 11 2018 14:56:24 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -462,26 +462,6 @@ clay.prototype.trigger = function (eventType) {
     return this;
 };
 
-/* 取消冒泡事件 */
-clay.cancelBubble = function (event) {
-    if (event && event.stopPropagation) { //这是其他非IE浏览器
-        event.stopPropagation();
-    } else {
-        event.cancelBubble = true;
-    }
-    return clay;
-};
-
-/* 阻止默认事件 */
-clay.preventDefault = function (event) {
-    if (event && event.stopPropagation) { //这是其他非IE浏览器
-        event.preventDefault();
-    } else {
-        event.returnValue = false;
-    }
-    return clay;
-};
-
 /*
  ************************************
  * 事件相关计算方法
@@ -548,13 +528,32 @@ var _IE = (function () {
 if (_IE < 9 && _browser == 'IE') throw new Error('IE browser version is too low, minimum support IE9!');
 
 // 获取函数名称
-// 部分浏览器不支持
+// 部分旧浏览器不支持
 if ('name' in Function.prototype === false) {
+    // https://www.ecma-international.org/ecma-262/6.0/#sec-setfunctionname
     Object.defineProperty(Function.prototype, 'name', {
         get: function () {
             return this.toString().match(/^\s*function\s*([^\(\s]*)/)[1];
         }
     });
+}
+
+// 表示二个正的浮点数之间的最新差值
+// 你可以由此判断二个浮点数是否相对
+// （因为js浮点运算都不是准确的，不可以简单的等号判断）
+// 老火狐和IE不支持
+if (Number.EPSILON === undefined) {
+    // https://www.ecma-international.org/ecma-262/6.0/#sec-number.epsilon
+    Number.EPSILON = Math.pow(2, - 52);
+}
+
+// 判断是不是整数
+// IE浏览器不支持
+if (Number.isInteger === undefined) {
+    Number.isInteger = function (value) {
+        // https://www.ecma-international.org/ecma-262/6.0/#sec-isfinite-number
+        return typeof value === 'number' && isFinite(value) && Math.floor(value) === value;
+    };
 }
 
 var _innerHTML = {
@@ -601,6 +600,36 @@ if ('innerHTML' in SVGElement.prototype === false) {
 }
 if ('innerHTML' in SVGSVGElement.prototype === false) {
     Object.defineProperty(SVGSVGElement.prototype, 'innerHTML', _innerHTML);
+}
+
+// 兼容老IE浏览器
+// 请不要使用event.srcElement获取
+// https://dom.spec.whatwg.org/#dom-event-srcelement
+if ('target' in Event.prototype === false) {
+    Object.defineProperty(Event.prototype, 'target', {
+        get: function () {
+            return this.srcElement;
+        }
+    });
+}
+
+// 取消冒泡事件
+// 防止对事件流中当前节点的后续节点中的所有事件侦听器进行处理
+// 此方法不会影响当前节点中的任何事件侦听器
+// 如果需要取消包括本结点的方法，应该使用stopImmediatePropagation()
+// https://dom.spec.whatwg.org/#dom-event-stopimmediatepropagation
+if ('stopPropagation' in Event.prototype === false) {
+    Event.prototype.stopPropagation = function () {
+        this.cancelBubble = true;
+    };
+}
+
+// 阻止默认事件
+// https://dom.spec.whatwg.org/#dom-event-preventdefault
+if ('preventDefault' in Event.prototype === false) {
+    Event.prototype.preventDefault = function () {
+        this.returnValue = false;
+    };
 }
 
 var _clock = {
@@ -2027,7 +2056,11 @@ var _polygon = function (painter) {
         catmullRom = clay.catmullRom();
 
     var polygon = function (point) {
-        var p = point.slice();
+        // 原来的slice写法会阻止某些JavaScript引擎中的优化
+        // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+        // 替换使用apply方法实现
+        // https://www.ecma-international.org/ecma-262/6.0/#sec-function.prototype.apply
+        var p = (point.length === 1 ? [point[0]] : Array.apply(null, point));
         p.push(p[0]);
 
         var l = p.length;

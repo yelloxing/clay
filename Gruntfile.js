@@ -17,6 +17,7 @@ var source = [
     './src/polyfill/browser.js',
     './src/polyfill/normal.js',
     './src/polyfill/innerHTML.js',
+    './src/polyfill/event.js',
 
     /**
      * 工具类
@@ -142,7 +143,8 @@ module.exports = function (grunt) {
                     "XMLHttpRequest": true,
                     "SVGSVGElement": true,
                     "ActiveXObject": true,
-                    "clay": true
+                    "clay": true,
+                    "Event": true
                 },
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件

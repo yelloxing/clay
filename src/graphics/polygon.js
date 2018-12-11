@@ -12,7 +12,11 @@ var _polygon = function (painter) {
         catmullRom = clay.catmullRom();
 
     var polygon = function (point) {
-        var p = point.slice();
+        // 原来的slice写法会阻止某些JavaScript引擎中的优化
+        // https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#3-managing-arguments
+        // 替换使用apply方法实现
+        // https://www.ecma-international.org/ecma-262/6.0/#sec-function.prototype.apply
+        var p = (point.length === 1 ? [point[0]] : Array.apply(null, point));
         p.push(p[0]);
 
         var l = p.length;
