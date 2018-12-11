@@ -14,8 +14,9 @@ var source = [
     /**
      * 兼容性
      */
-    './src/_polyfill/_browser.js',
-    './src/_polyfill/innerHTML.js',
+    './src/polyfill/browser.js',
+    './src/polyfill/normal.js',
+    './src/polyfill/innerHTML.js',
 
     /**
      * 工具类
@@ -68,9 +69,9 @@ var source = [
     /**
      * 扩展
      */
-    './src/_extend/_compiler.js',
-    './src/_extend/component.js',
-    './src/_extend/config.js'
+    './src/extend/compiler.js',
+    './src/extend/component.js',
+    './src/extend/config.js'
 
 ];
 
