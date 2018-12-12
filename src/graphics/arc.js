@@ -65,7 +65,7 @@ var _arc = function (painter) {
     };
 
     // 设置起点和终点样式
-    arc.isCircle = function (beginCircle, endCircle) {
+    arc.lineCap = function (beginCircle, endCircle) {
         scope.t = [beginCircle, endCircle];
         return arc;
     };

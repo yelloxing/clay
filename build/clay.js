@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Dec 12 2018 10:31:46 GMT+0800 (GMT+08:00)
+* Date:Wed Dec 12 2018 14:33:12 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -1559,7 +1559,7 @@ var _arc = function (painter) {
     };
 
     // 设置起点和终点样式
-    arc.isCircle = function (beginCircle, endCircle) {
+    arc.lineCap = function (beginCircle, endCircle) {
         scope.t = [beginCircle, endCircle];
         return arc;
     };

@@ -35,16 +35,16 @@
 
     arc(0, Math.PI).fill();
 
-    arc.isCircle(true, false).config({
+    arc.lineCap(true, false).config({
         "fillStyle": "green"
     })(Math.PI / 2, Math.PI, 160, 180).fill();
 
-    arc.isCircle(false, true).config({
+    arc.lineCap(false, true).config({
         "strokeStyle": "blue"
     })(Math.PI * 7 / 4, Math.PI / 4, 140, 160).stroke();
 
     arc(0, -Math.PI * 3, 10, 30).fill();
-    arc.isCircle(true, true)(1, -Math.PI * 2 + 1, 50, 70).fill();
+    arc.lineCap(true, true)(1, -Math.PI * 2 + 1, 50, 70).fill();
 
     /**
      * SVG绘制
@@ -55,10 +55,10 @@
 
     $$("<path></path>").attr('d', arc(0, Math.PI)).appendTo(svg);
 
-    $$("<path></path>").attr('d', arc.isCircle(true, false)(Math.PI / 2, Math.PI, 160, 180)).appendTo(svg)
+    $$("<path></path>").attr('d', arc.lineCap(true, false)(Math.PI / 2, Math.PI, 160, 180)).appendTo(svg)
         .css("fill", 'green');
 
-    $$("<path></path>").attr('d', arc.isCircle(false, true)(Math.PI * 7 / 4, Math.PI / 4, 140, 160)).appendTo(svg)
+    $$("<path></path>").attr('d', arc.lineCap(false, true)(Math.PI * 7 / 4, Math.PI / 4, 140, 160)).appendTo(svg)
         .css({
             "stroke": 'blue',
             "fill": "none"
@@ -67,7 +67,7 @@
     $$("<path></path>").attr('d', arc(0, -Math.PI * 3, 10, 30)).appendTo(svg)
         .css("fill", 'green');
 
-    $$("<path></path>").attr('d', arc.isCircle(true, true)(1, -Math.PI * 2 + 1, 50, 70)).appendTo(svg)
+    $$("<path></path>").attr('d', arc.lineCap(true, true)(1, -Math.PI * 2 + 1, 50, 70)).appendTo(svg)
         .css("fill", 'green');
 
 </script>
