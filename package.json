@@ -1,7 +1,7 @@
 {
   "name": "clay-core",
-  "version": "1.4.2",
-  "status": "本版本为开发中的未来版本",
+  "version": "1.4.2-next",
+  "status": "本项目从2.X.X开始接口稳定",
   "description": "Provide more flexible data visualization solutions!",
   "main": "build/clay.js",
   "scripts": {
