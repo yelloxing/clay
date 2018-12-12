@@ -13,7 +13,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Dec 12 2018 14:33:12 GMT+0800 (中国标准时间)
+* Date:Wed Dec 12 2018 18:00:19 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -21,7 +21,7 @@
 
     if (typeof module === "object" && typeof module.exports === "object") {
         module.exports = function use(target) {
-            factory(target || window);
+            return factory(target || window);
         };
     } else {
         factory(global);

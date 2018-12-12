@@ -4,7 +4,7 @@
 
     if (typeof module === "object" && typeof module.exports === "object") {
         module.exports = function use(target) {
-            factory(target || window);
+            return factory(target || window);
         };
     } else {
         factory(global);
