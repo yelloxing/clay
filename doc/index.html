@@ -16,7 +16,7 @@
         }
         function toEdit() {
             var url = window.location.href.replace(/[^#]*(#\/){0,1}/, '');
-            window.location.href = 'https://github.com/yelloxing/clay/blob/master/doc/apis/' + url + '.html';
+            window.location.href = 'https://github.com/yelloxing/clay-core/blob/master/doc/apis/' + url + '.html';
         }
     </script>
 </head>
@@ -25,7 +25,7 @@
     <button onclick='toEdit()' id='edit-btn'>编辑文档</button>
     <div class="menu-frame" id='menu-frame'>
         <header>
-            <a href='https://github.com/yelloxing/clay' target="_blank">clay-core</a> / doc
+            <a href='https://yelloxing.github.io/clay-core/doc/' target="_blank">文档</a> / API
         </header>
         <input type="text" placeholder="Type to filter" onkeyup='doSearch(this.value)'>
         <span>说明&amp;指南</span>
@@ -85,8 +85,8 @@
             <li onclick='loadpage("extend/service")'>可注入服务和this</li>
             <li onclick='loadpage("extend/component")'>自定义组件</li>
         </ul>
-        <footer onclick='window.location.href="https://github.com/yelloxing/clay"'>
-            版本：1.5.1next
+        <footer onclick='window.location.href="https://github.com/yelloxing/clay-core"'>
+            Fork Me On Github
         </footer>
     </div>
     <iframe frameborder="0"></iframe>
@@ -116,7 +116,7 @@
         '始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。',
         ' '
     ].join('\n'), "color:#d66eac"),
-        console.log("%cclay-core项目github地址：https://github.com/yelloxing/clay （期待你的加入）", "color:#5292b2"));
+        console.log("%cclay-core项目github地址：https://github.com/yelloxing/clay-core （期待你的加入）", "color:#5292b2"));
 
 </script>
 
