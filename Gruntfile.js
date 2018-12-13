@@ -77,7 +77,6 @@ var source = [
 ];
 
 var banner = '/*!\n' +
-    '* 文件状态：<%= pkg.status %>\n*\n' +
     '* <%= pkg.name %> - <%= pkg.description %>\n' +
     '* <%= pkg.repository.url %>\n' +
     '* \n' +
@@ -112,7 +111,7 @@ module.exports = function (grunt) {
                 banner: banner,
                 src: 'build/.temp',
                 info: ['<%= pkg.version %>', '<%= pkg.author %>', '<%= pkg.email %>'],
-                dest: ['build/clay.js']
+                dest: ['build/<%= pkg.name %>.js']
             }
         },
         clean: {// 删除临时文件
@@ -143,7 +142,7 @@ module.exports = function (grunt) {
                     "XMLHttpRequest": true,
                     "SVGSVGElement": true,
                     "ActiveXObject": true,
-                    "clay": true,
+                    "<%= pkg.name %>": true,
                     "Event": true,
                     "define": true,
                     "exports": true
@@ -151,7 +150,7 @@ module.exports = function (grunt) {
                 "force": true, // 强制执行，即使出现错误也会执行下面的任务
                 "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
             },
-            target: 'build/clay.js'
+            target: 'build/<%= pkg.name %>.js'
         },
         uglify: { //压缩代码
             options: {
@@ -162,7 +161,7 @@ module.exports = function (grunt) {
                     mangle: true
                 },
                 files: [{
-                    'build/clay.min.js': ['build/clay.js']
+                    'build/<%= pkg.name %>.min.js': ['build/<%= pkg.name %>.js']
                 }]
             }
         },
@@ -204,7 +203,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
-    // clay特殊的任务
+    // <%= pkg.name %>特殊的任务
     grunt.loadTasks("build/tasks");
 
     /*注册任务*/

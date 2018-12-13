@@ -8,7 +8,7 @@
     <link rel="shortcut icon" href="../clay.png" type="image/x-png">
     <link rel="stylesheet" href="./libs/easycss-1.3.1.min.css">
     <link rel="stylesheet" href="frame.css">
-    <title>文档 - clay.js</title>
+    <title>文档 - clay-core</title>
     <script>
         function loadpage(url) {
             document.getElementsByTagName('iframe')[0].src = "./apis/" + url + ".html";
@@ -25,7 +25,7 @@
     <button onclick='toEdit()' id='edit-btn'>编辑文档</button>
     <div class="menu-frame" id='menu-frame'>
         <header>
-            <a href='https://github.com/yelloxing/clay' target="_blank">clay.js</a> / doc
+            <a href='https://github.com/yelloxing/clay' target="_blank">clay-core</a> / doc
         </header>
         <input type="text" placeholder="Type to filter" onkeyup='doSearch(this.value)'>
         <span>说明&amp;指南</span>
@@ -86,15 +86,13 @@
             <li onclick='loadpage("extend/component")'>自定义组件</li>
         </ul>
         <footer onclick='window.location.href="https://github.com/yelloxing/clay"'>
-            版本：1.4.2-next
+            版本：1.5.1
         </footer>
     </div>
     <iframe frameborder="0"></iframe>
 </body>
 
 <script>
-
-    alert('温馨提示：目前clay依旧处于开发阶段，你不应该用于正式项目，从2.x.x开始的版本才是发布版本（预计2019年3月底发布），请知悉！');
 
     window.setTimeout(function () {
         loadpage(window.location.href.replace(/[^#]*(#\/){0,1}/, '') || "quickstart/environment");
@@ -118,7 +116,7 @@
         '始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。',
         ' '
     ].join('\n'), "color:#d66eac"),
-        console.log("%cclay.js项目github地址：https://github.com/yelloxing/clay （期待你的加入）", "color:#5292b2"));
+        console.log("%cclay-core项目github地址：https://github.com/yelloxing/clay （期待你的加入）", "color:#5292b2"));
 
 </script>
 

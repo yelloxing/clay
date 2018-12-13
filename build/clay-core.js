@@ -1,30 +1,28 @@
 /*!
-* 文件状态：本项目从2.X.X开始接口稳定
-*
 * clay-core - Provide more flexible data visualization solutions!
 * git+https://github.com/yelloxing/clay.git
 * 
 * author 心叶
 *
-* version 1.4.2-next
+* version 1.5.1
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Wed Dec 12 2018 18:00:19 GMT+0800 (GMT+08:00)
+* Date:Thu Dec 13 2018 10:16:04 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
     'use strict';
 
     if (typeof module === "object" && typeof module.exports === "object") {
-        module.exports = function use(target) {
+        module.exports = function (target) {
             return factory(target || window);
         };
     } else {
-        factory(global);
+        global.clay = global.$$ = factory(global);
     }
 
 })(typeof window !== "undefined" ? window : this, function (global, undefined) {
@@ -2562,11 +2560,9 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '1.4.2-next';
+    clay.version = '1.5.1';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
-
-    global.clay = global.$$ = clay;
 
     return clay;
 

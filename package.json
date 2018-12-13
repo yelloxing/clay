@@ -1,9 +1,8 @@
 {
   "name": "clay-core",
-  "version": "1.4.2-next",
-  "status": "本项目从2.X.X开始接口稳定",
+  "version": "1.5.1",
   "description": "Provide more flexible data visualization solutions!",
-  "main": "build/clay.js",
+  "main": "build/clay-core.js",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
     "server": "node_modules/.bin/grunt server",
@@ -12,7 +11,7 @@
   },
   "keywords": [
     "clay",
-    "clay.js",
+    "clay-core",
     "algorithm",
     "svg",
     "canvas",

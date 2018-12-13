@@ -1,4 +1,4 @@
-[clay.js](https://yelloxing.github.io/clay/doc/) - Provide more flexible data visualization solutions
+[clay-core](https://yelloxing.github.io/clay/doc/) - Provide more flexible data visualization solutions
 ==================================================
 
 [![travis](https://api.travis-ci.org/yelloxing/clay.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay)
@@ -13,17 +13,49 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
+>>> 温馨提示：目前clay-core依旧处于开发阶段，你不应该用于正式项目，从2.x.x开始的版本才是发布版本（预计2019年3月底发布），请知悉！
+
 关注的问题
 --------------------------------------
 首先，本项目是为了Web端数据可视化而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形来反映统计的数据，并且绘制的图形是可交互的。
 
-和别的库不同的是，clay.js关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
+和别的库不同的是，clay-core关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
 
 [![](https://github.com/yelloxing/clay/blob/master/doc/images/clay-readme.jpg)](https://yelloxing.github.io/clay/doc/)
 
 贡献代码和参与讨论？
 --------------------------------------
 始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay/doc)了解基本情况。如果仍有疑惑，可以发送作者邮箱询问细节。
+
+如何使用？
+--------------------------------------
+如果你开发的是一个web项目，直接在页面引入打包后的文件后即可：
+
+```html
+<script src="./build/clay-core.min.js" type="text/javascript"></script>
+```
+
+如果你想通过npm方式管理，首先你需要通过命令行安装clay-core：
+
+```bash
+npm install --save clay-core
+```
+
+安装好了，可以这样调用：
+
+```js
+import render from 'clay-core';
+
+// 启动clay
+let clay=render(window);
+
+// 基本配置(可以不配置，使用默认值)
+clay.config(...);
+...
+
+// 导出，供别的模块使用
+export default clay;
+```
 
 如何在本地搭建开发环境？
 --------------------------------------
@@ -71,11 +103,11 @@ npm run release
 
 图形模块：
 
-- **graphics**：包括SVG、Canvas2D和WebGL绘图接口。
+- **graphics**：包括SVG、Canvas2D和WebGL3D绘图接口。
 
-3D世界：
+扩展：
 
-- **WebGL**：针对绘制3D图形，建立的一个新的世界模型。
+- **extend**：包括已实现功能可加强扩展和组件扩展。
 
 ### 单元测试
 
