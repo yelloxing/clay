@@ -1,12 +1,12 @@
-[clay-core](https://yelloxing.github.io/clay-clone/doc/) - Provide more flexible data visualization solutions
+[clay-core](https://yelloxing.github.io/clay-core/doc/) - Provide more flexible data visualization solutions
 ==================================================
 
 [![travis](https://api.travis-ci.org/yelloxing/clay.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay)
-[![chat](https://github.com/yelloxing/clay-clone/blob/master/data/chat.svg)](https://github.com/yelloxing/clay-clone/issues)
+[![chat](https://github.com/yelloxing/clay-core/blob/master/data/chat.svg)](https://github.com/yelloxing/clay-core/issues)
 
 我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
 
-<img align="right" height="100" src="https://github.com/yelloxing/clay-clone/blob/master/clay.png">
+<img align="right" height="100" src="https://github.com/yelloxing/clay-core/blob/master/clay.png">
 
 ****
 ### 作者:心叶
@@ -21,11 +21,11 @@
 
 和别的库不同的是，clay-core关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
 
-[![](https://github.com/yelloxing/clay-clone/blob/master/doc/images/clay-readme.jpg)](https://yelloxing.github.io/clay/doc/)
+[![](https://github.com/yelloxing/clay-core/blob/master/doc/images/clay-readme.jpg)](https://yelloxing.github.io/clay/doc/)
 
 贡献代码和参与讨论？
 --------------------------------------
-始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay-clone/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay-clone/doc)了解基本情况。如果仍有疑惑，可以发送作者邮箱询问细节。
+始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay-core/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay-core/doc)了解基本情况。如果仍有疑惑，可以发送作者邮箱询问细节。
 
 如何使用？
 --------------------------------------
@@ -63,7 +63,7 @@ export default clay;
 把代码Clone到本地：
 
 ```bash
-git clone git://github.com/yelloxing/clay-clone.git
+git clone git://github.com/yelloxing/clay-core.git
 ```
 
 进入项目目录，安装打包文件：
