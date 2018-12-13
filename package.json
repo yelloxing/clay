@@ -19,15 +19,15 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yelloxing/clay.git"
+    "url": "git+https://github.com/yelloxing/clay-core.git"
   },
   "author": "心叶",
   "email": "yelloxing@gmail.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yelloxing/clay/issues"
+    "url": "https://github.com/yelloxing/clay-core/issues"
   },
-  "homepage": "https://yelloxing.github.io/clay/doc/",
+  "homepage": "https://yelloxing.github.io/clay-core/doc/",
   "devDependencies": {
     "grunt": "^1.0.3",
     "grunt-contrib-clean": "^2.0.0",
