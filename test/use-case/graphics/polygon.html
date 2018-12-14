@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
     <title>clay-core - 用例测试 - 多边形</title>
-    <script src="../../../build/clay-core.min.js"></script>
+    <script src="../../../build/clay-core.js"></script>
 </head>
 
 <body></body>
@@ -31,9 +31,16 @@
     /**
      * Canvas绘制
     */
-    $$.canvas.polygon(pencil).config({
+    var polygon = $$.canvas.polygon(pencil);
+
+    polygon.config({
         "fillStyle": "red"
     })(points).fill();
+
+    polygon.noInterpolate(true).config({
+        "strokeStyle": "white",
+        "lineWidth": 3
+    })(points).stroke();
 
     // 绘制点作为参考
     var i = 0;
@@ -47,10 +54,16 @@
     /**
      * SVG绘制
     */
-    $$("<path></path>").attr('d', $$.svg.polygon()
-        (points)).appendTo(svg)
+    polygon = $$.svg.polygon();
+    $$("<path></path>").attr('d', polygon(points)).appendTo(svg)
         .css({
-            "fill": "blue"
+            "fill": "pink"
+        });
+    $$("<path></path>").attr('d', polygon.noInterpolate(true)(points)).appendTo(svg)
+        .css({
+            "stroke": "red",
+            "fill": "none",
+            "stroke-width": 3
         });
 
 </script>

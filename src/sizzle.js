@@ -1,3 +1,4 @@
+// 用于扩展或加强选择器
 var _out_sizzle;
 _provider.$sizzleProvider = function (config) {
     _out_sizzle = config;

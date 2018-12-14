@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Dec 13 2018 14:27:37 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 14 2018 16:44:03 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -71,6 +71,7 @@ var _xlink = ["href", "title", "show", "type", "role", "actuate"];
 // 嵌入内部提供者
 var _provider = {};
 
+// 用于扩展或加强选择器
 var _out_sizzle;
 _provider.$sizzleProvider = function (config) {
     _out_sizzle = config;
@@ -2051,9 +2052,9 @@ var _polygon = function (painter) {
          * 设置d可以设置精度，d越大，精度越高，但是相应的计算量也会增加（计算时间增加）
          */
         d: 100
-    },
-        // 多边形插值方法
-        catmullRom = clay.catmullRom();
+    };
+    // 多边形插值方法
+    if (!scope.i) var catmullRom = clay.catmullRom();
 
     var polygon = function (point) {
         // 原来的slice写法会阻止某些JavaScript引擎中的优化
@@ -2071,8 +2072,12 @@ var _polygon = function (painter) {
         var i = 1,
             temp = "M" + p[1][0] + " " + p[1][1] + " ";
         for (; i < l; i++) {
-            catmullRom.setP(p[i - 1], p[i], p[i + 1], p[i + 2]);
-            temp = painter(catmullRom, 0, 1 / scope.d, temp);
+            if (!scope.i) {
+                catmullRom.setP(p[i - 1], p[i], p[i + 1], p[i + 2]);
+                temp = painter(catmullRom, 0, 1 / scope.d, temp);
+            } else {
+                temp = painter([p[i], p[i + 1]], 0, 1 / scope.d, temp);
+            }
         }
         // 闭合
         if (typeof temp == 'string') temp += " Z"; else temp.closePath();
@@ -2082,6 +2087,12 @@ var _polygon = function (painter) {
     polygon.setNum = function (num) {
         //设置精度（即将p1,p2两点间的曲线段分成的段数）
         scope.d = num;
+        return polygon;
+    };
+
+    // 设置是否需要插值
+    polygon.noInterpolate = function (noInterpolate) {
+        scope.i = noInterpolate;
         return polygon;
     };
 
@@ -2095,9 +2106,13 @@ clay.svg.polygon = function () {
         function (
             calcFn, start, dx, temp
         ) {
-            for (; start <= 1; start += dx) {
-                var point = calcFn(start);
-                temp = temp + " L" + point[0] + "," + point[1];
+            if (typeof calcFn !== 'function') {
+                temp = temp + " L" + calcFn[1][0] + "," + calcFn[1][1];
+            } else {
+                for (; start <= 1; start += dx) {
+                    var point = calcFn(start);
+                    temp = temp + " L" + point[0] + "," + point[1];
+                }
             }
             return temp;
         }
@@ -2112,14 +2127,21 @@ clay.canvas.polygon = function (selector, config) {
             _canvas(selector, config, _polygon, function (
                 calcFn, start, dx, temp
             ) {
-
-                var point = calcFn(start);
-                if (typeof temp == 'string') {
-                    obj._p.moveTo(point[0], point[1]);
-                }
-                for (; start <= 1; start += dx) {
-                    point = calcFn(start);
-                    obj._p.lineTo(point[0], point[1]);
+                if (typeof calcFn !== 'function') {
+                    if (typeof temp == 'string') {
+                        obj._p.beginPath();
+                        obj._p.moveTo(calcFn[0][0], calcFn[0][1]);
+                    }
+                    obj._p.lineTo(calcFn[1][0], calcFn[1][1]);
+                } else {
+                    var point = calcFn(start);
+                    if (typeof temp == 'string') {
+                        obj._p.moveTo(point[0], point[1]);
+                    }
+                    for (; start <= 1; start += dx) {
+                        point = calcFn(start);
+                        obj._p.lineTo(point[0], point[1]);
+                    }
                 }
                 return obj._p;
             });
@@ -2482,7 +2504,7 @@ clay.pieLayout = function () {
 var _service = {
     "$browser": {
         "type": _browser,
-        "IE": _IE
+        "version": _IE
     }
 };
 

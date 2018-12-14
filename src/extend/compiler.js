@@ -2,7 +2,7 @@
 var _service = {
     "$browser": {
         "type": _browser,
-        "IE": _IE
+        "version": _IE
     }
 };
 

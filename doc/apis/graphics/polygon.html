@@ -20,7 +20,9 @@
     </h2>
     <pre class='prettyprint lang-js'>var polygon = $$.canvas.polygon('canvas')
     // 设置进度（即两点间的曲线段分成的段数，可选）
-    .setNum(num);</pre>
+    .setNum(num)
+    // 是否不需要插值（默认false：需要；为true：不需要）
+    .noInterpolate(boolean);</pre>
     <p>
         获取多边形对象以后，直接传递点集合既可绘制多边形：
     </p>
@@ -30,7 +32,9 @@
     </h2>
     <pre class='prettyprint lang-js'>var polygon = $$.svg.polygon()
     // 设置进度（即两点间的曲线段分成的段数，可选）
-    .setNum(num);</pre>
+    .setNum(num)
+    // 是否不需要插值（默认false：需要；为true：不需要）
+    .noInterpolate(boolean);</pre>
     <p>
         获取多边形对象以后，直接传递点集合既可绘制多边形：
     </p>
