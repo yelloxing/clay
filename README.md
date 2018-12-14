@@ -1,7 +1,7 @@
 [clay-core](https://yelloxing.github.io/clay-core/doc/) - Provide more flexible data visualization solutions
 ==================================================
 
-[![travis](https://api.travis-ci.org/yelloxing/clay.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay)
+[![travis](https://www.travis-ci.org/yelloxing/clay-core.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay)
 [![chat](https://github.com/yelloxing/clay-core/blob/master/data/chat.svg)](https://github.com/yelloxing/clay-core/issues)
 
 我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
