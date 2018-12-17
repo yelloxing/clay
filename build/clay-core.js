@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 17 2018 16:57:34 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 17 2018 19:39:57 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2368,6 +2368,16 @@ clay.prototype.webgl = function (opts) {
 
     return glObj;
 };
+
+// 视图
+
+// 投影
+
+// 雾化
+
+// 灯光
+
+// 层次模型
 
 clay.treeLayout = function () {
 

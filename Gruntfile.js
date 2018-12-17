@@ -70,6 +70,15 @@ var source = [
     './src/webgl/index.js',
 
     /**
+     * 三维世界
+     */
+    './src/Matrix4/3d/carmera.js',
+    './src/Matrix4/3d/prespective.js',
+    './src/Matrix4/3d/fog.js',
+    './src/Matrix4/3d/light.js',
+    './src/Matrix4/3d/model.js',
+
+    /**
      * 布局
      */
     './src/layout/tree.js',
@@ -150,7 +159,6 @@ module.exports = function (grunt) {
                     "XMLHttpRequest": true,
                     "SVGSVGElement": true,
                     "ActiveXObject": true,
-                    "<%= pkg.name %>": true,
                     "Event": true,
                     "define": true,
                     "exports": true
@@ -211,7 +219,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-connect');
 
-    // <%= pkg.name %>特殊的任务
+    //特殊的任务
     grunt.loadTasks("build/tasks");
 
     /*注册任务*/
