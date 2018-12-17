@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 14 2018 16:44:03 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 17 2018 16:57:34 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2148,6 +2148,225 @@ clay.canvas.polygon = function (selector, config) {
 
     return obj;
 
+};
+
+// 把着色器字符串加载成着色器对象
+var _loadShader = function (gl, type, source) {
+    // 创建着色器对象
+    var shader = gl.createShader(type);
+    if (shader == null) throw new Error('Unable to create shader!');
+    // 绑定资源
+    gl.shaderSource(shader, source);
+    // 编译着色器
+    gl.compileShader(shader);
+    // 检测着色器编译是否成功
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+        throw new Error('Failed to compile shader:' + gl.getShaderInfoLog(shader));
+    return shader;
+};
+
+// 初始化着色器
+var _useShader = function (gl, vshaderSource, fshaderSource) {
+    // 分别加载顶点着色器对象和片段着色器对象
+    var vertexShader = _loadShader(gl, gl.VERTEX_SHADER, vshaderSource),
+        fragmentShader = _loadShader(gl, gl.FRAGMENT_SHADER, fshaderSource);
+    // 创建一个着色器程序
+    var glProgram = gl.createProgram();
+    // 把前面创建的二个着色器对象添加到着色器程序中
+    gl.attachShader(glProgram, vertexShader);
+    gl.attachShader(glProgram, fragmentShader);
+    // 把着色器程序链接成一个完整的程序
+    gl.linkProgram(glProgram);
+    // 检测着色器程序链接是否成功
+    if (!gl.getProgramParameter(glProgram, gl.LINK_STATUS))
+        throw new Error('Failed to link program: ' + gl.getProgramInfoLog(glProgram));
+    // 使用这个完整的程序
+    gl.useProgram(glProgram);
+    return glProgram;
+};
+
+// 获取一个新的缓冲区
+// isElement默认false，创建第一种缓冲区，为true创建第二种
+var _newBuffer = function (gl, isElement) {
+    var buffer = gl.createBuffer(),
+        TYPE = isElement ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
+    // 把缓冲区对象绑定到目标
+    gl.bindBuffer(TYPE, buffer);
+    return buffer;
+};
+
+// 数据写入缓冲区
+// data是一个类型化数组，表示写入的数据
+// usage表示程序如何使用存储在缓冲区的数据
+var _writeBuffer = function (gl, data, usage, isElement) {
+    var TYPE = isElement ? gl.ELEMENT_ARRAY_BUFFER : gl.ARRAY_BUFFER;
+    gl.bufferData(TYPE, data, usage);
+};
+
+// 使用缓冲区数据
+// location指定待分配的attribute变量的存储位置
+// size每个分量个数
+// type数据类型，应该是以下的某个：
+//      gl.UNSIGNED_BYTE    Uint8Array
+//      gl.SHORT            Int16Array
+//      gl.UNSIGNED_SHORT   Uint16Array
+//      gl.INT              Int32Array
+//      gl.UNSIGNED_INT     Uint32Array
+//      gl.FLOAT            Float32Array
+// stride相邻二个数据项的字节数
+// offset数据的起点字节位置
+// normalized是否把非浮点型的数据归一化到[0,1]或[-1,1]区间
+var _useBuffer = function (gl, location, size, type, stride, offset, normalized) {
+    // 把缓冲区对象分配给目标变量
+    gl.vertexAttribPointer(location, size, type, normalized || false, stride || 0, offset || 0);
+    // 连接目标对象和缓冲区对象
+    gl.enableVertexAttribArray(location);
+};
+
+// 删除缓冲区
+var _deleteBuffer = function (gl, buffer) {
+    gl.deleteBuffer(buffer);
+};
+
+// 初始化一个纹理对象
+// type有两个选择gl.TEXTURE_2D代表二维纹理，gl.TEXTURE_CUBE_MAP 立方体纹理
+var _initTexture = function (gl, unit, type) {
+    // 创建纹理对象
+    var texture = gl.createTexture();
+    // 开启纹理单元，unit表示开启的编号
+    gl.activeTexture(gl['TEXTURE' + unit]);
+    // 绑定纹理对象到目标上
+    gl.bindTexture(type, texture);
+    return texture;
+};
+
+// 配置纹理
+var _configTexture = function (gl, type, config) {
+    var key;
+    for (key in config) {
+        /**
+         *
+         * 可配置项有四个：
+         *  1. gl.TEXTURE_MAX_FILTER：放大方法
+         *  2. gl.TEXTURE_MIN_FILTER：缩小方法
+         *  3. gl.TEXTURE_WRAP_S：水平填充方法
+         *  4. gl.TEXTURE_WRAP_T：垂直填充方法
+         *
+         */
+        gl.texParameteri(type, gl[key], gl[config[key]]);
+    }
+};
+
+// 链接资源图片
+// level默认传入0即可，和金字塔纹理有关
+// format表示图像的内部格式：
+//      gl.RGB(红绿蓝)
+//      gl.RGBA(红绿蓝透明度)
+//      gl.ALPHA(0.0,0.0,0.0,透明度)
+//      gl.LUMINANCE(L、L、L、1L:流明)
+//      gl.LUMINANCE_ALPHA(L、L、L,透明度)
+// textureType表示纹理数据的格式：
+//      gl.UNSIGNED_BYTE: 表示无符号整形，每一个颜色分量占据1字节
+//      gl.UNSIGNED_SHORT_5_6_5: 表示RGB，每一个分量分别占据占据5, 6, 5比特
+//      gl.UNSIGNED_SHORT_4_4_4_4: 表示RGBA，每一个分量分别占据占据4, 4, 4, 4比特
+//      gl.UNSIGNED_SHORT_5_5_5_1: 表示RGBA，每一个分量分别占据占据5比特，A分量占据1比特
+var _linkImage = function (gl, type, level, format, textureType, image) {
+    gl.texImage2D(type, level, format, format, textureType, image);
+};
+
+// 删除纹理
+var _deleteTexture = function (gl, texture) {
+    gl.deleteTexture(texture);
+};
+
+// 获取webgl上下文
+function _getCanvasWebgl(node, opts) {
+    var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
+        context = null, i;
+    for (i = 0; i < names.length; i++) {
+        try {
+            context = node.getContext(names[i], opts);
+        } catch (e) { }
+        if (context) break;
+    }
+    return context;
+}
+
+// 启动webgl绘图
+clay.prototype.webgl = function (opts) {
+    var gl = _getCanvasWebgl(this[0], opts),
+        glObj = {
+            "painter": function () {
+                return gl;
+            },
+
+            // 启用着色器
+            "shader": function (vshaderSource, fshaderSource) {
+                gl.program = _useShader(gl, vshaderSource, fshaderSource);
+                return glObj;
+            },
+
+            // 缓冲区
+            "buffer": function (isElement) {
+                // 创建缓冲区
+                var buffer = _newBuffer(gl, isElement),
+                    bufferData,
+                    bufferObj = {
+                        // 写入数据
+                        "write": function (data, usage) {
+                            usage = usage || gl.STATIC_DRAW;
+                            _writeBuffer(gl, data, usage, isElement);
+                            bufferData = data;
+                            return bufferObj;
+                        },
+                        // 分配使用
+                        "use": function (location, size, stride, offset, type, normalized) {
+                            var fsize = bufferData.BYTES_PER_ELEMENT;
+                            if (typeof location == 'string') location = gl.getAttribLocation(gl.program, location);
+                            type = type || gl.FLOAT;
+                            stride = stride || 0;
+                            offset = offset || 0;
+                            type = type || gl.FLOAT;
+                            _useBuffer(gl, location, size, type, stride * fsize, offset * fsize, normalized);
+                            return bufferObj;
+                        },
+                        // 关闭退出
+                        "close": function () {
+                            _deleteBuffer(gl, buffer);
+                            return glObj;
+                        }
+                    };
+                return bufferObj;
+            },
+
+            // 纹理
+            "texture": function (unit, type) {
+                type = type || gl.TEXTURE_2D;
+                // 创建纹理
+                var texture = _initTexture(gl, unit, type);
+                var textureObj = {
+                    // 配置纹理对象
+                    "config": function (config) {
+                        _configTexture(gl, type, config);
+                        return textureObj;
+                    },
+                    // 链接图片资源
+                    "use": function (level, format, textureType, image) {
+                        _linkImage(gl, type, level, format, textureType, image);
+                        return textureObj;
+                    },
+                    // 关闭纹理
+                    "close": function () {
+                        _deleteTexture(gl, texture);
+                        return glObj;
+                    }
+                };
+                return textureObj;
+            }
+
+        };
+
+    return glObj;
 };
 
 clay.treeLayout = function () {

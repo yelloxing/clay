@@ -62,6 +62,14 @@ var source = [
     './src/graphics/polygon.js',
 
     /**
+     * 3D图形
+     */
+    './src/webgl/shader.js',
+    './src/webgl/buffer.js',
+    './src/webgl/texture.js',
+    './src/webgl/index.js',
+
+    /**
      * 布局
      */
     './src/layout/tree.js',
