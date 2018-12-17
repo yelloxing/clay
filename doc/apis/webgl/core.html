@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="../../libs/prettify.css">
+    <link rel="stylesheet" href="../../doc.css">
+    <script src="../../libs/prettify.js"></script>
+</head>
+
+<body onload="prettyPrint()">
+    <header>
+        绘图对象
+    </header>
+    <p>
+        3D绘图采用的是WebGL实现，当然，你使用2D绘图对象，借助投影矩阵等实现也是可以的，不过这不是天然支持的。
+    </p>
+    <pre class='prettyprint lang-js'>var render3D=$$('canvas').webgl();</pre>
+    <p>
+        Canvas默认就是一个画布，调用webgl方法，表示我们要在上面绘制3D图形，这样就返回了一个3D启动器。
+    </p>
+    <pre class='prettyprint lang-js'>var gl=render3D.painter();</pre>
+    <p>
+        3D启动器用于处理许多基础的操作（比如着色器，缓冲区等），而绘制图形的时候，和2D一样，需要获取画笔，就像上面那样。
+    </p>
+    <p class="warn">
+        请记住render3D和gl，并明确他们是干什么的，这对阅读后续文档非常重要！
+    </p>
+</body>
+
+</html>
