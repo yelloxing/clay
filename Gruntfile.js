@@ -76,7 +76,7 @@ var source = [
     './src/Matrix4/3d/prespective.js',
     './src/Matrix4/3d/fog.js',
     './src/Matrix4/3d/light.js',
-    './src/Matrix4/3d/model.js',
+    './src/Matrix4/3d/layer.js',
 
     /**
      * 布局

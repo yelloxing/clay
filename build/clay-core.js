@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 17 2018 19:39:57 GMT+0800 (GMT+08:00)
+* Date:Tue Dec 18 2018 09:55:33 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2370,8 +2370,61 @@ clay.prototype.webgl = function (opts) {
 };
 
 // 视图
+clay.carmera = function () {
 
-// 投影
+    var matrix4 = clay.Matrix4();
+
+    var carmera = {
+        "lookAt": function (
+            // 视点
+            eX, eY, eZ,
+            // 观察方向
+            dX, dY, dZ,
+            // 上方向
+            upX, upY, upZ
+        ) {
+
+
+
+            return carmera;
+        },
+        "value": function () {
+            return matrix4.value();
+        }
+    };
+
+    return carmera;
+
+};
+
+// 透视投影
+clay.prespective = function () {
+
+    var matrix4 = clay.Matrix4();
+
+    // 这是一个一点透视
+    var prespective = {
+        "set": function (
+            // 垂直视角，也就是视野的顶面和底面夹角
+            fov,
+            // 视野的宽/高
+            aspect,
+            // 近裁剪面和远裁剪面
+            near, far
+        ) {
+
+
+
+            return prespective;
+        },
+        "value": function () {
+            return matrix4.value();
+        }
+    };
+
+    return prespective;
+
+};
 
 // 雾化
 
