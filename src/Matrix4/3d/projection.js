@@ -1,25 +1,20 @@
 // 一点透视
 // 物体限制在四棱锥中
 var _perspective_projection = function (
-    // 视点
-    eX, eY, eZ,
     // 裁剪面边界
     left, right, top, bottom,
     // 近裁剪面和远裁剪面
     near, far
 ) {
-    // 视点归结至原点
-    left -= eX; right -= eX;
-    top -= eY; bottom -= eY;
-    near -= eZ; far -= eZ;
-
-    // 1, 0, 0, 0,
-    // 0, 1, 0, 0,
-    // 0, 0, 1, 0,
-    // -eX, -eY, -eZ, 1
-
+    // 特别注意：求出的新坐标为（x'z,y'z,z'z,z）
     return [
-
+        2 * near / (right - left), 0, 0, 0,
+        0, 2 * near / (top - bottom), 0, 0,
+        (left + right) / (left - right),
+        (bottom + top) / (bottom - top),
+        far / (near - far),
+        1,
+        0, 0, far * near / (far - near), 0
     ];
 };
 
