@@ -1,14 +1,23 @@
 // 一点透视
 // 物体限制在四棱锥中
 var _perspective_projection = function (
-    // 垂直视角
-    // 也就是视野的顶面和底面夹角
-    fov,
-    // 视野的宽/高
-    aspect,
+    // 视点
+    eX, eY, eZ,
+    // 裁剪面边界
+    left, right, top, bottom,
     // 近裁剪面和远裁剪面
     near, far
 ) {
+    // 视点归结至原点
+    left -= eX; right -= eX;
+    top -= eY; bottom -= eY;
+    near -= eZ; far -= eZ;
+
+    // 1, 0, 0, 0,
+    // 0, 1, 0, 0,
+    // 0, 0, 1, 0,
+    // -eX, -eY, -eZ, 1
+
     return [
 
     ];
@@ -29,16 +38,20 @@ var _orthogonal_projection = function (
     return [
         2 / (right - left), 0, 0, 0,
         0, 2 / (top - bottom), 0, 0,
-        0, 0, 1 / (far - near), 0,
+        0, 0, -1 / (far - near), 0,
         -(right + left) / (right - left),
         -(top + bottom) / (top - bottom),
-        -near / (far - near),
+        near / (far - near),
         1
     ];
 };
 
 // 投影
+// 这里采用右手坐标系
 // https://www.codeguru.com/cpp/misc/misc/graphics/article.php/c10123/Deriving-Projection-Matrices.htm
+// -1<=x<=1
+// -1<=y<=1
+// -1<=z<=0
 clay.projection = function () {
 
 };
