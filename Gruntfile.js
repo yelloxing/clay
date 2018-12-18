@@ -73,7 +73,7 @@ var source = [
      * 三维世界
      */
     './src/Matrix4/3d/carmera.js',
-    './src/Matrix4/3d/prespective.js',
+    './src/Matrix4/3d/perspective.js',
     './src/Matrix4/3d/fog.js',
     './src/Matrix4/3d/light.js',
     './src/Matrix4/3d/layer.js',
