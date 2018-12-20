@@ -17,17 +17,19 @@ var _rect = function (painter) {
         // 记录矩形的四个角坐标
         var position, s2 = scope.s * 0.5;
 
+        var flag = scope.t[0];
+
         // 分类前准备
         if (scope.t[0] == "RL" || scope.t[0] == "BT") {
             length = -length;
-            scope.t[0] = {
+            flag = {
                 "RL": "LR",
                 "BT": "TB"
             }[scope.t[0]];
         }
 
         // 分类计算
-        switch (scope.t[0]) {
+        switch (flag) {
             case "LR":
                 position = [
                     [x, y - s2],
