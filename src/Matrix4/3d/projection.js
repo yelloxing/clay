@@ -49,4 +49,44 @@ var _orthogonal_projection = function (
 // -1<=z<=0
 clay.projection = function () {
 
+    var scope = {},
+        projection = function () {
+            if (scope.p) {
+                return _perspective_projection(
+                    scope.l, scope.r,
+                    scope.t, scope.b,
+                    scope.n, scope.f
+                );
+            } else {
+                return _orthogonal_projection(
+                    scope.l, scope.r,
+                    scope.t, scope.b,
+                    scope.n, scope.f
+                );
+            }
+        };
+
+    // 设置是否采用透视（具体点，就是一点透视）
+    projection.isPerspective = function (flag) {
+        scope.p = flag;
+        return projection;
+    };
+
+    // 设置裁剪面
+    projection.setFace = function (near, far) {
+        scope.n = near;
+        scope.f = far;
+        return projection;
+    };
+
+    // 设置边界
+    projection.setBorder = function (top, right, bottom, left) {
+        scope.t = top;
+        scope.r = right;
+        scope.b = bottom;
+        scope.l = left;
+        return projection;
+    };
+
+    return projection;
 };
