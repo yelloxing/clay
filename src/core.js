@@ -33,7 +33,7 @@
 
     clay.prototype.init.prototype = clay.prototype;
 
-    // @CODE build.js inserts compiled clay-core here
+    // @CODE build.js inserts compiled clay.js here
 
     return clay;
 

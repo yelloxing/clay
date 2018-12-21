@@ -1,5 +1,5 @@
 /*!
-* clay-core - Provide more flexible data visualization solutions!
+* clay.js - Provide more flexible data visualization solutions!
 * git+https://github.com/yelloxing/clay-core.git
 * 
 * author 心叶
@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 21 2018 15:55:08 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 21 2018 17:44:42 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 

@@ -23,7 +23,7 @@
         除此之外，绘图的时候，我们也无法像之前的HTML那样，重绘部分图案，只有全部擦除了重新绘制，这是一件让人沮丧的事实。
     </p>
     <p>
-        幸运的是，clay-core提供了类似photoshop的图层功能，而针对图片中一个特定区域绑定事件，抽象了一个区域对象的概念。你可以
+        幸运的是，clay.js提供了类似photoshop的图层功能，而针对图片中一个特定区域绑定事件，抽象了一个区域对象的概念。你可以
         <a target="_blank" href="../../../test/use-case/tool/layer&region.html">点击这里</a>
         查看右图实际运行效果或源码，对比下面的说明。
     </p>
@@ -35,7 +35,7 @@
     </p>
     <pre class='prettyprint lang-js'>var pencil=document.getElementsByTagName('canvas')[0].getContext('2d');</pre>
     <p>
-        通过这只画笔我们就可以直接调用各种canvas2D提供的接口绘制图形了，这的确很炫酷。而为了更方便绘图，clay-core在此基础上抽象了一个图层管理者，我们不直接使用canvas提供的画笔绘图，而是使用图层管理者提供的画笔，就像下面这样：
+        通过这只画笔我们就可以直接调用各种canvas2D提供的接口绘制图形了，这的确很炫酷。而为了更方便绘图，clay.js在此基础上抽象了一个图层管理者，我们不直接使用canvas提供的画笔绘图，而是使用图层管理者提供的画笔，就像下面这样：
     </p>
     <pre class='prettyprint lang-js'>// 创建图层管理者
 var layerManger = $$('#canvas').layer();
@@ -52,7 +52,7 @@ var bg_pencil = layerManger.painter('bg'),
     </p>
     <pre class='prettyprint lang-js'>var pencil=$$('#canvas').painter();</pre>
     <p>
-        这是clay-core提供的获取canvas2D画笔的方法，和我们最初绘图习惯获取的画笔没有任何区别。
+        这是clay.js提供的获取canvas2D画笔的方法，和我们最初绘图习惯获取的画笔没有任何区别。
     </p>
     <p>
         需要特别注意，使用图层管理者获取的画笔绘制的图形在对应图层上，如果想同步到页面上的canvas画布上，需要调用这个方法：

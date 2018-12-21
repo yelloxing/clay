@@ -1,4 +1,4 @@
-[clay-core](https://yelloxing.github.io/clay-core/doc/) - Provide more flexible data visualization solutions
+[clay.js](https://yelloxing.github.io/clay-core/doc/) - Provide more flexible data visualization solutions
 ==================================================
 
 [![travis](https://www.travis-ci.org/yelloxing/clay-core.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay)
@@ -13,13 +13,13 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
->>> 温馨提示：目前clay-core依旧处于开发阶段，你不应该用于正式项目，从2.x.x开始的版本才是发布版本（预计2019年3月底发布），请知悉！
+>>> 温馨提示：目前clay.js依旧处于开发阶段，你不应该用于正式项目，从2.x.x开始的版本才是发布版本（预计2019年3月底发布），请知悉！
 
 关注的问题
 --------------------------------------
 首先，本项目是为了Web端数据可视化而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形来反映统计的数据，并且绘制的图形是可交互的。
 
-和别的库不同的是，clay-core关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
+和别的库不同的是，clay.js关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
 
 [![](https://github.com/yelloxing/clay-core/blob/master/doc/images/clay-readme.jpg)](https://yelloxing.github.io/clay/doc/)
 
@@ -35,7 +35,7 @@
 <script src="./build/clay-core.min.js" type="text/javascript"></script>
 ```
 
-如果你想通过npm方式管理，首先你需要通过命令行安装clay-core：
+如果你想通过npm方式管理，首先你需要通过命令行安装clay.js：
 
 ```bash
 npm install --save clay-core

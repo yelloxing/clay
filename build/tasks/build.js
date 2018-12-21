@@ -12,7 +12,7 @@ module.exports = function (grunt) {
             return grunt.file.read(srcFolder + fileName);
         },
         // 寻找插入点
-        core = read("src/core.js").split(/\/\/ @CODE build.js inserts compiled clay-core here/),
+        core = read("src/core.js").split(/\/\/ @CODE build.js inserts compiled clay.js here/),
         config = {
             wrap: {
                 start: core[0],

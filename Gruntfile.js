@@ -94,7 +94,7 @@ var source = [
 ];
 
 var banner = '/*!\n' +
-    '* <%= pkg.name %> - <%= pkg.description %>\n' +
+    '* clay.js - <%= pkg.description %>\n' +
     '* <%= pkg.repository.url %>\n' +
     '* \n' +
     '* author <%= pkg.author %>\n' +

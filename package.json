@@ -10,7 +10,7 @@
     "start": "npm install && npm run release"
   },
   "keywords": [
-    "clay",
+    "clay.js",
     "clay-core",
     "algorithm",
     "svg",
