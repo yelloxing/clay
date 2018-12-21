@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
+    <title>clay-core - 用例测试 - 相机</title>
+    <script src="../../../build/clay-core.js"></script>
+
+    <!-- 顶点着色器 -->
+    <script type='x-shader/x-vertex' id='vs'>
+        attribute vec4 a_position;
+        uniform mat4 u_carmera;
+        void main(){
+            gl_Position=u_carmera*a_position;
+        }
+    </script>
+
+    <!-- 片段着色器 -->
+    <script type='x-shader/x-fragment' id='fs'>
+        void main(){
+            gl_FragColor=vec4(1.0,0.0,0.0,1.0);
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <canvas width=500 height=500>非常抱歉，您的浏览器不支持canvas!</canvas>
+
+</body>
+
+<script>
+
+    // 启动3D绘图
+    var render3D = $$('canvas').webgl();
+
+    // 启用着色器
+    render3D.shader($$('#vs')[0].innerHTML, $$('#fs')[0].innerHTML);
+
+    // 获取画笔
+    var gl = render3D.painter();
+
+    // 数据
+    var data = new Float32Array([
+        // 顶点坐标
+        0.0, -0.7, 0.0,
+        -0.5, 0.5, 0.0,
+        0.5, 0.5, 0.0,
+
+        0.0, 0.7, 1.0,
+        -0.5, -0.5, 1.0,
+        0.5, -0.5, 1.0,
+
+        0.0, -0.7, -1.0,
+        -0.5, 0.5, -1.0,
+        0.5, 0.5, -1.0
+    ]);
+
+    render3D
+        // 初始化缓冲区
+        .buffer()
+
+        // 数据写入缓冲区
+        .write(data)
+
+        // 写入缓冲区的数据分配
+        .use('a_position', 3, 3, 0);
+
+    /**
+     * -----------------------------------------------------
+     * 相机
+     * -----------------------------------------------------
+    */
+
+    var u_carmera = gl.getUniformLocation(gl.program, 'u_carmera');
+    var carmera = $$.carmera().lookAt(
+        // 视点
+        0, 0, 0,
+        // 观察目标中心点
+        0, 0, -1,
+        // 上方向
+        0.5, 0.5, 0
+    );
+    gl.uniformMatrix4fv(u_carmera, false, carmera.value());
+
+    // -------------------------end
+
+    gl.drawArrays(gl.TRIANGLES, 0, 9);
+
+</script>
+
+</html>

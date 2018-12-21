@@ -35,8 +35,8 @@ clay.carmera = function () {
 
                 // 转至xOy平面
                 var sqrt = Math.sqrt(upX * upX + upZ * upZ),
-                    cos = upX / sqrt,
-                    sin = upZ / sqrt;
+                    cos = sqrt != 0 ? upX / sqrt : 1,
+                    sin = sqrt != 0 ? upZ / sqrt : 0;
                 cX = cZ * sin + cX * cos;
                 cZ = cZ * cos - cX * sin;
 
@@ -51,8 +51,8 @@ clay.carmera = function () {
 
                 // 转至Oy轴上，正方向
                 sqrt = Math.sqrt(upX * upX + upY * upY);
-                cos = upY / sqrt;
-                sin = upX / sqrt;
+                cos = sqrt != 0 ? upY / sqrt : 1;
+                sin = sqrt != 0 ? upX / sqrt : 0;
                 cX = cX * cos - cY * sin;
                 cY = cX * sin + cY * cos;
 
@@ -69,8 +69,8 @@ clay.carmera = function () {
 
                 // 转至yOz平面
                 sqrt = Math.sqrt(cX * cX + cZ * cZ);
-                cos = cZ / sqrt;
-                sin = -cX / sqrt;
+                cos = sqrt != 0 ? -cZ / sqrt : -1;
+                sin = sqrt != 0 ? -cX / sqrt : 0;
 
                 matrix4.multiply([
                     cos, 0, -sin, 0,
@@ -83,8 +83,8 @@ clay.carmera = function () {
 
                 // 转至Oz轴上，负方向
                 sqrt = Math.sqrt(cY * cY + cZ * cZ);
-                cos = -cX / sqrt;
-                sin = -cZ / sqrt;
+                cos = sqrt != 0 ? -cZ / sqrt : -1;
+                sin = sqrt != 0 ? -cX / sqrt : 0;
 
                 matrix4.multiply([
                     1, 0, 0, 0,

@@ -69,7 +69,7 @@ git clone git://github.com/yelloxing/clay-core.git
 进入项目目录，安装打包文件：
 
 ```bash
-cd clay && npm install
+cd clay-core && npm install
 ```
 
 安装好以后就可以进行开发了，修改代码以后，应该启动打包程序：
