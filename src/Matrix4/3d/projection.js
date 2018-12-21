@@ -12,9 +12,9 @@ var _perspective_projection = function (
         0, 2 * near / (top - bottom), 0, 0,
         (left + right) / (left - right),
         (bottom + top) / (bottom - top),
-        far / (near - far),
+        (far + near) / (near - far),
         1,
-        0, 0, far * near / (far - near), 0
+        0, 0, far * far * 2 / (near - far), 0
     ];
 };
 
@@ -33,10 +33,10 @@ var _orthogonal_projection = function (
     return [
         2 / (right - left), 0, 0, 0,
         0, 2 / (top - bottom), 0, 0,
-        0, 0, -1 / (far - near), 0,
-        -(right + left) / (right - left),
-        -(top + bottom) / (top - bottom),
-        near / (far - near),
+        0, 0, 2 / (near - far), 0,
+        (right + left) / (left - right),
+        (top + bottom) / (bottom - top),
+        (far + near) / (far - near),
         1
     ];
 };
@@ -46,7 +46,7 @@ var _orthogonal_projection = function (
 // https://www.codeguru.com/cpp/misc/misc/graphics/article.php/c10123/Deriving-Projection-Matrices.htm
 // -1<=x<=1
 // -1<=y<=1
-// -1<=z<=0
+// -1<=z<=1
 clay.projection = function () {
 
     var scope = {},

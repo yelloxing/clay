@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 21 2018 11:44:27 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 21 2018 15:55:08 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2387,86 +2387,9 @@ clay.carmera = function () {
                 upX, upY, upZ
             ) {
 
-                /**
-                 * 视点移动至原点
-                 */
-                cX -= eX;
-                cY -= eY;
-                cZ -= eZ;
+                throw new Error('温馨提示：由完成状态切回开发状态！');
 
-                // 初始化矩阵
-                matrix4 = clay.Matrix4([
-                    1, 0, 0, 0,
-                    0, 1, 0, 0,
-                    0, 0, 1, 0,
-                    -eX, -eY, -eZ, 1
-                ]);
-
-                /**
-                 * 上方向旋转成Oy轴方向
-                 */
-
-                // 转至xOy平面
-                var sqrt = Math.sqrt(upX * upX + upZ * upZ),
-                    cos = sqrt != 0 ? upX / sqrt : 1,
-                    sin = sqrt != 0 ? upZ / sqrt : 0;
-                cX = cZ * sin + cX * cos;
-                cZ = cZ * cos - cX * sin;
-
-                matrix4.multiply([
-                    cos, 0, -sin, 0,
-                    0, 1, 0, 0,
-                    sin, 0, cos, 0,
-                    0, 0, 0, 1
-                ]);
-
-                upX = sqrt * (upX > 0 ? 1 : -1);
-
-                // 转至Oy轴上，正方向
-                sqrt = Math.sqrt(upX * upX + upY * upY);
-                cos = sqrt != 0 ? upY / sqrt : 1;
-                sin = sqrt != 0 ? upX / sqrt : 0;
-                cX = cX * cos - cY * sin;
-                cY = cX * sin + cY * cos;
-
-                matrix4.multiply([
-                    cos, sin, 0, 0,
-                    -sin, cos, 0, 0,
-                    0, 0, 1, 0,
-                    0, 0, 0, 1
-                ]);
-
-                /**
-                 * 观察中心旋转至-Oz轴上
-                 */
-
-                // 转至yOz平面
-                sqrt = Math.sqrt(cX * cX + cZ * cZ);
-                cos = sqrt != 0 ? -cZ / sqrt : -1;
-                sin = sqrt != 0 ? -cX / sqrt : 0;
-
-                matrix4.multiply([
-                    cos, 0, -sin, 0,
-                    0, 1, 0, 0,
-                    sin, 0, cos, 0,
-                    0, 0, 0, 1
-                ]);
-
-                cZ = sqrt * (cZ > 0 ? 1 : -1);
-
-                // 转至Oz轴上，负方向
-                sqrt = Math.sqrt(cY * cY + cZ * cZ);
-                cos = sqrt != 0 ? -cZ / sqrt : -1;
-                sin = sqrt != 0 ? -cX / sqrt : 0;
-
-                matrix4.multiply([
-                    1, 0, 0, 0,
-                    0, cos, sin, 0,
-                    0, -sin, cos, 0,
-                    0, 0, 0, 1
-                ]);
-
-                return carmera;
+                // return carmera;
             },
 
             // 获取视图矩阵数组表示
@@ -2494,9 +2417,9 @@ var _perspective_projection = function (
         0, 2 * near / (top - bottom), 0, 0,
         (left + right) / (left - right),
         (bottom + top) / (bottom - top),
-        far / (near - far),
+        (far + near) / (near - far),
         1,
-        0, 0, far * near / (far - near), 0
+        0, 0, far * far * 2 / (near - far), 0
     ];
 };
 
@@ -2515,10 +2438,10 @@ var _orthogonal_projection = function (
     return [
         2 / (right - left), 0, 0, 0,
         0, 2 / (top - bottom), 0, 0,
-        0, 0, -1 / (far - near), 0,
-        -(right + left) / (right - left),
-        -(top + bottom) / (top - bottom),
-        near / (far - near),
+        0, 0, 2 / (near - far), 0,
+        (right + left) / (left - right),
+        (top + bottom) / (bottom - top),
+        (far + near) / (far - near),
         1
     ];
 };
@@ -2528,7 +2451,7 @@ var _orthogonal_projection = function (
 // https://www.codeguru.com/cpp/misc/misc/graphics/article.php/c10123/Deriving-Projection-Matrices.htm
 // -1<=x<=1
 // -1<=y<=1
-// -1<=z<=0
+// -1<=z<=1
 clay.projection = function () {
 
     var scope = {},
