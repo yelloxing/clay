@@ -25,10 +25,24 @@
     <h2>
         getColors
     </h2>
-    <pre class='prettyprint lang-js'>var colors = $$.getColors(num);</pre>
+    <pre class='prettyprint lang-js'>var colors = $$.getColors(num,range,baseColor);</pre>
     <p>
-        传递一个整数，返回一组色彩。
+        传递整数,色彩范围和基准颜色，返回一组色彩。
     </p>
+    <p>
+        num为最终返回的颜色个数。
+    </p>
+    <p>
+        range为色彩范围，是一个数组，取值范围0-360。
+    </p>
+    <p>
+        baseColor可选参数，为基准颜色，是一个数组，包含rgb三个值（0-255），返回的颜色数组都将以该色调为基准。
+    </p>
+    <pre class='prettyprint lang-js'>var colors = $$.getColors(15, [0, 270], [20, 156, 203]);</pre>
+    <p class='warn'>
+        另外，如果你只是想要一组颜色，可以直接指定颜色数目，返回随机色彩：
+    </p>
+    <pre class='prettyprint lang-js'>var colors = $$.getColors(15);</pre>
 </body>
 
 </html>
