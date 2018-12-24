@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 24 2018 15:08:51 GMT+0800 (GMT+08:00)
+* Date:Mon Dec 24 2018 16:43:45 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2578,8 +2578,6 @@ clay.projection = function () {
     return projection;
 };
 
-// 雾化
-
 // 灯光
 
 // diffuse reflection
@@ -2590,8 +2588,6 @@ clay.projection = function () {
 // <环境反射光颜色>=<入射光颜色>*<表面基底色>
 
 // <表面的反射光颜色>=<漫反射光颜色>+<环境反射光颜色>
-
-// 层次模型
 
 clay.treeLayout = function () {
 
