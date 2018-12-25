@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../../../libs/easycss-1.3.1.min.css">
-    <link rel="stylesheet" href="../../../libs/prettify.css">
-    <link rel="stylesheet" href="../../../doc.css">
-    <script src="../../../libs/prettify.js"></script>
+    <link rel="stylesheet" href="../../libs/easycss-1.3.1.min.css">
+    <link rel="stylesheet" href="../../libs/prettify.css">
+    <link rel="stylesheet" href="../../doc.css">
+    <script src="../../libs/prettify.js"></script>
 </head>
 
 <body onload="prettyPrint()">
     <header>
-        常用图形
+        SVG 常用接口
     </header>
     <p>
         svg的图形（包括path和text等类似标签）都可以通过配置下列选项来确定最终的渲染效果：
@@ -70,6 +70,65 @@
     <p>
         上面的一系列点(x1, y1)、(x2, y2)、(x3, y3)...连接起来形成折线。
     </p>
+    <h2>
+        path
+    </h2>
+    <p>
+        &lt;path&gt;用于定义一个路径，一个有下面d属性可选项：
+    </p>
+    <ul>
+        <li>
+            1.M：移动到（例子：'M10,20'）；
+        </li>
+        <li>
+            2.L：画直线到（例子：'L10,20 11,21 12,22'）；
+        </li>
+        <li>
+            3.H：画水平直线到（例子：'H10'）；
+        </li>
+        <li>
+            4.V：画垂直直线到（例子：'V20'）；
+        </li>
+        <li>
+            5.C：三次贝塞尔曲线；
+        </li>
+        <li>
+            6.S：简化的贝塞尔曲线；
+        </li>
+        <li>
+            7.Q：二次贝塞尔曲线Q；
+        </li>
+        <li>
+            8.T：Q命令的简写命令；
+        </li>
+        <li>
+            9.A：画圆；
+        </li>
+        <li>
+            10.Z：闭合路径，不需要参数。
+        </li>
+    </ul>
+    <h4>
+        A 画圆
+    </h4>
+    <pre class='prettyprint lang-js'>&lt;path d="Arx,ry x-axis-rotation large-arc-flag sweep-flag x,y"/&gt;</pre>
+    <ul>
+        <li>
+            1.rx和ry分别表示弧的半长轴长度和半短轴长度
+        </li>
+        <li>
+            2.x-axis-rotation是此段弧所在的x轴与水平方向的夹角，即x轴的逆时针旋转角度，负数代表顺时针旋转角度
+        </li>
+        <li>
+            3.large-arc-flag为1表示大角度弧线，0表示小角度弧线
+        </li>
+        <li>
+            4.sweep-flag为1表示从起点到终点弧线绕中心顺时针方向，0表示逆时针方向
+        </li>
+        <li>
+            5.终点左边(x, y)
+        </li>
+    </ul>
 </body>
 
 </html>
