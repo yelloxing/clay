@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 1.5.3next
+* version 1.5.5next
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Dec 24 2018 16:43:45 GMT+0800 (GMT+08:00)
+* Date:Tue Dec 25 2018 20:19:14 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -82,9 +82,13 @@ function _sizzle(selector, context) {
 
     var temp = [], flag;
     if (typeof selector === 'string') {
-        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
+
         // 去掉回车，空格和换行
         selector = (selector + "").trim().replace(/[\n\f\r]/g, '');
+
+        if (/^</.test(selector)) return [_toNode(selector)];
+
+        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
 
         // 支持的选择器包括：
         // #id .class [attr='value'] tagName
@@ -166,13 +170,8 @@ function _sizzle(selector, context) {
             return temp;
         }
 
-        // 其它情况一律认为希望把字符串变成结点
         else {
-            try {
-                return [_toNode(selector)];
-            } catch (e) {
-                return [];
-            }
+            return [];
         }
 
     }
@@ -3021,7 +3020,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '1.5.3next';
+    clay.version = '1.5.5next';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 

@@ -9,9 +9,13 @@ function _sizzle(selector, context) {
 
     var temp = [], flag;
     if (typeof selector === 'string') {
-        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
+
         // 去掉回车，空格和换行
         selector = (selector + "").trim().replace(/[\n\f\r]/g, '');
+
+        if (/^</.test(selector)) return [_toNode(selector)];
+
+        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
 
         // 支持的选择器包括：
         // #id .class [attr='value'] tagName
@@ -93,13 +97,8 @@ function _sizzle(selector, context) {
             return temp;
         }
 
-        // 其它情况一律认为希望把字符串变成结点
         else {
-            try {
-                return [_toNode(selector)];
-            } catch (e) {
-                return [];
-            }
+            return [];
         }
 
     }

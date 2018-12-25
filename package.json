@@ -1,6 +1,6 @@
 {
   "name": "clay-core",
-  "version": "1.5.3next",
+  "version": "1.5.5next",
   "description": "Provide more flexible data visualization solutions!",
   "main": "build/clay-core.js",
   "scripts": {
