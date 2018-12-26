@@ -98,7 +98,7 @@ function _sizzle(selector, context) {
         }
 
         else {
-            return [];
+            throw new Error("Unsupported selector!");
         }
 
     }
@@ -119,7 +119,7 @@ function _sizzle(selector, context) {
     else if (selector && selector.constructor === clay) {
         return selector;
     } else {
-        return [];
+        throw new Error("Unsupported parameter!");
     }
 
 }

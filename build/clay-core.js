@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Dec 25 2018 20:19:14 GMT+0800 (GMT+08:00)
+* Date:Wed Dec 26 2018 09:21:49 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -171,7 +171,7 @@ function _sizzle(selector, context) {
         }
 
         else {
-            return [];
+            throw new Error("Unsupported selector!");
         }
 
     }
@@ -192,7 +192,7 @@ function _sizzle(selector, context) {
     else if (selector && selector.constructor === clay) {
         return selector;
     } else {
-        return [];
+        throw new Error("Unsupported parameter!");
     }
 
 }
