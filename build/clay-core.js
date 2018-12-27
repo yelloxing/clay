@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Dec 27 2018 14:19:51 GMT+0800 (GMT+08:00)
+* Date:Thu Dec 27 2018 16:10:41 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2418,7 +2418,6 @@ clay.prototype.webgl = function (opts) {
                         "use": function (location, size, stride, offset, type, normalized) {
                             var fsize = bufferData.BYTES_PER_ELEMENT;
                             if (typeof location == 'string') location = gl.getAttribLocation(gl.program, location);
-                            type = type || gl.FLOAT;
                             stride = stride || 0;
                             offset = offset || 0;
                             type = type || gl.FLOAT;

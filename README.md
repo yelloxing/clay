@@ -96,8 +96,6 @@ npm run release
 
 对于单元测试，如果是新添加的html页面，应该在Gruntfile.js里最后部分添加引用（每次发布代码到Github的时候会自动报告是否存在问题），本地直接在目标浏览器中打开对应html页面即可查看测试结果。
 
-<img align="center" height="300" src="https://github.com/yelloxing/clay-core/blob/master/doc/images/clay.design.jpg">
-
 ### 免责声明
 
 *   项目中部分数据（如图片等）来自互联网，如果侵犯到对应权益者请联系我们，方便我们及时删除！
