@@ -12,7 +12,7 @@ var _text = function (painter) {
      * @param {string|number} text 绘制的文字
      */
     var text = function (x, y, text, deg) {
-        deg = !deg ? 0 : (deg * 180 / Math.PI);
+        deg = !deg ? 0 : deg;
         return painter(x, y, text, deg, scope.p[0], scope.p[1], scope.c || "#000", scope.s || 16);
     };
 
@@ -55,7 +55,7 @@ clay.svg.text = function () {
                 }
             }
 
-            var rotate = !deg ? "" : "transform='rotate(" + deg + "," + x + "," + y + ")'";
+            var rotate = !deg ? "" : "transform='rotate(" + (deg * 180 / Math.PI) + "," + x + "," + y + ")'";
             return clay('<text fill=' + color + ' x="' + x + '" y="' + y + '" ' + rotate + '>' + text + '</text>').css({
                 // 文本水平
                 "text-anchor": {
