@@ -16,7 +16,39 @@
         着色器
     </header>
     <p>
-
+        着色器分为两种：顶点着色器（Vertex shader）和片元（或片段）着色器（Fragment shader）。
+    </p>
+    <h4>
+        顶点着色器
+    </h4>
+    <p>
+        用于描述顶点特征（比如位置，大小，颜色等）的程序，在这里就是一段字符串，为了书写和调试方便，常常这样书写：
+    </p>
+    <pre class='prettyprint lang-js'>&lt;script type='x-shader/x-vertex' id='vs'&gt;
+    // 定义参数
+    void main(){
+        // 设置顶点特征
+    }
+&lt;/script&gt;</pre>
+    <h4>
+        片元着色器
+    </h4>
+    <p>
+        用于配置逐片元处理过程中，如何计算光照等数据，和上面一样，也是一段字符串，和上面的区别在与，这是针对全部点的配置：
+    </p>
+    <pre class='prettyprint lang-js'>&lt;script type='x-shader/x-fragment' id='fs'&gt;
+    // 基本配置
+    // 定义参数
+    void main(){
+        // 设置顶点特征
+    }
+&lt;/script&gt;</pre>
+    <h2>
+        使用着色器
+    </h2>
+    <pre class='prettyprint lang-js'>render3D.shader($$('#vs')[0].innerHTML, $$('#fs')[0].innerHTML);</pre>
+    <p>
+        编辑好着色器字符串以后，运行上面的语句，表示启用着色器，然后才可以借助这两个着色器程序绘图（编译着色器字符串创建的着色器程序存储在gl.program中）。
     </p>
 </body>
 
