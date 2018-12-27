@@ -97,15 +97,18 @@ function _sizzle(selector, context) {
             return temp;
         }
 
+        // 非法的选择器
         else {
             throw new Error("Unsupported selector!");
         }
 
     }
+
     // 如果是结点
     else if (selector && (selector.nodeType === 1 || selector.nodeType === 11 || selector.nodeType === 9)) {
         return [selector];
     }
+
     // 如果是结点集合
     else if (selector && (selector.constructor === Array || selector.constructor === HTMLCollection || selector.constructor === NodeList)) {
         for (flag = 0; flag < selector.length; flag++) {
@@ -115,10 +118,19 @@ function _sizzle(selector, context) {
         }
         return temp;
     }
+
     // 如果是clay对象
     else if (selector && selector.constructor === clay) {
         return selector;
-    } else {
+    }
+
+    // 如果没传递，表示想获取空对象
+    else if (!selector) {
+        return [];
+    }
+
+    // 其它未知情况
+    else {
         throw new Error("Unsupported parameter!");
     }
 
