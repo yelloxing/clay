@@ -96,50 +96,7 @@ npm run release
 
 对于单元测试，如果是新添加的html页面，应该在Gruntfile.js里最后部分添加引用（每次发布代码到Github的时候会自动报告是否存在问题），本地直接在目标浏览器中打开对应html页面即可查看测试结果。
 
-### 项目结构
-
-设计的初衷是方便绘制2D和3D的图形，让数据以交互的图片形式展示。
-
-核心模块：
-
-- **矩阵变换**：2D和3D图形变换，包括3D相机和投影等。
-- **插值运算**：坐标查找。
-- **坐标映射**：比如地图经纬度映射。
-- **轮播动画**：主要是动画核心计算方法。
-- **小工具**：一些实用的小工具，比如色彩格式化等。
-- **结点操作**：兼容HTML和SVG等不同上下文标签和属性操作。
-
-布局模块：
-
-- **layout**：对于特殊展示方式，定义对应的布局来方便位置和图形计算。
-
-图形模块：
-
-- **graphics**：包括SVG、Canvas2D和WebGL3D绘图接口。
-
-三维模块：
-- **色彩方面**：灯光、雾化和材质等视觉接口。
-- **结构方面**：模型、视图和投影等形或结构变换接口。
-- **层次模型**：多图形绘制接口等。
-
-扩展：
-
-- **extend**：包括已实现功能可加强扩展和组件扩展。
-
-### 单元测试
-
-采用QUnit，下面是可以选择的测试方法：
-
-```js
-ok( value, [message] );
-equal( actual, expected, [message] );
-notEqual( actual, expected, [message] );
-deepEqual( actual, expected, [message] );
-notDeepEqual( actual, expected, [message] );
-strictEqual( actual, expected, [message] );
-notStrictEqual( actual, expected, [message] );
-throws( block, [expected], [message] );
-```
+<img align="center" height="300" src="https://github.com/yelloxing/clay-core/blob/master/doc/images/clay.design.jpg">
 
 ### 免责声明
 
