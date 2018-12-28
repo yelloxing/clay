@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 28 2018 11:14:58 GMT+0800 (GMT+08:00)
+* Date:Fri Dec 28 2018 11:26:11 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1316,6 +1316,7 @@ var _inverse_matrix = function (matrix4) {
     var adjoint = _adjoint_matrix(matrix4),
         determinant = _determinant(matrix4),
         flag, newMatrix4 = [];
+    if (determinant == 0) throw new Error('This matrix is irreversible!');
     for (flag = 0; flag < 16; flag++)
         newMatrix4[flag] = adjoint[flag] / determinant;
     return newMatrix4;

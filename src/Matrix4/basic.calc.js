@@ -191,6 +191,7 @@ var _inverse_matrix = function (matrix4) {
     var adjoint = _adjoint_matrix(matrix4),
         determinant = _determinant(matrix4),
         flag, newMatrix4 = [];
+    if (determinant == 0) throw new Error('This matrix is irreversible!');
     for (flag = 0; flag < 16; flag++)
         newMatrix4[flag] = adjoint[flag] / determinant;
     return newMatrix4;
