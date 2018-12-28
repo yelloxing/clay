@@ -26,9 +26,9 @@ clay.camera = function () {
                 // 上方向
                 upX, upY, upZ
             ) {
-                eX = eX || 0, eY = eY || 0, eZ = eZ || 1;
+                eX = eX || 0, eY = eY || 0, eZ = eZ === 0 ? 0 : 1;
                 cX = cX || 0, cY = cY || 0, cZ = cZ || 0;
-                upX = upX || 0, upY = upY || 1, upZ = upZ || 0;
+                upX = upX || 0, upY = upY === 0 ? 0 : 1, upZ = upZ || 0;
                 if (upX === 0 && upY === 0 && upZ === 0) {
                     throw new Error("相机上方向不能为零向量！");
                 }

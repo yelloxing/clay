@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 28 2018 17:46:57 GMT+0800 (中国标准时间)
+* Date:Fri Dec 28 2018 17:58:06 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -2689,9 +2689,9 @@ clay.camera = function () {
                 // 上方向
                 upX, upY, upZ
             ) {
-                eX = eX || 0, eY = eY || 0, eZ = eZ || 1;
+                eX = eX || 0, eY = eY || 0, eZ = eZ === 0 ? 0 : 1;
                 cX = cX || 0, cY = cY || 0, cZ = cZ || 0;
-                upX = upX || 0, upY = upY || 1, upZ = upZ || 0;
+                upX = upX || 0, upY = upY === 0 ? 0 : 1, upZ = upZ || 0;
                 if (upX === 0 && upY === 0 && upZ === 0) {
                     throw new Error("相机上方向不能为零向量！");
                 }
@@ -2713,7 +2713,7 @@ clay.camera = function () {
                 /**
                  * 由此可以根据物体原坐标[OriginX,OriginY,OriginZ],计算出物体新坐标 [x,y,z] ：
                  * 
-                 *      i               j               k 
+                 *      i               j               k         z轴与相机拍摄方向相反，故取负号
                  * 
                  * xRailVector[0]   upVector[0]   -visualVector[0]       x     OriginX     O[0]
                  * xRailVector[1]   upVector[1]   -visualVector[1]   X   y  =  OriginY  -  O[1]
