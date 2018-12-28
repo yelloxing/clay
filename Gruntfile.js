@@ -63,7 +63,7 @@ var source = [
     './src/graphics/polygon.js',
 
     /**
-     * 3D图形
+     * webgl
      */
     './src/webgl/shader.js',
     './src/webgl/buffer.js',
@@ -73,9 +73,10 @@ var source = [
     /**
      * 三维世界
      */
-    './src/Matrix4/3d/carmera.js',
-    './src/Matrix4/3d/projection.js',
-    './src/Matrix4/3d/light.js',
+    './src/three/lookAt.js',
+    './src/three/projection.js',
+    './src/three/camera.js',
+    './src/three/light.js',
 
     /**
      * 布局
