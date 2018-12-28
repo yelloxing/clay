@@ -50,7 +50,7 @@ clay.camera = function () {
                 /**
                  * 由此可以根据物体原坐标[OriginX,OriginY,OriginZ],计算出物体新坐标 [x,y,z] ：
                  * 
-                 *      i               j               k 
+                 *      i               j               k         z轴与相机拍摄方向相反，故取负号
                  * 
                  * xRailVector[0]   upVector[0]   -visualVector[0]       x     OriginX     O[0]
                  * xRailVector[1]   upVector[1]   -visualVector[1]   X   y  =  OriginY  -  O[1]
