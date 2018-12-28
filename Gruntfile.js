@@ -35,6 +35,7 @@ var source = [
     /**
      * 变换矩阵4x4
      */
+    './src/Matrix4/basic.calc.js',
     './src/Matrix4/move.js',
     './src/Matrix4/rotate.js',
     './src/Matrix4/scale.js',
