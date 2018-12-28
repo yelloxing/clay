@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Dec 28 2018 20:59:18 GMT+0800 (中国标准时间)
+* Date:Sat Dec 29 2018 00:05:00 GMT+0800 (中国标准时间)
 */
 (function (global, factory) {
 
@@ -2684,9 +2684,9 @@ var _lookAt = function (
     // 上方向
     upX, upY, upZ
 ) {
-    eX = eX || 0, eY = eY || 0, eZ = eZ === 0 ? 0 : 1;
-    cX = cX || 0, cY = cY || 0, cZ = cZ || 0;
-    upX = upX || 0, upY = upY === 0 ? 0 : 1, upZ = upZ || 0;
+    eX = eX || 0; eY = eY || 0; eZ = eZ === 0 ? 0 : 1;
+    cX = cX || 0; cY = cY || 0; cZ = cZ || 0;
+    upX = upX || 0; upY = upY === 0 ? 0 : 1; upZ = upZ || 0;
 
     if (upX === 0 && upY === 0 && upZ === 0) throw new Error("The orientation above the camera cannot be a zero vector!");
     if (eX === cX && eY === cY && eZ === cZ) throw new Error("Viewpoint cannot coincide with target point!");
@@ -2779,7 +2779,80 @@ var _orthogonal_projection = function (
     ];
 };
 
+// 照相机
+clay.camera = function () {
 
+    var scope = {};
+
+    // 求解出最终的相机矩阵
+    var camera = function () {
+        var matrix;
+        if (scope.e && scope.c && scope.u) {
+            matrix = clay.Matrix4(_lookAt(
+                scope.e[0], scope.e[1], scope.e[2],
+                scope.c[0], scope.c[1], scope.c[2],
+                scope.u[0], scope.u[1], scope.u[2]
+            ));
+        } else {
+            matrix = clay.Matrix4();
+        }
+        if (scope.f && scope.b) {
+            if (scope.p) {
+                matrix.multiply(_perspective_projection(
+                    scope.b[3], scope.b[1],
+                    scope.b[0], scope.b[2],
+                    scope.f[0], scope.f[1]
+                ));
+            } else {
+                matrix.multiply(_orthogonal_projection(
+                    scope.b[3], scope.b[1],
+                    scope.b[0], scope.b[2],
+                    scope.f[0], scope.f[1]
+                ));
+            }
+        }
+        return matrix.value();
+    };
+
+    // 视点
+    camera.setEye = function (eX, eY, eZ) {
+        scope.e = [eX, eY, eZ];
+        return camera;
+    };
+
+    // 观察目标中心点
+    camera.setCenter = function (cX, cY, cZ) {
+        scope.c = [cX, cY, cZ];
+        return camera;
+    };
+
+    // 上方向
+    camera.setUp = function (upX, upY, upZ) {
+        scope.u = [upX, upY, upZ];
+        return camera;
+    };
+
+    // 设置是否采用透视（具体点，就是一点透视）
+    camera.isPerspective = function (flag) {
+        scope.p = flag;
+        return camera;
+    };
+
+    // 设置裁剪面
+    camera.setFace = function (near, far) {
+        scope.f = [near, far];
+        return camera;
+    };
+
+    // 设置边界
+    camera.setBorder = function (top, right, bottom, left) {
+        scope.b = [top, right, bottom, left];
+        return camera;
+    };
+
+    return camera;
+
+};
 // 灯光
 
 // diffuse reflection

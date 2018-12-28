@@ -21,9 +21,9 @@ var _lookAt = function (
     // 上方向
     upX, upY, upZ
 ) {
-    eX = eX || 0, eY = eY || 0, eZ = eZ === 0 ? 0 : 1;
-    cX = cX || 0, cY = cY || 0, cZ = cZ || 0;
-    upX = upX || 0, upY = upY === 0 ? 0 : 1, upZ = upZ || 0;
+    eX = eX || 0; eY = eY || 0; eZ = eZ === 0 ? 0 : 1;
+    cX = cX || 0; cY = cY || 0; cZ = cZ || 0;
+    upX = upX || 0; upY = upY === 0 ? 0 : 1; upZ = upZ || 0;
 
     if (upX === 0 && upY === 0 && upZ === 0) throw new Error("The orientation above the camera cannot be a zero vector!");
     if (eX === cX && eY === cY && eZ === cZ) throw new Error("Viewpoint cannot coincide with target point!");
