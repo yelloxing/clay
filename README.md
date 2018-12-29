@@ -37,7 +37,6 @@
 
 除了项目本身，还有一些用例项目需要维护，分别在下面列出，你可以作为交流或练习的地方：
 
-- [主要是基于clay.js绘制的一些有趣2D的图形用例，如果你想练习clay.js的话，应该来这里](https://github.com/yelloxing/clay-2d-image)
 - [基于clay.js维护的常用组件，如果你希望自己的图形和别人分享，请来这里](https://github.com/yelloxing/clay-component)
 
 如何使用？
