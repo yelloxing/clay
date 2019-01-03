@@ -18,7 +18,7 @@
     <h2>
         定义
     </h2>
-    <pre class='prettyprint lang-js'>$$.component("example", ["$browser", function ($browser) {
+    <pre class='prettyprint lang-js'>$$.component("example", ["$server", function ($server) {
     return {
         "beforeCreate": function (element) {
             console.log("beforeCreate...", element, this);
@@ -42,7 +42,7 @@
     </p>
     <ul>
         <li>1."example"表示组件名称，可以是任意一个合法的标志符；</li>
-        <li>2.$browser是注入的服务，由clay.js内部提供。</li>
+        <li>2.$server表示注入的服务，由clay.js内部提供。</li>
         <li>3.element和$scope是形参，分别表示组件应用的结点和配置参数；</li>
         <li>4.$scope.$watch方法可以监听配置数据的改变，从而主体调整图形；</li>
         <li>5.你可以在todo 1和todo 2出分别绘图图形和调整图形。</li>
