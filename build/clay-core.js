@@ -1,17 +1,17 @@
 /*!
-* clay.js - Provide more flexible data visualization solutions!
+* clay.js - Provide a more friendly web-side drawing interface!
 * git+https://github.com/yelloxing/clay-core.git
 * 
 * author 心叶
 *
-* version 1.6.0next
+* version 1.7.0next
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Jan 03 2019 16:34:09 GMT+0800 (GMT+08:00)
+* Date:Thu Jan 03 2019 16:55:52 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2464,7 +2464,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '1.6.0next';
+    clay.version = '1.7.0next';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 
