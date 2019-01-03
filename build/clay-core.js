@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Dec 29 2018 09:39:39 GMT+0800 (GMT+08:00)
+* Date:Thu Jan 03 2019 11:26:22 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2694,9 +2694,6 @@ var _lookAt = function (
     if (eX === cX && eY === cY && eZ === cZ)
         throw new Error("Viewpoint cannot coincide with target point!");
 
-    if (((cX - eX) * upX + (cY - eY) * upY + (cZ - eZ) * upZ) !== 0)
-        throw new Error("The shooting direction of the camera must be perpendicular to the upper direction!");
-
     //获得相机拍摄方向的单位向量
     var visualVector = _getUnitVector(cX - eX, cY - eY, cZ - eZ);
     //获得上方向的单位向量
@@ -2720,18 +2717,16 @@ var _lookAt = function (
      *
      */
     return clay.Matrix4([
+        xRailVector[0], xRailVector[1], xRailVector[2], 0,
+        upVector[0], upVector[1], upVector[2], 0,
+        -visualVector[0], -visualVector[1], -visualVector[2], 0,
+        0, 0, 0, 1
+    ]).inverse().multiply([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
         -O[0], -O[1], -O[2], 1
-    ]).multiply(
-        clay.Matrix4([
-            xRailVector[0], xRailVector[1], xRailVector[2], 0,
-            upVector[0], upVector[1], upVector[2], 0,
-            -visualVector[0], -visualVector[1], -visualVector[2], 0,
-            0, 0, 0, 1
-        ]).inverse().value()
-        ).value();
+    ], true).value();
 };
 
 // 投影
@@ -2747,17 +2742,13 @@ var _perspective_projection = function (
     // 裁剪面边界
     left, right, top, bottom,
     // 近裁剪面和远裁剪面
-    near, far
+    near, far,
+    // 透视起点
+    zP
 ) {
     // 特别注意：求出的新坐标为（x'z,y'z,z'z,z）
     return [
-        2 * near / (right - left), 0, 0, 0,
-        0, 2 * near / (top - bottom), 0, 0,
-        (left + right) / (left - right),
-        (bottom + top) / (bottom - top),
-        (far + near) / (near - far),
-        1,
-        0, 0, far * far * 2 / (near - far), 0
+
     ];
 };
 
@@ -2802,11 +2793,12 @@ clay.camera = function () {
             matrix = clay.Matrix4();
         }
         if (scope.f && scope.b) {
-            if (scope.p) {
+            if (scope.p && typeof scope.p == 'number' && scope.p > scope.f[0]) {
                 matrix.multiply(_perspective_projection(
                     scope.b[3], scope.b[1],
                     scope.b[0], scope.b[2],
-                    scope.f[0], scope.f[1]
+                    scope.f[0], scope.f[1],
+                    scope.p
                 ));
             } else {
                 matrix.multiply(_orthogonal_projection(
@@ -2838,8 +2830,10 @@ clay.camera = function () {
     };
 
     // 设置是否采用透视（具体点，就是一点透视）
-    camera.isPerspective = function (flag) {
-        scope.p = flag;
+    // zPosition如果为一个数字（>1），表示透视时人所在的z轴位置
+    // 不然，不启动透视
+    camera.setPerspective = function (zPosition) {
+        scope.p = zPosition;
         return camera;
     };
 
@@ -2858,6 +2852,7 @@ clay.camera = function () {
     return camera;
 
 };
+
 // 灯光
 
 // diffuse reflection

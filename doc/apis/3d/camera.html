@@ -44,9 +44,6 @@
     <p>
         设置上方向，你可以理解为人脚到头顶的方向，返回相机对象camera。
     </p>
-    <p class="warn">
-        上方向和视线需要保持垂直！
-    </p>
     <pre class="prettyprint lang-js">camera.setCenter(cX, cY, cZ);</pre>
     <p>
         设置视图中心，也就是人眼看过去的点，返回相机对象camera。
@@ -68,9 +65,9 @@
     <p>
         上面是使用投影的必须参数，默认采用正交投影，如果你想设置使用那种投影，调用下面的方法：
     </p>
-    <pre class="prettyprint lang-js">camera.isPerspective = function (flag);</pre>
+    <pre class="prettyprint lang-js">camera.setPerspective(zPosition);</pre>
     <p>
-        flag是一个boolean类型的值，默认false，只有设置true的时候，才会启用透视，也就是使用透视投影，返回相机对象camera。
+        只有zPosition为一个数字（且>near）的时候，表示透视时人所在的z轴位置，才会启用透视，也就是使用透视投影，返回相机对象camera。
     </p>
 </body>
 

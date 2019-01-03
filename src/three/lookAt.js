@@ -31,9 +31,6 @@ var _lookAt = function (
     if (eX === cX && eY === cY && eZ === cZ)
         throw new Error("Viewpoint cannot coincide with target point!");
 
-    if (((cX - eX) * upX + (cY - eY) * upY + (cZ - eZ) * upZ) !== 0)
-        throw new Error("The shooting direction of the camera must be perpendicular to the upper direction!");
-
     //获得相机拍摄方向的单位向量
     var visualVector = _getUnitVector(cX - eX, cY - eY, cZ - eZ);
     //获得上方向的单位向量
@@ -57,16 +54,14 @@ var _lookAt = function (
      *
      */
     return clay.Matrix4([
+        xRailVector[0], xRailVector[1], xRailVector[2], 0,
+        upVector[0], upVector[1], upVector[2], 0,
+        -visualVector[0], -visualVector[1], -visualVector[2], 0,
+        0, 0, 0, 1
+    ]).inverse().multiply([
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
         -O[0], -O[1], -O[2], 1
-    ]).multiply(
-        clay.Matrix4([
-            xRailVector[0], xRailVector[1], xRailVector[2], 0,
-            upVector[0], upVector[1], upVector[2], 0,
-            -visualVector[0], -visualVector[1], -visualVector[2], 0,
-            0, 0, 0, 1
-        ]).inverse().value()
-        ).value();
+    ], true).value();
 };

@@ -16,11 +16,12 @@ clay.camera = function () {
             matrix = clay.Matrix4();
         }
         if (scope.f && scope.b) {
-            if (scope.p) {
+            if (scope.p && typeof scope.p == 'number' && scope.p > scope.f[0]) {
                 matrix.multiply(_perspective_projection(
                     scope.b[3], scope.b[1],
                     scope.b[0], scope.b[2],
-                    scope.f[0], scope.f[1]
+                    scope.f[0], scope.f[1],
+                    scope.p
                 ));
             } else {
                 matrix.multiply(_orthogonal_projection(
@@ -52,8 +53,10 @@ clay.camera = function () {
     };
 
     // 设置是否采用透视（具体点，就是一点透视）
-    camera.isPerspective = function (flag) {
-        scope.p = flag;
+    // zPosition如果为一个数字（>1），表示透视时人所在的z轴位置
+    // 不然，不启动透视
+    camera.setPerspective = function (zPosition) {
+        scope.p = zPosition;
         return camera;
     };
 

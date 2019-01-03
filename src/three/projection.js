@@ -11,17 +11,13 @@ var _perspective_projection = function (
     // 裁剪面边界
     left, right, top, bottom,
     // 近裁剪面和远裁剪面
-    near, far
+    near, far,
+    // 透视起点
+    zP
 ) {
     // 特别注意：求出的新坐标为（x'z,y'z,z'z,z）
     return [
-        2 * near / (right - left), 0, 0, 0,
-        0, 2 * near / (top - bottom), 0, 0,
-        (left + right) / (left - right),
-        (bottom + top) / (bottom - top),
-        (far + near) / (near - far),
-        1,
-        0, 0, far * far * 2 / (near - far), 0
+
     ];
 };
 
