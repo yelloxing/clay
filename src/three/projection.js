@@ -1,26 +1,3 @@
-// 投影
-// 这里采用右手坐标系
-// https://www.codeguru.com/cpp/misc/misc/graphics/article.php/c10123/Deriving-Projection-Matrices.htm
-// -1<=x<=1
-// -1<=y<=1
-// -1<=z<=1
-
-// 一点透视
-// 物体限制在四棱锥中
-var _perspective_projection = function (
-    // 裁剪面边界
-    left, right, top, bottom,
-    // 近裁剪面和远裁剪面
-    near, far,
-    // 透视起点
-    zP
-) {
-    // 特别注意：求出的新坐标为（x'z,y'z,z'z,z）
-    return [
-
-    ];
-};
-
 // 正交投影
 // 投影向量和观察平面垂直
 // 物体坐标沿观察坐标系的z轴平行投影到观察平面上

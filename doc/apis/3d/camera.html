@@ -62,12 +62,8 @@
     <p>
         设置前后边界，也就是投影的景深，返回相机对象camera。
     </p>
-    <p>
-        上面是使用投影的必须参数，默认采用正交投影，如果你想设置使用那种投影，调用下面的方法：
-    </p>
-    <pre class="prettyprint lang-js">camera.setPerspective(zPosition);</pre>
-    <p>
-        只有zPosition为一个数字（且>near）的时候，表示透视时人所在的z轴位置，才会启用透视，也就是使用透视投影，返回相机对象camera。
+    <p class="warn">
+        由于透视投影参数没有确定，目前只提供了正交投影。
     </p>
 </body>
 

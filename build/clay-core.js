@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Jan 03 2019 17:52:28 GMT+0800 (GMT+08:00)
+* Date:Thu Jan 03 2019 20:46:53 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1849,29 +1849,6 @@ var _lookAt = function (
     ], true).value();
 };
 
-// 投影
-// 这里采用右手坐标系
-// https://www.codeguru.com/cpp/misc/misc/graphics/article.php/c10123/Deriving-Projection-Matrices.htm
-// -1<=x<=1
-// -1<=y<=1
-// -1<=z<=1
-
-// 一点透视
-// 物体限制在四棱锥中
-var _perspective_projection = function (
-    // 裁剪面边界
-    left, right, top, bottom,
-    // 近裁剪面和远裁剪面
-    near, far,
-    // 透视起点
-    zP
-) {
-    // 特别注意：求出的新坐标为（x'z,y'z,z'z,z）
-    return [
-
-    ];
-};
-
 // 正交投影
 // 投影向量和观察平面垂直
 // 物体坐标沿观察坐标系的z轴平行投影到观察平面上
@@ -1913,20 +1890,11 @@ clay.camera = function () {
             matrix = clay.Matrix4();
         }
         if (scope.f && scope.b) {
-            if (scope.p && typeof scope.p == 'number' && scope.p > scope.f[0]) {
-                matrix.multiply(_perspective_projection(
-                    scope.b[3], scope.b[1],
-                    scope.b[0], scope.b[2],
-                    scope.f[0], scope.f[1],
-                    scope.p
-                ));
-            } else {
-                matrix.multiply(_orthogonal_projection(
-                    scope.b[3], scope.b[1],
-                    scope.b[0], scope.b[2],
-                    scope.f[0], scope.f[1]
-                ));
-            }
+            matrix.multiply(_orthogonal_projection(
+                scope.b[3], scope.b[1],
+                scope.b[0], scope.b[2],
+                scope.f[0], scope.f[1]
+            ));
         }
         return matrix.value();
     };
@@ -1946,14 +1914,6 @@ clay.camera = function () {
     // 上方向
     camera.setUp = function (upX, upY, upZ) {
         scope.u = [upX, upY, upZ];
-        return camera;
-    };
-
-    // 设置是否采用透视（具体点，就是一点透视）
-    // zPosition如果为一个数字（>1），表示透视时人所在的z轴位置
-    // 不然，不启动透视
-    camera.setPerspective = function (zPosition) {
-        scope.p = zPosition;
         return camera;
     };
 
