@@ -24,7 +24,6 @@ var source = [
      */
     './src/Tools/animation.js',
     './src/Tools/tool.js',
-    './src/Tools/ajax.js',
 
     /**
      * 高效独立对象
@@ -52,29 +51,12 @@ var source = [
     './src/calculate/transform.js',
 
     /**
-     * 2D图形
-     */
-    './src/2d.graphics/index.js',
-    './src/2d.graphics/arc.js',
-    './src/2d.graphics/rect.js',
-    './src/2d.graphics/line.js',
-    './src/2d.graphics/text.js',
-    './src/2d.graphics/bezier.js',
-    './src/2d.graphics/polygon.js',
-
-    /**
      * webgl
      */
     './src/webgl/shader.js',
     './src/webgl/buffer.js',
     './src/webgl/texture.js',
     './src/webgl/index.js',
-
-    /**
-     * 3D图形
-     */
-    './src/webgl.graphics/index.js',
-    './src/webgl.graphics/ball.js',
 
     /**
      * 三维世界

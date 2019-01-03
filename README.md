@@ -1,10 +1,10 @@
-[clay.js](https://yelloxing.github.io/clay-core/doc/) - Provide more flexible data visualization solutions
+[clay.js](https://yelloxing.github.io/clay-core/doc/) - Provide a more friendly web-side drawing interface
 ==================================================
 
 [![travis](https://www.travis-ci.org/yelloxing/clay-core.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay-core)
 [![chat](https://github.com/yelloxing/clay-core/blob/master/data/chat.svg)](https://github.com/yelloxing/clay-core/issues)
 
-我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。
+我们的目标是：提供更友好的web端绘图接口。
 
 <img align="right" height="100" src="https://github.com/yelloxing/clay-core/blob/master/clay.png">
 
@@ -13,11 +13,9 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
->>> 温馨提示：目前clay.js依旧处于开发阶段，你不应该用于正式项目，从2.x.x开始的版本才是发布版本（预计2019年3月底发布），请知悉！
-
 关注的问题
 --------------------------------------
-首先，本项目是为了Web端数据可视化而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形来反映统计的数据，并且绘制的图形是可交互的。
+首先，本项目是为了Web端绘图而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形，并且绘制的图形是可交互的。
 
 和别的库不同的是，clay.js关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
 
@@ -34,10 +32,6 @@
 - 参与项目代码开发：关于项目开发部分，全部由[Projects - 核心代码开发](https://github.com/yelloxing/clay-core/projects/2)分配任务，你可以在其中领取任务或在issue中提出开发意见。
 
 - 参与文档编辑：关于项目本身和相关文档，全部由[Projects - 文档整理和校对](https://github.com/yelloxing/clay-core/projects/3)分配任务。
-
-除了项目本身，还有一些用例项目需要维护，分别在下面列出，你可以作为交流或练习的地方：
-
-- [基于clay.js维护的常用组件，如果你希望自己的图形和别人分享，请来这里](https://github.com/yelloxing/clay-component)
 
 如何使用？
 --------------------------------------

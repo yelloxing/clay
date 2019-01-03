@@ -33,8 +33,6 @@
         <label>快速开始</label>
         <ul>
             <li onclick='loadpage("quickstart/environment")'>初始化环境</li>
-            <li onclick='loadpage("quickstart/example")'>简单例子</li>
-            <li onclick='loadpage("quickstart/broswer")'>浏览器支持</li>
             <li onclick='loadpage("quickstart/url")'>有用的链接</li>
         </ul>
         <label>教程</label>
@@ -56,7 +54,6 @@
             <li onclick='loadpage("tool/color")'>色彩相关</li>
             <li onclick='loadpage("tool/animation")'>轮询</li>
             <li onclick='loadpage("tool/layer_and_region")'>图层和区域管理者</li>
-            <li onclick='loadpage("tool/xhr")'>XHR 请求</li>
         </ul>
         <label>计算&amp;求值</label>
         <ul>
@@ -65,27 +62,12 @@
             <li onclick='loadpage("calculate/matrix4")'>Matrix4矩阵</li>
             <li onclick='loadpage("calculate/map")'>地球坐标映射</li>
         </ul>
-        <label>2D图形</label>
-        <ul>
-            <li onclick='loadpage("2d.graphics/object")'>绘图对象</li>
-            <li onclick='loadpage("2d.graphics/arc")'>圆弧 arc</li>
-            <li onclick='loadpage("2d.graphics/bezier")'>贝塞尔曲线 bezier</li>
-            <li onclick='loadpage("2d.graphics/line")'>曲线 line</li>
-            <li onclick='loadpage("2d.graphics/text")'>文字 text</li>
-            <li onclick='loadpage("2d.graphics/rect")'>矩形 rect</li>
-            <li onclick='loadpage("2d.graphics/polygon")'>多边形 polygon</li>
-        </ul>
         <label>WebGL</label>
         <ul>
             <li onclick='loadpage("webgl/core")'>绘图对象</li>
             <li onclick='loadpage("webgl/shader")'>着色器</li>
             <li onclick='loadpage("webgl/buffer")'>缓冲区</li>
             <li onclick='loadpage("webgl/texture")'>纹理</li>
-        </ul>
-        <label>3D图形</label>
-        <ul>
-            <li onclick='loadpage("webgl.graphics/object")'>绘图对象</li>
-            <li onclick='loadpage("webgl.graphics/ball")'>ball 球</li>
         </ul>
         <label>布局</label>
         <ul>
@@ -97,12 +79,13 @@
             <li onclick='loadpage("3d/light")'>灯光</li>
             <li onclick='loadpage("3d/camera")'>照相机</li>
         </ul>
-        <span>原生接口</span>
+        <span>加强部分</span>
+        <label>原生接口</label>
         <ul>
             <li onclick='loadpage("prototype/svg")'>SVG 图形接口</li>
             <li onclick='loadpage("prototype/canvas")'>Canvas 图形接口</li>
         </ul>
-        <span>扩展接口</span>
+        <label>扩展接口</label>
         <ul>
             <li onclick='loadpage("extend/config")'>配置文件</li>
             <li onclick='loadpage("extend/service")'>可注入服务和this</li>
@@ -134,7 +117,7 @@
 
     window.console && window.console.log && (console.log([
         '%c ',
-        '我们的目标是：提供更友好的数据可视化（2D和3D）解决方案。',
+        '我们的目标是：提供更友好的web端绘图接口。',
         ' ',
         '始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。',
         ' '

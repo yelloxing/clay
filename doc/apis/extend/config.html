@@ -16,36 +16,6 @@
         配置文件
     </header>
     <h2>
-        $httpProvider
-    </h2>
-    <p>
-        使用get和post方法发送http请求的时候，除了在调用的时候设置请求头和处理方法等，你也可以像下面这样，进行统一设置。
-    </p>
-    <p class="warn">
-        下面是可配置项，全部是可选的。
-    </p>
-    <pre class='prettyprint lang-js'>$$.config("$httpProvider", ["$browser", function ($browser) {
-    return {
-        "headers": {
-            'Content-Type': 'application/json'
-        },
-        "timeout": 7000,
-        "context": "/data/",
-        "request": function (config) {
-            return config;
-        },
-        "success": function (data, doback) {
-            doback(data);
-        },
-        "error": function (error, doback) {
-            doback(error);
-        }
-    };
-}]);</pre>
-    <p>
-        当然，比如请求头的Content-Type可能大部分情况是一样的，如果有一个比较特殊，可以在调用的时候传递，统一配置的优先级低于传递的，高于缺省的。
-    </p>
-    <h2>
         $sizzleProvider
     </h2>
     <p>
