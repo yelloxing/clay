@@ -65,7 +65,7 @@ var tree = clay.treeLayout();</pre>
 // 获取孩子结点
 .child(function (parentTree, initTree) {
     var children = [], i;
-    for (i = 0; i < nodes.length; i++) {
+    for (i = 0; i < initTree.length; i++) {
         if (initTree[i][1] == parentTree[0])
             children.push(initTree[i]);
     }
@@ -80,42 +80,11 @@ var tree = clay.treeLayout();</pre>
         不同布局需要配置的项不一样，对于tree布局而言，关于数据结构的部分，只需要告诉她如何根据父结点获取子结点，一个结点的唯一标识怎么确定，根节点是谁。
     </p>
     <p>
-        开头就说明的很清楚了，布局应该是和具体绘图方式无关的存在，因此，这里我们选择了svg绘图，就需要再配置一下具体的绘图方法。
+        到这里，所有必须的配置都写好了，添加下面这行代码，启动计算：
     </p>
-    <pre class='prettyprint lang-js'>tree.drawer(function (nodes, rootid, size) {
-    var i, node;
-    for (i in nodes) {
-        node = nodes[i];
-
-        // 绘制结点
-        $$('&lt;circle target=' + node.data[0] + ' r="3" fill="white" stroke="red" stroke-width="1"/&gt;')
-            .appendTo('.node')
-            .attr('cx', node.left * 100)
-            .attr('cy', node.top * 100);
-
-        // 绘制文字
-        $$('&lt;text style="font-size:10px;"&gt;' + node.data[0] + '&lt;/text&gt;')
-            .appendTo('.text')
-            .attr('x', node.left * 100)
-            .attr('y', (node.top * 100 - 14));
-
-        // 绘制连线
-        if (node.pid)
-            $$('&lt;path source=' + node.data[1] + ' target=' + node.data[0] + ' stroke-width="1" stroke="gray" fill="none"&gt;&lt;/path&gt;')
-                .appendTo('.line')
-                .attr('d',
-                    'M' + nodes[node.pid].left * 100 + " " + nodes[node.pid].top * 100 + "C" +
-                    (nodes[node.pid].left * 100 + 50) + "," + nodes[node.pid].top * 100 + " " +
-                    (node.left * 100 - 50) + "," + node.top * 100 + " " +
-                    node.left * 100 + "," + node.top * 100 + " ");
-    }
-});</pre>
+    <pre class='prettyprint lang-js'>var result=tree(nodes);</pre>
     <p>
-        到这里，所有必须的配置都写好了，添加下面这行代码，启动绘图：
-    </p>
-    <pre class='prettyprint lang-js'>tree(nodes);</pre>
-    <p>
-        至此，运行代码就可以看见一棵记录着结点关系的树图了，绘图结束！
+        至此，每个结点的位置就计算出来了，具体的绘图和布局无关，不再说明！
     </p>
     <h2>
         计算模型
@@ -141,17 +110,6 @@ var tree = clay.treeLayout();</pre>
 }</pre>
     <p>
         其中data记录着结点的原始数据，我们主要看看left和top，这显示该结点应该绘制的坐标为（1.5,1.5），对照右图，是不是就很清晰了。别的布局的设计思想也是如此，请耐心体会一下！
-    </p>
-    <h2>
-        添加交互
-    </h2>
-    <pre class='prettyprint lang-js'>// 添加交互用例
-$$('circle').bind('click', function () {
-    // 删除结点
-    tree.delete($$(this).attr('target'));
-});</pre>
-    <p>
-        其实交互和布局应该是没有关系的，始终强调，布局只负责计算绘图的位置，比如上面的结点删除例子，绑定点击事件，调用结点的删除结点方法即可。删除方法删除的只是布局保存的数据，然后重绘画面，如果你需要画面平滑改变，修改绘图实现方法即可，这里不再赘述。
     </p>
 </body>
 

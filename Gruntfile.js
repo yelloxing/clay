@@ -66,7 +66,6 @@ var source = [
      * 布局
      */
     './src/layout/tree.js',
-    './src/layout/pie.js',
 
     /**
      * 加强

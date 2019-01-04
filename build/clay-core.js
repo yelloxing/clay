@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Jan 05 2019 00:07:34 GMT+0800 (GMT+08:00)
+* Date:Sat Jan 05 2019 01:48:44 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1924,9 +1924,12 @@ clay.treeLayout = function () {
 
             })(alltreedata[rootid], 0);
 
-            // 画图
             // 传递的参数分别表示：记录了位置信息的树结点集合、根结点ID和树的宽
-            scope.e.drawer(alltreedata, rootid, size);
+            return {
+                "node": alltreedata,
+                "root": rootid,
+                "size": size
+            };
 
         };
 
@@ -1938,8 +1941,7 @@ clay.treeLayout = function () {
      *  "data":原始数据,
      *  "pid":父亲ID,
      *  "id":唯一标识ID,
-     *  "children":[cid1、cid2、...],
-     *  "show":boolean，表示该结点在计算位置的时候是否可见
+     *  "children":[cid1、cid2、...]
      * }
      */
     var toInnerTree = function (initTree) {
@@ -1952,8 +1954,7 @@ clay.treeLayout = function () {
             "data": temp,
             "pid": null,
             "id": id,
-            "children": [],
-            "show": true
+            "children": []
         };
         // 根据传递的原始数据，生成内部统一结构
         (function createTree(pdata, pid) {
@@ -1965,8 +1966,7 @@ clay.treeLayout = function () {
                     "data": children[flag],
                     "pid": pid,
                     "id": id,
-                    "children": [],
-                    "show": true
+                    "children": []
                 };
                 createTree(children[flag], id);
             }
@@ -1982,8 +1982,7 @@ clay.treeLayout = function () {
         var treeData = toInnerTree(initTree);
         alltreedata = treeData[1];
         rootid = treeData[0];
-        update();
-        return tree;
+        return update();
 
     };
 
@@ -2005,208 +2004,8 @@ clay.treeLayout = function () {
         return tree;
     };
 
-    // 结点更新处理方法 drawer(alltreedata, rootid, size)
-    tree.drawer = function (drawerback) {
-        scope.e.drawer = drawerback;
-        return tree;
-    };
-
-    // 第三个参数为true的时候不会自动更新
-    tree.add = function (pid, newnodes, notUpdate) {
-
-        var treeData = toInnerTree(newnodes), id;
-        treeData[1][treeData[0]].pid = pid;
-        alltreedata[pid].children.push(treeData[0]);
-        for (id in treeData[1])
-            alltreedata[id] = treeData[1][id];
-        if (!notUpdate) update();
-        return tree;
-
-    };
-    tree.delete = function (id, notUpdate) {
-
-        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
-        if (index > -1)
-            alltreedata[alltreedata[id].pid].children.splice(index, 1);
-
-        // 删除多余结点
-        (function deleteNode(pid) {
-            var flag;
-            for (flag = 0; flag < alltreedata[pid].children.length; flag++) {
-                deleteNode(alltreedata[alltreedata[pid].children[flag]].id);
-            }
-            delete alltreedata[pid];
-        })(id);
-
-        if (!notUpdate) update();
-        return tree;
-
-    };
-
-    // 控制结点显示还是隐藏
-    // flag可选，"show"：显示，"hidden"：隐藏，不传递就是切换
-    tree.toggle = function (id, notUpdate, flag) {
-
-        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
-        if (index > -1 && flag != 'show') {
-            alltreedata[alltreedata[id].pid].children.splice(index, 1);
-            alltreedata[id]._index = index;
-        }
-        else if (flag != 'hidden')
-            alltreedata[alltreedata[id].pid].children.splice(alltreedata[id]._index, 0, id);
-        if (!notUpdate) update();
-        return tree;
-
-    };
-
-    tree.update = function () {
-
-        update();
-        return tree;
-    };
-
     return tree;
 
-};
-
-clay.pieLayout = function () {
-    var scope = {
-        // 圆心
-        c: [0, 0],
-        // 半径
-        r: 1,
-        // 提示信息连线长度
-        l: [20, 20],
-        // 获取值方法
-        v: function (value, key, index) {
-            return value;
-        },
-        // 起始角度
-        b: 0,
-        // 旋转方向
-        d: false,
-        // arc尺寸
-        g: Math.PI * 2
-    }, calcLinePosition = function (deg, r) {
-
-        var pos = [];
-        // 求出第一个点
-        pos[0] = clay.rotate(scope.c[0], scope.c[1], deg, scope.c[0] + r, scope.c[1]);
-
-        // 求出第二个点
-        pos[1] = clay.rotate(scope.c[0], scope.c[1], deg, scope.c[0] + r + scope.l[0], scope.c[1]);
-
-        // 求出第三个点
-        pos[2] = [
-            pos[1][0] > scope.c[0] ? pos[1][0] - (-scope.l[1]) : pos[1][0] - scope.l[1],
-            pos[1][1]
-        ];
-
-        pos[3] = pos[1][0] > scope.c[0] ? "left" : "right";
-
-        return pos;
-    };
-
-    /**
-     * 计算饼图数据
-     * @param {Array} initPie 一个可迭代的原始数据
-     */
-    var pie = function (initPie) {
-        var resultData = [], key, allVal = 0, i = 0;
-        for (key in initPie) {
-            resultData.push({
-                "org": initPie[key],
-                "val": scope.v(initPie[key], key, i)
-            });
-            allVal += resultData[i].val;
-            i += 1;
-        }
-        var preBegin = scope.b, preDeg = 0;
-        var cDeg;
-        for (i = 0; i < resultData.length - 1; i++) {
-
-            // 求解角度（主要用于画弧）
-            preBegin = resultData[i].begin = preBegin + preDeg;
-            resultData[i].p = resultData[i].val / allVal;
-            preDeg = resultData[i].deg = scope.g * resultData[i].p * (scope.d ? -1 : 1);
-
-            // 求解说明文字连线（主要用于绘制折线）
-            resultData[i].line = calcLinePosition(
-                resultData[i].begin + resultData[i].deg * 0.5,
-                typeof scope.r == 'function' ? scope.r(initPie[key], key, i) : scope.r);
-
-            // 启动绘画方法
-            scope.p(resultData[i], i);
-        }
-
-        // 最后一个为了可以完全闭合（因为计算有精度丢失导致的），独立计算
-        resultData[i].begin = preBegin + preDeg;
-        resultData[i].deg = scope.g * (scope.d ? -1 : 1) + scope.b - resultData[i].begin;
-        resultData[i].p = resultData[i].val / allVal;
-
-        resultData[i].line = calcLinePosition(
-            resultData[i].begin + resultData[i].deg * 0.5,
-            typeof scope.r == 'function' ? scope.r(initPie[key], key, i) : scope.r);
-
-        scope.p(resultData[i], i);
-        return pie;
-
-    };
-
-    // 设置如何获取值
-    // 函数有三个参数：原始值、值的key、序号
-    pie.setValue = function (valback) {
-        scope.v = valback;
-        return pie;
-    };
-
-    // 设置如何绘图
-    pie.drawer = function (drawerback) {
-        scope.p = drawerback;
-        return pie;
-    };
-
-    // 设置旋转方向
-    // true 逆时针
-    // false 顺时针
-    pie.setD = function (notClockwise) {
-        scope.d = notClockwise;
-        return pie;
-    };
-
-    // 设置起始角度
-    pie.setBegin = function (deg) {
-        scope.b = deg;
-        return pie;
-    };
-
-    // 设置半径
-    // 一个数字或返回半径的函数
-    // 函数有三个参数：原始值、值的key、序号
-    pie.setRadius = function (r) {
-        scope.r = r;
-        return pie;
-    };
-
-    // 设置提示信息连接线长度
-    pie.setDis = function (l1, l2) {
-        scope.l = [l1, typeof l2 == 'number' ? l2 : l1];
-        return pie;
-    };
-
-    // 设置弧中心
-    pie.setCenter = function (x, y) {
-        scope.c = [x, y];
-        return pie;
-    };
-
-    // 设置弧度跨度
-    pie.setDeg = function (deg) {
-        scope.g = deg;
-        return pie;
-    };
-
-    return pie;
 };
 
 clay.config = function ($provider, content) {

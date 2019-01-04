@@ -71,9 +71,12 @@ clay.treeLayout = function () {
 
             })(alltreedata[rootid], 0);
 
-            // 画图
             // 传递的参数分别表示：记录了位置信息的树结点集合、根结点ID和树的宽
-            scope.e.drawer(alltreedata, rootid, size);
+            return {
+                "node": alltreedata,
+                "root": rootid,
+                "size": size
+            };
 
         };
 
@@ -85,8 +88,7 @@ clay.treeLayout = function () {
      *  "data":原始数据,
      *  "pid":父亲ID,
      *  "id":唯一标识ID,
-     *  "children":[cid1、cid2、...],
-     *  "show":boolean，表示该结点在计算位置的时候是否可见
+     *  "children":[cid1、cid2、...]
      * }
      */
     var toInnerTree = function (initTree) {
@@ -99,8 +101,7 @@ clay.treeLayout = function () {
             "data": temp,
             "pid": null,
             "id": id,
-            "children": [],
-            "show": true
+            "children": []
         };
         // 根据传递的原始数据，生成内部统一结构
         (function createTree(pdata, pid) {
@@ -112,8 +113,7 @@ clay.treeLayout = function () {
                     "data": children[flag],
                     "pid": pid,
                     "id": id,
-                    "children": [],
-                    "show": true
+                    "children": []
                 };
                 createTree(children[flag], id);
             }
@@ -129,8 +129,7 @@ clay.treeLayout = function () {
         var treeData = toInnerTree(initTree);
         alltreedata = treeData[1];
         rootid = treeData[0];
-        update();
-        return tree;
+        return update();
 
     };
 
@@ -149,66 +148,6 @@ clay.treeLayout = function () {
     // 获取结点ID方法:id(treedata)
     tree.id = function (idback) {
         scope.e.id = idback;
-        return tree;
-    };
-
-    // 结点更新处理方法 drawer(alltreedata, rootid, size)
-    tree.drawer = function (drawerback) {
-        scope.e.drawer = drawerback;
-        return tree;
-    };
-
-    // 第三个参数为true的时候不会自动更新
-    tree.add = function (pid, newnodes, notUpdate) {
-
-        var treeData = toInnerTree(newnodes), id;
-        treeData[1][treeData[0]].pid = pid;
-        alltreedata[pid].children.push(treeData[0]);
-        for (id in treeData[1])
-            alltreedata[id] = treeData[1][id];
-        if (!notUpdate) update();
-        return tree;
-
-    };
-    tree.delete = function (id, notUpdate) {
-
-        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
-        if (index > -1)
-            alltreedata[alltreedata[id].pid].children.splice(index, 1);
-
-        // 删除多余结点
-        (function deleteNode(pid) {
-            var flag;
-            for (flag = 0; flag < alltreedata[pid].children.length; flag++) {
-                deleteNode(alltreedata[alltreedata[pid].children[flag]].id);
-            }
-            delete alltreedata[pid];
-        })(id);
-
-        if (!notUpdate) update();
-        return tree;
-
-    };
-
-    // 控制结点显示还是隐藏
-    // flag可选，"show"：显示，"hidden"：隐藏，不传递就是切换
-    tree.toggle = function (id, notUpdate, flag) {
-
-        var index = alltreedata[alltreedata[id].pid].children.indexOf(id);
-        if (index > -1 && flag != 'show') {
-            alltreedata[alltreedata[id].pid].children.splice(index, 1);
-            alltreedata[id]._index = index;
-        }
-        else if (flag != 'hidden')
-            alltreedata[alltreedata[id].pid].children.splice(alltreedata[id]._index, 0, id);
-        if (!notUpdate) update();
-        return tree;
-
-    };
-
-    tree.update = function () {
-
-        update();
         return tree;
     };
 

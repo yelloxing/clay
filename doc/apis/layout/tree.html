@@ -38,13 +38,19 @@
         首先，我们需要获取树布局对象，然后配置三个基本方法，正是因为这三个基本方法的存在，原始数据结构理论上讲，只要是一个数组即可。
     </p>
     <p>
-        接着，我们需要配置布局的绘图方法，因为布局是用来计算的，不是绘图的，具体的绘图方式是自由的，你需要配置你选择的绘图方法：
+        接着，传递原始数据，就可以获取计算后的结果了：
     </p>
-    <pre class='prettyprint lang-js'>tree.drawer(function (nodes, rootid, size) {
-    // 在这里绘图
-});</pre>
+    <pre class='prettyprint lang-js'>var result=tree(nodes);</pre>
     <p>
-        其中nodes表示所有的树结点，记录着结点位置，使用教程中的例子：
+        返回结果如下：
+    </p>
+    <pre class='prettyprint lang-js'>{
+    "node": alltreedata,
+    "root": rootid,
+    "size": size
+}</pre>
+    <p>
+        其中node表示所有的树结点，记录着结点位置，使用教程中的例子：
     </p>
     <pre class='prettyprint lang-js'>[
     "油画":{
@@ -59,33 +65,8 @@
     ...
 ]</pre>
     <p>
-        rootid表示根结点，size表示树在Y轴方向占高尺寸，和top对应。
+        root表示根结点id，size表示树在Y轴方向占高尺寸，和top对应。
     </p>
-    <p>
-        以上就是使用tree布局绘制所需要的最基本的配置，然后你就可以启动绘图了：
-    </p>
-    <pre class='prettyprint lang-js'>tree(nodes);</pre>
-    <h4>
-        交互接口
-    </h4>
-    <p>
-        绘制好的树，你可能希望和其交互，为此，我们主要提供了下面的方法供你使用：
-    </p>
-    <pre class='prettyprint lang-js'>// 添加新结点，pid表示挂载的父id，newnodes是新结点集合
-tree.add(pid, newnodes, notUpdate);
-
-// 删除结点，id表示需要删除的结点的唯一标识
-tree.delete(id, notUpdate);
-
-// 切换结点显示隐藏（flag可选，传递"show"：显示，"hidden"：隐藏）
-tree.toggle(id, notUpdate, flag);</pre>
-    <p>
-        因为对结点进行了修改，页面是否需要立刻刷新可以通过上面方法的notUpdate来控制，默认false自动刷新，设置为true不刷新。
-    </p>
-    <p>
-        如果不刷新，希望自己在指定时刻主动刷新重绘页面，可以调用下面的方法启动刷新：
-    </p>
-    <pre class='prettyprint lang-js'>tree.update();</pre>
 </body>
 
 </html>
