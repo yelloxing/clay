@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Jan 04 2019 15:07:58 GMT+0800 (GMT+08:00)
+* Date:Fri Jan 04 2019 21:41:25 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1858,17 +1858,6 @@ clay.camera = function () {
     return camera;
 
 };
-
-// 灯光
-
-// diffuse reflection
-// <漫反射光颜色>=<入射光颜色>*<表面基底色>*cosB
-// 入射光线和法线的夹角称为入射角，用B表示
-
-// ambient reflection
-// <环境反射光颜色>=<入射光颜色>*<表面基底色>
-
-// <表面的反射光颜色>=<漫反射光颜色>+<环境反射光颜色>
 
 clay.treeLayout = function () {
 

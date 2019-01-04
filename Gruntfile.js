@@ -61,7 +61,6 @@ var source = [
     './src/three/lookAt.js',
     './src/three/projection.js',
     './src/three/camera.js',
-    './src/three/light.js',
 
     /**
      * 布局
