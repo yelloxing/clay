@@ -1,6 +1,6 @@
 {
   "name": "clay-core",
-  "version": "1.7.0next",
+  "version": "1.8.0next",
   "description": "Provide a more friendly web-side drawing interface!",
   "main": "build/clay-core.js",
   "scripts": {

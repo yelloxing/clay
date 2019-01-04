@@ -45,16 +45,13 @@
     <p>
         安装好了，可以这样调用：
     </p>
-    <pre class='prettyprint lang-js'>import render from 'clay-core';
-
-// 启动clay
-let clay=render(window);
+    <pre class='prettyprint lang-js'>import clay from 'clay-core';
 
 // 基本配置(可以不配置，使用默认值)
 clay.config(...);
 ...
 
-// 导出，供别的模块使用
+// 导出，供别的模块使用(如果没有配置，别的模块重新import也一样)
 export default clay;</pre>
     <h2>
         注意点

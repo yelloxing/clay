@@ -13,6 +13,8 @@
 ### 邮箱:yelloxing@gmail.com
 ****
 
+>>> 温馨提示：clay.js系列，v1.x.x全部表明该版本处于实验阶段，从2.0.0开始的版本，请放心使用，另外，每个版本（可使用版本）基本都向前兼容，如果有特殊情况，会在此处登记！
+
 关注的问题
 --------------------------------------
 首先，本项目是为了Web端绘图而建立的，如果用更通俗的话说，就是为了方便使用HTML + CSS + ES绘制各种2D和3D图形，并且绘制的图形是可交互的。
@@ -50,16 +52,13 @@ npm install --save clay-core
 安装好了，可以这样调用：
 
 ```js
-import render from 'clay-core';
-
-// 启动clay
-let clay=render(window);
+import clay from 'clay-core';
 
 // 基本配置(可以不配置，使用默认值)
 clay.config(...);
 ...
 
-// 导出，供别的模块使用
+// 导出，供别的模块使用(如果没有配置，别的模块重新import也一样)
 export default clay;
 ```
 

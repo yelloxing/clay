@@ -3,14 +3,12 @@
     'use strict';
 
     if (typeof module === "object" && typeof module.exports === "object") {
-        module.exports = function (target) {
-            return factory(target || window);
-        };
+        module.exports = factory();
     } else {
-        global.clay = global.$$ = factory(global);
+        global.clay = global.$$ = factory();
     }
 
-})(typeof window !== "undefined" ? window : this, function (global, undefined) {
+})(typeof window !== "undefined" ? window : this, function (undefined) {
 
     'use strict';
 
