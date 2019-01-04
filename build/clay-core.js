@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Jan 04 2019 10:38:06 GMT+0800 (GMT+08:00)
+* Date:Fri Jan 04 2019 15:07:58 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2227,7 +2227,10 @@ var _service = {
 
 // 常用方法
 var _this = {
-    "toNode": _toNode
+    "toNode": _toNode,
+    "rotateX": _rotateX,
+    "rotateY": _rotateY,
+    "rotateZ": _rotateZ
 };
 
 /**
