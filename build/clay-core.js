@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 1.8.0next
+* version 1.9.0next
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Jan 04 2019 23:50:10 GMT+0800 (GMT+08:00)
+* Date:Sat Jan 05 2019 00:07:34 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2214,7 +2214,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '1.8.0next';
+    clay.version = '1.9.0next';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 

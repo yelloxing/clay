@@ -29,6 +29,9 @@
     <p>
         返回图层名称为id的图层上的画笔，该画布和canvas2D上的画笔用法一样，使用该画笔绘制的图形会保存在对应图层上。
     </p>
+    <p class="warn">
+        不使用图层获取画笔的方法是：$$('canvas').painter();
+    </p>
     <pre class='prettyprint lang-js'>layerManger.clean(pencil);</pre>
     <p>
         传递某个图层上的画笔(painter方法的id也可以)，会清除该画笔对应的图层上保存的全部图形。返回图层管理者。
