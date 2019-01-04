@@ -69,11 +69,9 @@ var source = [
     './src/layout/pie.js',
 
     /**
-     * 扩展
+     * 加强
      */
-    './src/extend/compiler.js',
-    './src/extend/component.js',
-    './src/extend/config.js'
+    './src/enhance/config.js'
 
 ];
 

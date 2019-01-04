@@ -21,11 +21,10 @@
     <p>
         因为clay.js的主要目的是绘图，因此内置的sizzle选择器比较有限，如果需要，你可以重置sizzle查找方法：
     </p>
-    <pre class='prettyprint lang-js'>$$.config("$sizzleProvider", function () {
-    return function (selector, context) {
+    <pre class='prettyprint lang-js'>$$.config("$sizzleProvider", function (selector, context) {
+
         // 配置新的查找方法
         return document.getElementsByTagName('meta');
-    };
 });</pre>
 </body>
 

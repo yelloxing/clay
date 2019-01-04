@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Jan 04 2019 21:41:25 GMT+0800 (GMT+08:00)
+* Date:Fri Jan 04 2019 23:50:10 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -2209,85 +2209,8 @@ clay.pieLayout = function () {
     return pie;
 };
 
-// 可注入内部服务
-var _service = {
-
-};
-
-// 常用方法
-var _this = {
-    "toNode": _toNode,
-    "rotateX": _rotateX,
-    "rotateY": _rotateY,
-    "rotateZ": _rotateZ
-};
-
-/**
- * 确定应用目标以后
- * 启动编译并应用
- */
-clay.prototype.use = function (name, config) {
-
-    // 销毁之前的
-    if (this[0]._component) _component[this[0]._component].beforeDestory.apply(_this, [this]);
-
-    // 使用组件前，在结点中记录一下
-    this[0]._component = name;
-
-    // 添加监听方法
-    config.$watch = function (key, doback) {
-        var val = config[key];
-        Object.defineProperty(config, key, {
-            get: function () {
-                return val;
-            },
-            set: function (newVal) {
-                doback(newVal, val);
-                val = newVal;
-            }
-        });
-    };
-
-    // 组件创建前
-    if (typeof _component[name].beforeCreate == 'function') _component[name].beforeCreate.apply(_this, [this]);
-
-    // 启动组件
-    _component[name].link.apply(_this, [this, config]);
-    return this;
-};
-
-// 主动销毁
-clay.prototype.destory = function () {
-    if (this[0]._component) _component[this[0]._component].beforeDestory.apply(_this, [this]);
-    return this;
-};
-
-var _component = {
-    // 挂载组件
-};
-
-/**
- * 记录挂载的组件
- * 包括预处理
- */
-clay.component = function (name, content) {
-    var param = [], i;
-    if (content.constructor != Array) content = [content];
-    for (i = 0; i < content.length - 1; i++) {
-        param[i] = _service[content[i]] || undefined;
-    }
-    _component[name] = content[content.length - 1].apply(this, param);
-    return clay;
-};
-
 clay.config = function ($provider, content) {
-    var param = [], i;
-    if (content.constructor != Array) content = [content];
-    for (i = 0; i < content.length - 1; i++) {
-        param[i] = _service[content[i]] || undefined;
-    }
-    var config = content[content.length - 1].apply(this, param);
-    _provider[$provider](config);
+    _provider[$provider](content);
     return clay;
 };
 
