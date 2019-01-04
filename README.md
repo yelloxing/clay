@@ -27,14 +27,6 @@
 --------------------------------------
 始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay-core/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay-core/doc)了解基本情况。如果仍有疑惑，可以发送作者邮箱询问细节。
 
-如何参与？
---------------------------------------
-目前维护工作主要有如下方面，你可以根据自己的选择进行：
-
-- 参与项目代码开发：关于项目开发部分，全部由[Projects - 核心代码开发](https://github.com/yelloxing/clay-core/projects/2)分配任务，你可以在其中领取任务或在issue中提出开发意见。
-
-- 参与文档编辑：关于项目本身和相关文档，全部由[Projects - 文档整理和校对](https://github.com/yelloxing/clay-core/projects/3)分配任务。
-
 如何使用？
 --------------------------------------
 如果你开发的是一个web项目，直接在页面引入打包后的文件后即可：
