@@ -14,6 +14,7 @@ var source = [
     /**
      * 兼容性
      */
+    './src/polyfill/function.js',
     './src/polyfill/innerHTML.js',
 
     /**

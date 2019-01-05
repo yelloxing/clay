@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 1.9.0next
+* version 1.9.1next
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Jan 05 2019 01:48:44 GMT+0800 (GMT+08:00)
+* Date:Sat Jan 05 2019 16:42:27 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -191,7 +191,7 @@ function _sizzle(selector, context) {
     }
 
     // 如果是clay对象
-    else if (selector && selector.constructor === clay) {
+    else if (selector && selector.constructor.name === 'clay') {
         return selector;
     }
 
@@ -488,6 +488,17 @@ clay.prototype.position = function (event) {
     };
 
 };
+
+// 获取函数名称
+// 部分旧浏览器不支持
+if ('name' in Function.prototype === false) {
+    // https://www.ecma-international.org/ecma-262/6.0/#sec-setfunctionname
+    Object.defineProperty(Function.prototype, 'name', {
+        get: function () {
+            return this.toString().match(/^\s*function\s*([^\(\s]*)/)[1];
+        }
+    });
+}
 
 // 针对部分浏览器svg不支持innerHTML方法
 var _innerSVG = function (target, svgstring) {
@@ -2013,7 +2024,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '1.9.0next';
+    clay.version = '1.9.1next';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 
