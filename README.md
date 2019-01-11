@@ -52,6 +52,29 @@ clay.config(...);
 export default clay;
 ```
 
+如果你是使用npm方式管理的，除了导入全局clay外，你还可以导入你需要的接口，下面列出全部可导入接口：
+
+```js
+import {
+    // 全局变量
+    clay, $$,
+    // 布局
+    treeLayout, pieLayout,
+    // 比例尺
+    scaleLinear,
+    // 坐标变换
+    rotate, move, scale,
+    // 曲线插值
+    hermite, cardinal, catmullRom,
+    // Matrix4矩阵
+    Matrix4,
+    // 地球坐标映射
+    map,
+    // 轮询
+    animaion, loop
+} from 'clay-core';
+```
+
 如何在本地搭建开发环境？
 --------------------------------------
 

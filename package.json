@@ -1,13 +1,14 @@
 {
   "name": "clay-core",
-  "version": "1.9.1next",
+  "version": "2.0.0",
   "description": "Provide a more friendly web-side drawing interface!",
-  "main": "build/clay-core.js",
+  "main": "build/export.js",
   "scripts": {
     "release": "node_modules/.bin/grunt release",
     "server": "node_modules/.bin/grunt server",
     "test": "npm install grunt-contrib-qunit && node_modules/.bin/grunt test",
-    "start": "npm install && npm run release"
+    "start": "npm install && npm run release",
+    "export": "node_modules/.bin/webpack"
   },
   "keywords": [
     "clay.js",
@@ -34,6 +35,9 @@
     "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-jshint": "^2.0.0",
-    "grunt-contrib-uglify": "^4.0.0"
+    "grunt-contrib-uglify": "^4.0.0",
+    "webpack": "2.7.0",
+    "babel-core": "6.26.0",
+    "babel-loader": "6.4.1"
   }
 }

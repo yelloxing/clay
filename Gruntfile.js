@@ -57,13 +57,6 @@ var source = [
     './src/webgl/index.js',
 
     /**
-     * 三维世界
-     */
-    './src/three/lookAt.js',
-    './src/three/projection.js',
-    './src/three/camera.js',
-
-    /**
      * 布局
      */
     './src/layout/tree.js',

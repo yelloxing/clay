@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 1.9.1next
+* version 2.0.0
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sat Jan 05 2019 16:42:27 GMT+0800 (GMT+08:00)
+* Date:Fri Jan 11 2019 22:57:05 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1718,158 +1718,6 @@ clay.prototype.webgl = function (opts) {
     return glObj;
 };
 
-//计算获得单位向量
-var _getUnitVector = function (x, y, z) {
-    var d = Math.sqrt(x * x + y * y + z * z);
-    return [x / d, y / d, z / d];
-},
-    //计算获得v1,v2两个向量的叉积
-    _getXMultiplyResult = function (v1, v2) {
-        return [
-            v1[1] * v2[2] - v1[2] * v2[1],
-            v1[2] * v2[0] - v1[0] * v2[2],
-            v1[0] * v2[1] - v1[1] * v2[0]
-        ];
-    };
-
-// 视图
-var _lookAt = function (
-    // 视点
-    eX, eY, eZ,
-    // 观察目标中心点
-    cX, cY, cZ,
-    // 上方向
-    upX, upY, upZ
-) {
-    eX = eX || 0; eY = eY || 0; eZ = eZ === 0 ? 0 : 1;
-    cX = cX || 0; cY = cY || 0; cZ = cZ || 0;
-    upX = upX || 0; upY = upY === 0 ? 0 : 1; upZ = upZ || 0;
-
-    if (upX === 0 && upY === 0 && upZ === 0)
-        throw new Error("The orientation above the camera cannot be a zero vector!");
-
-    if (eX === cX && eY === cY && eZ === cZ)
-        throw new Error("Viewpoint cannot coincide with target point!");
-
-    //获得相机拍摄方向的单位向量
-    var visualVector = _getUnitVector(cX - eX, cY - eY, cZ - eZ);
-    //获得上方向的单位向量
-    var upVector = _getUnitVector(upX, upY, upZ);
-    //根据visualVector和upVector叉积，求得右手螺旋定则的另一轴单位向量（x轴）
-    //visualVector X upVector
-    var xRailVector = _getXMultiplyResult(visualVector, upVector);
-    //计算该坐标系下原点位置
-    var O = [eX + visualVector[0], eY + visualVector[1], eZ + visualVector[2]];
-    /**
-     * 由此可以根据物体原坐标[OriginX,OriginY,OriginZ],计算出物体新坐标 [x,y,z] ：
-     *
-     *      i               j               k         z轴与相机拍摄方向相反，故取负号
-     *
-     * xRailVector[0]   upVector[0]   -visualVector[0]       x     OriginX     O[0]
-     * xRailVector[1]   upVector[1]   -visualVector[1]   X   y  =  OriginY  -  O[1]
-     * xRailVector[2]   upVector[2]   -visualVector[2]       z     OriginZ     O[2]
-     *
-     * 简写形式： AX=Ox-B
-     * 则         X=(A^-1)(Ox-B)
-     *
-     */
-    return clay.Matrix4([
-        xRailVector[0], xRailVector[1], xRailVector[2], 0,
-        upVector[0], upVector[1], upVector[2], 0,
-        -visualVector[0], -visualVector[1], -visualVector[2], 0,
-        0, 0, 0, 1
-    ]).inverse().multiply([
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        -O[0], -O[1], -O[2], 1
-    ], true).value();
-};
-
-// 正交投影
-// 投影向量和观察平面垂直
-// 物体坐标沿观察坐标系的z轴平行投影到观察平面上
-// 观察点和观察平面间的距离不会影响物体的投影大小
-// 取景范围是一个长方体
-// 只有在这个长方体中的景物才会被绘制出来
-var _orthogonal_projection = function (
-    // 裁剪面边界
-    left, right, top, bottom,
-    // 近裁剪面和远裁剪面
-    near, far
-) {
-    return [
-        2 / (right - left), 0, 0, 0,
-        0, 2 / (top - bottom), 0, 0,
-        0, 0, 2 / (near - far), 0,
-        (right + left) / (left - right),
-        (top + bottom) / (bottom - top),
-        (far + near) / (far - near),
-        1
-    ];
-};
-
-// 照相机
-clay.camera = function () {
-
-    var scope = {};
-
-    // 求解出最终的相机矩阵
-    var camera = function () {
-        var matrix;
-        if (scope.e && scope.c && scope.u) {
-            matrix = clay.Matrix4(_lookAt(
-                scope.e[0], scope.e[1], scope.e[2],
-                scope.c[0], scope.c[1], scope.c[2],
-                scope.u[0], scope.u[1], scope.u[2]
-            ));
-        } else {
-            matrix = clay.Matrix4();
-        }
-        if (scope.f && scope.b) {
-            matrix.multiply(_orthogonal_projection(
-                scope.b[3], scope.b[1],
-                scope.b[0], scope.b[2],
-                scope.f[0], scope.f[1]
-            ));
-        }
-        return matrix.value();
-    };
-
-    // 视点
-    camera.setEye = function (eX, eY, eZ) {
-        scope.e = [eX, eY, eZ];
-        return camera;
-    };
-
-    // 观察目标中心点
-    camera.setCenter = function (cX, cY, cZ) {
-        scope.c = [cX, cY, cZ];
-        return camera;
-    };
-
-    // 上方向
-    camera.setUp = function (upX, upY, upZ) {
-        scope.u = [upX, upY, upZ];
-        return camera;
-    };
-
-    // 设置裁剪面
-    camera.setFace = function (near, far) {
-        scope.f = [near, far];
-        return camera;
-    };
-
-    // 设置边界
-    camera.setBorder = function (top, right, bottom, left) {
-        scope.b = [top, right, bottom, left];
-        return camera;
-    };
-
-    return camera;
-
-};
-
 clay.treeLayout = function () {
 
     var scope = {
@@ -2024,7 +1872,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '1.9.1next';
+    clay.version = '2.0.0';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 
