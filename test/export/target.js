@@ -72,18 +72,16 @@
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return treeLayout; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return pieLayout; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return scaleLinear; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return rotate; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return move; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return scale; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return hermite; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return cardinal; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return catmullRom; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return Matrix4; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return map; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "o", function() { return animaion; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "p", function() { return loop; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return rotate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return move; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return scale; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "h", function() { return hermite; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "i", function() { return cardinal; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "j", function() { return catmullRom; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "k", function() { return Matrix4; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "l", function() { return map; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "m", function() { return animation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "n", function() { return loop; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__clay_core__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__clay_core___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__clay_core__);
 /* harmony reexport (default from non-hamory) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a; });
@@ -92,7 +90,6 @@
 
 
 let treeLayout = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.treeLayout;
-let pieLayout = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.pieLayout;
 
 let scaleLinear = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.scaleLinear;
 
@@ -108,7 +105,7 @@ let Matrix4 = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.Matrix4;
 
 let map = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.map;
 
-let animaion = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.animaion;
+let animation = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.animation;
 let loop = __WEBPACK_IMPORTED_MODULE_0__clay_core___default.a.loop;
 
 
@@ -123,14 +120,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["a" /* default */], __WEBPACK_IMPORTED_MODULE_0__build_export__["b" /* clay */], __WEBPACK_IMPORTED_MODULE_0__build_export__["c" /* $$ */]);
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["d" /* treeLayout */], __WEBPACK_IMPORTED_MODULE_0__build_export__["e" /* pieLayout */]);
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["f" /* scaleLinear */]);
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["g" /* rotate */], __WEBPACK_IMPORTED_MODULE_0__build_export__["h" /* move */], __WEBPACK_IMPORTED_MODULE_0__build_export__["i" /* scale */]);
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["j" /* hermite */], __WEBPACK_IMPORTED_MODULE_0__build_export__["k" /* cardinal */], __WEBPACK_IMPORTED_MODULE_0__build_export__["l" /* catmullRom */]);
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["m" /* Matrix4 */]);
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["n" /* map */]);
-console.log(__WEBPACK_IMPORTED_MODULE_0__build_export__["o" /* animaion */], __WEBPACK_IMPORTED_MODULE_0__build_export__["p" /* loop */]);
+function doTest() {
+    for (var i = 0; i < arguments.length; i++) {
+        if (arguments[i]) {
+            console.log(arguments[i]);
+        } else {
+            console.error(arguments[i]);
+        }
+    }
+}
+
+doTest(__WEBPACK_IMPORTED_MODULE_0__build_export__["a" /* default */], __WEBPACK_IMPORTED_MODULE_0__build_export__["b" /* clay */], __WEBPACK_IMPORTED_MODULE_0__build_export__["c" /* $$ */]);
+doTest(__WEBPACK_IMPORTED_MODULE_0__build_export__["d" /* treeLayout */]);
+doTest(__WEBPACK_IMPORTED_MODULE_0__build_export__["e" /* rotate */], __WEBPACK_IMPORTED_MODULE_0__build_export__["f" /* move */], __WEBPACK_IMPORTED_MODULE_0__build_export__["g" /* scale */]);
+doTest(__WEBPACK_IMPORTED_MODULE_0__build_export__["h" /* hermite */], __WEBPACK_IMPORTED_MODULE_0__build_export__["i" /* cardinal */], __WEBPACK_IMPORTED_MODULE_0__build_export__["j" /* catmullRom */]);
+doTest(__WEBPACK_IMPORTED_MODULE_0__build_export__["k" /* Matrix4 */]);
+doTest(__WEBPACK_IMPORTED_MODULE_0__build_export__["l" /* map */]);
+doTest(__WEBPACK_IMPORTED_MODULE_0__build_export__["m" /* animation */], __WEBPACK_IMPORTED_MODULE_0__build_export__["n" /* loop */]);
 
 /***/ }),
 /* 2 */

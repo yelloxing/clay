@@ -1,7 +1,6 @@
 import clay from './clay-core';
 
 let treeLayout = clay.treeLayout;
-let pieLayout = clay.pieLayout;
 
 let scaleLinear = clay.scaleLinear;
 
@@ -17,7 +16,7 @@ let Matrix4 = clay.Matrix4;
 
 let map = clay.map;
 
-let animaion = clay.animaion;
+let animation = clay.animation;
 let loop = clay.loop;
 
 export {
@@ -29,10 +28,6 @@ export {
 
     // 布局
     treeLayout,
-    pieLayout,
-
-    // 比例尺
-    scaleLinear,
 
     // 坐标变换
     rotate,
@@ -51,7 +46,7 @@ export {
     map,
 
     // 轮询
-    animaion,
+    animation,
     loop
 
 };

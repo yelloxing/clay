@@ -59,9 +59,7 @@ import {
     // 全局变量
     clay, $$,
     // 布局
-    treeLayout, pieLayout,
-    // 比例尺
-    scaleLinear,
+    treeLayout,
     // 坐标变换
     rotate, move, scale,
     // 曲线插值
@@ -71,7 +69,7 @@ import {
     // 地球坐标映射
     map,
     // 轮询
-    animaion, loop
+    animation, loop
 } from 'clay-core';
 ```
 

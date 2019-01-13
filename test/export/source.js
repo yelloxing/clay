@@ -3,9 +3,7 @@ import {
     // 全局变量
     clay, $$,
     // 布局
-    treeLayout, pieLayout,
-    // 比例尺
-    scaleLinear,
+    treeLayout,
     // 坐标变换
     rotate, move, scale,
     // 曲线插值
@@ -15,14 +13,23 @@ import {
     // 地球坐标映射
     map,
     // 轮询
-    animaion, loop
+    animation, loop
 } from '../../build/export';
 
-console.log(default_clay, clay, $$);
-console.log(treeLayout, pieLayout);
-console.log(scaleLinear);
-console.log(rotate, move, scale);
-console.log(hermite, cardinal, catmullRom);
-console.log(Matrix4);
-console.log(map);
-console.log(animaion, loop);
+function doTest() {
+    for (var i = 0; i < arguments.length; i++) {
+        if (arguments[i]) {
+            console.log(arguments[i]);
+        } else {
+            console.error(arguments[i]);
+        }
+    }
+}
+
+doTest(default_clay, clay, $$);
+doTest(treeLayout);
+doTest(rotate, move, scale);
+doTest(hermite, cardinal, catmullRom);
+doTest(Matrix4);
+doTest(map);
+doTest(animation, loop);
