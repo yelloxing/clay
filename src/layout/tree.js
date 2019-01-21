@@ -22,9 +22,10 @@ clay.treeLayout = function () {
          */
         update = function () {
 
-            var beforeDis = [], size = 0;
+            var beforeDis = [], size = 0, maxDeep = 0;
             (function positionCalc(pNode, deep) {
 
+                if (deep > maxDeep) maxDeep = deep;
                 var flag;
                 for (flag = 0; flag < pNode.children.length; flag++)
                     // 因为全部的子结点的位置确定了，父结点的y位置就是子结点的中间位置
@@ -75,7 +76,8 @@ clay.treeLayout = function () {
             return {
                 "node": alltreedata,
                 "root": rootid,
-                "size": size
+                "size": size,
+                "deep": maxDeep + 1
             };
 
         };

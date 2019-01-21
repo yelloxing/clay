@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 2.0.1next
+* version 2.0.2
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Sun Jan 13 2019 13:05:13 GMT+0800 (GMT+08:00)
+* Date:Mon Jan 21 2019 16:37:37 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1734,9 +1734,10 @@ clay.treeLayout = function () {
          */
         update = function () {
 
-            var beforeDis = [], size = 0;
+            var beforeDis = [], size = 0, maxDeep = 0;
             (function positionCalc(pNode, deep) {
 
+                if (deep > maxDeep) maxDeep = deep;
                 var flag;
                 for (flag = 0; flag < pNode.children.length; flag++)
                     // 因为全部的子结点的位置确定了，父结点的y位置就是子结点的中间位置
@@ -1787,7 +1788,8 @@ clay.treeLayout = function () {
             return {
                 "node": alltreedata,
                 "root": rootid,
-                "size": size
+                "size": size,
+                "deep": maxDeep + 1
             };
 
         };
@@ -1872,7 +1874,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '2.0.1next';
+    clay.version = '2.0.2';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 

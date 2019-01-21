@@ -45,9 +45,10 @@
         返回结果如下：
     </p>
     <pre class='prettyprint lang-js'>{
-    "node": alltreedata,
-    "root": rootid,
-    "size": size
+    "node": Array,
+    "root": any,
+    "size": number,
+    "deep":number
 }</pre>
     <p>
         其中node表示所有的树结点，记录着结点位置，使用教程中的例子：
@@ -65,7 +66,7 @@
     ...
 ]</pre>
     <p>
-        root表示根结点id，size表示树在Y轴方向占高尺寸，和top对应。
+        root表示根结点id，size表示树在Y轴方向占高尺寸，和top对应，deep表示有多少层。
     </p>
 </body>
 

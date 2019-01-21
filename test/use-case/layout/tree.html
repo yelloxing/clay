@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="../../../clay.png" type="image/x-png">
+    <title>clay.js - 用例测试 - tree布局</title>
+    <script src="../../../data/tree.js"></script>
+    <script src="../../../build/clay-core.min.js"></script>
+</head>
+
+<body></body>
+
+<script>
+    $$('<svg>' +
+        // 绘制连线
+        '<g class="line"></g>' +
+        // 绘制结点
+        '<g class="node"></g>' +
+        '</svg>').appendTo('body')
+        .attr('width', '1000')
+        .attr('height', '1600');
+    // 创建布局对象
+    var tree = clay.treeLayout()
+        /**
+         * 基本配置
+         */
+        // 获取根结点
+        .root(function (initTree) {
+            return initTree;
+        })
+        // 获取孩子结点
+        .child(function (parentTree, initTree) {
+            return parentTree.children;
+        })
+        // 获取结点标志id
+        .id(function (treedata) {
+            return treedata.name;
+        })
+
+        //  启动计算
+        (treeData);
+
+    /**
+     * 绘图
+     */
+    var i, node;
+    for (i in tree.node) {
+        node = tree.node[i];
+        // 绘制结点
+        $$('<circle target=' + node.data[0] + ' r="3" fill="white" stroke="red" stroke-width="1"/>')
+            .appendTo('.node')
+            .attr('cx', node.left * 200)
+            .attr('cy', node.top * 10);
+        // 绘制连线
+        if (node.pid)
+            $$('<line source=' + node.data[1] + ' target=' + node.data[0] + ' stroke-width="1" stroke="gray" fill="none"></path>')
+                .appendTo('.line')
+                .attr('x1', tree.node[node.pid].left * 200)
+                .attr('y1', tree.node[node.pid].top * 10)
+                .attr('x2', node.left * 200)
+                .attr('y2', node.top * 10);
+    }
+
+</script>
+
+</html>
