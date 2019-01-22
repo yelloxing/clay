@@ -19,7 +19,14 @@ clay.prototype.datum = function (data, calcback) {
 clay.prototype.data = function (datas, calcback) {
 
     var flag, temp = [];
-    if (datas && datas.constructor === Array) {
+    if (datas) {
+        if (datas.constructor !== Array) {
+            var _temp = [];
+            for (flag in datas) {
+                _temp.push(datas[flag]);
+            }
+            datas = _temp;
+        }
         // 创建新的对象返回，不修改原来对象
         var newClay = clay();
         newClay.selector = this.selector;
@@ -75,4 +82,12 @@ clay.prototype.exit = function () {
     delete this._exit;
     return newClay;
 
+};
+// 迭代执行
+clay.prototype.loop = function (doIt) {
+    var flag;
+    for (flag = 0; flag < this.length; flag++) {
+        doIt(this[flag]._data, flag, this.eq(flag));
+    }
+    return this;
 };

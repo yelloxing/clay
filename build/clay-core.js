@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 2.0.2next
+* version 2.0.3
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Mon Jan 21 2019 16:40:18 GMT+0800 (GMT+08:00)
+* Date:Tue Jan 22 2019 17:46:02 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -374,7 +374,14 @@ clay.prototype.datum = function (data, calcback) {
 clay.prototype.data = function (datas, calcback) {
 
     var flag, temp = [];
-    if (datas && datas.constructor === Array) {
+    if (datas) {
+        if (datas.constructor !== Array) {
+            var _temp = [];
+            for (flag in datas) {
+                _temp.push(datas[flag]);
+            }
+            datas = _temp;
+        }
         // 创建新的对象返回，不修改原来对象
         var newClay = clay();
         newClay.selector = this.selector;
@@ -430,6 +437,14 @@ clay.prototype.exit = function () {
     delete this._exit;
     return newClay;
 
+};
+// 迭代执行
+clay.prototype.loop = function (doIt) {
+    var flag;
+    for (flag = 0; flag < this.length; flag++) {
+        doIt(this[flag]._data, flag, this.eq(flag));
+    }
+    return this;
 };
 
 clay.prototype.bind = function (eventType, callback) {
@@ -1874,7 +1889,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '2.0.2next';
+    clay.version = '2.0.3';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 

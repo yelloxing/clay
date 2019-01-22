@@ -18,11 +18,23 @@
     <h2>
         loop
     </h2>
+    <h4>
+        普通的轮询
+    </h4>
     <pre class='prettyprint lang-js'>$$.loop(datas, function(value, key, index){
     // 在这里添加处理方法
 });</pre>
     <p>
         datas是一个可迭代的数组或json等即可，第二个参数是一个函数，其中value、key和index分别是当前面对的数据值，数据名和索引。
+    </p>
+    <h4>
+        数据绑定轮询
+    </h4>
+    <pre class='prettyprint lang-js'>clayObject.loop(function(data, index, target){
+    // 在这里添加处理方法
+});</pre>
+    <p>
+        其中data表示结点绑定的数据，index表示结点序号，target表示当前结点。
     </p>
     <h2>
         animation
