@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 2.0.3next
+* version 2.0.4
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Tue Jan 22 2019 17:50:17 GMT+0800 (GMT+08:00)
+* Date:Thu Jan 24 2019 11:39:18 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -1791,6 +1791,21 @@ clay.treeLayout = function () {
                     alltreedata[pNode.id].top = (alltreedata[pNode.children[0]].top + alltreedata[pNode.children[flag - 1]].top) * 0.5;
                 }
 
+                // 因为计算孩子的时候
+                // 无法掌握父辈兄弟的情况
+                // 可能会出现父亲和兄弟重叠问题
+                if (alltreedata[pNode.id].top <= beforeDis[deep]) {
+                    var needUp = beforeDis[deep] + 1 - alltreedata[pNode.id].top;
+                    (function doUp(_pid, _deep) {
+                        alltreedata[_pid].top += needUp;
+                        if (beforeDis[_deep] < alltreedata[_pid].top) beforeDis[_deep] = alltreedata[_pid].top;
+                        var _flag;
+                        for (_flag = 0; _flag < alltreedata[_pid].children.length; _flag++) {
+                            doUp(alltreedata[_pid].children[_flag], _deep + 1);
+                        }
+                    })(pNode.id, deep);
+                }
+
                 // 计算好一个结点后，需要更新此刻该层的上边缘
                 beforeDis[deep] = alltreedata[pNode.id].top;
 
@@ -1889,7 +1904,7 @@ clay.config = function ($provider, content) {
     return clay;
 };
 
-    clay.version = '2.0.3next';
+    clay.version = '2.0.4';
     clay.author = '心叶';
     clay.email = 'yelloxing@gmail.com';
 

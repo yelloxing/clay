@@ -63,7 +63,7 @@ clay.treeLayout = function () {
                     // 其实，flag==0的分支计算的就是孩子，是没有孩子的叶结点，那是关键
                     alltreedata[pNode.id].top = (alltreedata[pNode.children[0]].top + alltreedata[pNode.children[flag - 1]].top) * 0.5;
                 }
-                
+
                 // 因为计算孩子的时候
                 // 无法掌握父辈兄弟的情况
                 // 可能会出现父亲和兄弟重叠问题
