@@ -1,6 +1,6 @@
 {
   "name": "clay-core",
-  "version": "2.0.4next",
+  "version": "2.1.0",
   "description": "Provide a more friendly web-side drawing interface!",
   "main": "build/export.js",
   "scripts": {
@@ -30,14 +30,13 @@
   },
   "homepage": "https://yelloxing.github.io/clay-core/doc/",
   "devDependencies": {
+    "babel-core": "6.26.0",
+    "babel-loader": "6.4.1",
     "grunt": "^1.0.3",
-    "grunt-contrib-clean": "^2.0.0",
-    "grunt-contrib-concat": "^1.0.1",
     "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-jshint": "^2.0.0",
     "grunt-contrib-uglify": "^4.0.0",
-    "webpack": "2.7.0",
-    "babel-core": "6.26.0",
-    "babel-loader": "6.4.1"
+    "grunt-plug-insert": "^0.1.2",
+    "webpack": "2.7.0"
   }
 }

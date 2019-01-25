@@ -4,14 +4,14 @@
 * 
 * author 心叶
 *
-* version 2.0.4next
+* version 2.1.0
 * 
 * build Sun Jul 29 2018
 *
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Thu Jan 24 2019 11:43:48 GMT+0800 (GMT+08:00)
+* Date:Fri Jan 25 2019 14:25:09 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -40,6 +40,7 @@
         }
         this.selector = selector;
         this.length = nodes.length;
+        this.type="clay-object";
         return this;
 
     };
@@ -68,7 +69,6 @@ var _xlink = ["href", "title", "show", "type", "role", "actuate"];
 
 // 嵌入内部提供者
 var _provider = {};
-
 // 用于扩展或加强选择器
 var _out_sizzle;
 _provider.$sizzleProvider = function (config) {
@@ -191,7 +191,7 @@ function _sizzle(selector, context) {
     }
 
     // 如果是clay对象
-    else if (selector && selector.constructor.name === 'clay') {
+    else if (selector && selector.type === 'clay-object') {
         return selector;
     }
 
@@ -206,7 +206,6 @@ function _sizzle(selector, context) {
     }
 
 }
-
 // 把字符串变成结点
 function _toNode(str) {
     var frame = document.createElementNS(_namespace.svg, 'svg');
@@ -352,7 +351,6 @@ clay.prototype.size = function (type) {
         height: elemHeight
     };
 };
-
 // 用于把数据绑定到一组结点或返回第一个结点数据
 // 可以传递函数对数据处理
 clay.prototype.datum = function (data, calcback) {
@@ -446,7 +444,6 @@ clay.prototype.loop = function (doIt) {
     }
     return this;
 };
-
 clay.prototype.bind = function (eventType, callback) {
 
     var flag;
@@ -503,7 +500,6 @@ clay.prototype.position = function (event) {
     };
 
 };
-
 // 获取函数名称
 // 部分旧浏览器不支持
 if ('name' in Function.prototype === false) {
@@ -514,7 +510,6 @@ if ('name' in Function.prototype === false) {
         }
     });
 }
-
 // 针对部分浏览器svg不支持innerHTML方法
 var _innerSVG = function (target, svgstring) {
     if ('innerHTML' in SVGElement.prototype === false || 'innerHTML' in SVGSVGElement.prototype === false) {
@@ -547,7 +542,6 @@ var _innerSVG = function (target, svgstring) {
         target.innerHTML = svgstring;
     }
 };
-
 var _clock = {
     //当前正在运动的动画的tick函数堆栈
     timers: [],
@@ -632,7 +626,6 @@ _clock.stop = function () {
         _clock.timerId = null;
     }
 };
-
 var _rgb2hsl = function (R, G, B) {
     var R1 = +R / 255,
         G1 = +G / 255,
@@ -741,7 +734,6 @@ clay.loop = function (datas, callback) {
         callback(datas[data], data, flag++);
     return clay;
 };
-
 // 用特定色彩绘制区域
 var _drawerRegion = function (pen, color, drawback, regionManger) {
     pen.beginPath();
@@ -822,7 +814,6 @@ clay.prototype.region = function () {
     return regionManger;
 
 };
-
 // 获取canvas2D对象
 function _getCanvas2D(selector) {
     if (selector && selector.constructor === CanvasRenderingContext2D)
@@ -891,7 +882,6 @@ clay.prototype.layer = function () {
     return layerManager;
 
 };
-
 // 二个4x4矩阵相乘
 // 或矩阵和齐次坐标相乘
 var _multiply = function (matrix4, param) {
@@ -1090,7 +1080,6 @@ var _inverse_matrix = function (matrix4) {
         newMatrix4[flag] = adjoint[flag] / determinant;
     return newMatrix4;
 };
-
 // 在(a,b,c)方向位移d
 var _move = function (d, a, b, c) {
     c = c || 0;
@@ -1102,7 +1091,6 @@ var _move = function (d, a, b, c) {
         a * d / sqrt, b * d / sqrt, c * d / sqrt, 1
     ];
 };
-
 // 围绕0Z轴旋转
 // 其它的旋转可以借助transform实现
 // 旋转角度单位采用弧度制
@@ -1116,7 +1104,6 @@ var _rotate = function (deg) {
         0, 0, 0, 1
     ];
 };
-
 // 围绕圆心x、y和z分别缩放xTimes, yTimes和zTimes倍
 var _scale = function (xTimes, yTimes, zTimes, cx, cy, cz) {
     cx = cx || 0; cy = cy || 0; cz = cz || 0;
@@ -1127,7 +1114,6 @@ var _scale = function (xTimes, yTimes, zTimes, cx, cy, cz) {
         cx - cx * xTimes, cy - cy * yTimes, cz - cz * zTimes, 1
     ];
 };
-
 // 针对任意射线(a1,b1,c1)->(a2,b2,c2)
 // 计算出二个变换矩阵
 // 分别为：任意射线变成OZ轴变换矩阵 + OZ轴变回原来的射线的变换矩阵
@@ -1182,7 +1168,10 @@ var _transform = function (a1, b1, c1, a2, b2, c2) {
         throw new Error('a1 and b1 is required!');
     }
 };
-
+/**
+ * 4x4矩阵
+ * 列主序存储
+ */
 clay.Matrix4 = function (initMatrix4) {
 
     var matrix4 = initMatrix4 || [
@@ -1247,7 +1236,6 @@ clay.Matrix4 = function (initMatrix4) {
 
     return matrix4Obj;
 };
-
 // Hermite三次插值
 clay.hermite = function () {
 
@@ -1311,7 +1299,16 @@ clay.hermite = function () {
 
     return hermite;
 };
-
+/**
+ * Cardinal三次插值
+ * ----------------------------
+ * Hermite拟合的计算是，确定二个点和二个点的斜率
+ * 用一个y=ax(3)+bx(2)+cx+d的三次多项式来求解
+ * 而Cardinal是建立在此基础上
+ * 给定需要拟合的二个点和第一个点的前一个点+最后一个点的后一个点
+ * 第一个点的斜率由第一个点的前一个点和第二个点的斜率确定
+ * 第二个点的斜率由第一个点和第二个点的后一个点的斜率确定
+ */
 clay.cardinal = function () {
 
     var scope = { "t": 0 };
@@ -1380,7 +1377,10 @@ clay.cardinal = function () {
 
     return cardinal;
 };
-
+/**
+ *  catmull-rom插值
+ *  给定四个点p0,p1,p2,p3，可以计算出p1,p2之间的插值，其中的p0,p3为控制点
+ */
 clay.catmullRom = function () {
 
     var scope = {};
@@ -1404,7 +1404,6 @@ clay.catmullRom = function () {
 
     return catmull;
 };
-
 var
     // 围绕X轴旋转
     _rotateX = function (deg, x, y, z) {
@@ -1485,7 +1484,9 @@ clay.map = function () {
     return map;
 
 };
-
+/**
+ * 点（x,y）围绕中心（cx,cy）旋转deg度
+ */
 clay.rotate = function (cx, cy, deg, x, y) {
     var cos = Math.cos(deg), sin = Math.sin(deg);
     return [
@@ -1514,6 +1515,16 @@ clay.scale = function (cx, cy, times, x, y) {
         (times * (y - cy) + cy).toFixed(7)
     ];
 };
+/**
+ * 着色器一些公共的方法
+ * --------------------------------------------
+ * 主要是和生成特定着色器无关的方法
+ * 着色器分为二类：顶点着色器 + 片段着色器
+ * 前者用于定义一个点的特性，比如位置，大小，颜色等
+ * 后者用于针对每个片段（可以理解为像素）进行处理
+ *
+ * 着色器采用的语言是：GLSL ES语言
+ */
 
 // 把着色器字符串加载成着色器对象
 var _loadShader = function (gl, type, source) {
@@ -1549,6 +1560,14 @@ var _useShader = function (gl, vshaderSource, fshaderSource) {
     gl.useProgram(glProgram);
     return glProgram;
 };
+/**
+ * 缓冲区核心方法
+ * --------------------------------------------
+ * 缓冲区分为二种：
+ *  1.缓冲区中保存了包含顶点的数据
+ *  2.缓冲区保存了包含顶点的索引值
+ *
+ */
 
 // 获取一个新的缓冲区
 // isElement默认false，创建第一种缓冲区，为true创建第二种
@@ -1592,6 +1611,12 @@ var _useBuffer = function (gl, location, size, type, stride, offset, normalized)
 var _deleteBuffer = function (gl, buffer) {
     gl.deleteBuffer(buffer);
 };
+/**
+ * 纹理方法
+ * --------------------------------------------
+ * 在绘制的多边形上贴图
+ * 丰富效果
+ */
 
 // 初始化一个纹理对象
 // type有两个选择gl.TEXTURE_2D代表二维纹理，gl.TEXTURE_CUBE_MAP 立方体纹理
@@ -1643,7 +1668,6 @@ var _linkImage = function (gl, type, level, format, textureType, image) {
 var _deleteTexture = function (gl, texture) {
     gl.deleteTexture(texture);
 };
-
 // 获取webgl上下文
 function _getCanvasWebgl(node, opts) {
     var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
@@ -1732,7 +1756,14 @@ clay.prototype.webgl = function (opts) {
 
     return glObj;
 };
-
+/**
+ * 无论绘制的树结构是什么样子的
+ * 计算时都假想目标树的样子如下：
+ *  1.根结点在最左边，且上下居中
+ *  2.树是从左往右生长的结构
+ *  3.每个结点都是一块1*1的正方形，top和left分别表示正方形中心的位置
+ *
+ */
 clay.treeLayout = function () {
 
     var scope = {
@@ -1898,15 +1929,14 @@ clay.treeLayout = function () {
     return tree;
 
 };
-
+/**
+ * 扩展配置常规属性
+ * 包括额外方法
+ */
 clay.config = function ($provider, content) {
     _provider[$provider](content);
     return clay;
 };
-
-    clay.version = '2.0.4next';
-    clay.author = '心叶';
-    clay.email = 'yelloxing@gmail.com';
 
     return clay;
 

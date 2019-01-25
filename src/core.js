@@ -25,6 +25,7 @@
         }
         this.selector = selector;
         this.length = nodes.length;
+        this.type="clay-object";
         return this;
 
     };
@@ -32,7 +33,6 @@
     clay.prototype.init.prototype = clay.prototype;
 
     // @CODE build.js inserts compiled clay.js here
-
     return clay;
 
 });

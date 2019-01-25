@@ -120,7 +120,7 @@ function _sizzle(selector, context) {
     }
 
     // 如果是clay对象
-    else if (selector && selector.constructor.name === 'clay') {
+    else if (selector && selector.type === 'clay-object') {
         return selector;
     }
 
