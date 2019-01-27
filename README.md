@@ -1,4 +1,4 @@
-[clay.js](https://yelloxing.github.io/clay-core/doc/) - Provide a more friendly web-side drawing interface
+[clay.js / core](https://yelloxing.github.io/clay-core/doc/) - Provide a more friendly web-side drawing interface
 ==================================================
 
 [![travis](https://www.travis-ci.org/yelloxing/clay-core.svg?branch=master)](https://www.travis-ci.org/yelloxing/clay-core)
@@ -20,6 +20,18 @@
 和别的库不同的是，clay.js关注的重点是绘图过程中繁琐的操作和复杂的计算部分，通过提供更友好的操作接口和丰富而基础的计算接口来加速绘图。除此之外，不会也不喜欢强迫使用者改变自己的代码习惯，或者说在尽可能的情况下，保证灵活性。
 
 [![](https://github.com/yelloxing/clay-core/blob/master/doc/images/clay-readme.jpg)](https://yelloxing.github.io/clay-core/doc/)
+
+项目关系
+--------------------------------------
+clay.js是一个在浏览器端绘图的一个项目集的称呼，其中有很多项目，下面分别说明一下：
+
+* [clay.js / core](https://yelloxing.github.io/clay-core/doc/) - 也就是本项目，主要是浏览器端绘图的基本接口，只要是使用本系列绘图，大部分情况下，都应该引入本项目。
+
+* [clay.js / 2d](https://github.com/yelloxing/clay-2d) - 主要提供绘制二维图形的快捷接口，比如扇形等，引入本项目以后，基本的二维图形的绘制将不再麻烦。
+
+* [clay.js / chart](https://github.com/yelloxing/clay-chart) - 主要是图表绘制问题，比如绘制饼状图、树图等，你可以认为，这是一个数据可视化相关的计算库。
+
+* [clay.js / 3d](https://github.com/yelloxing/clay-3d) - 绘制三维图形相关的基础库，目前处于开发阶段。
 
 开源初衷
 --------------------------------------
