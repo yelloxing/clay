@@ -31,8 +31,6 @@ clay.js是一个在浏览器端绘图的一个项目集的称呼，其中有很�
 
 * [clay.js / chart](https://github.com/yelloxing/clay-chart) - 主要是图表绘制问题，比如绘制饼状图、树图等，你可以认为，这是一个数据可视化相关的计算库。
 
-* [clay.js / 3d](https://github.com/yelloxing/clay-3d) - 绘制三维图形相关的基础库，目前处于开发阶段。
-
 开源初衷
 --------------------------------------
 始终秉承着开源的初衷，任何有益的建议或设计都是被鼓励作为新的代码贡献进来的。加入我们前，请先阅读[相关基本说明](https://github.com/yelloxing/clay-core/blob/master/.github/CONTRIBUTING.md)和[接口文档API](https://yelloxing.github.io/clay-core/doc)了解基本情况。如果仍有疑惑，可以发送作者邮箱询问细节。
