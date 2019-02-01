@@ -1,4 +1,4 @@
-clay.prototype.bind = function (eventType, callback) {
+_clay_prototype.bind = function (eventType, callback) {
 
     var flag;
     if (window.attachEvent)
@@ -13,7 +13,7 @@ clay.prototype.bind = function (eventType, callback) {
 
 };
 
-clay.prototype.trigger = function (eventType) {
+_clay_prototype.trigger = function (eventType) {
     var flag, event;
 
     //创建event的对象实例。
@@ -44,7 +44,7 @@ clay.prototype.trigger = function (eventType) {
  */
 
 //  获取鼠标相对特定元素左上角位置
-clay.prototype.position = function (event) {
+_clay_prototype.position = function (event) {
 
     var bounding = this[0].getBoundingClientRect();
 

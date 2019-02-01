@@ -58,20 +58,20 @@ var _rgb2hsl = function (R, G, B) {
     }
     return [+r.toFixed(0), +g.toFixed(0), +b.toFixed(0)];
 }, _randomColors = function (num) {
-    if (typeof num == 'number' && num > 3) {
+    if (_is_number(num) && num > 3) {
         var temp = [], flag = 0;
         for (flag = 1; flag <= num; flag++)
             temp.push('rgb(' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ')');
         return temp;
     } else {
-        return ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+        return ['red', 'green', 'blue'];
     }
 };
 
 // 把颜色统一转变成rgba(x,x,x,x)格式
 // 返回数字数组[r,g,b,a]
 clay.color = function (color) {
-    var temp = clay('head').css('color', color).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(new RegExp('\\,' + _regexp.whitespace));
+    var temp = clay('head').css('color', color).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(new RegExp('\\,' + _regexp_whitespace));
     return [+temp[0], +temp[1], +temp[2], temp[3] == undefined ? 1 : +temp[3]];
 };
 

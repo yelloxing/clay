@@ -2,8 +2,8 @@
 function _toNode(str) {
     var frame = document.createElementNS(_namespace.svg, 'svg');
     // 把传递元素类型和标记进行统一处理
-    if (new RegExp("^" + _regexp.identifier + "$").test(str)) str = "<" + str + "></" + str + ">";
-    _innerSVG(frame,str);
+    if (new RegExp("^" + _regexp_identifier + "$").test(str)) str = "<" + str + "></" + str + ">";
+    _innerSVG(frame, str);
     var childNodes = frame.childNodes, flag, child;
     for (flag = 0; flag < childNodes.length; flag++) {
         if (childNodes[flag].nodeType === 1 || childNodes[flag].nodeType === 9 || childNodes[flag].nodeType === 11) {
@@ -29,7 +29,7 @@ function _toNode(str) {
 }
 
 // 当前维护的第一个结点作为上下文查找
-clay.prototype.find = function (selector) {
+_clay_prototype.find = function (selector) {
     if (this.length <= 0) return clay();
     var newClay = clay(),
         nodes = _sizzle(selector, this[0]), flag;
@@ -41,11 +41,11 @@ clay.prototype.find = function (selector) {
     return newClay;
 };
 
-clay.prototype.eq = function (flag) {
+_clay_prototype.eq = function (flag) {
     return this.length <= flag ? new clay() : new clay(this[flag]);
 };
 
-clay.prototype.appendTo = function (target) {
+_clay_prototype.appendTo = function (target) {
 
     var newClay = clay(target), i, j;
     for (i = 0; i < newClay.length; i++)
@@ -54,7 +54,7 @@ clay.prototype.appendTo = function (target) {
     return this;
 };
 
-clay.prototype.remove = function () {
+_clay_prototype.remove = function () {
 
     var flag;
     for (flag = 0; flag < this.length; flag++)
@@ -63,7 +63,7 @@ clay.prototype.remove = function () {
 };
 
 // 选择器重新查找一次
-clay.prototype.refresh = function () {
+_clay_prototype.refresh = function () {
 
     var nodes = _sizzle(this.selector, this.context), flag, length = this.length;
     this.length = 0;
@@ -77,14 +77,14 @@ clay.prototype.refresh = function () {
     return this;
 };
 
-clay.prototype.attr = function (attr, val) {
+_clay_prototype.attr = function (attr, val) {
 
     if (val == null || val == undefined) {
         return this.length > 0 ? this[0].getAttribute(attr) : undefined;
     } else {
         var flag, _val;
         for (flag = 0; flag < this.length; flag++) {
-            _val = typeof val === 'function' ? val(this[flag]._data, flag, this.eq(flag)) : val;
+            _val = _is_function(val) ? val(this[flag]._data, flag, this.eq(flag)) : val;
             // 如果是xml元素
             // 针对xlink使用特殊方法赋值
             if (/[A-Z]/.test(this[flag].tagName) && _xlink.indexOf(attr) >= 0) {
@@ -97,32 +97,30 @@ clay.prototype.attr = function (attr, val) {
     }
 };
 
-clay.prototype.css = function (name, style) {
+_clay_prototype.css = function (name, style) {
 
     if (arguments.length <= 1 && typeof name !== 'object') {
         if (this.length < 1) return undefined;
         var allStyle = document.defaultView && document.defaultView.getComputedStyle ?
             document.defaultView.getComputedStyle(this[0], null) :
             this[0].currentStyle;
-        return typeof name === 'string' ?
-            allStyle.getPropertyValue(name) :
-            allStyle;
+        return _is_string(name) ? allStyle.getPropertyValue(name) : allStyle;
     } else if (this.length > 0) {
         var flag, key;
         if (typeof name === 'object') {
             for (key in name)
                 for (flag = 0; flag < this.length; flag++)
-                    this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, key, name[key]) : name[key];
+                    this[flag].style[key] = _is_function(style) ? style(this[flag]._data, flag, key, name[key]) : name[key];
         } else {
             for (flag = 0; flag < this.length; flag++)
-                this[flag].style[name] = typeof style === 'function' ? style(this[flag]._data, flag) : style;
+                this[flag].style[name] = _is_function(style) ? style(this[flag]._data, flag) : style;
         }
     }
     return this;
 
 };
 
-clay.prototype.size = function (type) {
+_clay_prototype.size = function (type) {
     type = type || "border";
     var elemHeight, elemWidth;
     if (type == 'content') { //内容

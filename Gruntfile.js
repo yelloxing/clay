@@ -1,11 +1,29 @@
 'use strict';
 
-var source = [
+let banner = '/*!\n' +
+    '* clay.js - <%= pkg.description %>\n' +
+    '* <%= pkg.repository.url %>\n' +
+    '* \n' +
+    '* author <%= pkg.author %>\n' +
+    '*\n' +
+    '* version <%= pkg.version %>\n' +
+    '* \n' +
+    '* build Sun Jul 29 2018\n' +
+    '*\n' +
+    '* Copyright yelloxing\n' +
+    '* Released under the <%= pkg.license %> license\n' +
+    '* \n' +
+    '* Date:' + new Date() + '\n' +
+    '*/\n';
+
+// 打包文件
+const source = [
 
     /**
      * 核心代码
      */
     './src/config.js',
+    './src/tool.js',
     './src/sizzle.js',
     './src/modify.js',
     './src/data.js',
@@ -14,8 +32,7 @@ var source = [
     /**
      * 兼容性
      */
-    './src/polyfill/function.js',
-    './src/polyfill/innerHTML.js',
+    './src/polyfill/svg.innerHTML.js',
 
     /**
      * 工具类
@@ -68,23 +85,18 @@ var source = [
 
 ];
 
-var banner = '/*!\n' +
-    '* clay.js - <%= pkg.description %>\n' +
-    '* <%= pkg.repository.url %>\n' +
-    '* \n' +
-    '* author <%= pkg.author %>\n' +
-    '*\n' +
-    '* version <%= pkg.version %>\n' +
-    '* \n' +
-    '* build Sun Jul 29 2018\n' +
-    '*\n' +
-    '* Copyright yelloxing\n' +
-    '* Released under the <%= pkg.license %> license\n' +
-    '* \n' +
-    '* Date:' + new Date() + '\n' +
-    '*/\n';
+// 需要单元测试文件
+const unit_file = [
+    'test/unit/node.html',
+    'test/unit/data.html',
+    'test/unit/calculate.html'
+];
 
 module.exports = function (grunt) {
+
+    // 独立配置文件
+    const jshint_options = grunt.file.readJSON('jshint.json');
+
     /*配置插件*/
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -99,40 +111,12 @@ module.exports = function (grunt) {
                     target: 'src/core.js'
                 },
                 files: {
-                    'build/<%= pkg.name %>.js':source
+                    'build/<%= pkg.name %>.js': source
                 }
             }
         },
         jshint: { //语法检查
-            options: { //语法检查配置
-                '-W064': true,
-                "strict": true,
-                "eqnull": true,
-                "undef": true,
-                "globals": {
-                    "window": true,
-                    "navigator": true,
-                    "document": true,
-                    "console": true,
-                    "module": true,
-                    "setInterval": true,
-                    "clearInterval": true,
-                    "Math": true,
-                    "SVGElement": true,
-                    "HTMLCollection": true,
-                    "CanvasRenderingContext2D": true,
-                    "WebGLRenderingContext": true,
-                    "NodeList": true,
-                    "XMLHttpRequest": true,
-                    "SVGSVGElement": true,
-                    "ActiveXObject": true,
-                    "Event": true,
-                    "define": true,
-                    "exports": true
-                },
-                "force": true, // 强制执行，即使出现错误也会执行下面的任务
-                "reporterOutput": 'jshint.debug.txt' //将jshint校验的结果输出到文件
-            },
+            options: jshint_options,
             target: 'build/<%= pkg.name %>.js'
         },
         uglify: { //压缩代码
@@ -153,11 +137,7 @@ module.exports = function (grunt) {
                 options: {
                     httpBase: "http://localhost:30000",
                     force: true,//一个任务失败了依旧不停止
-                    urls: [
-                        'test/unit/node.html',
-                        'test/unit/data.html',
-                        'test/unit/calculate.html'
-                    ]
+                    urls: unit_file
                 }
             }
         },

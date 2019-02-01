@@ -1,6 +1,6 @@
 // 获取webgl上下文
 function _getCanvasWebgl(node, opts) {
-    var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
+    var names = _webgl_types,
         context = null, i;
     for (i = 0; i < names.length; i++) {
         try {
@@ -12,7 +12,7 @@ function _getCanvasWebgl(node, opts) {
 }
 
 // 启动webgl绘图
-clay.prototype.webgl = function (opts) {
+_clay_prototype.webgl = function (opts) {
     var gl = _getCanvasWebgl(this[0], opts),
         glObj = {
             "painter": function () {
@@ -41,7 +41,7 @@ clay.prototype.webgl = function (opts) {
                         // 分配使用
                         "use": function (location, size, stride, offset, type, normalized) {
                             var fsize = bufferData.BYTES_PER_ELEMENT;
-                            if (typeof location == 'string') location = gl.getAttribLocation(gl.program, location);
+                            if (_is_string(location)) location = gl.getAttribLocation(gl.program, location);
                             stride = stride || 0;
                             offset = offset || 0;
                             type = type || gl.FLOAT;

@@ -11,7 +11,7 @@
 * Copyright yelloxing
 * Released under the MIT license
 * 
-* Date:Fri Jan 25 2019 14:31:42 GMT+0800 (GMT+08:00)
+* Date:Fri Feb 01 2019 15:52:04 GMT+0800 (GMT+08:00)
 */
 (function (global, factory) {
 
@@ -47,7 +47,11 @@
 
     clay.prototype.init.prototype = clay.prototype;
 
-    // 命名空间路径
+    /**
+ * 命名空间路径
+ * ==========================
+ */
+
 var _namespace = {
     svg: "http://www.w3.org/2000/svg",
     xhtml: "http://www.w3.org/1999/xhtml",
@@ -56,19 +60,77 @@ var _namespace = {
     xmlns: "http://www.w3.org/2000/xmlns/"
 };
 
-// 空格、标志符
-var _regexp = {
-    // http://www.w3.org/TR/css3-selectors/#whitespace
-    whitespace: "[\\x20\\t\\r\\n\\f]",
-    // http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
-    identifier: "(?:\\\\.|[\\w-]|[^\0-\\xa0])+"
-};
+/**
+ * 正则相关
+ * ==========================
+ */
+
+// 空格
+// http://www.w3.org/TR/css3-selectors/#whitespace
+var _regexp_whitespace = "[\\x20\\t\\r\\n\\f]";
+
+// 标志符
+// http://www.w3.org/TR/CSS21/syndata.html#value-def-identifier
+var _regexp_identifier = "(?:\\\\.|[\\w-]|[^\0-\\xa0])+";
+
+/**
+ * 兼容性标记
+ * ==========================
+ */
 
 // 记录需要使用xlink命名空间常见的xml属性
 var _xlink = ["href", "title", "show", "type", "role", "actuate"];
 
+// 记录不同浏览器对webgl的别名
+var _webgl_types = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"];
+
+/**
+ * 全局挂载
+ * ==========================
+ */
+
 // 嵌入内部提供者
 var _provider = {};
+
+/**
+ * 常用对象
+ * ==========================
+ */
+
+// canvas 2d
+var _canvas_2d = CanvasRenderingContext2D;
+// clay 原型
+var _clay_prototype = clay.prototype;
+
+/**
+ * 提示文字
+ * ==========================
+ */
+
+// 不支持的选择器
+var _tips_error_selector = "Unsupported selector!";
+
+// 不支持的参数
+var _tips_error_parameter = 'Unsupported parameter!';
+/**
+ * 类型判断
+ * ==========================
+ */
+
+// 判断是否是数字
+var _is_number = function (param) {
+    return typeof param === 'number';
+};
+
+// 判断是否是函数
+var _is_function = function (param) {
+    return typeof param === 'function';
+};
+
+// 判断是否是字符串
+var _is_string = function (param) {
+    return typeof param === 'string';
+};
 // 用于扩展或加强选择器
 var _out_sizzle;
 _provider.$sizzleProvider = function (config) {
@@ -79,14 +141,14 @@ _provider.$sizzleProvider = function (config) {
 function _sizzle(selector, context) {
 
     var temp = [], flag;
-    if (typeof selector === 'string') {
+    if (_is_string(selector)) {
 
         // 去掉回车，空格和换行
         selector = (selector + "").trim().replace(/[\n\f\r]/g, '');
 
         if (/^</.test(selector)) return [_toNode(selector)];
 
-        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
+        if (_is_function(_out_sizzle)) return _out_sizzle(selector, context);
 
         // 支持的选择器包括：
         // #id .class [attr='value'] tagName
@@ -97,8 +159,8 @@ function _sizzle(selector, context) {
         }
 
         // 用于判断是否为合法选择器组合
-        var whitespace = _regexp.whitespace,
-            identifier = _regexp.identifier,
+        var whitespace = _regexp_whitespace,
+            identifier = _regexp_identifier,
             attrReg = "\\[" + whitespace + "{0,}" + identifier + "(?:" + whitespace + "{0,}=" + whitespace + "{0,}(\\\'|\\\"){0,1}" + identifier + "\\1{0,1}){0,1}" + whitespace + "{0,}\\]",
             regexp = new RegExp("^(?:" + identifier + "){0,1}(?:(?:#|\\.)" + identifier + "|" + attrReg + "){0,}$");
         if (regexp.test(selector)) {
@@ -170,7 +232,7 @@ function _sizzle(selector, context) {
 
         // 非法的选择器
         else {
-            throw new Error("Unsupported selector!");
+            throw new Error(_tips_error_selector);
         }
 
     }
@@ -202,7 +264,7 @@ function _sizzle(selector, context) {
 
     // 其它未知情况
     else {
-        throw new Error("Unsupported parameter!");
+        throw new Error(_tips_error_selector);
     }
 
 }
@@ -210,8 +272,8 @@ function _sizzle(selector, context) {
 function _toNode(str) {
     var frame = document.createElementNS(_namespace.svg, 'svg');
     // 把传递元素类型和标记进行统一处理
-    if (new RegExp("^" + _regexp.identifier + "$").test(str)) str = "<" + str + "></" + str + ">";
-    _innerSVG(frame,str);
+    if (new RegExp("^" + _regexp_identifier + "$").test(str)) str = "<" + str + "></" + str + ">";
+    _innerSVG(frame, str);
     var childNodes = frame.childNodes, flag, child;
     for (flag = 0; flag < childNodes.length; flag++) {
         if (childNodes[flag].nodeType === 1 || childNodes[flag].nodeType === 9 || childNodes[flag].nodeType === 11) {
@@ -237,7 +299,7 @@ function _toNode(str) {
 }
 
 // 当前维护的第一个结点作为上下文查找
-clay.prototype.find = function (selector) {
+_clay_prototype.find = function (selector) {
     if (this.length <= 0) return clay();
     var newClay = clay(),
         nodes = _sizzle(selector, this[0]), flag;
@@ -249,11 +311,11 @@ clay.prototype.find = function (selector) {
     return newClay;
 };
 
-clay.prototype.eq = function (flag) {
+_clay_prototype.eq = function (flag) {
     return this.length <= flag ? new clay() : new clay(this[flag]);
 };
 
-clay.prototype.appendTo = function (target) {
+_clay_prototype.appendTo = function (target) {
 
     var newClay = clay(target), i, j;
     for (i = 0; i < newClay.length; i++)
@@ -262,7 +324,7 @@ clay.prototype.appendTo = function (target) {
     return this;
 };
 
-clay.prototype.remove = function () {
+_clay_prototype.remove = function () {
 
     var flag;
     for (flag = 0; flag < this.length; flag++)
@@ -271,7 +333,7 @@ clay.prototype.remove = function () {
 };
 
 // 选择器重新查找一次
-clay.prototype.refresh = function () {
+_clay_prototype.refresh = function () {
 
     var nodes = _sizzle(this.selector, this.context), flag, length = this.length;
     this.length = 0;
@@ -285,14 +347,14 @@ clay.prototype.refresh = function () {
     return this;
 };
 
-clay.prototype.attr = function (attr, val) {
+_clay_prototype.attr = function (attr, val) {
 
     if (val == null || val == undefined) {
         return this.length > 0 ? this[0].getAttribute(attr) : undefined;
     } else {
         var flag, _val;
         for (flag = 0; flag < this.length; flag++) {
-            _val = typeof val === 'function' ? val(this[flag]._data, flag, this.eq(flag)) : val;
+            _val = _is_function(val) ? val(this[flag]._data, flag, this.eq(flag)) : val;
             // 如果是xml元素
             // 针对xlink使用特殊方法赋值
             if (/[A-Z]/.test(this[flag].tagName) && _xlink.indexOf(attr) >= 0) {
@@ -305,32 +367,30 @@ clay.prototype.attr = function (attr, val) {
     }
 };
 
-clay.prototype.css = function (name, style) {
+_clay_prototype.css = function (name, style) {
 
     if (arguments.length <= 1 && typeof name !== 'object') {
         if (this.length < 1) return undefined;
         var allStyle = document.defaultView && document.defaultView.getComputedStyle ?
             document.defaultView.getComputedStyle(this[0], null) :
             this[0].currentStyle;
-        return typeof name === 'string' ?
-            allStyle.getPropertyValue(name) :
-            allStyle;
+        return _is_string(name) ? allStyle.getPropertyValue(name) : allStyle;
     } else if (this.length > 0) {
         var flag, key;
         if (typeof name === 'object') {
             for (key in name)
                 for (flag = 0; flag < this.length; flag++)
-                    this[flag].style[key] = typeof style === 'function' ? style(this[flag]._data, flag, key, name[key]) : name[key];
+                    this[flag].style[key] = _is_function(style) ? style(this[flag]._data, flag, key, name[key]) : name[key];
         } else {
             for (flag = 0; flag < this.length; flag++)
-                this[flag].style[name] = typeof style === 'function' ? style(this[flag]._data, flag) : style;
+                this[flag].style[name] = _is_function(style) ? style(this[flag]._data, flag) : style;
         }
     }
     return this;
 
 };
 
-clay.prototype.size = function (type) {
+_clay_prototype.size = function (type) {
     type = type || "border";
     var elemHeight, elemWidth;
     if (type == 'content') { //内容
@@ -353,14 +413,14 @@ clay.prototype.size = function (type) {
 };
 // 用于把数据绑定到一组结点或返回第一个结点数据
 // 可以传递函数对数据处理
-clay.prototype.datum = function (data, calcback) {
+_clay_prototype.datum = function (data, calcback) {
 
     if (data === null || data === undefined) {
         return this.length > 0 ? this[0]._data : undefined;
     } else {
         var flag;
         for (flag = 0; flag < this.length; flag++) {
-            data = typeof calcback === 'function' ? calcback(data, flag) : data;
+            data = _is_function(calcback) ? calcback(data, flag) : data;
             this[flag]._data = data;
         }
         return this;
@@ -369,7 +429,7 @@ clay.prototype.datum = function (data, calcback) {
 };
 // 用于把一组数据绑定到一组结点或返回一组结点数据
 // 可以传递函数对数据处理
-clay.prototype.data = function (datas, calcback) {
+_clay_prototype.data = function (datas, calcback) {
 
     var flag, temp = [];
     if (datas) {
@@ -384,14 +444,14 @@ clay.prototype.data = function (datas, calcback) {
         var newClay = clay();
         newClay.selector = this.selector;
         for (flag = 0; flag < datas.length && flag < this.length; flag++) {
-            this[flag]._data = typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag];
+            this[flag]._data = _is_function(calcback) ? calcback(datas[flag], flag) : datas[flag];
             newClay[flag] = this[flag];
             newClay.length += 1;
         }
         // 分别记录需要去平衡的数据和结点
         newClay._enter = [];
         for (; flag < datas.length; flag++) {
-            newClay._enter.push(typeof calcback === 'function' ? calcback(datas[flag], flag) : datas[flag]);
+            newClay._enter.push(_is_function(calcback) ? calcback(datas[flag], flag) : datas[flag]);
         }
         newClay._exit = [];
         for (; flag < this.length; flag++) {
@@ -409,7 +469,7 @@ clay.prototype.data = function (datas, calcback) {
 };
 // 把过滤出来多于结点的数据部分变成结点返回
 // 需要传递一个字符串来标明新创建元素是什么
-clay.prototype.enter = function (str) {
+_clay_prototype.enter = function (str) {
 
     var flag, node, newClay = clay();
     newClay.selector = this.selector;
@@ -424,7 +484,7 @@ clay.prototype.enter = function (str) {
 
 };
 // 把过滤出来多于数据的结点部分返回
-clay.prototype.exit = function () {
+_clay_prototype.exit = function () {
 
     var flag, newClay = clay();
     newClay.selector = this.selector;
@@ -437,14 +497,14 @@ clay.prototype.exit = function () {
 
 };
 // 迭代执行
-clay.prototype.loop = function (doIt) {
+_clay_prototype.loop = function (doIt) {
     var flag;
     for (flag = 0; flag < this.length; flag++) {
         doIt(this[flag]._data, flag, this.eq(flag));
     }
     return this;
 };
-clay.prototype.bind = function (eventType, callback) {
+_clay_prototype.bind = function (eventType, callback) {
 
     var flag;
     if (window.attachEvent)
@@ -459,7 +519,7 @@ clay.prototype.bind = function (eventType, callback) {
 
 };
 
-clay.prototype.trigger = function (eventType) {
+_clay_prototype.trigger = function (eventType) {
     var flag, event;
 
     //创建event的对象实例。
@@ -490,7 +550,7 @@ clay.prototype.trigger = function (eventType) {
  */
 
 //  获取鼠标相对特定元素左上角位置
-clay.prototype.position = function (event) {
+_clay_prototype.position = function (event) {
 
     var bounding = this[0].getBoundingClientRect();
 
@@ -500,16 +560,6 @@ clay.prototype.position = function (event) {
     };
 
 };
-// 获取函数名称
-// 部分旧浏览器不支持
-if ('name' in Function.prototype === false) {
-    // https://www.ecma-international.org/ecma-262/6.0/#sec-setfunctionname
-    Object.defineProperty(Function.prototype, 'name', {
-        get: function () {
-            return this.toString().match(/^\s*function\s*([^\(\s]*)/)[1];
-        }
-    });
-}
 // 针对部分浏览器svg不支持innerHTML方法
 var _innerSVG = function (target, svgstring) {
     if ('innerHTML' in SVGElement.prototype === false || 'innerHTML' in SVGSVGElement.prototype === false) {
@@ -563,10 +613,10 @@ clay.animation = function (doback, duration, callback) {
 
 //把tick函数推入堆栈
 _clock.timer = function (tick, duration, callback) {
-    if (typeof tick !== 'function') {
+    if (!_is_function(tick)) {
         throw new Error('tick is required!');
     }
-    duration = typeof duration === 'number' ? duration : _clock.speeds;
+    duration = typeof _is_number(duration) ? duration : _clock.speeds;
     if (duration < 0) duration = -duration;
     _clock.timers.push({
         "createTime": new Date(),
@@ -686,20 +736,20 @@ var _rgb2hsl = function (R, G, B) {
     }
     return [+r.toFixed(0), +g.toFixed(0), +b.toFixed(0)];
 }, _randomColors = function (num) {
-    if (typeof num == 'number' && num > 3) {
+    if (_is_number(num) && num > 3) {
         var temp = [], flag = 0;
         for (flag = 1; flag <= num; flag++)
             temp.push('rgb(' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ',' + (Math.random(1) * 230 + 20).toFixed(0) + ')');
         return temp;
     } else {
-        return ['rgb(255,0,0)', 'rgb(0,255,0)', 'rgb(0,0,255)'];
+        return ['red', 'green', 'blue'];
     }
 };
 
 // 把颜色统一转变成rgba(x,x,x,x)格式
 // 返回数字数组[r,g,b,a]
 clay.color = function (color) {
-    var temp = clay('head').css('color', color).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(new RegExp('\\,' + _regexp.whitespace));
+    var temp = clay('head').css('color', color).css('color').replace(/^rgba?\(([^)]+)\)$/, '$1').split(new RegExp('\\,' + _regexp_whitespace));
     return [+temp[0], +temp[1], +temp[2], temp[3] == undefined ? 1 : +temp[3]];
 };
 
@@ -747,15 +797,18 @@ var _drawerRegion = function (pen, color, drawback, regionManger) {
 // 区域对象，用于存储区域信息
 // 初衷是解决类似canvas交互问题
 // 可以用于任何标签的区域控制
-clay.prototype.region = function () {
+_clay_prototype.region = function (width, height) {
 
     var regions = {},//区域映射表
         canvas = document.createElement('canvas'),
         rgb = [0, 0, 0],//区域标识色彩,rgb(0,0,0)表示空白区域
         p = 'r';//色彩增值位置
 
-    canvas.setAttribute('width', this[0].offsetWidth);//内容+内边距+边框
-    canvas.setAttribute('height', this[0].offsetHeight);
+    if (!_is_number(width)) width = this[0].offsetWidth;//内容+内边距+边框
+    if (!_is_number(height)) height = this[0].offsetHeight;
+
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
 
     var _this = this;
 
@@ -793,6 +846,11 @@ clay.prototype.region = function () {
 
             // 擦除区域范围
             "erase": function (drawback) {
+                // 如果没有传递擦除方法
+                // 擦除全部
+                if (!_is_function(drawback)) drawback = function (pen) {
+                    pen.clearRect(0, 0, width, height);
+                };
                 return _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback, regionManger);
             },
 
@@ -816,7 +874,7 @@ clay.prototype.region = function () {
 };
 // 获取canvas2D对象
 function _getCanvas2D(selector) {
-    if (selector && selector.constructor === CanvasRenderingContext2D)
+    if (selector && selector.constructor === _canvas_2d)
         return selector;
     else {
         var canvas = clay(selector);
@@ -826,14 +884,14 @@ function _getCanvas2D(selector) {
 }
 
 // 直接使用canvas2D绘图
-clay.prototype.painter = function () {
+_clay_prototype.painter = function () {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
         throw new Error('painter is not function');
     return _getCanvas2D(this);
 };
 
 // 使用图层绘图
-clay.prototype.layer = function () {
+_clay_prototype.layer = function (width, height) {
     if (this.length > 0 && (this[0].nodeName != 'CANVAS' && this[0].nodeName != 'canvas'))
         throw new Error('layer is not function');
     // 画笔
@@ -841,11 +899,13 @@ clay.prototype.layer = function () {
         canvas = [],
         // 图层集合
         layer = {};
-    var width = this[0].clientWidth,//内容+内边距
-        height = this[0].clientHeight;
+
+    if (!_is_number(width)) width = this[0].clientWidth;//内容+内边距
+    if (!_is_number(height)) height = this[0].clientHeight;
+
     var layerManager = {
         "painter": function (index) {
-            if (!layer[index] || layer[index].constructor !== CanvasRenderingContext2D) {
+            if (!layer[index] || layer[index].constructor !== _canvas_2d) {
 
                 canvas.push(document.createElement('canvas'));
                 // 设置大小才会避免莫名其妙的错误
@@ -858,14 +918,14 @@ clay.prototype.layer = function () {
         },
         "clean": function (ctx2D) {
             if (ctx2D) {
-                if (ctx2D.constructor !== CanvasRenderingContext2D)
+                if (ctx2D.constructor !== _canvas_2d)
                     ctx2D = layerManager.painter(ctx2D);
                 ctx2D.clearRect(0, 0, width, height);
             }
             return layerManager;
         },
         "update": function () {
-            if (painter && painter.constructor === CanvasRenderingContext2D) {
+            if (painter && painter.constructor === _canvas_2d) {
                 var flag;
                 painter.clearRect(0, 0, width, height);
                 painter.save();
@@ -936,7 +996,7 @@ var _determinant = function (matrixX) {
 
     // 其它情况
     else {
-        throw new Error('Unsupported parameter!');
+        throw new Error(_tips_error_parameter);
     }
 
 };
@@ -1119,16 +1179,16 @@ var _scale = function (xTimes, yTimes, zTimes, cx, cy, cz) {
 // 分别为：任意射线变成OZ轴变换矩阵 + OZ轴变回原来的射线的变换矩阵
 var _transform = function (a1, b1, c1, a2, b2, c2) {
 
-    if (typeof a1 === 'number' && typeof b1 === 'number') {
+    if (_is_number(a1) && _is_number(b1)) {
 
         // 如果设置二个点
         // 表示二维上围绕某个点旋转
-        if (typeof c1 !== 'number') {
+        if (!_is_number(c1)) {
             c1 = 0; a2 = a1; b2 = b1; c2 = 1;
         }
         // 只设置三个点(设置不足六个点都认为只设置了三个点)
         // 表示围绕从原点出发的射线旋转
-        else if (typeof a2 !== 'number' || typeof b2 !== 'number' || typeof c2 !== 'number') {
+        else if (!_is_number(a2) || !_is_number(b2) || !_is_number(c2)) {
             a2 = a1; b2 = b1; c2 = c1; a1 = 0; b1 = 0; c1 = 0;
         }
 
@@ -1259,7 +1319,7 @@ clay.hermite = function () {
     // 设置张弛系数【应该在点的位置设置前设置】
     hermite.setU = function (t) {
 
-        if (typeof t === 'number') {
+        if (_is_number(t)) {
             scope.u = (1 - t) * 0.5;
         } else {
             throw new Error('Expecting a figure!');
@@ -1336,7 +1396,7 @@ clay.cardinal = function () {
     // 设置张弛系数【应该在点的位置设置前设置】
     cardinal.setU = function (t) {
 
-        if (typeof t === 'number') {
+        if (_is_number(t)) {
             scope.t = t;
         } else {
             throw new Error('Expecting a figure!');
@@ -1469,13 +1529,13 @@ clay.map = function () {
 
     // 设置缩放比例
     map.scale = function (scale) {
-        if (typeof scale === 'number') scope.s = scale;
+        if (_is_number(scale)) scope.s = scale;
         return map;
     };
 
     // 设置旋转中心
     map.center = function (longitude, latitude) {
-        if (typeof longitude === 'number' && typeof latitude === 'number') {
+        if (_is_number(longitude) && typeof _is_number(latitude)) {
             scope.c = [longitude, latitude];
         }
         return map;
@@ -1670,7 +1730,7 @@ var _deleteTexture = function (gl, texture) {
 };
 // 获取webgl上下文
 function _getCanvasWebgl(node, opts) {
-    var names = ["webgl", "experimental-webgl", "webkit-3d", "moz-webgl"],
+    var names = _webgl_types,
         context = null, i;
     for (i = 0; i < names.length; i++) {
         try {
@@ -1682,7 +1742,7 @@ function _getCanvasWebgl(node, opts) {
 }
 
 // 启动webgl绘图
-clay.prototype.webgl = function (opts) {
+_clay_prototype.webgl = function (opts) {
     var gl = _getCanvasWebgl(this[0], opts),
         glObj = {
             "painter": function () {
@@ -1711,7 +1771,7 @@ clay.prototype.webgl = function (opts) {
                         // 分配使用
                         "use": function (location, size, stride, offset, type, normalized) {
                             var fsize = bufferData.BYTES_PER_ELEMENT;
-                            if (typeof location == 'string') location = gl.getAttribLocation(gl.program, location);
+                            if (_is_string(location)) location = gl.getAttribLocation(gl.program, location);
                             stride = stride || 0;
                             offset = offset || 0;
                             type = type || gl.FLOAT;

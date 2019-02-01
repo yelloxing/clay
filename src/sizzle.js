@@ -8,14 +8,14 @@ _provider.$sizzleProvider = function (config) {
 function _sizzle(selector, context) {
 
     var temp = [], flag;
-    if (typeof selector === 'string') {
+    if (_is_string(selector)) {
 
         // 去掉回车，空格和换行
         selector = (selector + "").trim().replace(/[\n\f\r]/g, '');
 
         if (/^</.test(selector)) return [_toNode(selector)];
 
-        if (typeof _out_sizzle === 'function') return _out_sizzle(selector, context);
+        if (_is_function(_out_sizzle)) return _out_sizzle(selector, context);
 
         // 支持的选择器包括：
         // #id .class [attr='value'] tagName
@@ -26,8 +26,8 @@ function _sizzle(selector, context) {
         }
 
         // 用于判断是否为合法选择器组合
-        var whitespace = _regexp.whitespace,
-            identifier = _regexp.identifier,
+        var whitespace = _regexp_whitespace,
+            identifier = _regexp_identifier,
             attrReg = "\\[" + whitespace + "{0,}" + identifier + "(?:" + whitespace + "{0,}=" + whitespace + "{0,}(\\\'|\\\"){0,1}" + identifier + "\\1{0,1}){0,1}" + whitespace + "{0,}\\]",
             regexp = new RegExp("^(?:" + identifier + "){0,1}(?:(?:#|\\.)" + identifier + "|" + attrReg + "){0,}$");
         if (regexp.test(selector)) {
@@ -99,7 +99,7 @@ function _sizzle(selector, context) {
 
         // 非法的选择器
         else {
-            throw new Error("Unsupported selector!");
+            throw new Error(_tips_error_selector);
         }
 
     }
@@ -131,7 +131,7 @@ function _sizzle(selector, context) {
 
     // 其它未知情况
     else {
-        throw new Error("Unsupported parameter!");
+        throw new Error(_tips_error_selector);
     }
 
 }

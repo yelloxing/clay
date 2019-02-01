@@ -1,0 +1,29 @@
+{
+    "-W064": true,
+    "strict": true,
+    "eqnull": true,
+    "undef": true,
+    "globals": {
+        "window": true,
+        "navigator": true,
+        "document": true,
+        "console": true,
+        "module": true,
+        "setInterval": true,
+        "clearInterval": true,
+        "Math": true,
+        "SVGElement": true,
+        "HTMLCollection": true,
+        "CanvasRenderingContext2D": true,
+        "WebGLRenderingContext": true,
+        "NodeList": true,
+        "XMLHttpRequest": true,
+        "SVGSVGElement": true,
+        "ActiveXObject": true,
+        "Event": true,
+        "define": true,
+        "exports": true
+    },
+    "force": true,
+    "reporterOutput": "jshint.debug.txt"
+}

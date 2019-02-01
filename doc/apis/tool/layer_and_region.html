@@ -21,9 +21,12 @@
     <h2>
         图层管理者
     </h2>
-    <pre class='prettyprint lang-js'>var layerManger=$$('canvas').layer();</pre>
+    <pre class='prettyprint lang-js'>var layerManger=$$('canvas').layer([width, height]);</pre>
     <p>
         使用图层的第一步是通过上面的方法获取布局管理者，剩下的就是通过调用layerManger提供的方法使用图层绘图。
+    </p>
+    <p class="warn">
+        默认采用页面canvas大小建立图层，你也可以传递宽和高来指定图层大小。
     </p>
     <pre class='prettyprint lang-js'>var pencil=layerManger.painter(id);</pre>
     <p>
@@ -43,9 +46,12 @@
     <h2>
         区域管理者
     </h2>
-    <pre class='prettyprint lang-js'>var regionManage=clayObject.region();</pre>
+    <pre class='prettyprint lang-js'>var regionManage=clayObject.region([width, height]);</pre>
     <p>
         和图层管理者不一样的是，区域管理者可以管理任何一个结点的区域，当然，第一步依旧是获取管理者，余下就是调用管理者提供的服务即可。
+    </p>
+    <p class="warn">
+        默认采用页面canvas大小建立区域管理者，你也可以传递宽和高来指定区域管理者管理范围。
     </p>
     <pre class='prettyprint lang-js'>regionManage.drawer(region_id,function(pencil){
     // 用pencil这种画笔画出区域
@@ -57,7 +63,7 @@
         如果上面的方法第二个参数不是一个方法，会返回绘制区域的画笔，别的不变。
     </p>
     <pre class='prettyprint lang-js'>regionManage.erase(function(erase){
-    // 用erase擦除不需要标记的区域
+    // 用erase擦除不需要标记的区域，如果传递的参数不是函数或未传递，则擦除全部区域标记信息
 });</pre>
     <p>
         和drawer方法类似，只不过功能相反，擦除的地方被标记为不属于任何区域。返回区域管理者。

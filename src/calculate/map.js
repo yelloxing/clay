@@ -63,13 +63,13 @@ clay.map = function () {
 
     // 设置缩放比例
     map.scale = function (scale) {
-        if (typeof scale === 'number') scope.s = scale;
+        if (_is_number(scale)) scope.s = scale;
         return map;
     };
 
     // 设置旋转中心
     map.center = function (longitude, latitude) {
-        if (typeof longitude === 'number' && typeof latitude === 'number') {
+        if (_is_number(longitude) && typeof _is_number(latitude)) {
             scope.c = [longitude, latitude];
         }
         return map;

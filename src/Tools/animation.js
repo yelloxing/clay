@@ -19,10 +19,10 @@ clay.animation = function (doback, duration, callback) {
 
 //把tick函数推入堆栈
 _clock.timer = function (tick, duration, callback) {
-    if (typeof tick !== 'function') {
+    if (!_is_function(tick)) {
         throw new Error('tick is required!');
     }
-    duration = typeof duration === 'number' ? duration : _clock.speeds;
+    duration = typeof _is_number(duration) ? duration : _clock.speeds;
     if (duration < 0) duration = -duration;
     _clock.timers.push({
         "createTime": new Date(),

@@ -52,7 +52,7 @@ var _determinant = function (matrixX) {
 
     // 其它情况
     else {
-        throw new Error('Unsupported parameter!');
+        throw new Error(_tips_error_parameter);
     }
 
 };

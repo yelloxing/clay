@@ -21,7 +21,7 @@ clay.hermite = function () {
     // 设置张弛系数【应该在点的位置设置前设置】
     hermite.setU = function (t) {
 
-        if (typeof t === 'number') {
+        if (_is_number(t)) {
             scope.u = (1 - t) * 0.5;
         } else {
             throw new Error('Expecting a figure!');

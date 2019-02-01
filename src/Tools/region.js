@@ -11,15 +11,18 @@ var _drawerRegion = function (pen, color, drawback, regionManger) {
 // 区域对象，用于存储区域信息
 // 初衷是解决类似canvas交互问题
 // 可以用于任何标签的区域控制
-clay.prototype.region = function () {
+_clay_prototype.region = function (width, height) {
 
     var regions = {},//区域映射表
         canvas = document.createElement('canvas'),
         rgb = [0, 0, 0],//区域标识色彩,rgb(0,0,0)表示空白区域
         p = 'r';//色彩增值位置
 
-    canvas.setAttribute('width', this[0].offsetWidth);//内容+内边距+边框
-    canvas.setAttribute('height', this[0].offsetHeight);
+    if (!_is_number(width)) width = this[0].offsetWidth;//内容+内边距+边框
+    if (!_is_number(height)) height = this[0].offsetHeight;
+
+    canvas.setAttribute('width', width);
+    canvas.setAttribute('height', height);
 
     var _this = this;
 
@@ -57,6 +60,11 @@ clay.prototype.region = function () {
 
             // 擦除区域范围
             "erase": function (drawback) {
+                // 如果没有传递擦除方法
+                // 擦除全部
+                if (!_is_function(drawback)) drawback = function (pen) {
+                    pen.clearRect(0, 0, width, height);
+                };
                 return _drawerRegion(canvas2D, 'rgb(0,0,0)', drawback, regionManger);
             },
 

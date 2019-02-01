@@ -3,16 +3,16 @@
 // 分别为：任意射线变成OZ轴变换矩阵 + OZ轴变回原来的射线的变换矩阵
 var _transform = function (a1, b1, c1, a2, b2, c2) {
 
-    if (typeof a1 === 'number' && typeof b1 === 'number') {
+    if (_is_number(a1) && _is_number(b1)) {
 
         // 如果设置二个点
         // 表示二维上围绕某个点旋转
-        if (typeof c1 !== 'number') {
+        if (!_is_number(c1)) {
             c1 = 0; a2 = a1; b2 = b1; c2 = 1;
         }
         // 只设置三个点(设置不足六个点都认为只设置了三个点)
         // 表示围绕从原点出发的射线旋转
-        else if (typeof a2 !== 'number' || typeof b2 !== 'number' || typeof c2 !== 'number') {
+        else if (!_is_number(a2) || !_is_number(b2) || !_is_number(c2)) {
             a2 = a1; b2 = b1; c2 = c1; a1 = 0; b1 = 0; c1 = 0;
         }
 
