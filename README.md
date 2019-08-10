@@ -1,7 +1,7 @@
-# npm-compare
+# npm-downloads
 npm包下载量比较。
 
-<img align="center" src="https://github.com/yelloxing/npm-compare/blob/master/src/asset/npm.png">
+<img align="center" src="https://github.com/yelloxing/npm-downloads/blob/master/src/asset/npm.png">
 
 如何启动本地编辑？
 --------------------------------------
