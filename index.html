@@ -8,11 +8,10 @@
     <title>Compare npm downloads</title>
     <script>
         if (!/packages=/.test(window.location.href))
-            window.location.href = './index.html?interval=7&packages=image2d,image3d';
+            window.location.href = './index.html?interval=7&packages=image2d';
         function balance() {
             window.location.reload();
         }
-
         function reload(deleteNpm) {
             window.location.href = (window.location.href + "").replace(deleteNpm, '');
         }
@@ -23,28 +22,18 @@
     <noscript>
         很抱歉，如果没有 JavaScript 支持，本项目将不能正常工作。请启用浏览器的 JavaScript 然后继续。
     </noscript>
-    <div id="root">
-        <svg preserveAspectRatio='xMidYMax'>
-            <g class='line'></g>
-            <g class="helper"></g>
-            <g class="circle"></g>
-            <g class="move">
-                <text id='move-text' />
-                <circle id='move-circle'></circle>
-                <path id='move-path-top' />
-                <path id='move-path-bottom' />
-            </g>
-        </svg>
-        <ul></ul>
-        <div class="logo">
-            npm-downloads
-        </div>
-        <div>
-            Crafted in 🇨🇳 by yelloxing
-            <a href="https://github.com/yelloxing/npm-downloads" target="_blank">
-                <img src="./src/asset/icon-github.svg" width=16 alt="fork me on github">
-            </a>
-        </div>
+    <canvas>
+        非常抱歉，您的浏览器不支持Canvas!
+    </canvas>
+    <div class="logo">
+        npm-downloads
+    </div>
+    <ul class="npm-colors"></ul>
+    <div>
+        Crafted in 🇨🇳 by yelloxing, powered by image2D
+        <a href="https://github.com/yelloxing/npm-downloads" target="_blank">
+            <img src="./src/asset/icon-github.svg" width=16 alt="fork me on github">
+        </a>
     </div>
     <script src="./build/main.js"></script>
 </body>

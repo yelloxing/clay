@@ -7,7 +7,6 @@ module.exports = merge(common, {
     plugins: [
         new uglify({
             uglifyOptions: {
-                // 其它优化选项 https://segmentfault.com/a/1190000010874406
                 compress: {
                     drop_console: true,
                     drop_debugger: true,

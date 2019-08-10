@@ -1,46 +1,19 @@
-#root {
-    width: 100vw;
-    height: 100vh;
-    &>ul {
+body {
+    &>canvas {
+        width: 100vw;
+        height: 100vh;
         position: fixed;
-        top: 1rem;
         left: 0;
-        padding: .2rem;
-        &>li {
-            background-color: var(--color);
-            font-size: .14rem;
-            line-height: .35rem;
-            padding-left: .1rem;
-            margin-left: .2rem;
-            margin-top: .1rem;
-            color: #fff;
-            border: 1px solid #aaa;
-            &>em {
-                margin-left: .1rem;
-                float: right;
-                width: .35rem;
-                height: .35rem;
-                background-color: #fff;
-                color: #000;
-                text-align: center;
-                font-style: normal;
-                cursor: pointer;
-            }
-        }
+        top: 0;
     }
-    &>div {
-        &.logo {
-            position: fixed;
-            top: .3rem;
-            left: 0;
-            color: red;
-            font-weight: 800;
-            font-size: 0.5rem;
-            font-family: fantasy;
-        }
-    }
-    &>svg {
-        background-image: url('../asset/bg-rect.jpg');
+    &>.logo {
+        position: fixed;
+        top: .3rem;
+        left: .3rem;
+        color: red;
+        font-weight: 800;
+        font-size: 0.4rem;
+        font-family: fantasy;
     }
     &>div {
         position: fixed;
@@ -53,6 +26,32 @@
         width: 100vw;
         &>a {
             float: right;
+        }
+    }
+    &>.npm-colors{
+        position: fixed;
+        top: 1rem;
+        left: 0;
+        padding: .2rem;
+        &>li{
+            background-color: var(--color);
+            font-size: .14rem;
+            line-height: .35rem;
+            padding-left: .1rem;
+            margin-left: .2rem;
+            margin-top: .1rem;
+            color: #fff;
+            &>em{
+                margin-left: .1rem;
+                float: right;
+                width: .35rem;
+                height: .35rem;
+                background-color: rgb(240, 231, 231);
+                color: #000;
+                text-align: center;
+                font-style: normal;
+                cursor: pointer;
+            }
         }
     }
 }

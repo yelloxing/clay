@@ -1,5 +1,3 @@
-
-
 let get = function (url) {
 
     let data = sessionStorage.getItem(url);
