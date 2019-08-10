@@ -1,0 +1,39 @@
+html {
+    /* 统一rem计算基数 */
+    font-size: 100px;
+}
+
+body {
+    /* 恢复正常字体大小 */
+    font-size: .16rem;
+    overflow-y: hidden;
+}
+
+/* webkit下滚动条样式 */
+
+::-webkit-scrollbar {
+    width: .07rem;
+    height: .07rem;
+    background-color: #eee;
+}
+
+::-webkit-scrollbar-thumb {
+    height: .3rem;
+    background-color: #888;
+    border-radius: .05rem;
+}
+
+/* IE浏览器下 */
+
+* {
+    /*三角箭头的颜色*/
+    scrollbar-arrow-color: #888;
+    /*滚动条滑块按钮的颜色*/
+    scrollbar-face-color: #eeeeee;
+    /*滚动条整体颜色*/
+    scrollbar-highlight-color: #fff;
+    /*滚动条阴影*/
+    scrollbar-shadow-color: #ccc;
+    /*滚动条轨道颜色*/
+    scrollbar-track-color: #fff;
+}

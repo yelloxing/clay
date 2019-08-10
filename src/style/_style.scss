@@ -1,0 +1,58 @@
+#root {
+    width: 100vw;
+    height: 100vh;
+    &>ul {
+        position: fixed;
+        top: 1rem;
+        left: 0;
+        padding: .2rem;
+        &>li {
+            background-color: var(--color);
+            font-size: .14rem;
+            line-height: .35rem;
+            padding-left: .1rem;
+            margin-left: .2rem;
+            margin-top: .1rem;
+            color: #fff;
+            border: 1px solid #aaa;
+            &>em {
+                margin-left: .1rem;
+                float: right;
+                width: .35rem;
+                height: .35rem;
+                background-color: #fff;
+                color: #000;
+                text-align: center;
+                font-style: normal;
+                cursor: pointer;
+            }
+        }
+    }
+    &>div {
+        &.logo {
+            position: fixed;
+            top: .3rem;
+            left: 0;
+            color: red;
+            font-weight: 800;
+            font-size: 0.5rem;
+            font-family: fantasy;
+        }
+    }
+    &>svg {
+        background-image: url('../asset/bg-rect.jpg');
+    }
+    &>div {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        padding: .08rem .1rem 0 .1rem;
+        height: .42rem;
+        line-height: .42rem;
+        font-size: .12rem;
+        width: 100vw;
+        &>a {
+            float: right;
+        }
+    }
+}
