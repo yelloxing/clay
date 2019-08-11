@@ -38,7 +38,7 @@ get(paramJSON.packages).then(function (data) {
         }
     }, 1000, function () {
         for (let key in formatData.downloads) {
-            template += "<li style='--color:" + colorsRGBA.pop() + "'>" + key + "<em onclick=\"reload('" + key + "')\">X</em></li>";
+            template += "<li style='--color:" + colorsRGBA.shift() + "'>" + key + "<em onclick=\"reload('" + key + "')\">X</em></li>";
             $$('.npm-colors')[0].innerHTML = template;
         }
     });
