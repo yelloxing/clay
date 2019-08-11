@@ -15,6 +15,10 @@ body {
         font-size: 0.4rem;
         font-family: fantasy;
     }
+    &>canvas {
+        background-image: url('../asset/bg.png');
+        background-position: center;
+    }
     &>div {
         position: fixed;
         left: 0;
@@ -24,16 +28,22 @@ body {
         line-height: .42rem;
         font-size: .12rem;
         width: 100vw;
+        color: white;
         &>a {
             float: right;
+            &>img {
+                background-color: white;
+                border-radius: 50%;
+                border: 1px solid #e3e3eb;
+            }
         }
     }
-    &>.npm-colors{
+    &>.npm-colors {
         position: fixed;
         top: 1rem;
         left: 0;
         padding: .2rem;
-        &>li{
+        &>li {
             background-color: var(--color);
             font-size: .14rem;
             line-height: .35rem;
@@ -41,7 +51,7 @@ body {
             margin-left: .2rem;
             margin-top: .1rem;
             color: #fff;
-            &>em{
+            &>em {
                 margin-left: .1rem;
                 float: right;
                 width: .35rem;

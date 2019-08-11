@@ -62,8 +62,13 @@ export default function (oral, paramJSON) {
         }
     }
 
+
+
     return {
         downloads: formatDownloads,
-        number
+        number,
+        width,
+        height,
+        maxValue
     };
 };

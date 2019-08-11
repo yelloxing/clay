@@ -14,7 +14,7 @@ import './style/root.scss';
 // 获取npm包名和时间长度
 let paramJSON = param(window.location.href);
 
-let painter = $$('canvas').painter();
+let painter = $$('canvas').painter().config('fillStyle', 'white');
 
 // 获取包下载量数据
 get(paramJSON.packages).then(function (data) {
@@ -25,18 +25,24 @@ get(paramJSON.packages).then(function (data) {
 
     let colorsRGBA = colors(formatData.number);
 
-    let template = "", color;
+    let template = "";
 
-    for (let key in formatData.downloads) {
-        color = colorsRGBA.pop();
+    // 绘制线条
+    $$.animation(function (deep) {
+        painter.clearRect();
+        let i = 0;
+        for (let key in formatData.downloads) {
+            let color = colorsRGBA[i];
+            i += 1;
+            drawer(key, formatData.downloads[key], painter, color, deep, formatData.width, formatData.height);
+        }
+    }, 1000, function () {
+        for (let key in formatData.downloads) {
+            template += "<li style='--color:" + colorsRGBA.pop() + "'>" + key + "<em onclick=\"reload('" + key + "')\">X</em></li>";
+            $$('.npm-colors')[0].innerHTML = template;
+        }
+    });
 
-        template += "<li style='--color:" + color + "'>" + key + "<em onclick=\"reload('" + key + "')\">X</em></li>";
 
-        // 绘制线条
-        painter.config("strokeStyle", color);
-        drawer(key, formatData.downloads[key], painter);
-    }
-
-    $$('.npm-colors')[0].innerHTML = template;
 
 });

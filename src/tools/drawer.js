@@ -1,10 +1,25 @@
-export default function (key, npmDownload, painter) {
+import $$ from 'image2d';
 
-    painter.beginPath();
-    painter.moveTo(npmDownload[0].x, npmDownload[0].y);
-    for (let i = 1; i < npmDownload.length; i++) {
-        painter.lineTo(npmDownload[i].x, npmDownload[i].y);
+export default function (key, npmDownload, painter, color, deep, width, height) {
+    height *= 0.5;
+    width *= 0.5;
+
+    painter
+        .config("strokeStyle", color)
+        .beginPath()
+        .moveTo(width - (width - npmDownload[0].x) * deep, height - (height - npmDownload[0].y) * deep);
+
+    // 连线
+    for (let i = 0; i < npmDownload.length; i++) {
+        painter.lineTo(width - (width - npmDownload[i].x) * deep, height - (height - npmDownload[i].y) * deep);
+
     }
     painter.stroke();
+
+    // 添加圆圈
+    for (let i = 0; i < npmDownload.length; i++) {
+        painter.fillCircle(width - (width - npmDownload[i].x) * deep, height - (height - npmDownload[i].y) * deep, 3);
+        painter.strokeCircle(width - (width - npmDownload[i].x) * deep, height - (height - npmDownload[i].y) * deep, 3);
+    }
 
 };
