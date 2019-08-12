@@ -24,7 +24,7 @@ export default function (oral, paramJSON) {
                 number: 0,
                 begin: oralJSON[key].downloads[1].day
             };
-            for (let i = 1; i < oralJSON[key].downloads.length; i++) {
+            for (let i = 1; i < oralJSON[key].downloads.length - 1; i++) {
                 temp.number += oralJSON[key].downloads[i].downloads;
                 if (i % paramJSON.interval == 0) {
 
@@ -58,7 +58,7 @@ export default function (oral, paramJSON) {
         for (let i = 0; i < downloads[key].length; i++) {
             formatDownloads[key].push(downloads[key][i]);
             formatDownloads[key][i].x = (width / 366) * downloads[key][i].position;
-            formatDownloads[key][i].y = height - (downloads[key][i].number / maxValue) * height+10;
+            formatDownloads[key][i].y = height - (downloads[key][i].number / maxValue) * height + 10;
         }
     }
 
