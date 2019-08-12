@@ -19,30 +19,40 @@ let painter = $$('canvas').painter().config('fillStyle', 'white');
 // 获取包下载量数据
 get(paramJSON.packages).then(function (data) {
 
-    // 获取格式化后的数据
-    // 根据时间长度格式化
-    let formatData = format(data, paramJSON);
+    try {
 
-    let colorsRGBA = colors(formatData.number);
+        // 获取格式化后的数据
+        // 根据时间长度格式化
+        let formatData = format(data, paramJSON);
 
-    let template = "";
+        let colorsRGBA = colors(formatData.number);
 
-    // 绘制线条
-    $$.animation(function (deep) {
-        painter.clearRect();
-        let i = 0;
-        for (let key in formatData.downloads) {
-            let color = colorsRGBA[i];
-            i += 1;
-            drawer(key, formatData.downloads[key], painter, color, deep, formatData.width, formatData.height);
-        }
-    }, 1000, function () {
-        for (let key in formatData.downloads) {
-            template += "<li style='--color:" + colorsRGBA.shift() + "'>" + key + "<em onclick=\"reload('" + key + "')\">X</em></li>";
-            $$('.npm-colors')[0].innerHTML = template;
-        }
-    });
+        let template = "";
 
+        // 绘制线条
+        $$.animation(function (deep) {
+            painter.clearRect();
+            let i = 0;
+            for (let key in formatData.downloads) {
+                let color = colorsRGBA[i];
+                i += 1;
+                drawer(key, formatData.downloads[key], painter, color, deep, formatData.width, formatData.height);
+            }
+        }, 1000, function () {
+            for (let key in formatData.downloads) {
+                template += "<li style='--color:" + colorsRGBA.shift() + "'>" + key + "<em onclick=\"reload('" + key + "')\">X</em></li>";
+                $$('.npm-colors')[0].innerHTML = template;
+            }
+        });
 
+    } catch (e) {
+
+        $$(`<div style='width:100vw;height:100vh;text-align:center;line-height:100vh;'>
+            <span style='background-color:red;padding:.1rem;'>运行错误，错误信息为：`+e+`，访问地址为：`+window.location.href+`，请提
+            <a href='https://github.com/yelloxing/npm-downloads/issues'>issue</a>
+            告知开发人员！</span>
+        </div>`).appendTo('body');
+
+    }
 
 });
