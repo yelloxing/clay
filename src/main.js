@@ -39,10 +39,18 @@ get(paramJSON.packages).then(function (data) {
                 drawer(key, formatData.downloads[key], painter, color, deep, formatData.width, formatData.height);
             }
         }, 1000, function () {
+
+            // 添加标志说明
             for (let key in formatData.downloads) {
-                template += "<li style='--color:" + colorsRGBA.shift() + "'>" + key + "<em onclick=\"reload('" + key + "')\">X</em></li>";
-                $$('.npm-colors')[0].innerHTML = template;
+                template += "<li style='--color:" + colorsRGBA.shift() + "'>"
+                    + key
+                    + "<em onclick=\"reload('" + key + "')\">X</em>"
+                    + "</li>";
+                $$('#npm-packages')[0].innerHTML = template;
             }
+
+
+
         });
 
     } catch (e) {

@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="logo.png">
     <title>Compare npm downloads</title>
     <script>
         if (!/packages=/.test(window.location.href))
@@ -14,6 +15,12 @@
         }
         function reload(deleteNpm) {
             window.location.href = (window.location.href + "").replace(deleteNpm, '');
+        }
+        function addNpmPkg() {
+            var npmName = document.getElementById('add-npm-pkg-input').value;
+            if (npmName) {
+                window.location.href = window.location.href + "," + npmName;
+            }
         }
     </script>
 </head>
@@ -28,7 +35,13 @@
     <div class="logo">
         npm-downloads
     </div>
-    <ul class="npm-colors"></ul>
+    <div class="npm-colors">
+        <ul id='npm-packages'></ul>
+        <div>
+            <input type="text" id='add-npm-pkg-input' placeholder="输入需要比较的npm包名称">
+            <span onclick='addNpmPkg()'>+</span>
+        </div>
+    </div>
     <div>
         Crafted in 🇨🇳 by yelloxing, powered by image2D
         <a href="https://github.com/yelloxing/npm-downloads" target="_blank">

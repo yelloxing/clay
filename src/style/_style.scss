@@ -41,26 +41,60 @@ body {
     &>.npm-colors {
         position: fixed;
         top: 1rem;
-        left: 0;
+        left: .2rem;
         padding: .2rem;
-        &>li {
-            background-color: var(--color);
-            font-size: .14rem;
-            line-height: .35rem;
-            padding-left: .1rem;
-            margin-left: .2rem;
-            margin-top: .1rem;
-            color: #fff;
-            &>em {
-                margin-left: .1rem;
-                float: right;
-                width: .35rem;
-                height: .35rem;
-                background-color: rgb(240, 231, 231);
+        &>ul {
+            position: absolute;
+            top: .5rem;
+            &>li {
+                background-color: var(--color);
+                font-size: .14rem;
+                line-height: .35rem;
+                padding-left: .1rem;
+                margin-top: .1rem;
+                color: #fff;
+                &>em {
+                    margin-left: .1rem;
+                    float: right;
+                    width: .35rem;
+                    height: .35rem;
+                    background-color: rgb(240, 231, 231);
+                    color: #000;
+                    text-align: center;
+                    font-style: normal;
+                    cursor: pointer;
+                }
+            }
+        }
+        &>div {
+            position: absolute;
+            top: 0;
+            font-size: 0;
+            --size: .4rem;
+            white-space: nowrap;
+            &>* {
+                font-size: .14rem;
+                vertical-align: top;
+            }
+            &>input {
+                height: var(--size);
+                display: inline-block;
+                width: 2rem;
+                background-color: rgb(197, 192, 192);
+                padding: .1rem;
+                color: #fff;
+            }
+            &>span {
+                width: var(--size);
+                height: var(--size);
+                line-height: var(--size);
+                display: inline-block;
                 color: #000;
+                font-size: .3rem;
+                background-color: white;
                 text-align: center;
-                font-style: normal;
                 cursor: pointer;
+                user-select: none;
             }
         }
     }
