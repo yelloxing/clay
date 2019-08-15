@@ -14,10 +14,29 @@ import './style/root.scss';
 // 获取npm包名和时间长度
 let paramJSON = param(window.location.href);
 
-let painter = $$('canvas').painter().config('fillStyle', 'white');
+let canvas = $$('canvas'), painter = canvas.painter().config('fillStyle', 'white');
+
+// 添加加载中提示
+let x = (+canvas.attr('width')) / 4, y = (+canvas.attr('height')) / 4 - 50;
+painter.config({
+    textBaseline: "middle",
+    textAlign: "center"
+});
+
+let stop, loadingFlag, loadingFun = () => {
+    if (loadingFlag) return;
+    stop = $$.animation((deep) => {
+        painter.clearRect();
+        painter.config('font-size', (deep > 0.5 ? deep : 1 - deep) * 30).fillText('正在为您请求数据，请稍等片刻......', x, y);
+    }, 2000, loadingFun);
+};
+loadingFun();
 
 // 获取包下载量数据
 get(paramJSON.packages).then(function (data) {
+
+    // 请求返回的时候，停止加载提示动画
+    stop(); loadingFlag = true; painter.clearRect();
 
     try {
 
@@ -48,8 +67,6 @@ get(paramJSON.packages).then(function (data) {
                     + "</li>";
                 $$('#npm-packages')[0].innerHTML = template;
             }
-
-
 
         });
 
