@@ -71,7 +71,6 @@ get(paramJSON.packages).then(data => {
         });
 
     } catch (e) {
-
         $$(`<div style='width:100vw;height:100vh;text-align:center;padding-top:50vh;'>
             <span style='vertical-align:middle;background-color:red;padding:.1rem;'>运行错误，错误信息为：`+ e + `，访问地址为：` + window.location.href + `，请提
             <a style='color:white;background-color:green;padding:.03rem .1rem;border-radius:.1rem;' href='https://github.com/yelloxing/npm-downloads/issues'>issue</a>

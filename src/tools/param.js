@@ -1,11 +1,23 @@
 export default urlstring => {
 
-    // 建立url对象
-    let urlSearchParams = new URLSearchParams((urlstring + "").replace(/^[^?]+/, '').replace(/^\?/, ''));
+    let params = /\?([^&=]+=[^&=]+)(&[^&=]+=[^&=]+)*/.test(urlstring) ? urlstring.split("?")[1].split('&') : [], urlSearchParams = {};
+
+    for (let index = 0; index < params.length; index++) {
+        let temp = params[index].split('=');
+        urlSearchParams[temp[0]] = temp[1];
+    }
+
+    // 如果请求参数非法
+    if (!urlSearchParams['packages'] || !/^\d+$/.test(urlSearchParams['interval'])) {
+        let interval = urlSearchParams['interval'];
+        if (!/^\d+$/.test(interval)) interval = 7;
+        let packages = urlSearchParams['packages'] || 'image2d,vue,react,angular,jquery';
+        window.location.href = './index.html?interval=' + interval + '&packages=' + packages;
+    }
 
     // 返回npm包和时间间隔
     return {
-        packages: urlSearchParams.get('packages'),
-        interval: urlSearchParams.get('interval')
+        packages: urlSearchParams['packages'],
+        interval: urlSearchParams['interval']
     };
 };
