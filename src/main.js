@@ -38,7 +38,7 @@ get(paramJSON.packages).then(data => {
 
     // 请求返回的时候，停止加载提示动画
     stop(); loadingFlag = true;
-    // debugger
+
     painter.clearRect();
     layer.update();
 
@@ -134,7 +134,7 @@ get(paramJSON.packages).then(data => {
 
                 }
 
-                let xx = position.x, yy = position.y, width = hover_length * 12, height = info.length * 30;
+                let xx = position.x, yy = position.y, width = hover_length * 12, height = info.length * 20 + 50;
 
                 // 不同位置寻找更好的坐标
                 if (xx > formatData.width * 0.5) {
@@ -152,7 +152,7 @@ get(paramJSON.packages).then(data => {
                 hover_painter.beginPath()
                     .fillRect(xx, yy, width, height)
                     .config({
-                        'fillStyle': 'red',
+                        'fillStyle': 'rgb(244,100,200)',
                         'font-size': 14
                     }).fillText(hover_text[0], xx + 30, yy + 30)
                     .config({
