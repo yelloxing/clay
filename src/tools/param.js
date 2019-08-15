@@ -1,4 +1,4 @@
-export default function (urlstring) {
+export default urlstring => {
 
     // 建立url对象
     let urlSearchParams = new URLSearchParams((urlstring + "").replace(/^[^?]+/, '').replace(/^\?/, ''));

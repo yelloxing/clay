@@ -1,6 +1,6 @@
 import $$ from 'image2d';
 
-export default function (key, npmDownload, painter, color, deep, width, height) {
+export default (key, npmDownload, painter, color, deep, width, height) => {
 
     painter
         .config("strokeStyle", color)

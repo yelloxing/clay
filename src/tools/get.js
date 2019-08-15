@@ -1,8 +1,8 @@
-let get = function (url) {
+let get = url => {
 
     let data = sessionStorage.getItem(url);
     if (data) {
-        return new Promise(function (resolve) {
+        return new Promise(resolve => {
             resolve(JSON.parse(data));
         });
     }
@@ -17,11 +17,11 @@ let get = function (url) {
     // 打开请求地址
     xhr.open("GET", url, true);
 
-    let promise = new Promise(function (resolve, reject) {
+    let promise = new Promise((resolve, reject) => {
 
         // 请求成功回调
-        xhr.onload = function () {
-            sessionStorage.setItem(url,JSON.stringify(xhr.response));
+        xhr.onload = () => {
+            sessionStorage.setItem(url, JSON.stringify(xhr.response));
             resolve(xhr.response);
         };
 
@@ -34,7 +34,7 @@ let get = function (url) {
 
 };
 
-export default function (packages) {
+export default packages => {
 
     let date = new Date();
     let year = date.getFullYear();

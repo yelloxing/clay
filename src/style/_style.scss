@@ -25,17 +25,25 @@ body {
         left: 0;
         bottom: 0;
         padding: .08rem .1rem 0 .1rem;
-        height: .42rem;
-        line-height: .42rem;
+        height: .5rem;
+        line-height: .5rem;
         font-size: .12rem;
         width: 100vw;
         color: white;
         &>a {
-            float: right;
-            &>img {
-                background-color: white;
-                border-radius: 50%;
-                border: 1px solid #e3e3eb;
+            &.link {
+                background-color: rgb(107, 189, 243);
+                padding: .01rem .1rem;
+                color: white;
+                border-radius: .05rem;
+            }
+            &.github {
+                float: right;
+                &>img {
+                    background-color: white;
+                    border-radius: 50%;
+                    border: 1px solid #e3e3eb;
+                }
             }
         }
     }

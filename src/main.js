@@ -33,7 +33,7 @@ let stop, loadingFlag, loadingFun = () => {
 loadingFun();
 
 // 获取包下载量数据
-get(paramJSON.packages).then(function (data) {
+get(paramJSON.packages).then(data => {
 
     // 请求返回的时候，停止加载提示动画
     stop(); loadingFlag = true; painter.clearRect();
@@ -49,7 +49,7 @@ get(paramJSON.packages).then(function (data) {
         let template = "";
 
         // 绘制线条
-        $$.animation(function (deep) {
+        $$.animation(deep => {
             painter.clearRect();
             let i = 0;
             for (let key in formatData.downloads) {
@@ -57,7 +57,7 @@ get(paramJSON.packages).then(function (data) {
                 i += 1;
                 drawer(key, formatData.downloads[key], painter, color, deep, formatData.width, formatData.height);
             }
-        }, 1000, function () {
+        }, 1000, () => {
 
             // 添加标志说明
             for (let key in formatData.downloads) {

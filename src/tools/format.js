@@ -1,6 +1,6 @@
 import $$ from 'image2d';
 
-export default function (oral, paramJSON) {
+export default (oral, paramJSON) => {
 
     let oralJSON, maxValue = 0, number = 0;
 
