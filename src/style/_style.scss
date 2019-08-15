@@ -20,7 +20,7 @@ body {
         background-position: center;
         background-color: #332929;
     }
-    &>div {
+    &>.footer {
         position: fixed;
         left: 0;
         bottom: 0;
@@ -52,6 +52,11 @@ body {
         top: 1rem;
         left: .2rem;
         padding: .2rem;
+        height: .5rem;
+        line-height: .5rem;
+        font-size: .12rem;
+        width: auto;
+        color: white;
         &>ul {
             position: absolute;
             top: .5rem;
@@ -59,12 +64,15 @@ body {
                 background-color: var(--color);
                 font-size: .14rem;
                 line-height: .35rem;
-                padding-left: .1rem;
+                padding: 0 .1rem;
                 margin-top: .1rem;
                 color: #fff;
+                white-space: nowrap;
                 &>em {
                     margin-left: .1rem;
-                    float: right;
+                    position: absolute;
+                    right: -.35rem;
+                    display: inline-block;
                     width: .35rem;
                     height: .35rem;
                     background-color: rgb(240, 231, 231);
