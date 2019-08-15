@@ -81,10 +81,14 @@ get(paramJSON.packages).then(data => {
 
                     // 寻找合适的index,只需要寻找一次
                     if (index == -1) {
+                        let minDis = (formatData.downloads[key][0].x - (
+                            formatData.downloads[key].length < 2 ?
+                                formatData.width : formatData.downloads[key][1].x
+                        )) * 0.5;
                         for (index = 0; index < formatData.downloads[key].length; index++) {
                             if (
-                                position.x - formatData.downloads[key][index].x < 3 &&
-                                position.x - formatData.downloads[key][index].x > -3
+                                position.x - formatData.downloads[key][index].x < -1*minDis &&
+                                position.x - formatData.downloads[key][index].x > minDis
                             ) {
                                 begin = formatData.downloads[key][index].begin;
                                 end = formatData.downloads[key][index].end;
@@ -111,7 +115,7 @@ get(paramJSON.packages).then(data => {
                     .moveTo(x, 0).lineTo(x, formatData.height + 50)
                     .config({
                         "strokeStyle": "red",
-                        "fillStyle": "rgba(200,200,200,0.5)",
+                        "fillStyle": "white",
                         "lineWidth": 2
                     })
                     .stroke();
@@ -150,6 +154,9 @@ get(paramJSON.packages).then(data => {
 
                 // 绘制提示文字
                 hover_painter.beginPath()
+                    .config({
+                        "fillStyle": "rgba(200,200,200,0.5)"
+                    })
                     .fillRect(xx, yy, width, height)
                     .config({
                         'fillStyle': 'rgb(244,100,200)',
