@@ -87,7 +87,7 @@ get(paramJSON.packages).then(data => {
                         )) * 0.5;
                         for (index = 0; index < formatData.downloads[key].length; index++) {
                             if (
-                                position.x - formatData.downloads[key][index].x < -1*minDis &&
+                                position.x - formatData.downloads[key][index].x < -1 * minDis &&
                                 position.x - formatData.downloads[key][index].x > minDis
                             ) {
                                 begin = formatData.downloads[key][index].begin;
@@ -127,9 +127,9 @@ get(paramJSON.packages).then(data => {
                 for (let index = 0; index < info.length; index++) {
 
                     // 画圈
-                    hover_painter.beginPath()
-                        .strokeCircle(x, info[index].y, 5)
-                        .fillCircle(x, info[index].y, 5);
+                    hover_painter.config("lineWidth", 4)
+                        .strokeCircle(x, info[index].y, 7)
+                        .fillCircle(x, info[index].y, 7);
 
 
                     let temp = info[index].name + " : " + info[index].value;
