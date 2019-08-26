@@ -18,6 +18,6 @@ export default urlstring => {
     // 返回npm包和时间间隔
     return {
         packages: urlSearchParams['packages'],
-        interval: urlSearchParams['interval']
+        interval: +urlSearchParams['interval'] >= 356 ? 364 : urlSearchParams['interval']
     };
 };
