@@ -9,6 +9,7 @@ import colors from './tools/colors';
 import 'promise-polyfill/src/polyfill';
 
 // 加载样式
+import '@yelloxing/normalize.css/index.css';
 import './style/root.scss';
 
 // 获取npm包名和时间长度
