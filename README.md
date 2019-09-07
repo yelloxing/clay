@@ -5,13 +5,13 @@ npm包下载量比较。
 
 如何使用？
 --------------------------------------
-我们以jquery为例，下面是项目的最终效果，点击它你就会进入具体的下载统计页面。
+我们以@yelloxing/core.js为例，下面是项目的最终效果，点击它你就会进入具体的下载统计页面。
 
-<a href="https://yelloxing.github.io/npm-downloads?interval=7&packages=jquery"><img src="https://img.shields.io/npm/dm/jquery.svg" alt="Downloads"></a>
+<a href="https://yelloxing.github.io/npm-downloads?interval=7&packages=@yelloxing/core.js"><img src="https://img.shields.io/npm/dm/@yelloxing/core.js.svg" alt="Downloads"></a>
 
 ```html
-<a href="https://yelloxing.github.io/npm-downloads?interval=7&packages=jquery">
-    <img src="https://img.shields.io/npm/dm/jquery.svg" alt="Downloads">
+<a href="https://yelloxing.github.io/npm-downloads?interval=7&packages=@yelloxing/core.js">
+    <img src="https://img.shields.io/npm/dm/@yelloxing/core.js.svg" alt="Downloads">
 </a>
 ```
 
