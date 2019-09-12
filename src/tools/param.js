@@ -11,7 +11,7 @@ export default urlstring => {
     if (!urlSearchParams['packages'] || !/^\d+$/.test(urlSearchParams['interval'])) {
         let interval = urlSearchParams['interval'];
         if (!/^\d+$/.test(interval)) interval = 7;
-        let packages = urlSearchParams['packages'] || 'image2d,vue,react,angular,jquery';
+        let packages = urlSearchParams['packages'] || 'image2d,image3d';
         window.location.href = './index.html?interval=' + interval + '&packages=' + packages;
     }
 
