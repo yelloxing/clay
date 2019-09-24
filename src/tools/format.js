@@ -1,15 +1,8 @@
 import $$ from 'image2d';
 
-export default (oral, paramJSON) => {
+export default (oralJSON, paramJSON) => {
 
-    let oralJSON, maxValue = 0, number = 0;
-
-    // 统一数据格式
-    if (!/,/.test(paramJSON.packages)) {
-        let temp = {};
-        temp[paramJSON.packages] = JSON.parse(oral);
-        oralJSON = temp;
-    } else oralJSON = JSON.parse(oral);
+    let maxValue = 0, number = 0;
 
     let downloads = {};
     for (let key in oralJSON) {

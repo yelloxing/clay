@@ -4,6 +4,7 @@ import get from './tools/get';
 import param from './tools/param';
 import drawer from './tools/drawer';
 import colors from './tools/colors';
+import split from '@yelloxing/core.js/split.js';
 
 // 兼容文件
 import 'promise-polyfill/src/polyfill';
@@ -35,7 +36,7 @@ let stop, loadingFlag, loadingFun = () => {
 loadingFun();
 
 // 获取包下载量数据
-get(paramJSON.packages).then(data => {
+let doIt = data => {
 
     // 请求返回的时候，停止加载提示动画
     stop(); loadingFlag = true;
@@ -176,13 +177,26 @@ get(paramJSON.packages).then(data => {
 
     } catch (e) {
         $$(`<div style='background-color: red;position:fixed;line-height: 3em;width:100vw;height:100vh;text-align:center;padding-top:20vh;'>
-            <span style='vertical-align:middle;padding:.1rem;color:white;'>运行错误，错误信息为：`+ e + `，访问地址为：` + window.location.href + `，请提
-            <a style='color:black;background-color:white;padding:.03rem .1rem;border-radius:.1rem;' href='https://github.com/yelloxing/npm-downloads/issues'>issue</a>
-            告知开发人员！</span>
-        </div>`).appendTo('body');
+                <span style='vertical-align:middle;padding:.1rem;color:white;'>运行错误，错误信息为：`+ e + `，访问地址为：` + window.location.href + `，请提
+                <a style='color:black;background-color:white;padding:.03rem .1rem;border-radius:.1rem;' href='https://github.com/yelloxing/npm-downloads/issues'>issue</a>
+                告知开发人员！</span>
+            </div>`).appendTo('body');
 
         throw e;
 
     }
 
-});
+};
+
+let packages = split(paramJSON.packages, ",");
+let datas = {}, flag = 1;
+for (let i = 0; i < packages.length; i++) {
+    get(packages[i]).then(data => {
+        datas[packages[i]] = JSON.parse(data);
+        flag += 1;
+        if (flag >= packages.length) doIt(datas);
+    });
+}
+
+
+
