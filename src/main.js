@@ -4,7 +4,7 @@ import get from './tools/get';
 import param from './tools/param';
 import drawer from './tools/drawer';
 import colors from './tools/colors';
-import split from '@yelloxing/core.js/split.js';
+import __ from '@yelloxing/core.js/';
 
 // 兼容文件
 import 'promise-polyfill/src/polyfill';
@@ -188,7 +188,7 @@ let doIt = data => {
 
 };
 
-let packages = split(paramJSON.packages, ",");
+let packages = __.split(paramJSON.packages, ",");
 let datas = {}, flag = 1;
 for (let i = 0; i < packages.length; i++) {
     get(packages[i]).then(data => {
