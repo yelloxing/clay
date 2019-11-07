@@ -4,7 +4,7 @@
   "main": "src/main.js",
   "scripts": {
     "dev": "node_modules/.bin/webpack-dev-server --open --config webpack.dev.js",
-    "build": "node_modules/.bin/webpack --config webpack.prod.js",
+    "build": "cuf -d ./build && node_modules/.bin/webpack --config webpack.prod.js",
     "start": "npm install && npm run dev"
   },
   "repository": {
@@ -28,6 +28,7 @@
     "babel-plugin-dynamic-import-webpack": "^1.1.0",
     "babel-preset-env": "^1.7.0",
     "css-loader": "^2.1.1",
+    "cuf": "^1.0.3",
     "file-loader": "^4.0.0",
     "node-sass": "^4.11.0",
     "postcss": "^7.0.14",
