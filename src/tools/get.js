@@ -17,7 +17,7 @@ let get = url => {
     // 打开请求地址
     xhr.open("GET", url, true);
 
-    let promise = new Promise((resolve, reject) => {
+    let promise = new Promise(resolve => {
 
         // 请求成功回调
         xhr.onload = () => {

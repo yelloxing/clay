@@ -4,7 +4,7 @@
   "main": "src/main.js",
   "scripts": {
     "dev": "node_modules/.bin/webpack-dev-server --open --config webpack.dev.js",
-    "build": "cuf -d ./build && node_modules/.bin/webpack --config webpack.prod.js",
+    "build": "node_modules/.bin/webpack --config webpack.prod.js",
     "start": "npm install && npm run dev"
   },
   "repository": {
@@ -45,7 +45,7 @@
   "dependencies": {
     "@yelloxing/core.js": "^0.2.4",
     "@yelloxing/normalize.css": "^0.1.1",
-    "image2d": "^1.4.0",
+    "image2d": "^1.6.4",
     "promise-polyfill": "8.1.3"
   }
 }

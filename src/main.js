@@ -16,11 +16,11 @@ import './style/root.scss';
 // 获取npm包名和时间长度
 let paramJSON = param(window.location.href);
 
-let canvas = $$('canvas'), layer = canvas.layer(), painter = layer.painter('npm-downloads').config('fillStyle', 'white');
+let canvas = $$('canvas'), layer = canvas.layer(), painterInfo = layer.painter('npm-downloads').config('fillStyle', 'white');
 
 // 添加加载中提示
 let x = (+canvas.attr('width')) / 4, y = (+canvas.attr('height')) / 4 - 50;
-painter.config({
+painterInfo.config({
     textBaseline: "middle",
     textAlign: "center"
 });
@@ -28,15 +28,15 @@ painter.config({
 let stop, loadingFlag, loadingFun = () => {
     if (loadingFlag) return;
     stop = $$.animation((deep) => {
-        painter.clearRect();
-        painter.config('font-size', (deep > 0.5 ? deep : 1 - deep) * 30).fillText('正在为您请求数据，请稍等片刻......', x, y);
+        painterInfo.clearRect();
+        painterInfo.config('font-size', (deep > 0.5 ? deep : 1 - deep) * 30).fillText('正在为您请求数据，请稍等片刻......', x, y);
         layer.update();
     }, 2000, loadingFun);
 };
 loadingFun();
 
 // 获取包下载量数据
-let doIt = data => {
+let doIt = (data,painter,isLast) => {
 
     // 请求返回的时候，停止加载提示动画
     stop(); loadingFlag = true;
@@ -57,22 +57,24 @@ let doIt = data => {
         // 绘制线条
         $$.animation(deep => {
             painter.clearRect();
+            painterInfo.clearRect();
             let i = 0;
             for (let key in formatData.downloads) {
                 let color = colorsRGBA[i];
                 i += 1;
-                drawer(key, formatData.downloads[key], painter, color, deep, formatData.width, formatData.height);
+                drawer(formatData.downloads[key], painter, color, deep, formatData.height);
             }
             layer.update();
         }, 1000, () => {
+            if(isLast) return;
 
             // 添加标志说明
             for (let key in formatData.downloads) {
-                template += "<li style='--color:" + colorsRGBA.shift() + "'>"
+                template = "<li style='--color:" + colorsRGBA.shift() + "'>"
                     + key
                     + "<em onclick=\"reload('" + key + "')\">X</em>"
                     + "</li>";
-                $$('#npm-packages')[0].innerHTML = template;
+                $$('#npm-packages')[0].innerHTML += template;
             }
 
             // 绑定悬浮事件
@@ -194,7 +196,11 @@ for (let i = 0; i < packages.length; i++) {
     get(packages[i]).then(data => {
         datas[packages[i]] = JSON.parse(data);
         flag += 1;
-        if (flag >= packages.length) doIt(datas);
+        if (flag >= packages.length) doIt(
+            datas,
+            layer.painter('pkg-'+flag).clearRect().config('fillStyle', 'white'),
+            flag<packages.length+1
+            );
     });
 }
 
