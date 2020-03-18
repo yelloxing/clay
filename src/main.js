@@ -38,6 +38,8 @@ loadingFun();
 // 获取包下载量数据
 let doIt = (data,painter,isLast) => {
 
+    if(!isLast) return;
+
     // 请求返回的时候，停止加载提示动画
     stop(); loadingFlag = true;
 
@@ -66,7 +68,6 @@ let doIt = (data,painter,isLast) => {
             }
             layer.update();
         }, 1000, () => {
-            if(isLast) return;
 
             // 添加标志说明
             for (let key in formatData.downloads) {
@@ -198,8 +199,8 @@ for (let i = 0; i < packages.length; i++) {
         flag += 1;
         if (flag >= packages.length) doIt(
             datas,
-            layer.painter('pkg-'+flag).clearRect().config('fillStyle', 'white'),
-            flag<packages.length+1
+            layer.painter('pkg-'+packages[i]).clearRect().config('fillStyle', 'white'),
+            flag>=packages.length+1
             );
     });
 }
