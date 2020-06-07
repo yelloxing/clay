@@ -30,7 +30,7 @@
     "css-loader": "^2.1.1",
     "cuf": "^1.0.3",
     "file-loader": "^4.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "postcss": "^7.0.14",
     "postcss-loader": "^3.0.0",
     "sass-loader": "^7.1.0",
@@ -38,13 +38,13 @@
     "url-loader": "^2.0.0",
     "webpack": "^4.29.0",
     "webpack-cli": "^3.2.1",
-    "webpack-dev-server": "^3.1.14",
+    "webpack-dev-server": "^3.11.0",
     "webpack-merge": "^4.2.1"
   },
   "dependencies": {
     "@yelloxing/core.js": "^0.2.4",
     "@yelloxing/normalize.css": "^0.1.1",
-    "image2d": "^1.6.4",
+    "image2d": "^1.6.8",
     "promise-polyfill": "8.1.3"
   }
 }
